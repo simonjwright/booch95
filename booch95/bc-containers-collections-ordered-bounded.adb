@@ -36,8 +36,7 @@ package body BC.Containers.Collections.Ordered.Bounded is
   begin
     for Index in 1 .. Collection_Nodes.Length (C.Rep)
     loop
-      if not (Collection_Nodes.Item_At (C.Rep, Index)
-              < Elem) then
+      if not (Collection_Nodes.Item_At (C.Rep, Index) < Elem) then
         Collection_Nodes.Insert (C.Rep, Elem, Index);
         return;
       end if;
@@ -51,8 +50,7 @@ package body BC.Containers.Collections.Ordered.Bounded is
   begin
     for Index in 1 .. Collection_Nodes.Length (C.Rep)
     loop
-      if not (Collection_Nodes.Item_At (C.Rep, Index)
-              < Elem) then
+      if not (Collection_Nodes.Item_At (C.Rep, Index) < Elem) then
         Collection_Nodes.Insert (C.Rep, Elem, Index);
         return;
       end if;
