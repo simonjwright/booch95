@@ -126,7 +126,7 @@ private
    type Unconstrained_Map
      (Number_Of_Buckets : Positive)
    is new Abstract_Map with record
-      Rep : Tables.Table (Number_Of_Buckets => Buckets);
+      Rep : Tables.Table (Number_Of_Buckets => Number_Of_Buckets);
    end record;
 
    procedure Attach (M : in out Unconstrained_Map; K : Key; I : Item);
