@@ -36,6 +36,11 @@ package BC.Containers.Queues.Ordered is
 
 private
 
+   --  Suppress "unreferenced" warnings here (GNAT 5.02). Can't use
+   --  pragma Unreferenced, because then we get warnings in child
+   --  packages.
+   pragma Warnings (Off, "<");
+
    type Abstract_Ordered_Queue is abstract new Abstract_Queue with null record;
 
 end BC.Containers.Queues.Ordered;

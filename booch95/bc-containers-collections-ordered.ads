@@ -39,6 +39,11 @@ package BC.Containers.Collections.Ordered is
 
 private
 
+   --  Suppress "unreferenced" warnings here (GNAT 5.02). Can't use
+   --  pragma Unreferenced, because then we get warnings in child
+   --  packages.
+   pragma Warnings (Off, "<");
+
    type Abstract_Ordered_Collection
       is abstract new Abstract_Collection with null record;
 
