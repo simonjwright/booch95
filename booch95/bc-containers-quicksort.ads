@@ -34,6 +34,6 @@
 
 generic
    with function "<" (L, R : Item) return Boolean is <>;
-   type Container is new Containers.Container with private;
+   type Container (<>) is new Containers.Container with private;
    with function Length (C : Container) return Natural is <>;
 procedure BC.Containers.Quicksort (C : in out Container);
