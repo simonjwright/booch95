@@ -242,51 +242,47 @@ procedure Bag_Test is
     Modifier (Iter);
   end Test_Passive_Modifying_Iterator;
 
---    Bag_B_Pu1, Bag_B_Pu2 : BB.Bounded_Bag;
---    Bag_D_Pu1, Bag_D_Pu2 : BD.Dynamic_Bag;
-  Bag_U_Pu1, Bag_U_Pu2 : BU.Unbounded_Bag;
+--    Bag_B_P1, Bag_B_P2 : BB.Bounded_Bag;
+  Bag_D_P1, Bag_D_P2 : BD.Dynamic_Bag;
+  Bag_U_P1, Bag_U_P2 : BU.Unbounded_Bag;
 
 begin
   Put_Line ("Starting bag tests");
 --    Put_Line ("...Bounded Bag");
---    Test (Bag_B_Pu1, Bag_B_Pu2);
---    Put_Line ("...Dynamic Bag");
---    SD.Preallocate (Bag_D_Pu1, 50);
---    Test (Bag_D_Pu1, Bag_D_Pu2);
+--    Test (Bag_B_P1, Bag_B_P2);
+  Put_Line ("...Dynamic Bag");
+  BD.Preallocate (Bag_D_P1, 50);
+  Test (Bag_D_P1, Bag_D_P2);
   Put_Line ("...Unbounded Bag");
-  Test (Bag_U_Pu1, Bag_U_Pu2);
+  Test (Bag_U_P1, Bag_U_P2);
 
   Put_Line ("...Bag Active Iterator");
 --    Put_Line ("   Bounded:");
---    Test_Active_Iterator (Bag_B_Pu1);
---    Put_Line ("   Dynamic:");
---    Test_Active_Iterator (Bag_D_Pu1);
+--    Test_Active_Iterator (Bag_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Active_Iterator (Bag_D_P1);
   Put_Line ("   Unbounded:");
-  Test_Active_Iterator (Bag_U_Pu1);
+  Test_Active_Iterator (Bag_U_P1);
   Put_Line ("...Bag Passive Iterator");
 --    Put_Line ("   Bounded:");
---    Test_Passive_Iterator (Bag_B_Pu1);
---    Test_Passive_Modifying_Iterator (Bag_B_Pu1);
---    Put_Line ("   Dynamic:");
---    Test_Passive_Iterator (Bag_D_Pu1);
---    Test_Passive_Modifying_Iterator (Bag_D_Pu1);
+--    Test_Passive_Iterator (Bag_B_P1);
+--    Test_Passive_Modifying_Iterator (Bag_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Passive_Iterator (Bag_D_P1);
+  Test_Passive_Modifying_Iterator (Bag_D_P1);
   Put_Line ("   Unbounded:");
-  Test_Passive_Iterator (Bag_U_Pu1);
-  Test_Passive_Modifying_Iterator (Bag_U_Pu1);
+  Test_Passive_Iterator (Bag_U_P1);
+  Test_Passive_Modifying_Iterator (Bag_U_P1);
 
---    Assertion (BB.Is_Member (Bag_B_Pu1, '1'),
---               "** M01: Bag membership is not correct");
---    Assertion (BB.Extent (Bag_B_Pu2) = 3, "** M02: Bag extent is not correct");
---    Assertion (BD.Is_Member (Bag_D_Pu1, '1'),
---               "** M05: Bag membership is not correct");
---    Assertion (BD.Extent (Bag_D_Pu2) = 3, "** M06: Bag extent is not correct");
-  Assertion (Bags.Total_Size (Bag_U_Pu1) = 1,
+  Assertion (Bags.Total_Size (Bag_D_P1) = 1,
+             "** M05: Bag TotalSize is not correct");
+--   Assertion (BD.Count (Bag_D_P2. '8') = 2,
+--              "** M06: Bag Count is not correct");
+-- the statement above triggers a bug box in GANT 3.11b2
+  Assertion (Bags.Total_Size (Bag_U_P1) = 1,
              "** M07: Bag Total_Size is not correct");
-  Assertion (BU.Count (Bag_U_Pu2, '8') = 2,
+  Assertion (BU.Count (Bag_U_P2, '8') = 2,
              "** M10: Bag Count is not correct");
---    Assertion (SB.Available (Bag_B_Pu1) = 299,
---               "** M13: Available space is not correct");
---    Assertion (SB.Available (Bag_B_Pu2) = 297,
---               "** M14: Available space is not correct");
+
   Put_Line ("Completed bag tests");
 end Bag_Test;
