@@ -42,13 +42,16 @@ package BC.Support.Unmanaged_Storage is
                        Storage_Address : out System.Address;
                        Size_In_Storage_Elements : SSE.Storage_Count;
                        Alignment : SSE.Storage_Count);
+   pragma Inline (Allocate);
 
    procedure Deallocate (The_Pool : in out Pool;
                          Storage_Address : System.Address;
                          Size_In_Storage_Elements : SSE.Storage_Count;
                          Alignment : SSE.Storage_Count);
+   pragma Inline (Deallocate);
 
    function Storage_Size (This : Pool) return SSE.Storage_Count;
+   pragma Inline (Storage_Size);
 
 private
 
