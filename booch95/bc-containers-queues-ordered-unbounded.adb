@@ -28,14 +28,15 @@ package body BC.Containers.Queues.Ordered.Unbounded is
 
   procedure Append (Obj : in out Unbounded_Ordered_Queue; Elem : Item) is
   begin
-    for Pos in reverse 1 .. Unbounded_Ordered_Queue_Nodes.Length (Obj.Rep.all)
+    for Index in 1 .. Unbounded_Ordered_Queue_Nodes.Length (Obj.Rep.all)
     loop
-      if Unbounded_Ordered_Queue_Nodes.Item_At (Obj.Rep.all, Pos) < Elem then
-        Unbounded_Ordered_Queue_Nodes.Append (Obj.Rep.all, Elem, After => Pos);
+      if Elem < Unbounded_Ordered_Queue_Nodes.Item_At (Obj.Rep.all, Index)
+      then
+        Unbounded_Ordered_Queue_Nodes.Insert (Obj.Rep.all, Elem, Index);
         return;
       end if;
     end loop;
-    Unbounded_Ordered_Queue_Nodes.Insert (Obj.Rep.all, Elem);
+    Unbounded_Ordered_Queue_Nodes.Append (Obj.Rep.all, Elem);
   end Append;
 
   procedure Pop (Obj : in out Unbounded_Ordered_Queue) is
@@ -90,11 +91,6 @@ package body BC.Containers.Queues.Ordered.Unbounded is
   begin
     Unbounded_Ordered_Queue_Nodes.Clear (Obj.Rep.all);
   end Purge;
-
-  procedure Add (Obj : in out Unbounded_Ordered_Queue; Elem : Item) is
-  begin
-    Unbounded_Ordered_Queue_Nodes.Append (Obj.Rep.all, Elem);
-  end Add;
 
   function Cardinality (Obj : Unbounded_Ordered_Queue) return Natural is
   begin
