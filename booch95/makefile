@@ -92,6 +92,8 @@ bc-containers-lists-double.ad[bs] \
 bc-containers-lists-single.ad[bs] \
 bc-containers-lists.ad[bs] \
 bc-containers-maps-bounded.ad[bs] \
+bc-containers-maps-dynamic.ad[bs] \
+bc-containers-maps-unbounded.ad[bs] \
 bc-containers-maps.ad[bs] \
 bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
