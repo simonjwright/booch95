@@ -28,7 +28,7 @@ GNATMAKE=gnatmake
 ########
 # Tests
 
-GNATMAKE_FLAGS = -I.. -O2 -g -gnata -gnatf -gnatwu -gnatwl -gnaty
+GNATMAKE_FLAGS = -I.. -O2 -g -gnatafy -gnatwlu
 
 test: testable
 	for t in $(TESTABLE); do \
@@ -87,6 +87,9 @@ sort_test: force
 
 TESTABLE += stack_test
 stack_test: force
+
+TESTABLE += stream_test
+stream_test: force
 
 TESTABLE += tree_test
 tree_test: force
