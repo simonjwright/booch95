@@ -232,6 +232,14 @@ package body BC.Containers.Sets is
     return Item_At (It.S.all, It.Bucket_Index, It.Index);
   end Current_Item;
 
+  procedure Delete_Item_At (It : Set_Iterator) is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    raise BC.Not_Yet_Implemented;
+  end Delete_Item_At;
+
   -- Subprograms to be overridden
 
   procedure Attach (S : in out Set; I : Item) is
