@@ -214,6 +214,10 @@ package BC.Graphs is
   -- Iteration over the Arcs connected to a Vertex --
   ---------------------------------------------------
 
+  -- Note, in the case of a Directed Graph, these iterators only cover the
+  -- outgoing arcs. See BC.Graphs.Directed_Graphs for iteration over
+  -- incoming arcs.
+
   -- Active iteration
 
   type Vertex_Iterator is private;
