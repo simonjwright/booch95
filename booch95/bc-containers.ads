@@ -48,9 +48,8 @@ private
 
   type Container is abstract new Ada.Finalization.Controlled with null record;
 
-  function Item_At (Obj : Container; Index : Natural) return Item_Ptr
-    is abstract;
-  function Cardinality (Obj : Container) return Integer is abstract;
+  function Item_At (Obj : Container; Index : Natural) return Item_Ptr;
+  function Cardinality (Obj : Container) return Integer;
 
   type Iterator (C : access Container'Class) is limited record
     Index : Integer := 1;

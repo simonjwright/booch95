@@ -82,4 +82,16 @@ package body BC.Containers is
     return True;
   end Modify;
 
+  function Item_At (Obj : Container; Index : Natural) return Item_Ptr is
+  begin
+    raise Should_Have_Been_Overridden;
+    return null;
+  end Item_At;
+
+  function Cardinality (Obj : Container) return Integer is
+  begin
+    raise Should_Have_Been_Overridden;
+    return 0;
+  end Cardinality;
+
 end BC.Containers;

@@ -69,8 +69,8 @@ private
 
   type Queue is abstract new Container with null record;
 
-  procedure Purge (Obj : in out Queue) is abstract;
-  procedure Add (Obj : in out Queue; Elem : in out Item) is abstract;
+  procedure Purge (Obj : in out Queue);
+  procedure Add (Obj : in out Queue; Elem : in out Item);
 
 end Bc.Containers.Queues;
 

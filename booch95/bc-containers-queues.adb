@@ -55,4 +55,14 @@ package body Bc.Containers.Queues is
     end loop;
   end Copy;
 
+  procedure Purge (Obj : in out Queue) is
+  begin
+    raise Should_Have_Been_Overridden;
+  end Purge;
+
+  procedure Add (Obj : in out Queue; Elem : in out Item) is
+  begin
+    raise Should_Have_Been_Overridden;
+  end Add;
+
 end Bc.Containers.Queues;

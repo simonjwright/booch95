@@ -59,9 +59,9 @@ package Bc.Containers.Stacks is
 
 private
 
-    type Stack is abstract new Container with null record;
+  type Stack is abstract new Container with null record;
 
-    procedure Purge (Obj : in out Stack) is abstract;
-    procedure Add (Obj : in out Stack; Elem : in out Item) is abstract;
+  procedure Purge (Obj : in out Stack);
+  procedure Add (Obj : in out Stack; Elem : in out Item);
 
 end Bc.Containers.Stacks;
