@@ -21,11 +21,7 @@ with Ada.Finalization;
 
 generic
   type Vertex_Item is private;
-  type Vertex_Item_Ptr is access all Vertex_Item;
-       -- XXX for function Item return Vertex_Item_Ptr
   type Arc_Item is private;
-  type Arc_Item_Ptr is access all Arc_Item;
-       -- XXX for function Item return Arc_Item_Ptr
 package BC.Graphs is
 
   -- A directed graph is an unrooted collection of vertices and directed
@@ -132,8 +128,10 @@ package BC.Graphs is
   function Item (V : Vertex) return Vertex_Item;
   -- Return the item associated with the vertex.
 
-  function Item (V : Vertex) return Vertex_Item_Ptr;  -- hmm
-  -- Return a pointer to the item associated with the vertex.
+  generic
+    with procedure Process (I : in out Vertex_Item);
+  procedure Access_Vertex_Item (V : Vertex);
+  -- Process has read-write access to the item associated with the vertex.
 
   function Enclosing_Graph (V : Vertex) return Graph_Ptr;
   -- Return the graph enclosing the vertex.
@@ -161,8 +159,10 @@ package BC.Graphs is
   function Item (A : Arc) return Arc_Item;
   -- Return the item associated with the arc.
 
-  function Item (A : Arc) return Arc_Item_Ptr;
-  -- Return a pointer to the item associated with the arc.
+  generic
+    with procedure Process (I : in out Arc_Item);
+  procedure Access_Arc_Item (A : Arc);
+  -- Process has read-write access to the item associated with the arc.
 
   function Enclosing_Graph (A : Arc) return Graph_Ptr;
   -- Return the graph enclosing the arc.
@@ -181,7 +181,7 @@ private
   -- outgoing and incoming arcs, and a reference count
   -- XXX controlled only for check at finalization
   type Vertex_Node is new Ada.Finalization.Controlled with record
-    Item : aliased Vertex_Item;  -- XXX for function Item return Item_Ptr
+    Item : Vertex_Item;
     Enclosing : Graph_Ptr;
     Incoming : Arc_Node_Ptr;
     Outgoing : Arc_Node_Ptr;
@@ -197,7 +197,7 @@ private
   -- to and from the arc, and a reference count
   -- XXX controlled only for check at finalization
   type Arc_Node is new Ada.Finalization.Controlled with record
-    Item : aliased Arc_Item;  -- XXX for function Item return Item_Ptr
+    Item : Arc_Item;
     Enclosing : Graph_Ptr;
     From : Vertex_Node_Ptr;
     To : Vertex_Node_Ptr;

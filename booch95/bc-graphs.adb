@@ -237,14 +237,14 @@ package body BC.Graphs is
   end Item;
 
 
-  function Item (V : Vertex) return Vertex_Item_Ptr is
+  procedure Access_Vertex_Item (V : Vertex) is
   begin
     Assert (V.Rep /= null,
             BC.Is_Null'Identity,
-            "Item(Vertex)",
+            "Access_Vertex_Item",
             BSE.Is_Null);
-    return V.Rep.Item'Access;
-  end Item;
+    Process (V.Rep.Item);
+  end Access_Vertex_Item;
 
 
   function Enclosing_Graph (V : Vertex) return Graph_Ptr is
@@ -312,14 +312,14 @@ package body BC.Graphs is
   end Item;
 
 
-  function Item (A : Arc) return Arc_Item_Ptr is
+  procedure Access_Arc_Item (A : Arc) is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
-            "Item(Arc)",
+            "Access_Arc_Item",
             BSE.Is_Null);
-    return A.Rep.Item'Access;
-  end Item;
+    Process (A.Rep.Item);
+  end Access_Arc_Item;
 
 
   function Enclosing_Graph (A : Arc) return Graph_Ptr is
