@@ -90,7 +90,7 @@ package body BC.Containers.Bags.Bounded is
   is new System.Address_To_Access_Conversions (Bag);
 
   function New_Iterator (For_The_Bag : Bag) return Iterator'Class is
-    Result : Bag_Iterator;
+    Result : Bounded_Bag_Iterator;
   begin
     Result.For_The_Container :=
        Address_Conversions.To_Pointer (For_The_Bag'Address).all'Access;
@@ -120,20 +120,108 @@ package body BC.Containers.Bags.Bounded is
     return Buckets;
   end Number_Of_Buckets;
 
-  function Length (B : Bag; Bucket : Positive) return Natural is
-  begin
-    return Tables.Length (B.Rep, Bucket);
-  end Length;
-
   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return Tables.Item_At (B.Rep, Bucket, Index);
+    return Tables.Access_Item_At (B.Rep, Index);
   end Item_At;
 
   function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
   begin
-    return Tables.Value_At (B.Rep, Bucket, Index).all;
+    return B.Rep.Contents (Index).Value;
   end Value_At;
+
+  procedure Reset (It : in out Bounded_Bag_Iterator) is
+    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+  begin
+    It.Index := 0;
+    if Extent (B) = 0 then
+      It.Bucket_Index := 0;
+    else
+      It.Bucket_Index := 1;
+      while It.Bucket_Index <= Number_Of_Buckets (B) loop
+        if B.Rep.Buckets (It.Bucket_Index) > 0 then
+          It.Index := B.Rep.Buckets (It.Bucket_Index);
+          exit;
+        end if;
+        It.Bucket_Index := It.Bucket_Index + 1;
+      end loop;
+    end if;
+  end Reset;
+
+  procedure Next (It : in out Bounded_Bag_Iterator) is
+    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+  begin
+    if It.Bucket_Index <= Number_Of_Buckets (B) then
+      if B.Rep.Contents (It.Index).Next > 0 then
+        It.Index := B.Rep.Contents (It.Index).Next;
+      else
+        It.Bucket_Index := It.Bucket_Index + 1;
+        It.Index := 0;
+        while It.Bucket_Index <= Number_Of_Buckets (B) loop
+          if B.Rep.Buckets (It.Bucket_Index) > 0 then
+            It.Index := B.Rep.Buckets (It.Bucket_Index);
+            exit;
+          end if;
+          It.Bucket_Index := It.Bucket_Index + 1;
+        end loop;
+      end if;
+    end if;
+  end Next;
+
+  function Is_Done (It : Bounded_Bag_Iterator) return Boolean is
+    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+  begin
+    if It.Bucket_Index = 0
+       or else It.Bucket_Index > Number_Of_Buckets (B) then
+      return True;
+    end if;
+    if It.Index > 0 then
+      return False;
+    end if;
+    declare
+      package Conversions is new System.Address_To_Access_Conversions
+         (Bounded_Bag_Iterator'Class);
+      P : Conversions.Object_Pointer := Conversions.To_Pointer (It'Address);
+    begin
+      P.Bucket_Index := P.Bucket_Index + 1;
+      P.Index := 0;
+      while P.Bucket_Index <= Number_Of_Buckets (B) loop
+        if B.Rep.Buckets (P.Bucket_Index) > 0 then
+          P.Index := B.Rep.Buckets (P.Bucket_Index);
+          return False;
+        end if;
+        P.Bucket_Index := P.Bucket_Index + 1;
+      end loop;
+    end;
+    return True;
+  end Is_Done;
+
+  function Current_Item (It : Bounded_Bag_Iterator) return Item is
+    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    return B.Rep.Contents (It.Index).Item;
+  end Current_Item;
+
+  function Current_Item_Ptr (It : Bounded_Bag_Iterator) return Item_Ptr is
+    -- XXX this should probably not be permitted!
+    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    return Tables.Access_Item_At (B.Rep, It.Index);
+  end Current_Item_Ptr;
+
+  procedure Delete_Item_At (It : in out Bounded_Bag_Iterator) is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    raise BC.Not_Yet_Implemented;
+  end Delete_Item_At;
 
   Empty_Container : Bag;
   pragma Warnings (Off, Empty_Container);
