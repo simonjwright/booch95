@@ -217,6 +217,12 @@ package body BC.Support.Dynamic is
   function Location (Obj : Dyn_Node; Elem : Item; Start : Positive := 1)
                      return Natural is
   begin
+    -- XXX the C++ (which indexes from 0) nevertheless checks "start <= count"
+    -- We have to special-case the empty Node; the C++ indexes from 0, so
+    -- it can legally start with index 0 when the Node is empty.
+    if Obj.Size = 0 then
+      return 0;
+    end if;
     Assert (Start <= Obj.Size,
             BC.Range_Error'Identity,
             "Location",
