@@ -41,6 +41,10 @@ TESTABLE += bag_test
 bag_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+TESTABLE += collection_test
+collection_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
 TESTABLE += graph_test
 graph_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
@@ -90,6 +94,10 @@ aonix_test: aonix_testable
 
 AONIX_TESTABLE += bag_test_aonix
 bag_test_aonix: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+AONIX_TESTABLE += collection_test_aonix
+collection_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 AONIX_TESTABLE += map_test_aonix
@@ -184,6 +192,8 @@ bc-containers-bags-bounded.ad[bs] \
 bc-containers-bags-dynamic.ad[bs] \
 bc-containers-bags-unbounded.ad[bs] \
 bc-containers-bags.ad[bs] \
+bc-containers-collections-unbounded.ad[bs] \
+bc-containers-collections.ad[bs] \
 bc-containers-lists-double.ad[bs] \
 bc-containers-lists-single.ad[bs] \
 bc-containers-lists.ad[bs] \
@@ -235,6 +245,8 @@ bc-support.ad[bs] \
 bc.ad[bs] \
 bcwords.ada \
 chunks.ad[bs] \
+collection_test.ad[bs] \
+collection_test_support.ad[bs] \
 global_heap.ad[bs] \
 graph_test.ad[bs] \
 graph_test_support.ad[bs] \
