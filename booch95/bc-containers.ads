@@ -26,10 +26,12 @@ generic
   with function "=" (L, R : Item) return Boolean is <>;
 package BC.Containers is
 
+  pragma Elaborate_Body;
+
   -- This package specifies the common protocol of all Container classes.
   -- This common protocol consists of Iterators.
 
-  type Container is abstract new Ada.Finalization.Controlled with private;
+  type Container is abstract tagged private;
 
   -- Active iteration
 
