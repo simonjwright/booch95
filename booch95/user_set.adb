@@ -17,6 +17,10 @@
 
 -- $Id$
 
+-- This program demonstrates the use of user-defined equality for Sets.
+-- User_Set_Support defines sets of characters where equality is
+-- case-independent.
+
 with Ada.Text_Io;
 with User_Set_Support;
 
