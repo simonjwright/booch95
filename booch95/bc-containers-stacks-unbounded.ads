@@ -31,13 +31,29 @@ package BC.Containers.Stacks.Unbounded is
   -- available memory.  Assignment is "deep".
 
   function "=" (Left, Right : in Unb_Stack) return boolean;
+  -- Return True if and only if both stacks have the same depth and the
+  -- same items in the same order; return False otherwise.
+
   procedure Clear (Obj : in out Unb_Stack);
+  -- Empty the Stack of all items.
+
   procedure Push (Obj : in out Unb_Stack; Elem : Item);
+  -- Add a copy of the item to the top of the Stack.
+
   procedure Pop (Obj : in out Unb_Stack);
+  -- Remove the item from the top of the Stack.
+
   function Depth (Obj : in Unb_Stack) return Natural;
+  -- Returns the number of items in the Stack
+
   function Is_Empty (Obj : in Unb_Stack) return Boolean;
+  -- Returns True if and only if no items are in the stack
+
   function Top (Obj : in Unb_Stack) return Item;
+  -- Return a copy of the item at the top of the Stack.
+
   function Top (Obj : in Unb_Stack) return Item_Ptr;
+  -- Return a pointer to the item at the top of the Stack.
 
 private
 
