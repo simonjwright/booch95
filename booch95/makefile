@@ -1,4 +1,5 @@
-# Copyright (C) 1998-1999 Simon Wright. All Rights Reserved.
+# Copyright (C) 1998-2000 Simon Wright. All Rights Reserved.
+#
 #      This program is free software; you can redistribute it
 #      and/or modify it under the terms of the Ada Community
 #      License which comes with this Library.
@@ -36,6 +37,9 @@ MEMORY_CHECK = \
 # in. ccmalloc has to be able to find main(), so we link with the flag
 # that exports the program's symbol table to dynamic libraries that
 # need access.
+#
+# See http://www.pogner.demon.co.uk/leaks/ (NB, this is *not* applicable to
+# glibc2 systems, ie most :-)
 DYNAMIC_MEMORY_CHECK = -largs -rdynamic
 
 GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu -gnatwl
@@ -46,59 +50,75 @@ test: testable
 	  ./$$t 2>$$t.log; \
 	done
 
+TEST_SRC = global_heap.ad[bs]
+
 TESTABLE += avl_test
+TEST_SRC += avl_test.ad[bs] avl_test_support.ad[bs]
 avl_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += bag_test
+TEST_SRC += bag_test.ad[bs] bag_test_support.ad[bs]
 bag_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += collection_test
+TEST_SRC += collection_test.ad[bs] collection_test_support.ad[bs]
 collection_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += graph_test
+TEST_SRC += graph_test.ad[bs] graph_test_support.ad[bs]
 graph_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += list_test
+TEST_SRC += list_test.ad[bs] list_test_support.ad[bs]
 list_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += map_test
+TEST_SRC += map_test.ad[bs] map_test_support.ad[bs] chunks.ad[bs]
 map_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
 
 TESTABLE += ordered_collection_test
+TEST_SRC += ordered_collection_test.ad[bs] ordered_collection_test_support.ad[bs]
 ordered_collection_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += ordered_queue_test
+TEST_SRC += ordered_queue_test.ad[bs] ordered_queue_test_support.ad[bs]
 ordered_queue_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += queue_test
+TEST_SRC += queue_test.ad[bs] queue_test_support.ad[bs]
 queue_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += ring_test
+TEST_SRC += ring_test.ad[bs] ring_test_support.ad[bs]
 ring_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK) 
 
-TESTABLE += smart_test
-smart_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
-
 TESTABLE += set_test
+TEST_SRC += set_test.ad[bs] set_test_support.ad[bs]
 set_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+TESTABLE += smart_test
+TEST_SRC += smart_test.ad[bs] smart_test_support.ad[bs]
+smart_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
 TESTABLE += stack_test
+TEST_SRC += stack_test.ad[bs] stack_test_support.ad[bs]
 stack_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += tree_test
+TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs]
 tree_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
@@ -114,34 +134,27 @@ aonix_test: aonix_testable
 	done
 
 AONIX_TESTABLE += bag_test_aonix
+TEST_SRC += bag_test_aonix.ad[bs]
 bag_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
-#AONIX_TESTABLE += collection_test_aonix
-#collection_test_aonix: force
-#	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
-
 AONIX_TESTABLE += map_test_aonix
+TEST_SRC += map_test_aonix.ad[bs]
 map_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
 
-#AONIX_TESTABLE += ordered_collection_test_aonix
-#ordered_collection_test_aonix: force
-#       gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
-
-#AONIX_TESTABLE += ordered_queue_test_aonix
-#ordered_queue_test_aonix: force
-#       gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
-
 AONIX_TESTABLE += queue_test_aonix
+TEST_SRC += queue_test_aonix.ad[bs]
 queue_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 AONIX_TESTABLE += set_test_aonix
+TEST_SRC += set_test_aonix.ad[bs]
 set_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 AONIX_TESTABLE += stack_test_aonix
+TEST_SRC += stack_test_aonix.ad[bs]
 stack_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
@@ -150,40 +163,55 @@ aonix_testable: $(AONIX_TESTABLE)
 ########
 # Demos
 
-DEMOS += ada_units
-DEMOS += lists_traversal
-DEMOS += ordering_test
-DEMOS += test_synchronization
-DEMOS += time_lists
-DEMOS += time_queues
-DEMOS += unmanaged_storage
-DEMOS += user_set
-DEMOS += word_count
+DEMO_SRC = global_heap.ad[bs]
 
+DEMOS += ada_units
+DEMO_SRC += ada_units.ad[bs] ada_unit_support.ad[bs]
 ada_units: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
+DEMOS += lists_traversal
+DEMO_SRC += lists_for_traversal.ad[bs] lists_traversal.ad[bs]
 lists_traversal: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
+DEMOS += ordering_test
+DEMO_SRC += ordering_support.ad[bs] ordering_test.ad[bs]
 ordering_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
+DEMOS += storage
+DEMO_SRC += storage.ad[bs]
+storage: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+DEMOS += test_synchronization
+DEMO_SRC += test_synchronization.ad[bs]
 test_synchronization: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
 
+DEMOS += time_lists
+DEMO_SRC += time_lists.ad[bs] lists_for_timing.ad[bs]
 time_lists: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
+DEMOS += time_queues
+DEMO_SRC += time_queues.ad[bs] queues_for_timing.ad[bs]
 time_queues: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
+DEMOS += unmanaged_storage
+DEMO_SRC += unmanaged_storage.ad[bs]
 unmanaged_storage: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
+DEMOS += user_set
+DEMO_SRC += user_set.ad[bs] user_set_support.ad[bs]
 user_set: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
+DEMOS += word_count
+DEMO_SRC += bcwords.ada
 word_count: bcwords.ada
 	gnatchop -w bcwords.ada
 	gnatmake $(GNATMAKE_FLAGS) $@
@@ -216,13 +244,6 @@ dist: $(DISTRIBUTION_FILES)
 	cp -p ACL html/*.html html/*.gif distribution/
 
 ADA_SOURCE = \
-ada_units.ad[bs] \
-ada_unit_support.ad[bs] \
-avl_test.ad[bs] \
-avl_test_support.ad[bs] \
-bag_test.ad[bs] \
-bag_test_aonix.ad[bs] \
-bag_test_support.ad[bs] \
 bc-containers-bags-bounded.ad[bs] \
 bc-containers-bags-dynamic.ad[bs] \
 bc-containers-bags-unbounded.ad[bs] \
@@ -284,51 +305,7 @@ bc-support-synchronization.ad[bs] \
 bc-support-unbounded.ad[bs] \
 bc-support-unmanaged_storage.ad[bs] \
 bc-support.ad[bs] \
-bc.ad[bs] \
-bcwords.ada \
-chunks.ad[bs] \
-collection_test.ad[bs] \
-collection_test_support.ad[bs] \
-global_heap.ad[bs] \
-graph_test.ad[bs] \
-graph_test_support.ad[bs] \
-lists_for_timing.ad[bs] \
-lists_for_traversal.ad[bs] \
-lists_traversal.ad[bs] \
-list_test.ad[bs] \
-list_test_support.ad[bs] \
-map_test.ad[bs] \
-map_test_aonix.ad[bs] \
-map_test_support.ad[bs] \
-ordered_collection_test.ad[bs] \
-ordered_collection_test_support.ad[bs] \
-ordered_queue_test.ad[bs] \
-ordered_queue_test_support.ad[bs] \
-ordering_support.ad[bs] \
-ordering_test.ad[bs] \
-queues_for_timing.ad[bs] \
-queue_test.ad[bs] \
-queue_test_aonix.ad[bs] \
-queue_test_support.ad[bs] \
-ring_test.ad[bs] \
-ring_test_support.ad[bs] \
-smart_test.ad[bs] \
-smart_test_support.ad[bs] \
-set_test.ad[bs] \
-set_test_aonix.ad[bs] \
-set_test_support.ad[bs] \
-stack_test.ad[bs] \
-stack_test_aonix.ad[bs] \
-stack_test_support.ad[bs] \
-storage.ad[bs] \
-test_synchronization.ad[bs] \
-time_lists.ad[bs] \
-time_queues.ad[bs] \
-tree_test.ad[bs] \
-tree_test_support.ad[bs] \
-unmanaged_storage.ad[bs] \
-user_set.ad[bs] \
-user_set_support.ad[bs]
+bc.ad[bs]
 
 SOURCE = makefile ACL README $(ADA_SOURCE)
 
@@ -336,6 +313,12 @@ bc-$(DATE): force
 	-rm -rf $@
 	mkdir $@
 	tar cf - $(SOURCE) | (cd $@; tar xvf -)
+	mkdir $@/test
+	cp makefile-test $@/test/makefile
+	tar cf - $(TEST_SRC) | (cd $@/test; tar xvf -)
+	mkdir $@/demo
+	cp makefile-demo $@/demo/makefile
+	tar cf - $(DEMO_SRC) | (cd $@/demo; tar xvf -)
 
 bc-$(DATE).tgz: bc-$(DATE)
 	tar zcvf $@ $</
@@ -343,8 +326,8 @@ bc-$(DATE).tgz: bc-$(DATE)
 bc-$(DATE).zip: bc-$(DATE)
 	zip -lr $@ $</*
 
-bc-$(DATE).src: $(ADA_SOURCE)
-	cat $(ADA_SOURCE) > $@
+bc-$(DATE).src: $(ADA_SOURCE) $(TEST_SRC) $(DEMO_SRC)
+	cat $(ADA_SOURCE) $(TEST_SRC) $(DEMO_SRC) > $@
 
 bc-html-$(DATE).zip: force
 	(cd html; zip ../$@ *.gif *.html)
