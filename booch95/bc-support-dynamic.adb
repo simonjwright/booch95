@@ -193,6 +193,7 @@ package body BC.Support.Dynamic is
       Temp := new Dyn_Arr (1 .. Obj.Ref'Last);
       Temp (1 .. Obj.Ref'Last) := Obj.Ref.all;
       Last := Obj.Ref'Last;
+      Delete_Arr (Obj.Ref);
     else
       Last := 0;
     end if;
@@ -214,7 +215,10 @@ package body BC.Support.Dynamic is
 
   procedure Free (Obj : in out Dyn_Node_Ref) is
   begin
-    Delete_Node(Obj);
+    if Obj.Ref /= null then
+      Delete_Arr (Obj.Ref);
+    end if;
+    Delete_Node (Obj);
   end Free;
 
 end BC.Support.Dynamic;
