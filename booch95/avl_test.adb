@@ -45,10 +45,10 @@ begin
     declare
       Dummy : Boolean;
     begin
-      Insert (Obj => T,
+      Insert (T => T,
               Element => Random (G),
               Not_Found => Dummy);
-      Delete (Obj => T,
+      Delete (T => T,
               Element => Random (G),
               Found => Dummy);
       Validate (T);
