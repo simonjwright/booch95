@@ -38,7 +38,7 @@ package BC.Containers.Sets.Unbounded is
    --  well-defined universe. A set may not contain duplicate items.
 
    --  The hash function (the generic parameter Hash) determines the
-   --  allocation of pairs to hash buckets. The value returned must
+   --  allocation of items to hash buckets. The value returned must
    --  not change during the lifetime of a given Item. The range of
    --  hash values need not be constrained to the number of buckets in
    --  the set.
