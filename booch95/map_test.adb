@@ -265,9 +265,9 @@ begin
     Assertion (MU."=" (The_U.Map_U_Pu1, Map_U_Pu3),
                "** M09: Maps are not equal");
   end;
-  Assertion (MB.Available (The_B.Map_B_Pu1) = 297,
+  Assertion (MB.Available (The_B.Map_B_Pu1) = 97,
              "** M10: Available space is not correct");
-  Assertion (MB.Available (The_B.Map_B_Pu2) = 300,
+  Assertion (MB.Available (The_B.Map_B_Pu2) = 100,
              "** M11: Available space is not correct");
   Put_Line ("Completed map tests");
 
