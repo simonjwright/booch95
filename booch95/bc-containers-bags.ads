@@ -128,41 +128,21 @@ private
 
    type Abstract_Bag is abstract new Container with null record;
 
+   --  These subprograms are used in the implementation of the Bag
+   --  operations above. They would be abstract but that the ALRM
+   --  forbids that for private operations.
+   --
+   --  These implementatiosm raise Should_Have_Been_Overridden.
+
    procedure Attach (B : in out Abstract_Bag; I : Item; C : Positive);
 
    procedure Detach (B : in out Abstract_Bag; I : Item);
 
    procedure Set_Value (B : in out Abstract_Bag; I : Item; C : Positive);
 
-   function Multiplicity (B : Abstract_Bag'Class) return Natural;
-
-   function Number_Of_Buckets (B : Abstract_Bag) return Natural;
-
-   function Length (B : Abstract_Bag; Bucket : Positive) return Natural;
-
-   function Item_At
-     (B : Abstract_Bag; Bucket, Index : Positive) return Item_Ptr;
-
-   function Value_At
-     (B : Abstract_Bag; Bucket, Index : Positive) return Positive;
-
-   type Bag_Iterator is new Iterator with record
+   type Bag_Iterator is abstract new Iterator with record
       Bucket_Index : Natural := 0;
       Index : Natural := 0;
    end record;
-
-   --  Overriding primitive supbrograms of the concrete actual Iterator.
-
-   procedure Reset (It : in out Bag_Iterator);
-
-   procedure Next (It : in out Bag_Iterator);
-
-   function Is_Done (It : Bag_Iterator) return Boolean;
-
-   function Current_Item (It : Bag_Iterator) return Item;
-
-   function Current_Item_Ptr (It : Bag_Iterator) return Item_Ptr;
-
-   procedure Delete_Item_At (It : in out Bag_Iterator);
 
 end BC.Containers.Bags;

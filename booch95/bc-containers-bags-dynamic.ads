@@ -132,12 +132,20 @@ private
 
    procedure Set_Value (B : in out Bag; I : Item; C : Positive);
 
-   function Number_Of_Buckets (B : Bag) return Natural;
+   --  Iterators
 
-   function Length (B : Bag; Bucket : Positive) return Natural;
+   type Dynamic_Bag_Iterator is new Bag_Iterator with null record;
 
-   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr;
+   procedure Reset (It : in out Dynamic_Bag_Iterator);
 
-   function Value_At (B : Bag; Bucket, Index : Positive) return Positive;
+   procedure Next (It : in out Dynamic_Bag_Iterator);
+
+   function Is_Done (It : Dynamic_Bag_Iterator) return Boolean;
+
+   function Current_Item (It : Dynamic_Bag_Iterator) return Item;
+
+   function Current_Item_Ptr (It : Dynamic_Bag_Iterator) return Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Dynamic_Bag_Iterator);
 
 end BC.Containers.Bags.Dynamic;

@@ -109,7 +109,7 @@ package body BC.Containers.Bags.Dynamic is
    is new System.Address_To_Access_Conversions (Bag);
 
    function New_Iterator (For_The_Bag : Bag) return Iterator'Class is
-      Result : Bag_Iterator;
+      Result : Dynamic_Bag_Iterator;
    begin
       Result.For_The_Container :=
         Address_Conversions.To_Pointer (For_The_Bag'Address).all'Access;
@@ -134,27 +134,7 @@ package body BC.Containers.Bags.Dynamic is
       Tables.Rebind (B.Rep, I, C);
    end Set_Value;
 
-   function Number_Of_Buckets (B : Bag) return Natural is
-      pragma Warnings (Off, B);
-   begin
-      return Buckets;
-   end Number_Of_Buckets;
-
-   function Length (B : Bag; Bucket : Positive) return Natural is
-   begin
-      return IC.Length (B.Rep.Items (Bucket));
-   end Length;
-
-   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
-   begin
-      return IC.Item_At (B.Rep.Items (Bucket), Index);
-   end Item_At;
-
-   function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
-   begin
-      return VC.Item_At (B.Rep.Values (Bucket), Index);
-   end Value_At;
-
+   --  Null containers
    Empty_Container : Bag;
    pragma Warnings (Off, Empty_Container);
 
@@ -162,5 +142,53 @@ package body BC.Containers.Bags.Dynamic is
    begin
       return Empty_Container;
    end Null_Container;
+
+   --  Iterators
+
+   --  Bodge to make it easier to convert to the real
+   --  Unconstrained_Bag later.
+   subtype Unconstrained_Bag is Bag;
+
+   procedure Reset (It : in out Dynamic_Bag_Iterator) is
+      S : Unconstrained_Bag'Class
+        renames Unconstrained_Bag'Class (It.For_The_Container.all);
+   begin
+      Tables.Reset (S.Rep, It.Bucket_Index, It.Index);
+   end Reset;
+
+   procedure Next (It : in out Dynamic_Bag_Iterator) is
+      S : Unconstrained_Bag'Class
+        renames Unconstrained_Bag'Class (It.For_The_Container.all);
+   begin
+      Tables.Next (S.Rep, It.Bucket_Index, It.Index);
+   end Next;
+
+   function Is_Done (It : Dynamic_Bag_Iterator) return Boolean is
+      S : Unconstrained_Bag'Class
+        renames Unconstrained_Bag'Class (It.For_The_Container.all);
+   begin
+      return Tables.Is_Done (S.Rep, It.Bucket_Index, It.Index);
+   end Is_Done;
+
+   function Current_Item (It : Dynamic_Bag_Iterator) return Item is
+      S : Unconstrained_Bag'Class
+        renames Unconstrained_Bag'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Item_Ptr (S.Rep, It.Bucket_Index, It.Index).all;
+   end Current_Item;
+
+   function Current_Item_Ptr (It : Dynamic_Bag_Iterator) return Item_Ptr is
+      S : Unconstrained_Bag'Class
+        renames Unconstrained_Bag'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Item_Ptr (S.Rep, It.Bucket_Index, It.Index);
+   end Current_Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Dynamic_Bag_Iterator) is
+      S : Unconstrained_Bag'Class
+        renames Unconstrained_Bag'Class (It.For_The_Container.all);
+   begin
+      Tables.Delete_Item_At (S.Rep, It.Bucket_Index, It.Index);
+   end Delete_Item_At;
 
 end BC.Containers.Bags.Dynamic;
