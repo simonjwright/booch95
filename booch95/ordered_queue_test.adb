@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -18,6 +18,7 @@
 -- $Id$
 
 with Ada.Text_IO;
+with BC;
 with Ordered_Queue_Test_Support;
 
 procedure Ordered_Queue_Test is
@@ -109,11 +110,11 @@ procedure Ordered_Queue_Test is
     Append(Q2, '3');
     Append(Q2, '4');
     Assertion (Location (Q2, '1') = 1,
-	       "** P32: Queue location is not correct");
+               "** P32: Queue location is not correct");
     Assertion (Location (Q2, '2') = 2,
-	       "** P33: Queue location is not correct");
+               "** P33: Queue location is not correct");
     Assertion (Location (Q2, '4') = 4,
-	       "** P34: Queue location is not correct");
+               "** P34: Queue location is not correct");
     Remove(Q2, 1);
     Remove(Q2, 2);
     Remove(Q2, 2);
@@ -129,6 +130,46 @@ procedure Ordered_Queue_Test is
   begin
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
+
+  procedure Test_Iterator_Deletion (Q : in out Ordered_Queue'Class) is
+    Iter : Iterator := New_Iterator (Q);
+    Delete : Boolean;
+  begin
+    Clear (Q);
+    Append (Q, '6');
+    Append (Q, '5');
+    Append (Q, '4');
+    Append (Q, '3');
+    Append (Q, '2');
+    Append (Q, '1');
+    Delete := False;
+    Reset (Iter);
+    while not Is_Done (Iter) loop
+      if Delete then
+        Delete_Item_At (Iter);
+        Delete := False;
+      else
+        Next (Iter);
+        Delete := True;
+      end if;
+    end loop;
+    begin
+      Delete_Item_At (Iter);
+      Assertion (False, "** I01: Deletion succeeded");
+    exception
+      when BC.Not_Found => null;
+      when others =>
+        Assertion (False, "** I02: Unexpected exception");
+    end;
+    Assertion (Length (Q) = 3, "** I03: Queue length is not correct");
+    Assertion (Front (Q) = '1', "** I04: Queue item is not correct");
+    Pop (Q);
+    Assertion (Front (Q) = '3', "** I05: Queue item is not correct");
+    Pop (Q);
+    Assertion (Front (Q) = '5', "** I06: Queue item is not correct");
+    Pop (Q);
+    Assertion (Length (Q) = 0, "** I07: Queue length is not zero");
+  end Test_Iterator_Deletion;
 
 --   Queue_B_P1, Queue_B_P2 : QB.Bounded_Queue;
 --   Queue_D_P1, Queue_D_P2 : QD.Dynamic_Queue;
@@ -170,9 +211,17 @@ begin
   Assertion ((Length (Queue_U_P2) = 0), "** M10: Queue length is not correct");
 
 --   Assertion (Available (Queue_B_P1) = 99,
--- 	     "** M13: Available space not correct");
+--           "** M13: Available space not correct");
 --   Assertion (Available (Queue_B_P2) = 100,
--- 	     "** M14: Available space not correct");
+--           "** M14: Available space not correct");
+
+  Put_Line ("...Ordered Queue Iterator Deletion");
+--   Put_Line ("   Bounded:");
+--   Test_Iterator_Deletion (Queue_B_P1);
+--   Put_Line ("   Dynamic:");
+--   Test_Iterator_Deletion (Queue_D_P1);
+  Put_Line ("   Unbounded:");
+  Test_Iterator_Deletion (Queue_U_P1);
 
   Put_Line ("Completed queue tests");
 
