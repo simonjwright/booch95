@@ -54,12 +54,16 @@ test: testable
 	  echo running $$t; \
 	  ./$$t 2>&1; \
 	done
+clean::
+	rm -f $(TESTABLE)
 
 concurrent_test: concurrent_testable
 	for t in $(CONCURRENT_TESTABLE); do \
 	  echo running $$t; \
 	  ./$$t 2>&1; \
 	done
+clean::
+	rm -f $(CONCURRENT_TESTABLE)
 
 TEST_SRC = global_heap.ad[bs]
 
@@ -262,6 +266,9 @@ word_count: bcwords.ada
 	gnatmake $(GNATMAKE_FLAGS) $@
 
 demos: $(DEMOS)
+
+clean::
+	rm -f $(DEMOS)
 
 ############################
 # Distribution construction
