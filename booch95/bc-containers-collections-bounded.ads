@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -96,11 +96,7 @@ private
                              Maximum_Size => Maximum_Size);
 
   type Collection is new Abstract_Collection with record
-    Rep : Collection_Nodes.Bnd_Node_Ref
-       := new Collection_Nodes.Bnd_Node;
+    Rep : Collection_Nodes.Bnd_Node;
   end record;
-
-  procedure Adjust (C : in out Collection);
-  procedure Finalize (C : in out Collection);
 
 end BC.Containers.Collections.Bounded;
