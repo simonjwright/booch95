@@ -19,6 +19,7 @@
 
 generic
    type Key is private;
+   with function "=" (L, R : Key) return Boolean is <>;
 package BC.Containers.Maps is
 
    pragma Elaborate_Body;
