@@ -25,16 +25,10 @@
 --  $Author$
 
 with Ada.Exceptions;
-with BC.Support.Exceptions;
 with System;
 with System.Address_To_Access_Conversions;
 
 package body BC.Support.Bounded_Hash_Tables is
-
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Support.Bounded_Hash_Tables");
 
 
    package body Tables is
@@ -109,14 +103,12 @@ package body BC.Support.Bounded_Hash_Tables is
            := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          B : Index renames T.Buckets (Bucket);
       begin
-         Assert (Location (T, B, I) = 0,
-                 BC.Duplicate'Identity,
-                 "Bind",
-                 BSE.Duplicate);
-         Assert (T.Size < T.Maximum_Size,
-                 BC.Overflow'Identity,
-                 "Bind",
-                 BSE.Full);
+         if Location (T, B, I) /= 0 then
+            raise BC.Duplicate;
+         end if;
+         if T.Size >= T.Maximum_Size then
+            raise BC.Overflow;
+         end if;
          declare
             C : Cell renames T.Contents (T.Free);
             Next : constant Index := C.Next;
@@ -136,10 +128,9 @@ package body BC.Support.Bounded_Hash_Tables is
            := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          C : constant Index := Location (T, T.Buckets (Bucket), I);
       begin
-         Assert (C /= 0,
-                 BC.Not_Found'Identity,
-                 "Rebind",
-                 BSE.Missing);
+         if C = 0 then
+            raise BC.Not_Found;
+         end if;
          T.Contents (C).Value := V;
       end Rebind;
 
@@ -156,10 +147,9 @@ package body BC.Support.Bounded_Hash_Tables is
             Previous := Current;
             Current := T.Contents (Current).Next;
          end loop;
-         Assert (Current /= 0,
-                 BC.Not_Found'Identity,
-                 "Unbind",
-                 BSE.Missing);
+         if Current = 0 then
+            raise BC.Not_Found;
+         end if;
          if Previous = 0 then
             T.Buckets (Bucket) := T.Contents (Current).Next;
          else
@@ -203,10 +193,9 @@ package body BC.Support.Bounded_Hash_Tables is
            := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          C : constant Index := Location (T, T.Buckets (Bucket), I);
       begin
-         Assert (C /= 0,
-                 BC.Not_Found'Identity,
-                 "Value_Of",
-                 BSE.Missing);
+         if C = 0 then
+            raise BC.Not_Found;
+         end if;
          return T.Contents (C).Value;
       end Value_Of;
 
@@ -278,10 +267,9 @@ package body BC.Support.Bounded_Hash_Tables is
                                  Bucket : Positive;
                                  Index : Positive) return Items.Item_Ptr is
       begin
-         Assert (Bucket <= T.Number_Of_Buckets,
-                 BC.Not_Found'Identity,
-                 "Current_Item_Ptr",
-                 BSE.Missing);
+         if Bucket > T.Number_Of_Buckets then
+            raise BC.Not_Found;
+         end if;
          return Items.Item_Ptr
            (Allow_Item_Access.To_Pointer
             (T.Contents (Index).Item'Address));
@@ -292,10 +280,9 @@ package body BC.Support.Bounded_Hash_Tables is
                                   Bucket : Positive;
                                   Index : Positive) return Values.Value_Ptr is
       begin
-         Assert (Bucket <= T.Number_Of_Buckets,
-                 BC.Not_Found'Identity,
-                 "Current_Value_Ptr",
-                 BSE.Missing);
+         if Bucket > T.Number_Of_Buckets then
+            raise BC.Not_Found;
+         end if;
          return Values.Value_Ptr
            (Allow_Value_Access.To_Pointer
             (T.Contents (Index).Value'Address));
@@ -308,10 +295,9 @@ package body BC.Support.Bounded_Hash_Tables is
          Next : Tables.Index;
          Previous : Tables.Index;
       begin
-         Assert (Bucket <= T.Number_Of_Buckets,
-                 BC.Not_Found'Identity,
-                 "Delete_Item_At",
-                 BSE.Missing);
+         if Bucket > T.Number_Of_Buckets then
+            raise BC.Not_Found;
+         end if;
          Next := T.Contents (Index).Next;
          Previous := T.Buckets (Bucket);
          if Previous = Index then
@@ -349,10 +335,9 @@ package body BC.Support.Bounded_Hash_Tables is
                       Bucket : in out Positive;
                       Index : in out  Positive) is
       begin
-         Assert (Bucket <= T.Number_Of_Buckets,
-                 BC.Not_Found'Identity,
-                 "Next",
-                 BSE.Missing);
+         if Bucket > T.Number_Of_Buckets then
+            raise BC.Not_Found;
+         end if;
          if T.Contents (Index).Next > 0 then
             Index := T.Contents (Index).Next;
          else
