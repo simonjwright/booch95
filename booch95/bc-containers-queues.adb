@@ -21,6 +21,19 @@ with System;
 
 package body BC.Containers.Queues is
 
+  procedure Pop_Value (Q : in out Queue; Elem : out Item) is
+    -- This primitive is implemented in terms of other primitives that
+    -- are (at this level) abstract; so the calls must be dispatching;
+    -- so we need a classwide value.
+    procedure Actual_Pop_Value (Q : in out Queue'Class; Elem : out Item) is
+    begin
+      Elem := Front (Q);
+      Pop (Q);
+    end Actual_Pop_Value;
+  begin
+    Actual_Pop_Value (Q, Elem);
+  end Pop_Value;
+
   procedure Process_Front (Q : in out Queue'Class) is
   begin
     Process (Item_At (Q, 1).all);
