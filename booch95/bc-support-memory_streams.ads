@@ -65,6 +65,13 @@ package BC.Support.Memory_Streams is
                             Stream : in out Stream_Type);
    --  Reads the contents of Stream directly from the stream From, so
    --  that it can be read by a 'Input operation on Stream.
+   --  The previous contents of Stream are lost.
+
+   procedure Set_Contents (From : Ada.Streams.Stream_Element_Array;
+                           Stream : in out Stream_Type);
+   --  Sets the contents of Stream to be the contents of array From,
+   --  so that values can be read by a 'Input operation on Stream.
+   --  The previous contents of Stream are lost.
 
    --  A possible use of these features might be where an external
    --  datagram 'stream' requires the length of the data to be written

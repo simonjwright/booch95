@@ -103,6 +103,17 @@ package body BC.Support.Memory_Streams is
    end Read_Contents;
 
 
+   procedure Set_Contents (From : Ada.Streams.Stream_Element_Array;
+                           Stream : in out Stream_Type) is
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      pragma Assert (From'Length <= Stream.Capacity);
+      Reset (Stream);
+      Stream.Buffer (1 .. From'Length) := From;
+      Stream.Next_Write := From'Length + 1;
+   end Set_Contents;
+
+
    procedure Reset (Stream : out Stream_Type) is
    begin
       Stream.Next_Write := 1;
