@@ -35,16 +35,37 @@ package BC.Containers.Queues.Dynamic is
   function Create (Size : Positive) return Dyn_Queue;
   -- Creates a new Dynamic Queue that is preallocated for 'Size' elements
 
-  function "=" (Left, Right : Dyn_Queue) return Boolean;
   procedure Clear (Obj : in out Dyn_Queue);
+  -- Empty the queue of all items.
+
   procedure Append (Obj : in out Dyn_Queue; Elem : Item);
+  -- Add the item to the back of the queue; the item itself is copied.
+
   procedure Pop (Obj : in out Dyn_Queue);
+  -- Remove the item from the front of the queue.
+
   procedure Remove (Obj : in out Dyn_Queue; From : Natural);
+  -- Remove the item at the given index.
+
   function Length (Obj : in Dyn_Queue) return Natural;
+  -- Return the number of items in the queue.
+
   function Is_Empty (Obj : in Dyn_Queue) return Boolean;
+  -- Return True if and only if there are no items in the queue.
+
   function Front (Obj : in Dyn_Queue) return Item;
+  -- Return a copy of the item at the front of the queue.
+
   function Front (Obj : in Dyn_Queue) return Item_Ptr;
+  -- Return a pointer to the item at the front of the queue.
+
   function Location (Obj : in Dyn_Queue; Elem : Item) return Natural;
+  -- Return the first index at which the item is found; return 0 if the
+  -- item does not exist in the queue.
+
+  function "=" (Left, Right : Dyn_Queue) return Boolean;
+  -- Return True if and only if both queues have the same length and the same
+  -- items in the same order; return False otherwise.
 
   procedure Preallocate (Obj : in out Dyn_Queue; Size : Natural);
   -- Allocates 'Size' additional storage elements for the Queue
@@ -56,13 +77,12 @@ package BC.Containers.Queues.Dynamic is
   function Chunk_Size (Obj : Dyn_Queue) return Natural;
   -- Returns the Chunk_Size
 
-  procedure Purge (Obj : in out Dyn_Queue);
-  procedure Add (Obj : in out Dyn_Queue; Elem : in out Item);
-  function Cardinality (Obj : Dyn_Queue) return Integer;
-
 private
 
   function Item_At (Obj : in Dyn_Queue; Index : in Natural) return Item_Ptr;
+  function Cardinality (Obj : Dyn_Queue) return Integer;
+  procedure Purge (Obj : in out Dyn_Queue);
+  procedure Add (Obj : in out Dyn_Queue; Elem : in out Item);
 
   package Dyn_Queue_Nodes
   is new BC.Support.Dynamic (Item, Item_Ptr, Storage_Manager, Storage);
