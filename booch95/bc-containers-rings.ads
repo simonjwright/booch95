@@ -116,6 +116,6 @@ private
 
   function Current_Item_Ptr (It : Ring_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : Ring_Iterator);
+  procedure Delete_Item_At (It : in out Ring_Iterator);
 
 end BC.Containers.Rings;

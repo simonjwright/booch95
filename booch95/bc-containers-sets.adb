@@ -229,7 +229,7 @@ package body BC.Containers.Sets is
     return Item_At (S, It.Bucket_Index, It.Index);
   end Current_Item_Ptr;
 
-  procedure Delete_Item_At (It : Set_Iterator) is
+  procedure Delete_Item_At (It : in out Set_Iterator) is
   begin
     if Is_Done (It) then
       raise BC.Not_Found;

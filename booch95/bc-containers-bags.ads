@@ -155,6 +155,6 @@ private
 
   function Current_Item_Ptr (It : Bag_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : Bag_Iterator);
+  procedure Delete_Item_At (It : in out Bag_Iterator);
 
 end BC.Containers.Bags;

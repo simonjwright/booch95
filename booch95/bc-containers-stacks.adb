@@ -117,7 +117,7 @@ package body BC.Containers.Stacks is
     return Item_At (It.For_The_Container.all, It.Index);
   end Current_Item_Ptr;
 
-  procedure Delete_Item_At (It : Stack_Iterator) is
+  procedure Delete_Item_At (It : in out Stack_Iterator) is
     S : Abstract_Stack'Class
        renames Abstract_Stack'Class (It.For_The_Container.all);
   begin

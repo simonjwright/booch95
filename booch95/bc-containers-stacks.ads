@@ -86,6 +86,6 @@ private
 
   function Current_Item_Ptr (It : Stack_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : Stack_Iterator);
+  procedure Delete_Item_At (It : in out Stack_Iterator);
 
 end BC.Containers.Stacks;

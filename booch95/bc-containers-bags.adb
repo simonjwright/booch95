@@ -360,7 +360,7 @@ package body BC.Containers.Bags is
     return Item_At (B, It.Bucket_Index, It.Index);
   end Current_Item_Ptr;
 
-  procedure Delete_Item_At (It : Bag_Iterator) is
+  procedure Delete_Item_At (It : in out Bag_Iterator) is
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
