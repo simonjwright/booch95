@@ -45,6 +45,7 @@ bc-support-exceptions.ad[bs] \
 bc-support-hash_tables.ad[bs] \
 bc-support-managed_storage.ad[bs] \
 bc-support-nodes.ad[bs] \
+bc-support-standard_storage.ads \
 bc-support-synchronization.ad[bs] \
 bc-support-unbounded.ad[bs] \
 bc-support-unmanaged_storage.ad[bs] \
@@ -66,7 +67,7 @@ concurrent_test: concurrent_testable
 clean::
 	rm -f $(CONCURRENT_TESTABLE)
 
-TEST_SRC = global_heap.ad[bs]
+TEST_SRC = assertions.ad[bs] global_heap.ad[bs]
 
 TESTABLE += avl_test
 TEST_SRC += avl_test.ad[bs] avl_test_support.ad[bs]
@@ -256,6 +257,10 @@ time_queues: force
 DEMOS += unmanaged_storage
 DEMO_SRC += unmanaged_storage.ad[bs]
 unmanaged_storage: force
+
+DEMOS += user_map
+DEMO_SRC += user_map.ad[bs] user_map_support.ad[bs]
+user_map: force
 
 DEMOS += user_set
 DEMO_SRC += user_set.ad[bs] user_set_support.ad[bs]
