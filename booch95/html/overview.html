@@ -70,7 +70,7 @@ The current version has the following components available (the
 <LI>Bounded Queues 
 <LI>Dynamic Queues
 <LI>Unbounded Queues
-<LI><font color="red">Unbounded Ordered Queues</font>
+<LI>Unbounded Ordered Queues
 <LI>Unbounded Rings
 <LI>Unbounded Guarded Rings
 <LI>Unbounded Synchronized Rings
@@ -192,15 +192,22 @@ there are two forms of support for concurrency:
 <dt>synchronized<dd>where each operation provides its own internal locking
 </dl>
 
-In the C++ Components, <em>synchronized</em> objects additionally
-provide a form of queuing control; an attempt to read from an empty
-Container will result in blocking until an entry is added to the
-Container.
+Some <em>synchronized</em> objects additionally provide a form of
+queuing control; an attempt to read from an empty Container will
+result in blocking until an entry is added to the Container.<p>
 
-<p>This feature isn't implemented in the only Containers (Unbounded
-Rings) for which concurrency protection is presently (3.v.99)
-supported.
+</dd>
 
+<dt>Compilers</dt>
+
+<dd>
+
+I've been looking at adding concurrency support to Maps. This has
+turned up some GNAT problems, which I've reported, and has pretty well
+blown the Aonix ObjectAda 7.1 demo compiler out of the water (it has
+trouble with AVL Trees too). I understand from Aonix that they're
+considering a demo version of the latest compiler release; until then,
+support for newer BC features under OA will be low-priority.<p>
 
 </dd>
 
