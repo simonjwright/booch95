@@ -173,7 +173,8 @@ procedure Map_Test is
   Map_B_Pu1, Map_B_Pu2 : MB.Bounded_Map;
   Map_D_Pu1, Map_D_Pu2 : MD.Dynamic_Map;
   Map_U_Pu1, Map_U_Pu2 : MU.Unbounded_Map;
-  Map_US_Pu1, Map_US_Pu2 : MUS.synchronized_Unbounded_Map;
+  Map_UG_Pu1, Map_UG_Pu2 : MUG.Guarded_Unbounded_Map;
+  Map_US_Pu1, Map_US_Pu2 : MUS.Synchronized_Unbounded_Map;
 
 begin
   Put_Line ("Starting map tests");
@@ -184,6 +185,8 @@ begin
   Test (Map_D_Pu1, Map_D_Pu2);
   Put_Line ("...Unbounded Map");
   Test (Map_U_Pu1, Map_U_Pu2);
+  Put_Line ("...Guarded Unbounded Map");
+  Test (Map_UG_Pu1, Map_UG_Pu2);
   Put_Line ("...Synchronized Unbounded Map");
   Test (Map_US_Pu1, Map_US_Pu2);
 
@@ -194,6 +197,8 @@ begin
   Test_Active_Iterator (Map_D_Pu1);
   Put_Line ("   Unbounded:");
   Test_Active_Iterator (Map_U_Pu1);
+  Put_Line ("   Guarded Unbounded:");
+  Test_Active_Iterator (Map_UG_Pu1);
   Put_Line ("   Synchronized Unbounded:");
   Test_Active_Iterator (Map_US_Pu1);
 
@@ -207,6 +212,9 @@ begin
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Map_U_Pu1);
   Test_Passive_Modifying_Iterator (Map_U_Pu1);
+  Put_Line ("   Guarded Unbounded:");
+  Test_Passive_Iterator (Map_UG_Pu1);
+  Test_Passive_Modifying_Iterator (Map_UG_Pu1);
   Put_Line ("   Synchronized Unbounded:");
   Test_Passive_Iterator (Map_US_Pu1);
   Test_Passive_Modifying_Iterator (Map_US_Pu1);
