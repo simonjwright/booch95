@@ -137,7 +137,7 @@ private
     Count : Natural;
   end record;
   procedure Clear_Vertex_Node (G : in out Graph'Class;
-                               N : Vertex_Node_Ptr);
+                               N : in out Vertex_Node_Ptr);
   procedure Finalize (V : in out Vertex_Node);
 
   -- An Arc Node is a simple node consisting of an item, a pointer to the
