@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -20,8 +20,8 @@
 with BC.Containers;
 with BC.Containers.Queues;
 with BC.Containers.Queues.Ordered;
--- with BC.Containers.Queues.Ordered.Bounded;
--- with BC.Containers.Queues.Ordered.Dynamic;
+with BC.Containers.Queues.Ordered.Bounded;
+with BC.Containers.Queues.Ordered.Dynamic;
 with BC.Containers.Queues.Ordered.Unbounded;
 with Global_Heap;
 
@@ -33,10 +33,10 @@ package Ordered_Queue_Test_Support is
 
   package Queues is new Base_Queues.Ordered;
 
---   package QB is new Queues.Bounded (Maximum_Size => 100);
+  package QB is new Queues.Bounded (Maximum_Size => 100);
 
---   package QD is new Queues.Dynamic (Storage_Manager => Global_Heap.Pool,
---                                     Storage => Global_Heap.Storage);
+  package QD is new Queues.Dynamic (Storage_Manager => Global_Heap.Pool,
+                                    Storage => Global_Heap.Storage);
 
   package QU is new Queues.Unbounded (Storage_Manager => Global_Heap.Pool,
                                       Storage => Global_Heap.Storage);
