@@ -20,6 +20,7 @@ with BC.Containers.Sets;
 with BC.Containers.Sets.Bounded;
 with BC.Containers.Sets.Dynamic;
 with BC.Containers.Sets.Unbounded;
+with BC.Containers.Sets.Unmanaged;
 with BC.Support.Standard_Storage;
 with Global_Heap;
 
@@ -45,5 +46,9 @@ package Set_Test_Support is
      (Hash => Char_Hash,
       Buckets => 3,
       Storage => BC.Support.Standard_Storage.Pool);
+
+   package SUM is new Sets.Unmanaged
+     (Hash => Char_Hash,
+      Buckets => 3);
 
 end Set_Test_Support;
