@@ -20,16 +20,24 @@
 with Ada.Finalization;
 
 generic
+
   type Item is private;
---    type Item_Ptr is access all Item;
   with function "=" (L, R : Item) return Boolean is <>;
+
   with function Hash (V : Item) return Positive is <>;
+
   type Value is private;
   type Value_Ptr is access all Value;
   with function "=" (L, R : Value) return Boolean is <>;
+
   Buckets : Natural;
+
   type Item_Container is private;
   type Item_Container_Ptr is access all Item_Container;
+
+  -- The <> subprograms for Items are provided by one of
+  -- BC.Support.Bounded, Dynamic or Unbounded as appropriate.
+
   with function Create (From : Item_Container) return Item_Container_Ptr is <>;
   with procedure Clear (C : in out Item_Container) is <>;
   with procedure Insert (C : in out Item_Container; I : Item) is <>;
@@ -43,8 +51,13 @@ generic
   with function Location
      (C : Item_Container; I : Item; Start : Positive) return Natural is <>;
   with procedure Free (C : in out Item_Container_Ptr) is <>;
+
   type Value_Container is private;
   type Value_Container_Ptr is access all Value_Container;
+
+  -- The <> subprograms for Values are provided by one of
+  -- BC.Support.Bounded, Dynamic or Unbounded as appropriate.
+
   with function Create
      (From : Value_Container) return Value_Container_Ptr is <>;
   with procedure Clear (C : in out Value_Container) is <>;
@@ -61,30 +74,8 @@ generic
   with function Location
      (C : Value_Container; V : Value; Start : Positive) return Natural is <>;
   with procedure Free (C : in out Value_Container_Ptr) is <>;
+
 package BC.Support.Hash_Tables is
-
-  -- The required operations appear to be Length(), Append(), ItemAt(), Clear(), Location(), Insert(), Replace(), Remove(), []
-
---| //  The C++ Booch Components (Version 2.3)
---| //  (C) Copyright 1990-1994 Grady Booch. All Rights Reserved.
---| //
---| //  BCHashTa.h
---| //
---| //  This file contains the declaration of the open hash table class.
---|
---| #ifndef BCHASHTA_H
---| #define BCHASHTA_H 1
---|
---| #include "BCType.h"
---| #include "BCExcept.h"
---| #include "BCNodes.h"
---|
---| // Class denoting an open hash table
---|
---| template<class Item, class Value, BC_Index Buckets,
---|          class ItemContainer, class ValueContainer>
---| class BC_TTable {
-  --| public:
 
   -- The type Table represents an open hash table whose buckets may be
   -- formed by bounded, dynamic, or unbounded containers. Each table
@@ -113,72 +104,32 @@ package BC.Support.Hash_Tables is
 
   type Table is new Ada.Finalization.Controlled with private;
 
---|
---|   BC_TTable()
---|     : fSize(0),
---|       fHash(0) {}
---|   BC_TTable(BC_Index (*hash)(const Item&))
---|     : fSize(0),
---|       fHash(hash) {}
---|   BC_TTable(const BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>&);
---|   ~BC_TTable()
---|     {Clear();}
---X this is the Finalize()
---|
---|   BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>& operator=
---|     (const BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>&);
---|   BC_Boolean operator==
---|     (const BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>&) const;
-
   function "=" (L, R : Table) return Boolean;
-
---|   BC_Boolean operator!=
---|     (const BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>& t) const
---|       {return !operator==(t);}
---|
---|   void SetHashFunction(BC_Index (*hash)(const Item&))
---|     {BC_Assert((!fHash), BC_XDuplicate("BC_TTable::SetHashFunction", BC_kDuplicate));
---|      fHash = hash;}
---|   void Clear();
 
   procedure Clear (T : in out Table);
   -- Empty the hash table of all item/value pairs.
-
---|   BC_Boolean Bind(const Item&, const Value&);
 
   procedure Bind (T : in out Table; I : Item; V : Value);
   -- Generate a hash value for the item to select a bucket. If the item
   -- already exists in that bucket, raise BC.Duplicate; otherwise, insert
   -- the Item/value pair in the selected container.
 
---|   BC_Boolean Rebind(const Item&, const Value&);
-
   procedure Rebind (T : in out Table; I : Item; V : Value);
   -- Generate a hash value for the item to select a bucket. If the item
   -- already exists in that bucket, change the item's corresponding value;
   -- otherwise, raise BC.Not_Found.
-
---|   BC_Boolean Unbind(const Item&);
 
   procedure Unbind (T : in out Table; I : Item);
   -- Generate a hash value for the item to select a bucket. If the item
   -- already exists in that bucket, remove the item/value pair; otherwise,
   -- BC.Not_Found.
 
---|
---|   BC_Index Extent() const
---|     {return fSize;}
-
   function Extent (T : Table) return Natural;
   -- Return the number of item/value pairs in the hash table.
-
---|   BC_Boolean IsBound(const Item&) const;
 
   function Is_Bound (T : Table; I : Item) return Boolean;
   -- Return True if the item has a binding in the hash table; otherwise,
   -- return False.
-
---|   const Value* ValueOf(const Item&) const;
 
   function Value_Of (T : Table; I : Item) return Value;
   -- If the item does not have a binding in the hash table, raise
@@ -189,41 +140,11 @@ package BC.Support.Hash_Tables is
   -- BC.Not_Found; otherwise, return a pointer to the value corresponding
   -- to this item.
 
---|   const ItemContainer *const ItemBucket(BC_Index bucket) const
---|     {BC_Assert((bucket < Buckets),
---|                BC_XRangeError("BC_TTable::ItemBucket", BC_kInvalidIndex));
---|      return &fItemRep[bucket];}
-
   function Item_Bucket
      (T : Table; Bucket : Positive) return Item_Container_Ptr;
 
---|   ItemContainer* ItemBucket(BC_Index bucket)
---|     {BC_Assert((bucket < Buckets),
---|                BC_XRangeError("BC_TTable::ItemBucket", BC_kInvalidIndex));
---|      return &fItemRep[bucket];}
-
---|   const ValueContainer *const ValueBucket(BC_Index bucket) const
---|     {BC_Assert((bucket < Buckets),
---|                BC_XRangeError("BC_TTable::ValueBucket", BC_kInvalidIndex));
---|      return &fValueRep[bucket];}
-
   function Value_Bucket
      (T : Table; Bucket : Positive) return Value_Container_Ptr;
-
---|   ValueContainer* ValueBucket(BC_Index bucket)
---|     {BC_Assert((bucket < Buckets),
---|                BC_XRangeError("BC_TTable::ItemBucket", BC_kInvalidIndex));
---|      return &fValueRep[bucket];}
-
---|
---| protected:
---|
---|   ItemContainer fItemRep[Buckets];
---|   ValueContainer fValueRep[Buckets];
---|   BC_Index fSize;
---|   BC_Index (*fHash)(const Item&);
---|
---| };
 
 private
 
@@ -239,8 +160,5 @@ private
   procedure Initialize (T : in out Table);
   procedure Adjust (T : in out Table);
   procedure Finalize (T : in out Table);
-
---|
---| #endif
 
 end BC.Support.Hash_Tables;
