@@ -20,6 +20,7 @@
 --  This file contains tests for the list classes.
 
 with Ada.Text_IO;
+with BC;
 with List_Test_Support;
 
 procedure List_Test is
@@ -456,6 +457,86 @@ procedure List_Test is
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
+  procedure Test_Iterator_Deletion (L : in out Single_List) is
+    Iter : Iterator := New_Iterator (L);
+    Delete : Boolean;
+  begin
+    Clear (L);
+    Append (L, '1');
+    Append (L, '2');
+    Append (L, '3');
+    Append (L, '4');
+    Append (L, '5');
+    Append (L, '6');
+    Delete := False;
+    Reset (Iter);
+    while not Is_Done (Iter) loop
+      if Delete then
+        Delete_Item_At (Iter);
+        Delete := False;
+      else
+        Next (Iter);
+        Delete := True;
+      end if;
+    end loop;
+    begin
+      Delete_Item_At (Iter);
+      Assertion (False, "** IS01: Deletion succeeded");
+    exception
+      when BC.Not_Found => null;
+      when others =>
+        Assertion (False, "** IS02: Unexpected exception");
+    end;
+    Assertion (Length (L) = 3, "** IS03: List length is not correct");
+    Assertion (Head (L) = '1', "** IS04: List item is not correct");
+    Remove (L, 1);
+    Assertion (Head (L) = '3', "** IS05: List item is not correct");
+    Remove (L, 1);
+    Assertion (Head (L) = '5', "** IS06: List item is not correct");
+    Remove (L, 1);
+    Assertion (Length (L) = 0, "** IS07: List length is not zero");
+  end Test_Iterator_Deletion;
+
+  procedure Test_Iterator_Deletion (L : in out Double_List) is
+    Iter : Iterator := New_Iterator (L);
+    Delete : Boolean;
+  begin
+    Clear (L);
+    Append (L, '1');
+    Append (L, '2');
+    Append (L, '3');
+    Append (L, '4');
+    Append (L, '5');
+    Append (L, '6');
+    Delete := False;
+    Reset (Iter);
+    while not Is_Done (Iter) loop
+      if Delete then
+        Delete_Item_At (Iter);
+        Delete := False;
+      else
+        Next (Iter);
+        Delete := True;
+      end if;
+    end loop;
+    begin
+      Delete_Item_At (Iter);
+      Assertion (False, "** ID01: Deletion succeeded");
+    exception
+      when BC.Not_Found => null;
+      when others =>
+        Assertion (False, "** ID02: Unexpected exception");
+    end;
+    Assertion (Length (L) = 3, "** ID03: List length is not correct");
+    Assertion (Head (L) = '1', "** ID04: List item is not correct");
+    Remove (L, 1);
+    Assertion (Head (L) = '3', "** ID05: List item is not correct");
+    Remove (L, 1);
+    Assertion (Head (L) = '5', "** ID06: List item is not correct");
+    Remove (L, 1);
+    Assertion (Length (L) = 0, "** ID07: List length is not zero");
+  end Test_Iterator_Deletion;
+
   Slist_P1, Slist_P2 : Single_List;
 
   Dlist_P1, Dlist_P2 : Double_List;
@@ -480,6 +561,12 @@ begin
   Test_Passive_Iterator (Slist_P1);
   Put_Line ("   Double");
   Test_Passive_Iterator (Dlist_P1);
+
+  Put_Line ("...List Iterator Deletion");
+  Put_Line ("   Single:");
+  Test_Iterator_Deletion (Slist_P1);
+  Put_Line ("   Double:");
+  Test_Iterator_Deletion (Dlist_P1);
 
   Put_Line ("Completed list tests");
 end List_Test;
