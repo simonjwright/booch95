@@ -59,7 +59,7 @@ package BC.Containers is
   procedure Access_Current_Item (In_The_Iterator : Iterator'Class);
   -- Call Apply for the Iterator's current Item.
 
-  procedure Delete_Item_At (It : Iterator) is abstract;
+  procedure Delete_Item_At (It : in out Iterator) is abstract;
   -- Remove the current item.
 
   -- Passive iteration

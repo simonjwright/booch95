@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -114,7 +114,7 @@ package body BC.Containers.Collections is
     return Item_At (C, It.Index);
   end Current_Item_Ptr;
 
-  procedure Delete_Item_At (It : Collection_Iterator) is
+  procedure Delete_Item_At (It : in out Collection_Iterator) is
     C : Abstract_Collection'Class
        renames Abstract_Collection'Class(It.For_The_Container.all);
   begin

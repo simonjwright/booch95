@@ -142,6 +142,6 @@ private
 
   function Current_Item (It : Map_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : Map_Iterator);
+  procedure Delete_Item_At (It : in out Map_Iterator);
 
 end BC.Containers.Maps;

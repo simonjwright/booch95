@@ -134,7 +134,7 @@ package body BC.Containers.Maps is
     return Item_At (M, It.Bucket_Index, It.Index);
   end Current_Item;
 
-  procedure Delete_Item_At (It : Map_Iterator) is
+  procedure Delete_Item_At (It : in out Map_Iterator) is
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
