@@ -1,3 +1,22 @@
+-- Copyright (C) 1998 Pat Rogers.
+-- All Rights Reserved.
+--
+--      This program is free software; you can redistribute it
+--      and/or modify it under the terms of the Ada Community
+--      License which comes with this Library.
+--
+--      This program is distributed in the hope that it will be
+--      useful, but WITHOUT ANY WARRANTY; without even the implied
+--      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+--      PURPOSE. See the Ada Community License for more details.
+--      You should have received a copy of the Ada Community
+--      License with this library, in the file named "Ada Community
+--      License" or "ACL". If not, contact the author of this library
+--      for a copy.
+--
+
+-- $Id$
+
 with System.Address_To_Access_Conversions;
 with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
@@ -10,14 +29,14 @@ package body BC.Support.Managed_Storage is
   function Value_At( Location : System.Address ) return System.Address;
 
   procedure Put( This : in System.Address;  At_Location : in System.Address );
-  
+
   pragma Inline( Value_At, Put );
-  
+
 
   function Value_At( Location : System.Address ) return System.Address is
   begin
     return PeekPoke.To_Pointer(Location).all;
-  end Value_At;  
+  end Value_At;
 
   procedure Put( This : in System.Address;  At_Location : in System.Address ) is
   begin
@@ -53,7 +72,7 @@ package body BC.Support.Managed_Storage is
 
 
   function New_Allocation( Size : SSE.Storage_Count ) return Chunk_Pointer is
-    
+
     type Block is new SSE.Storage_Array( 1 .. Size );
 
     type Block_Pointer is access all Block;
@@ -67,15 +86,15 @@ package body BC.Support.Managed_Storage is
     return As_Chunk_Pointer( new Block );
   end New_Allocation;
 
-  
-  procedure Get_Chunk( Result                 :    out Chunk_Pointer; 
-                       From                   : in out Pool; 
+
+  procedure Get_Chunk( Result                 :    out Chunk_Pointer;
+                       From                   : in out Pool;
                        Requested_Element_Size : in     SSE.Storage_Count;
                        Requested_Alignment    : in     SSE.Storage_Count ) is
 
     Next, Start, Stop : System.Address;
     Usable_Chunk_Size : SSE.Storage_Count;
-    
+
     use type System.Address;
   begin
     Usable_Chunk_Size := From.Allocated_Chunk_Size - Aligned( Chunk_Overhead, Requested_Alignment );
@@ -104,12 +123,12 @@ package body BC.Support.Managed_Storage is
                       Storage_Address          :    out System.Address;
                       Size_in_Storage_Elements : in     SSE.Storage_Count;
                       Alignment                : in     SSE.Storage_Count ) is
-                      
+
     Ptr          : Chunk_Pointer;
     Aligned_Size : SSE.Storage_Offset;
     Previous     : Chunk_Pointer;
     Temp         : Chunk_Pointer;
-    
+
     use type System.Address;
   begin
     Aligned_Size := Aligned( Size_In_Storage_Elements, Alignment );
@@ -118,8 +137,8 @@ package body BC.Support.Managed_Storage is
     end if;
     -- look for a chunk with the right element size and alignment, stopping when no point in continuing
     Ptr := The_Pool.Head;
-    while Ptr /= null and then 
-          ( Aligned_Size > Ptr.Element_Size or Ptr.Alignment /= Alignment ) 
+    while Ptr /= null and then
+          ( Aligned_Size > Ptr.Element_Size or Ptr.Alignment /= Alignment )
     loop
       Previous := Ptr;
       Ptr := Ptr.Next_Sized_Chunk;
@@ -170,15 +189,15 @@ package body BC.Support.Managed_Storage is
       return;
     end if;
     Ptr := The_Pool.Head;
-    while Ptr /= null and then 
+    while Ptr /= null and then
       ( Aligned_Size /= Ptr.Element_Size and Ptr.Alignment /= Alignment )
     loop
       Ptr := Ptr.Next_Sized_Chunk;
     end loop;
     Put( Ptr.Next_Element, At_Location => Storage_Address );
     Ptr.Next_Element := Storage_Address;
-    -- Note that the effect of the above is that the "linked list" of 
-    -- elements will span chunks. This is necessary since Deallocate is given 
+    -- Note that the effect of the above is that the "linked list" of
+    -- elements will span chunks. This is necessary since Deallocate is given
     -- an address of the element, not a pointer to the containing chunk.
   end Deallocate;
 
@@ -231,7 +250,7 @@ package body BC.Support.Managed_Storage is
         Chunk.Number_Elements := Usable_Chunk_Size / Chunk.Element_Size;
         Chunk := Chunk.Next_Chunk;
       end loop Compute_Max;
-      -- Now we traverse the "linked list" of elements that span chunks, determining the 
+      -- Now we traverse the "linked list" of elements that span chunks, determining the
       -- containing chunk per element and decrementing the corresponding count (computed as
       -- the max, above).
       Element := Ptr.Next_Element;
@@ -345,7 +364,7 @@ package body BC.Support.Managed_Storage is
   end Unused_Chunks;
 
 
-  function Aligned( Size      : SSE.Storage_Count; 
+  function Aligned( Size      : SSE.Storage_Count;
                     Alignment : SSE.Storage_Count ) return SSE.Storage_Offset is
     use type SSE.Storage_Count;
   begin
