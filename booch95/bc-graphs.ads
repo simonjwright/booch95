@@ -101,23 +101,21 @@ package BC.Graphs is
 
   function Enclosing_Graph (A : Arc) return Graph_Ptr;
 
---   type Iterator (G : access Graph'Class) is limited private;
+  ---------------------
+  -- Graph iterators --
+  ---------------------
 
---   procedure Reset (Obj : in out Iterator);
---   procedure Next (Obj : in out Iterator);
---   function Is_Done (Obj : Iterator) return Boolean;
---   function Current_Item (Obj : Iterator) return Item;
---   function Current_Item (Obj : Iterator) return Item_Ptr;
+  type Graph_Iterator (G : access Graph'Class) is limited private;
 
---   type Passive_Iterator (G : access Graph'Class) is limited private;
+  procedure Reset (It : in out Graph_Iterator);
 
---   generic
---     with procedure Apply (Elem : in Item; OK : out Boolean);
---   function Visit (Obj : access Passive_Iterator) return Boolean;
+  procedure Next (It : in out Graph_Iterator);
 
---   generic
---     with procedure Apply (Elem_Ref : in Item_Ptr; OK : out Boolean);
---   function Modify (Obj : access Passive_Iterator) return Boolean;
+  function Is_Done (It : Graph_Iterator) return Boolean;
+
+  procedure Current_Item (It : Graph_Iterator; V : in out Vertex'Class);
+
+  -- For passive iterator, see concrete Graph package (Directed, Undirected)
 
 private
 
@@ -129,6 +127,7 @@ private
   -- A Vertex Node is a simple node consisting of an item, a pointer to the
   -- enclosing graph, a pointer to the next vertex, pointers to the
   -- outgoing and incoming arcs, and a reference count
+  -- XXX controlled only for check at finalization
   type Vertex_Node is new Ada.Finalization.Controlled with record
     Item : aliased Vertex_Item;  -- XXX for function Item return Item_Ptr
     Enclosing : Graph_Ptr;
@@ -144,6 +143,7 @@ private
   -- An Arc Node is a simple node consisting of an item, a pointer to the
   -- enclosing graph, a pointer to the next arc, pointers to the vertices
   -- to and from the arc, and a reference count
+  -- XXX controlled only for check at finalization
   type Arc_Node is new Ada.Finalization.Controlled with record
     Item : aliased Arc_Item;  -- XXX for function Item return Item_Ptr
     Enclosing : Graph_Ptr;
@@ -172,16 +172,9 @@ private
   procedure Adjust (A : in out Arc);
   procedure Finalize (A : in out Arc);
 
---   function Item_At (Obj : Graph; Index : Natural) return Item_Ptr;
---   function Cardinality (Obj : Graph) return Integer;
-
---   type Iterator (G : access Graph'Class) is limited record
---     Index : Integer := 1;
---   end record;
-
---   type Passive_Iterator (G : access Graph'Class) is limited record
---     Success : Boolean := False;
---   end record;
+  type Graph_Iterator (G : access Graph'Class) is limited record
+    Index : Vertex_Node_Ptr := G.Rep;
+  end record;
 
 end BC.Graphs;
 
