@@ -26,8 +26,8 @@ procedure Deque_Test is
   use Deque_Test_Support;
   use Containers;
   use Deques;
---   use DB;
---   use DD;
+  use DB;
+  use DD;
   use DU;
 
   procedure Process (C : Character; OK : out Boolean) is
@@ -200,54 +200,55 @@ procedure Deque_Test is
     Assertion (Length (D) = 0, "** I07: Deque length is not zero");
   end Test_Iterator_Deletion;
 
---   Deque_B_P1, Deque_B_P2 : DB.Bounded_Deque;
---   Deque_D_P1, Deque_D_P2 : DD.Dynamic_Deque;
+  Deque_B_P1, Deque_B_P2 : DB.Bounded_Deque;
+  Deque_D_P1, Deque_D_P2 : DD.Dynamic_Deque;
   Deque_U_P1, Deque_U_P2 : DU.Unbounded_Deque;
 
 begin
   Put_Line ("Starting deque tests");
 
---   Put_Line ("...Bounded Deque");
---   Test_Primitive (Deque_B_P1, Deque_B_P2);
+  Put_Line ("...Bounded Deque");
+  Test_Primitive (Deque_B_P1, Deque_B_P2);
 
---   Put_Line ("...Dynamic Deque");
---   Test_Primitive (Deque_D_P1, Deque_D_P2);
+  Put_Line ("...Dynamic Deque");
+  DD.Preallocate (Deque_D_P1, 50);
+  Test_Primitive (Deque_D_P1, Deque_D_P2);
 
   Put_Line ("...Unbounded Deque");
   Test_Primitive (Deque_U_P1, Deque_U_P2);
 
   Put_Line ("...Deque Active Iterator");
---   Put_Line ("   Bounded:");
---   Test_Active_Iterator (Deque_B_P1);
---   Put_Line ("   Dynamic:");
---   Test_Active_Iterator (Deque_D_P1);
+  Put_Line ("   Bounded:");
+  Test_Active_Iterator (Deque_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Active_Iterator (Deque_D_P1);
   Put_Line ("   Unbounded:");
   Test_Active_Iterator (Deque_U_P1);
 
   Put_Line ("...Deque Passive Iterator");
---   Put_Line ("   Bounded:");
---   Test_Passive_Iterator (Deque_B_P1);
---   Put_Line ("   Dynamic:");
---   Test_Passive_Iterator (Deque_D_P1);
+  Put_Line ("   Bounded:");
+  Test_Passive_Iterator (Deque_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Passive_Iterator (Deque_D_P1);
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Deque_U_P1);
 
---   Assertion ((Front (Deque_B_P1) = '9'), "** M01: Deque front is not correct");
---   Assertion ((Length (Deque_B_P2) = 0), "** M02: Deque length is not correct");
---   Assertion ((Front (Deque_D_P1) = '9'), "** M05: Deque front is not correct");
---   Assertion ((Length (Deque_D_P2) = 0), "** M06: Deque length is not correct");
+  Assertion ((Front (Deque_B_P1) = '9'), "** M01: Deque front is not correct");
+  Assertion ((Length (Deque_B_P2) = 0), "** M02: Deque length is not correct");
+  Assertion ((Front (Deque_D_P1) = '9'), "** M05: Deque front is not correct");
+  Assertion ((Length (Deque_D_P2) = 0), "** M06: Deque length is not correct");
   Assertion ((Front (Deque_U_P1) = '9'), "** M09: Deque front is not correct");
   Assertion ((Length (Deque_U_P2) = 0), "** M10: Deque length is not correct");
 
---   Assertion (Available (Deque_B_P1) = 99, "** M13: Available space not correct");
---   Assertion
---      (Available (Deque_B_P2) = 100, "** M14: Available space not correct");
+  Assertion (Available (Deque_B_P1) = 98, "** M13: Available space not correct");
+  Assertion
+     (Available (Deque_B_P2) = 100, "** M14: Available space not correct");
 
   Put_Line ("...Deque Iterator Deletion");
---   Put_Line ("   Bounded:");
---   Test_Iterator_Deletion (Deque_B_P1);
---   Put_Line ("   Dynamic:");
---   Test_Iterator_Deletion (Deque_D_P1);
+  Put_Line ("   Bounded:");
+  Test_Iterator_Deletion (Deque_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Iterator_Deletion (Deque_D_P1);
   Put_Line ("   Unbounded:");
   Test_Iterator_Deletion (Deque_U_P1);
 
