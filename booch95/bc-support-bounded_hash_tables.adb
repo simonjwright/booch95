@@ -223,7 +223,7 @@ package body BC.Support.Bounded_Hash_Tables is
       begin
          return Items.Item_Ptr
            (Allow_Item_Access.To_Pointer
-            (T.Contents (Position).Item'Address));
+              (T.Contents (Position).Item'Address));
       end Access_Item_At;
 
 
@@ -238,8 +238,100 @@ package body BC.Support.Bounded_Hash_Tables is
       begin
          return Values.Value_Ptr
            (Allow_Value_Access.To_Pointer
-            (T.Contents (Position).Value'Address));
+              (T.Contents (Position).Value'Address));
       end Access_Value_At;
+
+
+      procedure Reset (T : Table;
+                       Bucket : out Positive;
+                       Index : out Positive) is
+      begin
+         if T.Size = 0 then
+            Bucket := T.Number_Of_Buckets + 1;
+         else
+            Bucket := 1;
+            loop
+               exit when Bucket > T.Number_Of_Buckets;
+               if T.Buckets (Bucket) > 0 then
+                  Index := T.Buckets (Bucket);
+                  exit;
+               end if;
+               Bucket := Bucket + 1;
+            end loop;
+         end if;
+      end Reset;
+
+
+      function Is_Done (T : Table;
+                        Bucket : Positive;
+                        Index : Positive) return Boolean is
+         pragma Warnings (Off, Index);
+      begin
+         return Bucket > T.Number_Of_Buckets;
+      end Is_Done;
+
+
+      function Current_Item_Ptr (T : Table;
+                                 Bucket : Positive;
+                                 Index : Positive) return Items.Item_Ptr is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Current_Item_Ptr",
+                 BSE.Missing);
+         return Items.Item_Ptr
+           (Allow_Item_Access.To_Pointer
+            (T.Contents (Index).Item'Address));
+      end Current_Item_Ptr;
+
+
+      function Current_Value_Ptr (T : Table;
+                                  Bucket : Positive;
+                                  Index : Positive) return Values.Value_Ptr is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Current_Value_Ptr",
+                 BSE.Missing);
+         return Values.Value_Ptr
+           (Allow_Value_Access.To_Pointer
+            (T.Contents (Index).Value'Address));
+      end Current_Value_Ptr;
+
+
+      procedure Delete_Item_At (T : in out Table;
+                                Bucket : in out Positive;
+                                Index : in out  Positive) is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Delete_Item_At",
+                 BSE.Missing);
+         raise Not_Yet_Implemented;
+      end Delete_Item_At;
+
+
+      procedure Next (T : Table;
+                      Bucket : in out Positive;
+                      Index : in out  Positive) is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Next",
+                 BSE.Missing);
+         if T.Contents (Index).Next > 0 then
+            Index := T.Contents (Index).Next;
+         else
+            loop
+               Bucket := Bucket + 1;
+               exit when Bucket > T.Number_Of_Buckets;
+               if T.Buckets (Bucket) > 0 then
+                  Index := T.Buckets (Bucket);
+                  exit;
+               end if;
+            end loop;
+         end if;
+      end Next;
 
 
    end Tables;
