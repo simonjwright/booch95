@@ -136,14 +136,4 @@ private
   type Bounded_Map_Iterator (B : access Bounded_Map'Class)
   is new Map_Iterator (B) with null record;
 
---??  type Map_Iterator (M : access Map'Class)
---??  is new Ada.Finalization.Limited_Controlled with record
---??    Bucket_Index : Natural := 0;
---??    Index : Natural := 0;
---??  end record;
---??
---??  procedure Initialize (It : in out Map_Iterator);
---??
---??  type Passive_Map_Iterator (M : access Map'Class) is limited null record;
-
 end BC.Containers.Maps.Bounded;
