@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -105,11 +105,10 @@ private
 
    package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Items,
-      Values => Values,
-      Buckets => Buckets);
+      Values => Values);
 
    type Bag is new Abstract_Bag with record
-      Rep : Tables.Table;
+      Rep : Tables.Table (Number_Of_Buckets => Buckets);
    end record;
 
    procedure Attach (B : in out Bag; I : Item; C : Positive);
