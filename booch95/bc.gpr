@@ -1,0 +1,23 @@
+--  Project file (GCC-3.1, GNAT-3.15) for Booch Components
+--  $Id$
+
+project BC is
+
+  for Source_Dirs use (".");
+
+  for Object_Dir use ".build";
+
+  package Builder is
+     for Default_Switches ("Ada") use ("-m", "-g");
+  end Builder;
+
+  package Compiler is
+     for Default_Switches ("Ada") use ("-gnatqQafy", "-gnatwaL", "-O2");
+  end Compiler;
+
+  package Binder is
+     for Default_Switches ("Ada") use ("-E");
+  end Binder;
+
+end BC;
+
