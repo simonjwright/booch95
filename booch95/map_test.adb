@@ -81,21 +81,21 @@ procedure Map_Test is
     Assertion (not Maps.Is_Empty (M1), "** P16: Map is empty");
     Assertion (Maps.Extent (M1) = 3, "** P17: Map Extent is not correct");
     Assertion (Maps.Is_Bound (M1, '7'), "** P18: Map binding is not correct");
-    Assertion (Maps.Value_Of (M1, '5') = Gitems (7)'Access,
+    Assertion (Maps.Item_Of (M1, '5') = Gitems (7)'Access,
                "** P19: Map binding is not correct");
-    Assertion (Maps.Value_Of (M1, '6') = Gitems (6)'Access,
+    Assertion (Maps.Item_Of (M1, '6') = Gitems (6)'Access,
                "** P20: Map binding is not correct");
-    Assertion (Maps.Value_Of (M1, '7') = Gitems (5)'Access,
+    Assertion (Maps.Item_Of (M1, '7') = Gitems (5)'Access,
                "** P21: Map binding is not correct");
     M2 := M1;
     Assertion (not Maps.Is_Empty (M2), "** P22: Map is empty");
     Assertion (Maps.Extent (M2) = 3, "** P23: Map Extent is not correct");
     Assertion (Maps.Is_Bound (M2, '7'), "** P24: Map binding is not correct");
-    Assertion (Maps.Value_Of (M2, '5') = Gitems (7)'Access,
+    Assertion (Maps.Item_Of (M2, '5') = Gitems (7)'Access,
                "** P25: Map binding is not correct");
-    Assertion (Maps.Value_Of (M2, '6') = Gitems (6)'Access,
+    Assertion (Maps.Item_Of (M2, '6') = Gitems (6)'Access,
                "** P26: Map binding is not correct");
-    Assertion (Maps.Value_Of (M2, '7') = Gitems (5)'Access,
+    Assertion (Maps.Item_Of (M2, '7') = Gitems (5)'Access,
                "** P27: Map binding is not correct");
     Assertion (Maps.Are_Equal (M1, M2), "** P28: Maps are not equal");
     Maps.Clear (M2);
@@ -134,12 +134,12 @@ procedure Map_Test is
   end Test;
 
   procedure Test_Simple_Active_Iterator (M : in out Map'Class) is
-    Iter : Iterator'Class := New_Iterator (M);
+    Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
   begin
-    while not Is_Done (Iter) loop
+    while not Is_Done (Map_Iter) loop
       Put_Line ("      Item: "
-                & Current_Item (Iter));
-      Next (Iter);
+                & Current_Key (Map_Iter));
+      Next (Map_Iter);
     end loop;
   end Test_Simple_Active_Iterator;
 
@@ -148,9 +148,9 @@ procedure Map_Test is
   begin
     while not Is_Done (Map_Iter) loop
       Put_Line ("      Item: "
-                & Current_Item (Map_Iter)
+                & Current_Key (Map_Iter)
                 & " Value: "
-                & Image (Current_Value (Map_Iter).all));
+                & Image (Current_Item (Map_Iter).all));
       Next (Map_Iter);
     end loop;
   end Test_Active_Iterator;
