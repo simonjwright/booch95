@@ -174,6 +174,7 @@ procedure Collection_Test is
     Clear (C1);
     Clear (C2);
     Insert (C1, '7');
+    Insert (C1, 'z');
   end Test_Primitive;
 
   Collection_B_P1, Collection_B_P2 : CB.Bounded_Collection;

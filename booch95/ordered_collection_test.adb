@@ -175,6 +175,7 @@ procedure Ordered_Collection_Test is
     Clear (C1);
     Clear (C2);
     Insert (C1, '9');
+    Insert (C1, 'z');
   end Test_Primitive;
 
   Collection_B_P1, Collection_B_P2 : CB.Bounded_Ordered_Collection;
