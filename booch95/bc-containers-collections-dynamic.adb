@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -99,13 +99,6 @@ package body BC.Containers.Collections.Dynamic is
     return Collection_Nodes.Location (C.Rep.all, Elem);
   end Location;
 
-  function Create (Size : Positive) return Collection is
-    Temp : Collection;
-  begin
-    Temp.Rep := Collection_Nodes.Create (Size);
-    return Temp;
-  end Create;
-
   procedure Preallocate (C : in out Collection; Size : Natural) is
   begin
     Collection_Nodes.Preallocate (C.Rep.all, Size);
@@ -142,7 +135,7 @@ package body BC.Containers.Collections.Dynamic is
 
   procedure Initialize (C : in out Collection) is
   begin
-    C.Rep := Collection_Nodes.Create;
+    C.Rep := Collection_Nodes.Create (Initial_Size);
   end Initialize;
 
   procedure Adjust (C : in out Collection) is
