@@ -1,4 +1,4 @@
-# Copyright 1998 Simon Wright. All Rights Reserved.
+# Copyright (C) 1998-1999 Simon Wright. All Rights Reserved.
 #      This program is free software; you can redistribute it
 #      and/or modify it under the terms of the Ada Community
 #      License which comes with this Library.
@@ -29,6 +29,7 @@ all::
 
 MEMORY_CHECK = \
   -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
+GNATMAKE_FLAGS = -O2 -g -gnata
 
 test: testable
 	for t in $(TESTABLE); do \
@@ -38,33 +39,59 @@ test: testable
 
 TESTABLE += graph_test
 graph_test: force
-	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += list_test
 list_test: force
-	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += map_test
 map_test: force
-	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += queue_test
 queue_test: force
-	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += smart_test
 smart_test: force
-	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += stack_test
 stack_test: force
-	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += tree_test
 tree_test: force
-	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 testable: $(TESTABLE)
+
+########
+# Demos
+
+DEMOS += ada_units
+DEMOS += lists_traversal
+DEMOS += time_lists
+DEMOS += time_queues
+DEMOS += unmanaged_storage
+
+ada_units: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+lists_traversal: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+time_lists: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+time_queues: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+unmanaged_storage: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+demos: $(DEMOS)
 
 ############################
 # Distribution construction
@@ -84,7 +111,9 @@ dist: $(DISTRIBUTION_FILES)
 	(cd distribution; \
 	 ln -s ../../exported-booch-components download; \
 	 ln -s ../../wavefront-booch-components wavefront)
-	cp -p $(DISTRIBUTION_FILES) WAVEFRONT-README distribution/wavefront/
+	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
+	cp -p README distribution/download/
+	cp -p WAVEFRONT-README distribution/wavefront/README
 	cp -p ACL html/*.html html/*.gif distribution/
 
 ADA_SOURCE = \
@@ -105,6 +134,8 @@ bc-containers-stacks-bounded.ad[bs] \
 bc-containers-stacks-dynamic.ad[bs] \
 bc-containers-stacks-unbounded.ad[bs] \
 bc-containers-stacks.ad[bs] \
+bc-containers-trees-avl.ad[bs] \
+bc-containers-trees-avl-print.ad[bs] \
 bc-containers-trees-binary.ad[bs] \
 bc-containers-trees-multiway.ad[bs] \
 bc-containers-trees.ad[bs] \
@@ -123,12 +154,13 @@ bc-support-unbounded.ad[bs] \
 bc-support-unmanaged_storage.ad[bs] \
 bc-support.ad[bs] \
 bc.ad[bs] \
-character_references.ad[bs] \
 chunks.ad[bs] \
 global_heap.ad[bs] \
 graph_test.ad[bs] \
 graph_test_support.ad[bs] \
 lists_for_timing.ad[bs] \
+lists_for_traversal.ad[bs] \
+lists_traversal.ad[bs] \
 list_test.ad[bs] \
 list_test_support.ad[bs] \
 map_test.ad[bs] \
@@ -144,7 +176,8 @@ storage.ad[bs] \
 time_lists.ad[bs] \
 time_queues.ad[bs] \
 tree_test.ad[bs] \
-tree_test_support.ad[bs]
+tree_test_support.ad[bs] \
+unmanaged_storage.ad[bs]
 
 SOURCE = makefile ACL README $(ADA_SOURCE)
 
