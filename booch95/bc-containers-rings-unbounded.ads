@@ -34,24 +34,24 @@ package BC.Containers.Rings.Unbounded is
   -- Empty the ring of all items. The mark is cleared.
 
   procedure Insert (R : in out Unbounded_Ring; Elem : Item);
-  -- If the ring is empty, set the ring's mark to designate this
-  -- item. Add the item to the top of the ring; the previous top item
-  -- (if any) is now located clockwise adjacent to the new item; the
-  -- old item is forward of the new one.
+  -- If the ring was empty, set the ring's mark and top to designate
+  -- this item.
+  -- Otherwise,
+  --   this item becomes the new top;
+  --   the previous top is located one place forward of the new top;
+  --   the mark remains on the previously marked item.
 
   procedure Pop (R : in out Unbounded_Ring);
-  -- Remove the item from the top of the ring. The clockwise adjacent
-  -- item (if any) is now designated as the ring's top. If the removed
-  -- item had been marked, the ring's new top (if not empty) is now
-  -- designated as marked.
+  -- Remove the top item from the ring.
+  -- If the ring is still not empty, the new top is the item that was
+  -- previously one place forward from the top.
+  -- If the removed item was the marked item, the mark now designates
+  -- the new top.
 
   procedure Rotate (R : in out Unbounded_Ring; Dir : Direction := Forward);
-  -- Rotate the top of the ring in the given direction. Rotating the
-  -- ring in a forward direction moves the ring's top clockwise;
-  -- rotating the ring in a reverse direction advances the ring's top
-  -- counter-clockwise. The ring's mark is unaffected. If there is
-  -- exactly one item in the ring, rotating either direction always
-  -- returns to the same item.
+  -- Rotate the top of the ring in the given direction. The ring's
+  -- mark is unaffected. If there is exactly one item in the ring,
+  -- rotating either direction always returns to the same item.
 
   function Extent (R : Unbounded_Ring) return Natural;
   -- Return the number of items in the ring.
