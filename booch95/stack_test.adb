@@ -115,6 +115,22 @@ procedure Stack_Test is
     Assertion ((Top (S1) = '7'), "** P28: Stack top is not correct");
     Assertion ((Depth (S2) = 0), "** P30: Stack depth is not correct");
     Assertion (not Are_Equal (S1, S2), "** P31: Stacks not equal");
+    Push (S2, 'z');
+    Push (S2, 'a');
+    declare
+      procedure P (Ch : in out Character) is
+      begin
+        Ch := Character'Succ (Ch);
+      end P;
+      procedure Acc is new Stacks.Process_Top (P);
+    begin
+      Acc (S2);
+    end;
+    Assertion (Depth (S2) = 2, "** P32: Stack depth is not correct");
+    Assertion (Top (S2) = 'b', "** P33: Stack top is not correct");
+    Pop (S2);
+    Assertion (Top (S2) = 'z', "** P34: Stack top is not correct");
+    Pop (S2);
   end Test_Primitive;
 
   procedure Test_Iterator_Deletion (S : in out Stack'Class) is
