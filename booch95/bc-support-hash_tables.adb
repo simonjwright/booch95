@@ -18,7 +18,6 @@
 -- $Id$
 
 with BC.Support.Exceptions;
-with System.Address_To_Access_Conversions;
 
 package body BC.Support.Hash_Tables is
 
@@ -78,12 +77,12 @@ package body BC.Support.Hash_Tables is
     -- optimisation if L, R are the same Table?
     if L.Size = R.Size then
       for B in 1 .. Buckets loop
-        for Index in 1 .. Length (L.Items (B)) loop
+        for Index in 1 .. Length (L.Items (B).all) loop
           declare
-            This_Item : Item renames Item_At (L.Items (B), Index);
+            This_Item : Item renames Item_At (L.Items (B).all, Index);
           begin
             if not Is_Bound (R, This_Item)
-               or else not (Item_At (L.Values (B), Index)
+               or else not (Item_At (L.Values (B).all, Index)
                             = Value'(Value_Of (R, This_Item))) then
               return False;
             end if;
@@ -110,8 +109,8 @@ package body BC.Support.Hash_Tables is
   procedure Clear (T : in out Table) is
   begin
     for B in 1 .. Buckets loop
-      Clear (T.Items (B));
-      Clear (T.Values (B));
+      Clear (T.Items (B).all);
+      Clear (T.Values (B).all);
       T.Size := 0;
     end loop;
   end Clear;
@@ -137,12 +136,12 @@ package body BC.Support.Hash_Tables is
   procedure Bind (T : in out Table; I : Item; V : Value) is
     Bucket : constant Positive := (Hash (I) mod Buckets) + 1;
   begin
-    Assert (Location (T.Items (Bucket), I, 1) = 0,
+    Assert (Location (T.Items (Bucket).all, I, 1) = 0,
             BC.Duplicate'Identity,
             "Bind",
             BSE.Duplicate);
-    Insert (T.Items (Bucket), I);
-    Insert (T.Values (Bucket), V);
+    Insert (T.Items (Bucket).all, I);
+    Insert (T.Values (Bucket).all, V);
     T.Size := T.Size + 1;
   end Bind;
 
@@ -163,13 +162,13 @@ package body BC.Support.Hash_Tables is
 
   procedure Rebind (T : in out Table; I : Item; V : Value) is
     Bucket : constant Positive := (Hash (I) mod Buckets) + 1;
-    Index : constant Natural := Location (T.Items (Bucket), I, 1);
+    Index : constant Natural := Location (T.Items (Bucket).all, I, 1);
   begin
     Assert (Index /= 0,
             BC.Not_Found'Identity,
             "Rebind",
             BSE.Missing);
-    Replace (T.Values (Bucket), Index, V);
+    Replace (T.Values (Bucket).all, Index, V);
   end Rebind;
 
 --| template<class Item, class Value, BC_Index Buckets,
@@ -191,14 +190,14 @@ package body BC.Support.Hash_Tables is
 
   procedure Unbind (T : in out Table; I : Item) is
     Bucket : constant Positive := (Hash (I) mod Buckets) + 1;
-    Index : constant Natural := Location (T.Items (Bucket), I, 1);
+    Index : constant Natural := Location (T.Items (Bucket).all, I, 1);
   begin
     Assert (Index /= 0,
             BC.Not_Found'Identity,
             "Unbind",
             BSE.Missing);
-    Remove (T.Items (Bucket), Index);
-    Remove (T.Values (Bucket), Index);
+    Remove (T.Items (Bucket).all, Index);
+    Remove (T.Values (Bucket).all, Index);
     T.Size := T.Size - 1;
   end Unbind;
 
@@ -223,7 +222,7 @@ package body BC.Support.Hash_Tables is
   function Is_Bound (T : Table; I : Item) return Boolean is
     Bucket : constant Positive := (Hash (I) mod Buckets) + 1;
   begin
-    return Location (T.Items (Bucket), I, 1) /= 0;
+    return Location (T.Items (Bucket).all, I, 1) /= 0;
   end Is_Bound;
 
 --| template<class Item, class Value, BC_Index Buckets,
@@ -241,24 +240,24 @@ package body BC.Support.Hash_Tables is
 
   function Value_Of (T : Table; I : Item) return Value is
     Bucket : constant Positive := (Hash (I) mod Buckets) + 1;
-    Index : constant Natural := Location (T.Items (Bucket), I, 1);
+    Index : constant Natural := Location (T.Items (Bucket).all, I, 1);
   begin
     Assert (Index /= 0,
             BC.Not_Found'Identity,
             "Value_Of",
             BSE.Missing);
-    return Item_At (T.Values (Bucket), Index);
+    return Item_At (T.Values (Bucket).all, Index);
   end Value_Of;
 
   function Value_Of (T : Table; I : Item) return Value_Ptr is
     Bucket : constant Positive := (Hash (I) mod Buckets) + 1;
-    Index : constant Natural := Location (T.Items (Bucket), I, 1);
+    Index : constant Natural := Location (T.Items (Bucket).all, I, 1);
   begin
     Assert (Index /= 0,
             BC.Not_Found'Identity,
             "Value_Of",
             BSE.Missing);
-    return Item_At (T.Values (Bucket), Index);
+    return Item_At (T.Values (Bucket).all, Index);
   end Value_Of;
 
 --|   const ItemContainer *const ItemBucket(BC_Index bucket) const
@@ -266,23 +265,13 @@ package body BC.Support.Hash_Tables is
 --|                BC_XRangeError("BC_TTable::ItemBucket", BC_kInvalidIndex));
 --|      return &fItemRep[bucket];}
 
-  package Item_Conversions is new System.Address_To_Access_Conversions
-     (Item_Container);
-  -- This needs to be declared at this level rather than locally to the
-  -- place of use, to avoid access-level problems (in GNAT)
-
   function Item_Bucket
      (T : Table; Bucket : Positive) return Item_Container_Ptr is
   begin
     Assert (Bucket <= Buckets,
             BC.Container_Error'Identity,
             "Item_Bucket");
-    declare
-      P : Item_Conversions.Object_Pointer
-         := Item_Conversions.To_Pointer (T.Items (Bucket)'Address);
-    begin
-      return P.all'Access;
-    end;
+    return T.Items (Bucket);
   end Item_Bucket;
 
 --|   const ValueContainer *const ValueBucket(BC_Index bucket) const
@@ -290,21 +279,13 @@ package body BC.Support.Hash_Tables is
 --|                BC_XRangeError("BC_TTable::ValueBucket", BC_kInvalidIndex));
 --|      return &fValueRep[bucket];}
 
-  package Value_Conversions is new System.Address_To_Access_Conversions
-     (Value_Container);
-
   function Value_Bucket
      (T : Table; Bucket : Positive) return Value_Container_Ptr is
   begin
     Assert (Bucket <= Buckets,
             BC.Container_Error'Identity,
             "Value_Bucket");
-    declare
-      P : Value_Conversions.Object_Pointer
-         := Value_Conversions.To_Pointer (T.Values (Bucket)'Address);
-    begin
-      return P.all'Access;
-    end;
+    return T.Values (Bucket);
   end Value_Bucket;
 
 --| template<class Item, class Value, BC_Index Buckets,
@@ -329,17 +310,28 @@ package body BC.Support.Hash_Tables is
 --|     return *this;
 --|   }
 --| }
+  procedure Initialize (T : in out Table) is
+  begin
+    for B in 1 .. Buckets loop
+      T.Items (B) := new Item_Container;
+      T.Values (B) := new Value_Container;
+    end loop;
+  end Initialize;
+
   procedure Adjust (T : in out Table) is
   begin
     for B in 1 .. Buckets loop
-      T.Items (B) := Create (T.Items (B)).all;
-      T.Values (B) := Create (T.Values (B)).all;
+      T.Items (B) := Create (T.Items (B).all);
+      T.Values (B) := Create (T.Values (B).all);
     end loop;
   end Adjust;
 
   procedure Finalize (T : in out Table) is
   begin
-    Clear (T);
+    for B in 1 .. Buckets loop
+      Free (T.Items (B));
+      Free (T.Values (B));
+    end loop;
   end Finalize;
 
 end BC.Support.Hash_Tables;
