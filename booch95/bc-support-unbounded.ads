@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller, Pat Rogers and
+-- Copyright (C) 1994-1999 Grady Booch, David Weller, Pat Rogers and
 -- Simon Wright.
 -- All Rights Reserved.
 --
@@ -23,6 +23,7 @@ with System.Storage_Pools;
 
 generic
   type Item is private;
+  with function "=" (L, R : Item) return Boolean is <>;
   type Item_Ptr is access all Item;
   type Storage_Manager(<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
