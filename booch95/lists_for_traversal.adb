@@ -1,5 +1,5 @@
--- Copyright (C) 1998-1999 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1998-1999,2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,20 +15,20 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
-with Ada.Text_Io;
+with Ada.Text_IO;
 
 package body Lists_For_Traversal is
 
-  procedure Finalize (The_T : in out T) is
-  begin
-    Ada.Text_Io.Put_Line ("finalizing" & Integer'Image (The_T.V));
-  end Finalize;
+   procedure Finalize (The_T : in out T) is
+   begin
+      Ada.Text_IO.Put_Line ("finalizing" & Integer'Image (The_T.V));
+   end Finalize;
 
-  function "=" (L, R : P) return Boolean is
-  begin
-    return Smart.Value (L).V = Smart.Value (R).V;
-  end "=";
+   function "=" (L, R : P) return Boolean is
+   begin
+      return Smart.Value (L).V = Smart.Value (R).V;
+   end "=";
 
 end Lists_For_Traversal;

@@ -1,5 +1,5 @@
--- Copyright (C) 1999 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1999,2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,14 +15,14 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 package body Ordering_Support is
 
-  function "<" (L, R : Sortable) return Boolean is
-  begin
-    return L.Key < R.Key;
-  end "<";
+   function "<" (L, R : Sortable) return Boolean is
+   begin
+      return L.Key < R.Key;
+   end "<";
 
 end Ordering_Support;
 
