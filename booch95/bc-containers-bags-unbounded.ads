@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with BC.Support.Unbounded;
 with BC.Support.Hash_Tables;
@@ -37,7 +40,7 @@ package BC.Containers.Bags.Unbounded is
    --  counted, but are not stored with the bag.
 
    --  The hash function (the generic parameter Hash) determines the
-   --  allocation of pairs to hash buckets. The value returned must
+   --  allocation of items to hash buckets. The value returned must
    --  not change during the lifetime of a given Item. The range of
    --  hash values need not be constrained to the number of buckets in
    --  the bag.
