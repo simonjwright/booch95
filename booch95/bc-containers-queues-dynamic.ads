@@ -21,6 +21,7 @@ with BC.Support.Dynamic;
 with System.Storage_Pools;
 
 generic
+  Initial_Size : Positive;
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
@@ -35,9 +36,6 @@ package BC.Containers.Queues.Dynamic is
   -- no support for linear collapsing of the Queue.
 
   function Null_Container return Dynamic_Queue;
-
-  function Create (Size : Positive) return Dynamic_Queue;
-  -- Creates a new Dynamic Queue that is preallocated for 'Size' elements
 
   procedure Clear (Q : in out Dynamic_Queue);
   -- Empty the queue of all items.
