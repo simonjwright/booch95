@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -19,8 +19,8 @@
 
 with BC.Containers;
 with BC.Containers.Collections;
--- with BC.Containers.Collections.Bounded;
--- with BC.Containers.Collections.Dynamic;
+with BC.Containers.Collections.Bounded;
+with BC.Containers.Collections.Dynamic;
 with BC.Containers.Collections.Unbounded;
 with Global_Heap;
 
@@ -30,12 +30,12 @@ package Collection_Test_Support is
 
   package Collections is new Containers.Collections;
 
---   package CB is new Collections.Bounded (Maximum_Size => 100);
+  package CB is new Collections.Bounded (Maximum_Size => 100);
 
---   package CD is new Collections.Dynamic (Storage_Manager => Global_Heap.Pool,
---                                     Storage => Global_Heap.Storage);
+  package CD is new Collections.Dynamic (Storage_Manager => Global_Heap.Pool,
+                                         Storage => Global_Heap.Storage);
 
   package CU is new Collections.Unbounded (Storage_Manager => Global_Heap.Pool,
-					   Storage => Global_Heap.Storage);
+                                           Storage => Global_Heap.Storage);
 
 end Collection_Test_Support;

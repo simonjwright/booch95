@@ -591,11 +591,13 @@ package body BC.Containers.Lists.Double is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Double_List);
 
-  function New_Iterator (For_The_List : Double_List) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_List'Address);
+  function New_Iterator (For_The_List : Double_List) return Iterator'Class is
+    Result : Double_List_Iterator;
   begin
-    return Iterator (SP.Create (new Double_List_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_List'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   function Item_At (L : Double_List; Index : Positive) return Item_Ptr is
@@ -635,14 +637,10 @@ package body BC.Containers.Lists.Double is
     Clear (L);
   end Finalize;
 
-  procedure Initialize (It : in out Double_List_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
   procedure Reset (It : in out Double_List_Iterator) is
+    L : Double_List'Class renames Double_List'Class (It.For_The_Container.all);
   begin
-    It.Index := It.L.Rep;
+    It.Index := L.Rep;
   end Reset;
 
   procedure Next (It : in out Double_List_Iterator) is
@@ -665,18 +663,19 @@ package body BC.Containers.Lists.Double is
     return It.Index.Element;
   end Current_Item;
 
-  function Current_Item (It : Double_List_Iterator) return Item_Ptr is
+  function Current_Item_Ptr (It : Double_List_Iterator) return Item_Ptr is
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
     return Item_Ptr
        (Allow_Element_Access.To_Pointer (It.Index.Element'Address));
-  end Current_Item;
+  end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Double_List_Iterator) is
+    L : Double_List'Class renames Double_List'Class (It.For_The_Container.all);
     Prev : Double_Nodes.Double_Node_Ref;
-    Curr : Double_Nodes.Double_Node_Ref := It.L.Rep;
+    Curr : Double_Nodes.Double_Node_Ref := L.Rep;
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -689,11 +688,18 @@ package body BC.Containers.Lists.Double is
             BC.Range_Error'Identity,
             "Delete_Item_At",
             BSE.Invalid_Index);
-    It.Relay.Reference.Index := Curr.Next;
+    -- we need a writable version of the Iterator
+    declare
+      package Conversions is new System.Address_To_Access_Conversions
+         (Double_List_Iterator'Class);
+      P : Conversions.Object_Pointer := Conversions.To_Pointer (It'Address);
+    begin
+      P.Index := Curr.Next;
+    end;
     if Prev /= null then
       Prev.Next := Curr.Next;
     else
-      It.L.Rep := Curr.Next;
+      L.Rep := Curr.Next;
     end if;
     if Curr.Next /= null then
       Curr.Next.Previous := Prev;
@@ -704,5 +710,12 @@ package body BC.Containers.Lists.Double is
       Double_Nodes.Delete (Curr);
     end if;
   end Delete_Item_At;
+
+  Empty_Container : Double_List;
+
+  function Null_Container return Double_List is
+  begin
+    return Empty_Container;
+  end Null_Container;
 
 end BC.Containers.Lists.Double;

@@ -1,4 +1,4 @@
--- Copyright (C) 1998-1999 Simon Wright.
+-- Copyright (C) 1998-2000 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -94,7 +94,7 @@ package body Ada_Unit_Support is
       is new Dependencies_Base.Visit_Arcs (Apply => Process_Dependency);
       Directed_V : Dependencies.Directed_Vertex
          renames Dependencies.Directed_Vertex (V);
-      Vertex_It : Dependencies_Base.Vertex_Iterator
+      Vertex_It : Dependencies_Base.Vertex_Iterator'Class
          := Dependencies.New_Vertex_Outgoing_Iterator (Directed_V);
     begin
       Ada.Text_Io.Put_Line (Description (Dependencies.Item (Directed_V).all)
@@ -105,7 +105,7 @@ package body Ada_Unit_Support is
     end Process_Unit;
     procedure Visit is new Dependencies_Base.Visit_Vertices
        (Apply => Process_Unit);
-    Graph_It : Dependencies_Base.Graph_Iterator
+    Graph_It : Dependencies_Base.Graph_Iterator'Class
        := Dependencies.New_Graph_Iterator (Info);
   begin
     Visit (Using => Graph_It);
@@ -129,7 +129,7 @@ package body Ada_Unit_Support is
       is new Dependencies_Base.Visit_Arcs (Apply => Process_Dependency);
       Directed_V : Dependencies.Directed_Vertex
          renames Dependencies.Directed_Vertex (V);
-      Vertex_It : Dependencies_Base.Vertex_Iterator
+      Vertex_It : Dependencies_Base.Vertex_Iterator'Class
          := Dependencies.New_Vertex_Outgoing_Iterator (Directed_V);
       Old_Indent : ASU.Unbounded_String := Indent;
       use type ASU.Unbounded_String;

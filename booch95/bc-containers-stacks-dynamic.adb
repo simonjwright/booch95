@@ -92,11 +92,14 @@ package body BC.Containers.Stacks.Dynamic is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Dynamic_Stack);
 
-  function New_Iterator (For_The_Stack : Dynamic_Stack) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Stack'Address);
+  function New_Iterator
+     (For_The_Stack : Dynamic_Stack) return Iterator'Class is
+    Result : Stack_Iterator;
   begin
-    return Iterator (SP.Create (new Stack_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Stack'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   function Item_At (S : Dynamic_Stack; Index : Positive) return Item_Ptr is
@@ -131,5 +134,12 @@ package body BC.Containers.Stacks.Dynamic is
       Dynamic_Stack_Nodes.Free (S.Rep);
     end if;
   end Finalize;
+
+  Empty_Container : Dynamic_Stack;
+
+  function Null_Container return Dynamic_Stack is
+  begin
+    return Empty_Container;
+  end Null_Container;
 
 end BC.Containers.Stacks.Dynamic;

@@ -76,7 +76,7 @@ package BC.Containers.Bags is
 
   procedure Difference (B : in out Bag'Class; O : Bag'Class);
   -- Perform a logical bag difference; at the completion of this operation,
-  -- the bag S contains the items found in its original state, less those
+  -- the bag B contains the items found in its original state, less those
   -- found in the bag O. For each item in the bag O, if the item is not
   -- already a distinct member of the bag S, do nothing. If the item is a
   -- member of the bag S with a count less than that in the bag O, remove
@@ -128,21 +128,14 @@ private
 
   function Length (B : Bag; Bucket : Positive) return Natural;
 
---   function Exists (B : Bag; I : Item) return Boolean;
-
---   function Value_Of (B : Bag; I : Item) return Positive;
-
   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr;
 
   function Value_At (B : Bag; Bucket, Index : Positive) return Positive;
 
-  type Bag_Iterator (B : access Bag'Class)
-  is new Actual_Iterator (B) with record
+  type Bag_Iterator is new Iterator with record
     Bucket_Index : Natural := 0;
     Index : Natural := 0;
   end record;
-
-  procedure Initialize (It : in out Bag_Iterator);
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
 
@@ -154,7 +147,7 @@ private
 
   function Current_Item (It : Bag_Iterator) return Item;
 
-  function Current_Item (It : Bag_Iterator) return Item_Ptr;
+  function Current_Item_Ptr (It : Bag_Iterator) return Item_Ptr;
 
   procedure Delete_Item_At (It : Bag_Iterator);
 

@@ -48,6 +48,8 @@ package BC.Containers.Maps.Unbounded is
 
   type Unbounded_Map is new Map with private;
 
+  function Null_Container return Unbounded_Map;
+
   function "=" (L, R : Unbounded_Map) return Boolean;
   -- Return True if the two Maps contain the same items bound to the
   -- same values.
@@ -89,7 +91,7 @@ package BC.Containers.Maps.Unbounded is
   -- cached item/value pair is used to accelerate the search; if there is a
   -- cache hit, the time complexity of this operation is O(1).
 
-  function New_Iterator (For_The_Map : Unbounded_Map) return Iterator;
+  function New_Iterator (For_The_Map : Unbounded_Map) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Map.
 
 private
@@ -144,8 +146,5 @@ private
 
   function Value_At
      (M : Unbounded_Map; Bucket, Index : Positive) return Value_Ptr;
-
-  type Unbounded_Map_Iterator (B : access Unbounded_Map'Class)
-  is new Map_Iterator (B) with null record;
 
 end BC.Containers.Maps.Unbounded;

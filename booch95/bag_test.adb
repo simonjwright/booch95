@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -44,7 +44,7 @@ procedure Bag_Test is
       OK := True;
     end Print;
     procedure Visitor is new Containers.Visit (Print);
-    Iter : Containers.Iterator := Containers.New_Iterator (B);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (B);
   begin
     Put ("Bag " & Named);
     Visitor (Iter);
@@ -193,11 +193,12 @@ procedure Bag_Test is
     Bags.Remove (B1, '1');
     Bags.Remove (B1, '1');
     Bags.Remove (B1, '1');
+    Bags.Add (B1, 'z');
   end Test;
 
   procedure Test_Active_Iterator (B : in out Bags.Bag'Class) is
     use Containers; use Bags;
-    Iter : Containers.Iterator := New_Iterator (B);
+    Iter : Containers.Iterator'Class := New_Iterator (B);
   begin
     while not Containers.Is_Done (Iter) loop
       Put_Line
@@ -220,7 +221,7 @@ procedure Bag_Test is
       OK := True;
     end Process;
     procedure Visitor is new Containers.Visit (Process);
-    Iter : Containers.Iterator := Containers.New_Iterator (B);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (B);
   begin
     Visitor (Iter);
   end Test_Passive_Iterator;
@@ -237,7 +238,7 @@ procedure Bag_Test is
       OK := True;
     end Process_Modifiable;
     procedure Modifier is new Containers.Modify (Process_Modifiable);
-    Iter : Containers.Iterator := Containers.New_Iterator (B);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (B);
   begin
     Modifier (Iter);
   end Test_Passive_Modifying_Iterator;
@@ -274,12 +275,12 @@ begin
   Test_Passive_Iterator (Bag_U_P1);
   Test_Passive_Modifying_Iterator (Bag_U_P1);
 
-  Assertion (Bags.Total_Size (Bag_D_P1) = 1,
-             "** M05: Bag TotalSize is not correct");
+  Assertion (Bags.Total_Size (Bag_D_P1) = 2,
+             "** M05: Bag Total_Size is not correct");
 --    Assertion (BD.Count (Bag_D_P2. '8') = 2,
 --               "** M06: Bag Count is not correct");
 -- the statement above triggers a bug box in GNAT 3.11b2 and 3.11p
-  Assertion (Bags.Total_Size (Bag_U_P1) = 1,
+  Assertion (Bags.Total_Size (Bag_U_P1) = 2,
              "** M07: Bag Total_Size is not correct");
   Assertion (BU.Count (Bag_U_P2, '8') = 2,
              "** M10: Bag Count is not correct");

@@ -27,7 +27,7 @@ package body BC.Containers.Queues is
   end Process_Front;
 
   procedure Copy (From : Queue'Class; To : in out Queue'Class) is
-    Iter : Iterator := New_Iterator (From);
+    Iter : Iterator'Class := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
       Clear (To);
@@ -48,8 +48,8 @@ package body BC.Containers.Queues is
       return False;
     end if;
     declare
-      Left_Iter : Iterator := New_Iterator (Left);
-      Right_Iter : Iterator := New_Iterator (Right);
+      Left_Iter : Iterator'Class := New_Iterator (Left);
+      Right_Iter : Iterator'Class := New_Iterator (Right);
     begin
       while not Is_Done (Left_Iter) and then
          not Is_Done (Right_Iter) loop
@@ -63,14 +63,10 @@ package body BC.Containers.Queues is
     end;
   end Are_Equal;
 
-  procedure Initialize (It : in out Queue_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
   procedure Reset (It : in out Queue_Iterator) is
+    Q : Queue'Class renames Queue'Class (It.For_The_Container.all);
   begin
-    if Length (It.Q.all) = 0 then
+    if Length (Q) = 0 then
       It.Index := 0;
     else
       It.Index := 1;
@@ -83,8 +79,9 @@ package body BC.Containers.Queues is
   end Next;
 
   function Is_Done (It : Queue_Iterator) return Boolean is
+    Q : Queue'Class renames Queue'Class (It.For_The_Container.all);
   begin
-    return It.Index = 0 or else It.Index > Length (It.Q.all);
+    return It.Index = 0 or else It.Index > Length (Q);
   end Is_Done;
 
   function Current_Item (It : Queue_Iterator) return Item is
@@ -92,23 +89,24 @@ package body BC.Containers.Queues is
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.Q.all, It.Index).all;
+    return Item_At (It.For_The_Container.all, It.Index).all;
   end Current_Item;
 
-  function Current_Item (It : Queue_Iterator) return Item_Ptr is
+  function Current_Item_Ptr (It : Queue_Iterator) return Item_Ptr is
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.Q.all, It.Index);
-  end Current_Item;
+    return Item_At (It.For_The_Container.all, It.Index);
+  end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Queue_Iterator) is
+    Q : Queue'Class renames Queue'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    Remove (It.Q.all, It.Index);
+    Remove (Q, It.Index);
   end Delete_Item_At;
 
 end BC.Containers.Queues;

@@ -103,11 +103,13 @@ package body BC.Containers.Collections.Unbounded is
   is new System.Address_To_Access_Conversions (Unbounded_Collection);
 
   function New_Iterator
-     (For_The_Collection : Unbounded_Collection) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Collection'Address);
+     (For_The_Collection : Unbounded_Collection) return Iterator'Class is
+    Result : Collection_Iterator;
   begin
-    return Iterator (SP.Create (new Collection_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Collection'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   function Item_At
@@ -130,5 +132,12 @@ package body BC.Containers.Collections.Unbounded is
   begin
     Unbounded_Collection_Nodes.Free (C.Rep);
   end Finalize;
+
+  Empty_Container : Unbounded_Collection;
+
+  function Null_Container return Unbounded_Collection is
+  begin
+    return Empty_Container;
+  end Null_Container;
 
 end BC.Containers.Collections.Unbounded;

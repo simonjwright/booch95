@@ -44,6 +44,8 @@ package BC.Containers.Sets.Bounded is
 
   type Bounded_Set is new Set with private;
 
+  function Null_Container return Bounded_Set;
+
   procedure Clear (S : in out Bounded_Set);
   -- Empty the set of all items.
 
@@ -70,7 +72,7 @@ package BC.Containers.Sets.Bounded is
   function Is_Member (S : Bounded_Set; I : Item) return Boolean;
   -- Return True if and only if the item exists in the set.
 
-  function New_Iterator (For_The_Set : Bounded_Set) return Iterator;
+  function New_Iterator (For_The_Set : Bounded_Set) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Set.
 
 private
@@ -115,8 +117,5 @@ private
 
   function Item_At
      (S : Bounded_Set; Bucket, Index : Positive) return Item_Ptr;
-
-  type Bounded_Set_Iterator (B : access Bounded_Set'Class)
-  is new Set_Iterator (B) with null record;
 
 end BC.Containers.Sets.Bounded;

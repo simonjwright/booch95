@@ -104,13 +104,10 @@ private
 
   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr;
 
-  type Set_Iterator (S : access Set'Class)
-  is new Actual_Iterator (S) with record
+  type Set_Iterator is new Iterator with record
     Bucket_Index : Natural := 0;
     Index : Natural := 0;
   end record;
-
-  procedure Initialize (It : in out Set_Iterator);
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
 
@@ -122,7 +119,7 @@ private
 
   function Current_Item (It : Set_Iterator) return Item;
 
-  function Current_Item (It : Set_Iterator) return Item_Ptr;
+  function Current_Item_Ptr (It : Set_Iterator) return Item_Ptr;
 
   procedure Delete_Item_At (It : Set_Iterator);
 

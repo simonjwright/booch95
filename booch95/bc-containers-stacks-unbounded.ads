@@ -32,6 +32,8 @@ package BC.Containers.Stacks.Unbounded is
   -- This Stack exhibits unlimited growth and collapsing, limited only by
   -- available memory.  Assignment is "deep".
 
+  function Null_Container return Unbounded_Stack;
+
   function "=" (Left, Right : in Unbounded_Stack) return Boolean;
   -- Return True if and only if both stacks have the same depth and the
   -- same items in the same order; return False otherwise.
@@ -54,7 +56,7 @@ package BC.Containers.Stacks.Unbounded is
   function Top (S : in Unbounded_Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
 
-  function New_Iterator (For_The_Stack : Unbounded_Stack) return Iterator;
+  function New_Iterator (For_The_Stack : Unbounded_Stack) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Stack.
 
 private

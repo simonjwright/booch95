@@ -30,6 +30,8 @@ package BC.Containers.Rings.Unbounded is
 
   type Unbounded_Ring is new Ring with private;
 
+  function Null_Container return Unbounded_Ring;
+
   function "=" (Left, Right : in Unbounded_Ring) return Boolean;
 
   procedure Clear (R : in out Unbounded_Ring);
@@ -64,7 +66,7 @@ package BC.Containers.Rings.Unbounded is
   function Top (R : Unbounded_Ring) return Item;
   -- Return a copy of the item at the top of the ring.
 
-  function New_Iterator (For_The_Ring : Unbounded_Ring) return Iterator;
+  function New_Iterator (For_The_Ring : Unbounded_Ring) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Ring.
 
 private

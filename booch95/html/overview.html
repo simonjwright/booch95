@@ -55,41 +55,50 @@ The current version has the following components available (the
 <font color=red>red</font> parts are new since the last release):<p>
 
 <UL>
-<li>Bounded Bags
-<li>Dynamic Bags
-<li>Unbounded Bags
-<li>Unbounded Collections
-<li>Unbounded Ordered Collections
-<li>Directed Graphs
-<li>Undirected Graphs
-<LI>Single Lists 
-<LI>Double Lists
-<li>Bounded Maps
-<li>Dynamic Maps
-<li>Unbounded Maps
-<LI>Bounded Queues 
-<LI>Dynamic Queues
-<LI>Unbounded Queues
-<LI>Unbounded Ordered Queues
-<LI>Unbounded Rings
-<LI>Unbounded Guarded Rings
-<LI>Unbounded Synchronized Rings
-<li>Bounded Sets
-<li>Dynamic Sets
-<li>Unbounded Sets
-<LI>Bounded Stacks 
-<LI>Dynamic Stacks
-<LI>Unbounded Stacks
+
+<li>Bounded, Dynamic and Unbounded Bags
+
+<li><font color=red>Bounded</font>, <font color=red>Dynamic</font> and
+Unbounded Collections
+
+<li><font color=red>Bounded</font>, <font color=red>Dynamic</font> and
+Unbounded Ordered Collections
+
+<li><font color=red>Bounded</font>, <font color=red>Dynamic</font> and
+Unbounded Deques
+
+<li>Directed and Undirected Graphs
+
+<LI>Single and Double Lists 
+
+<li>Bounded, Dynamic and Unbounded Maps
+
+<LI>Bounded, Dynamic and Unbounded Queues
+
+<LI><font color=red>Bounded</font>, <font color=red>Dynamic</font> and
+Unbounded Ordered Queues
+
+<LI><font color=red>Bounded</font>, <font color=red>Dynamic</font> and
+Unbounded Rings
+
+li>Bounded, Dynamic and Unbounded Sets
+
+<LI>Bounded, Dynamic and Unbounded Stacks
+
 <li>AVL Trees
+
 <LI>Binary Trees
 <ul>
 <li>Pre-order, in-order and post-order iteration
 </ul>
+
 <LI>Multiway Trees
 <ul>
 <li>Pre-order and post-order iteration
 </ul>
+
 <li>Smart Pointers
+
 </UL>
 
 <P>See the <A HREF="documentation.html">Component Documentation</A> for
@@ -108,53 +117,6 @@ There is also a collection of <a href="contrib/">contributions</a>.
 me</a> with any thoughts you may have!</p>
 
 <dl>
-
-<dt>Iterators</dt>
-
-<dd>
-
-I've reworked Iteration throughout.<p>
-
-For active iterators, the new style uses a "factory" function
-<tt>New_Iterator</tt>, which dispatches on the concrete Container and
-returns an Iterator. This uses the fact that tagged types are passed
-by reference to allow a reference to the concrete Container to be kept
-behind the scenes.<p>
-
-You can see an example of this style in <tt>Map_Test</tt>;
-
-<pre>
-  procedure Test_Active_Iterator (M : in out Maps.Map'Class) is
-    use Containers; use Maps; use MB;
-    Iter : Containers.Iterator := New_Iterator (M);
-  begin
-    while not Containers.Is_Done (Iter) loop
-      Put_Line ("      Item: "
-                & Containers.Current_Item (Iter)
-                & " Value: "
-                & Image (Maps.Current_Value (Iter).all));
-      Containers.Next (Iter);
-    end loop;
-  end Test_Active_Iterator;
-</pre>
-
-Passive iteration is handled via generics. In the same test, we might have
-had
-
-<pre>
-  procedure Test_Passive_Iterator (M : in out Maps.Map'Class) is
-    procedure Visitor is new Maps.Visit (Process, M);
-    Iter : Containers.Iterator := New_Iterator (M);
-  begin
-    Visitor (using => Iter);
-  end Test_Passive_Iterator;
-</pre>
-
-Note, however, that <b><font color="red">iteration is broken</font>
-under GNAT 3.10p!</b> <b><font color="blue">Please use GNAT 3.11p (or
-later)</font></b>.<p>
-
-</dd>
 
 <dt>Hierarchy, Graphs and Trees</dt>
 
@@ -202,12 +164,16 @@ result in blocking until an entry is added to the Container.<p>
 
 <dd>
 
-I've been looking at adding concurrency support to Maps. This has
-turned up some GNAT problems, which I've reported, and has pretty well
-blown the Aonix ObjectAda 7.1 demo compiler out of the water (it has
-trouble with AVL Trees too). I understand from Aonix that they're
-considering a demo version of the latest compiler release; until then,
-support for newer BC features under OA will be low-priority.<p>
+The new Aonix ObjectAda 7.2 demo compiler handles the stock Components
+without change, so the old "Aonix-only" versions of the test programs,
+which omitted Dynamic forms, are no longer needed.
+
+<p>However, none of GNAT 3.12p, Apex (3.0.2B for NT) or OA7.2 <a
+href="compiler-problems.html#13aug2000">handles the idiom I've
+adopted</a> for adding concurrency. It's such a pleasant idiom, too,
+and saves <em>so</em> much work!
+
+<p>GNAT 3.13p works well.
 
 </dd>
 

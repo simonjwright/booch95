@@ -43,7 +43,7 @@ package body BC.Containers.Queues.Bounded is
     Bounded_Queue_Nodes.Remove (Q.Rep.all, From);
   end Remove;
 
-  function Available (Q: in Bounded_Queue) return Natural is
+  function Available (Q : in Bounded_Queue) return Natural is
   begin
     return Bounded_Queue_Nodes.Available (Q.Rep.all);
   end Available;
@@ -76,11 +76,14 @@ package body BC.Containers.Queues.Bounded is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Bounded_Queue);
 
-  function New_Iterator (For_The_Queue : Bounded_Queue) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Queue'Address);
+  function New_Iterator
+     (For_The_Queue : Bounded_Queue) return Iterator'Class is
+    Result : Queue_Iterator;
   begin
-    return Iterator (SP.Create (new Queue_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Queue'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   function Item_At (Q : Bounded_Queue; Index : Positive) return Item_Ptr is
@@ -97,5 +100,12 @@ package body BC.Containers.Queues.Bounded is
   begin
     Free (Q.Rep);
   end Finalize;
+
+  Empty_Container : Bounded_Queue;
+
+  function Null_Container return Bounded_Queue is
+  begin
+    return Empty_Container;
+  end Null_Container;
 
 end BC.Containers.Queues.Bounded;

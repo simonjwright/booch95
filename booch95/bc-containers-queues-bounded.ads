@@ -27,6 +27,8 @@ package BC.Containers.Queues.Bounded is
 
   type Bounded_Queue is new Queue with private;
 
+  function Null_Container return Bounded_Queue;
+
   procedure Clear (Q : in out Bounded_Queue);
   -- Empty the queue of all items.
 
@@ -40,7 +42,7 @@ package BC.Containers.Queues.Bounded is
   -- Remove the item at the given index (may be a balking operation).
 
   function Available (Q : in Bounded_Queue) return Natural;
-  -- Indicated number of empty "Item slots" left in Queue
+  -- Indicates number of empty "Item slots" left in Queue
 
   function Length (Q : in Bounded_Queue) return Natural;
   -- Remove the item at the given index (may be a balking operation).
@@ -59,7 +61,7 @@ package BC.Containers.Queues.Bounded is
   -- Return True if and only if both queues have the same length and the same
   -- items in the same order; return False otherwise.
 
-  function New_Iterator (For_The_Queue : Bounded_Queue) return Iterator;
+  function New_Iterator (For_The_Queue : Bounded_Queue) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Queue.
 
 private

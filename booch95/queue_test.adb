@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -44,7 +44,7 @@ procedure Queue_Test is
   end Assertion;
 
   procedure Test_Active_Iterator (Q : Container'Class) is
-    Iter : Iterator := New_Iterator (Q);
+    Iter : Iterator'Class := New_Iterator (Q);
     Success : Boolean;
     Temp : Character;
   begin
@@ -135,17 +135,18 @@ procedure Queue_Test is
     Remove (Q2, 1);
     Assertion (Front (Q2) = 'z', "** P40: Queue front is not correct");
     Remove (Q2, 1);
+    Append (Q1, 'z');
   end Test_Primitive;
 
   procedure Test_Passive_Iterator (Q : Container'Class) is
     procedure Iterate is new Visit (Apply => Process);
-    Iter : Iterator := New_Iterator (Q);
+    Iter : Iterator'Class := New_Iterator (Q);
   begin
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
   procedure Test_Iterator_Deletion (Q : in out Queue'Class) is
-    Iter : Iterator := New_Iterator (Q);
+    Iter : Iterator'Class := New_Iterator (Q);
     Delete : Boolean;
   begin
     Clear (Q);
@@ -195,6 +196,7 @@ begin
   Test_Primitive (Queue_B_P1, Queue_B_P2);
 
   Put_Line ("...Dynamic Queue");
+  QD.Preallocate (Queue_D_P1, 50);
   Test_Primitive (Queue_D_P1, Queue_D_P2);
 
   Put_Line ("...Unbounded Queue");
@@ -223,9 +225,9 @@ begin
   Assertion ((Front (Queue_U_P1) = '9'), "** M09: Queue front is not correct");
   Assertion ((Length (Queue_U_P2) = 0), "** M10: Queue length is not correct");
 
-  Assertion (Available (Queue_B_P1) = 99, "** M13: Available space not correct");
-  Assertion
-     (Available (Queue_B_P2) = 100, "** M14: Available space not correct");
+  Assertion (Available (Queue_B_P1) = 98, "** M13: Available space not correct");
+  Assertion (Available (Queue_B_P2) = 100,
+             "** M14: Available space not correct");
 
   Put_Line ("...Queue Iterator Deletion");
   Put_Line ("   Bounded:");

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -172,11 +172,12 @@ procedure Set_Test is
       when BC.Not_Found => null;
       when others => Put_Line ("** P51: Set remove is not correct");
     end;
+    Sets.Add (S1, 'z', Added => Status);
   end Test;
 
   procedure Test_Active_Iterator (S : in out Sets.Set'Class) is
     use Containers; use Sets; use SB;
-    Iter : Containers.Iterator := New_Iterator (S);
+    Iter : Containers.Iterator'Class := New_Iterator (S);
   begin
     while not Containers.Is_Done (Iter) loop
       Put_Line ("      Item: "
@@ -199,7 +200,7 @@ procedure Set_Test is
 
   procedure Test_Passive_Iterator (S : in out Containers.Container'Class) is
     procedure Visitor is new Containers.Visit (Process);
-    Iter : Containers.Iterator := Containers.New_Iterator (S);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (S);
   begin
     Visitor (Using => Iter);
   end Test_Passive_Iterator;
@@ -207,7 +208,7 @@ procedure Set_Test is
   procedure Test_Passive_Modifying_Iterator
      (S : in out Containers.Container'Class) is
     procedure Modifier is new Containers.Modify (Process_Modifiable);
-    Iter : Containers.Iterator := Containers.New_Iterator (S);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (S);
   begin
     Modifier (Using => Iter);
   end Test_Passive_Modifying_Iterator;
@@ -252,8 +253,10 @@ begin
   Assertion (SD.Extent (Set_D_Pu2) = 3, "** M06: Set extent is not correct");
   Assertion (SU.Is_Member (Set_U_Pu1, '1'),
              "** M09: Set membership is not correct");
+  Assertion (SU.Is_Member (Set_U_Pu1, 'z'),
+             "** M10: Set membership is not correct");
   Assertion (SU.Extent (Set_U_Pu2) = 3, "** M10: Set extent is not correct");
-  Assertion (SB.Available (Set_B_Pu1) = 299,
+  Assertion (SB.Available (Set_B_Pu1) = 298,
              "** M13: Available space is not correct");
   Assertion (SB.Available (Set_B_Pu2) = 297,
              "** M14: Available space is not correct");
