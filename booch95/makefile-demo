@@ -21,7 +21,7 @@
 ########
 # Demos
 
-GNATMAKE_FLAGS = -I.. -O2 -g -gnata -gnatwu -gnatwl
+GNATMAKE_FLAGS = -I.. -O2 -g -gnata -gnatf -gnatwu -gnatwl -gnaty
 
 all:: demos
 
