@@ -91,6 +91,7 @@ package body BC.Containers.Maps.Unbounded is
    end Attach;
 
    function Number_Of_Buckets (M : Map) return Natural is
+      pragma Warnings (Off, M);
    begin
       return Buckets;
    end Number_Of_Buckets;
