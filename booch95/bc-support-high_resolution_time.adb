@@ -34,7 +34,7 @@ with System.Machine_Code;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-package body High_Resolution_Time is
+package body BC.Support.High_Resolution_Time is
 
 
    pragma Suppress (All_Checks);
@@ -120,4 +120,4 @@ package body High_Resolution_Time is
 
 begin
    Initialize_Clock_Rate;
-end High_Resolution_Time;
+end BC.Support.High_Resolution_Time;
