@@ -1,3 +1,5 @@
+This is Release_980824 of the Ada 95 Booch Components.
+
 The Components are available in three forms:
 
 bc.tar.gz, normally for UNIX systems
@@ -17,5 +19,5 @@ bc.src,    uncompressed concatenated source, for DOS/Windows 3
   GNAT can be obtained from ftp://cs.nyu.edu/pub/gnat and mirrors.
 
 Simon Wright <simon@pogner.demon.co.uk>
-30.vii.98
+
 
