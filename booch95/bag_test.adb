@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -30,6 +30,7 @@ procedure Bag_Test is
    procedure Assertion (B : Boolean; S : String);
    procedure Print_Bag (B : Containers.Container'Class;
                         Named : String);
+   pragma Warnings (Off, Print_Bag);
    procedure Test (B1, B2 : in out Bags.Abstract_Bag'Class);
    procedure Test_Active_Iterator (B : in out Bags.Abstract_Bag'Class);
    procedure Test_Passive_Iterator (B : in out Containers.Container'Class);

@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -521,6 +521,7 @@ package body BC.Containers.Trees.AVL is
    end Modify;
 
    procedure Initialize (T : in out AVL_Tree) is
+      pragma Warnings (Off, T);
    begin
       null;
    end Initialize;

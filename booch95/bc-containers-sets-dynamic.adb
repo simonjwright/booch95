@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -131,6 +131,7 @@ package body BC.Containers.Sets.Dynamic is
    end Detach;
 
    function Number_Of_Buckets (S : Set) return Natural is
+      pragma Warnings (Off, S);
    begin
       return Buckets;
    end Number_Of_Buckets;

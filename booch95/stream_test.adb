@@ -59,6 +59,7 @@ procedure Stream_Test is
 
    --  Debug support only
    procedure Image (C : Abstract_Base_Containers.Container'Class);
+   pragma Warnings (Off, Image);
    procedure Image (C : Abstract_Base_Containers.Container'Class) is
       It : Abstract_Base_Containers.Iterator'Class :=
         Abstract_Base_Containers.New_Iterator (C);

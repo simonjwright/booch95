@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -50,6 +50,7 @@ package body BC.Containers.Collections.Ordered.Bounded is
    procedure Insert (C : in out Collection;
                      Elem : Item;
                      Before : Positive) is
+      pragma Warnings (Off, Before);
    begin
       for Index in 1 .. Collection_Nodes.Length (C.Rep)
       loop
@@ -76,6 +77,7 @@ package body BC.Containers.Collections.Ordered.Bounded is
    procedure Append (C : in out Collection;
                      Elem : Item;
                      After : Positive) is
+      pragma Warnings (Off, After);
    begin
       for Index in 1 .. Collection_Nodes.Length (C.Rep)
       loop

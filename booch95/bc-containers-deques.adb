@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -73,6 +73,7 @@ package body BC.Containers.Deques is
    end Are_Equal;
 
    function Available (D : in Abstract_Deque) return Natural is
+      pragma Warnings (Off, D);
    begin
       return Natural'Last;
    end Available;

@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -68,6 +68,7 @@ package body BC.Containers.Stacks is
    end Copy;
 
    function Available (S : in Abstract_Stack) return Natural is
+      pragma Warnings (Off, S);
    begin
       return Natural'Last;
    end Available;

@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -20,14 +20,9 @@
 --  $Date$
 --  $Author$
 
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Bags is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Containers.Bags");
 
    function Are_Equal (L, R : Abstract_Bag'Class) return Boolean is
       It : Iterator'Class := New_Iterator (L);
@@ -210,6 +205,7 @@ package body BC.Containers.Bags is
    end Is_Proper_Subset;
 
    function Available (B : Abstract_Bag) return Natural is
+      pragma Warnings (Off, B);
    begin
       return Natural'Last;
    end Available;

@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -30,6 +30,7 @@ procedure Set_Test is
    use Set_Test_Support;
 
    procedure Print_Set (S : in out Sets.Abstract_Set'Class; Named : String);
+   pragma Warnings (Off, Print_Set);
    procedure Process (Item : Character; OK : out Boolean);
    procedure Process_Modifiable (Item : in out Character; OK : out Boolean);
    procedure Test (S1, S2 : in out Sets.Abstract_Set'Class);
