@@ -224,6 +224,7 @@ package body BC.Support.Managed_Storage is
 
 
    function Storage_Size (This : Pool) return SSE.Storage_Count is
+      pragma Warnings (Off, This);
    begin
       return SSE.Storage_Count'Last; -- well, what else can we say!?
    end Storage_Size;
