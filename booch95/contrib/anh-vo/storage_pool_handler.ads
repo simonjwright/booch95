@@ -15,10 +15,10 @@ with System.Storage_Elements;
 
 package Storage_Pool_Handler is
 
-   -- Indicates storage pool problems mainly for storage exhaustion
+   --  Indicates storage pool problems mainly for storage exhaustion
    Storage_Pool_Error : exception;
 
-   -- User did not specify his identity
+   --  User did not specify his identity
    Unidentified_User : exception;
 
    ----------------------------------------------------------------------------
@@ -100,16 +100,16 @@ package Storage_Pool_Handler is
          Size_In_Storage_Elements : in System.Storage_Elements.Storage_Count;
          Alignment                : in System.Storage_Elements.Storage_Count);
 
-   function Storage_Size (Pool : in Detailed_Pool )
+   function Storage_Size (Pool : in Detailed_Pool)
                                return System.Storage_Elements.Storage_Count;
 
    function User_Id (Pool : Detailed_Pool) return String;
 
-   -- Free memory available for use
+   --  Free memory available for use
    function Memory_Left (Pool : Detailed_Pool)
                                return System.Storage_Elements.Storage_Count;
 
-   -- General status of the memory pool
+   --  General status of the memory pool
    function Status (Pool : Detailed_Pool) return String;
 
 private
@@ -122,18 +122,18 @@ private
    for User_Storage_Array'Alignment use Max_Alignment;
 
    --------------------------- General_Pool -----------------------------------
-    type General_Pool (Size : System.Storage_Elements.Storage_Count;
-                       User : access String ) is new
-      System.Storage_Pools.Root_Storage_Pool with record
+   type General_Pool (Size : System.Storage_Elements.Storage_Count;
+                      User : access String)
+   is new System.Storage_Pools.Root_Storage_Pool with record
       Data       : User_Storage_Array (1 .. Size);
       Addr_Index : System.Storage_Elements.Storage_Count := 1;
       Addr_Head  : System.Address := System.Null_Address;
    end record;
 
-   Procedure Initialize (Pool : in out General_Pool);
-   Procedure Finalize (Pool : in out General_Pool);
+   procedure Initialize (Pool : in out General_Pool);
+   procedure Finalize (Pool : in out General_Pool);
 
-   -- the following two subprograms are for internal test only.
+   --  the following two subprograms are for internal test only.
    function Storage_Available (Pool : General_Pool)
                       return System.Storage_Elements.Storage_Count;
 
@@ -155,7 +155,7 @@ private
    procedure Initialize (Pool : in out Detailed_Pool);
    procedure Finalize (Pool : in out Detailed_Pool);
 
-   -- the subprogram below is for internal test only.
+   --  the subprogram below is for internal test only.
    function Block_Remain (Pool : Detailed_Pool) return Natural;
 
 end Storage_Pool_Handler;

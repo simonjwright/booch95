@@ -11,14 +11,14 @@
 -------------------------------------------------------------------------------
 
 with Ada.Exceptions;
-with Ada.Text_Io;
+with Ada.Text_IO;
 with System.Address_To_Access_Conversions;
 with System.Storage_Elements;
 
 package body Storage_Pool_Handler is
 
    use Ada;
-   use Text_Io;
+   use Text_IO;
 
    use type System.Address;
    use type System.Storage_Elements.Storage_Count;
@@ -26,14 +26,14 @@ package body Storage_Pool_Handler is
    Package_Name : constant String := "Storage_Pool_Handler.";
 
 
-   -- used by General Pool to link memory together
+   --  used by General Pool to link memory together
    type Address_Linker is
       record
          Next_Address  : System.Address := System.Null_Address;
          Size_Elements : System.Storage_Elements.Storage_Count;
       end record;
 
-   -- storage elements needed by General Pool
+   --  storage elements needed by General Pool
    Link_Storage : constant System.Storage_Elements.Storage_Count :=
                              Address_Linker'Max_Size_In_Storage_Elements;
 
@@ -41,13 +41,13 @@ package body Storage_Pool_Handler is
                      System.Address_To_Access_Conversions (Address_Linker);
 
 
-   -- used by Detailed Pool to link the memory together
+   --  used by Detailed Pool to link the memory together
    type Holder is
       record
          Next_Address : System.Address := System.Null_Address;
       end record;
 
-   -- storage elements needed by Holder record.
+   --  storage elements needed by Holder record.
    Holder_Storage : constant System.Storage_Elements.Storage_Count :=
                                       Holder'Max_Size_In_Storage_Elements;
 
@@ -55,6 +55,10 @@ package body Storage_Pool_Handler is
                System.Address_To_Access_Conversions (Holder);
 
 
+   function Aligned (
+              Size      : System.Storage_Elements.Storage_Count;
+              Alignment : System.Storage_Elements.Storage_Count)
+                            return System.Storage_Elements.Storage_Count;
    function Aligned (
               Size      : System.Storage_Elements.Storage_Count;
               Alignment : System.Storage_Elements.Storage_Count)
@@ -85,12 +89,12 @@ package body Storage_Pool_Handler is
          if Address_Access_Conversion.To_Pointer (Current).Size_Elements =
                                                       Desired_Size then
 
-            -- select the matched memory block
+            --  select the matched memory block
             if Previous = System.Null_Address then
                Pool.Addr_Head :=
                  Address_Access_Conversion.To_Pointer (Current).Next_Address;
             else
-               -- examine the next memory block
+               --  examine the next memory block
                Address_Access_Conversion.To_Pointer (Previous).Next_Address :=
                  Address_Access_Conversion.To_Pointer (Current).Next_Address;
             end if;
@@ -106,7 +110,7 @@ package body Storage_Pool_Handler is
          end if;
       end loop;
 
-      -- nothing found from storage reuse, grap storage elements from pool
+      --  nothing found from storage reuse, grap storage elements from pool
       if Pool.Size - Pool.Addr_Index > Desired_Size then
          Storage_Address := Pool.Data (Pool.Addr_Index)'Address;
          Pool.Addr_Index := Pool.Addr_Index + Desired_Size;
@@ -181,11 +185,11 @@ package body Storage_Pool_Handler is
       end if;
    end Largest_Block;
 
-   Procedure Initialize (Pool : in out General_Pool) is
+   procedure Initialize (Pool : in out General_Pool) is
    begin
 
       if Pool.Size < Link_Storage then
-         -- fatal error - No go
+         --  fatal error - No go
          Exceptions.Raise_Exception (Storage_Pool_Error'Identity,
            Pool.User.all & "'s pool size specification is terribly wrong." &
            " The requirements are: Size must be at least" &
@@ -194,7 +198,7 @@ package body Storage_Pool_Handler is
       end if;
 
       if Pool.User.all = ""  then
-         -- serious usage error
+         --  serious usage error
          Exceptions.Raise_Exception (Unidentified_User'Identity,
            "Pool User, you did not have a meaningful name");
       end if;
@@ -203,7 +207,7 @@ package body Storage_Pool_Handler is
 --        System.Storage_Elements.Storage_Count'Image (Pool.Size));
    end Initialize;
 
-   Procedure Finalize (Pool : in out General_Pool) is
+   procedure Finalize (Pool : in out General_Pool) is
       Free_Count : System.Storage_Elements.Storage_Count := 0;
       Addr_Index : System.Address := Pool.Addr_Head;
       The_Object : Address_Access_Conversion.Object_Pointer;
@@ -219,7 +223,7 @@ package body Storage_Pool_Handler is
          Put_Line (Standard_Output, "Memory Leakage Detected!!! " &
            Pool.User.all & "'s codes had memory leakage of" &
            System.Storage_Elements.Storage_Count'Image (
-              Pool.Addr_Index - 1 - Free_count) & " storage elements.");
+              Pool.Addr_Index - 1 - Free_Count) & " storage elements.");
       end if;
 
 --      Put_Line (Pool.User.all & "'s " & "Free_Count = " &
@@ -256,14 +260,14 @@ package body Storage_Pool_Handler is
          Pool                     : in out Detailed_Pool;
          Storage_Address          : in System.Address;
          Size_In_Storage_Elements : in System.Storage_Elements.Storage_Count;
-         Alignment : in System.Storage_Elements.Storage_Count ) is
+         Alignment : in System.Storage_Elements.Storage_Count) is
    begin
       Address_Access_Conv.To_Pointer (Storage_Address).Next_Address :=
                                                               Pool.Head_Keeper;
       Pool.Head_Keeper := Storage_Address;
    end Deallocate;
 
-   function Storage_Size (Pool : in Detailed_Pool )
+   function Storage_Size (Pool : in Detailed_Pool)
                             return System.Storage_Elements.Storage_Count is
    begin
       return Pool.Size;
@@ -310,7 +314,7 @@ package body Storage_Pool_Handler is
    begin   -- Initialize
 
       if Pool.Max < Holder_Storage or else Pool.Size < Pool.Max then
-         -- fatal error - No go
+         --  fatal error - No go
          Exceptions.Raise_Exception (Storage_Pool_Error'Identity,
            Pool.User.all & "'s pool size specification is terribly wrong." &
            " The requirements are: Size must be at least" &
@@ -321,7 +325,7 @@ package body Storage_Pool_Handler is
       end if;
 
       if Pool.User.all = ""  then
-         -- serious usage error
+         --  serious usage error
          Exceptions.Raise_Exception (Unidentified_User'Identity,
            "Pool user, you did not have a meaningful name");
       end if;
@@ -330,7 +334,7 @@ package body Storage_Pool_Handler is
          Temp_Addr := Pool.Data (Addr_Index)'Address;
          Addr_Index := Addr_Index + Pool.Max;
          Address_Access_Conv.To_Pointer (Temp_Addr).Next_Address :=
-                                                            Pool.Head_keeper;
+                                                            Pool.Head_Keeper;
          Pool.Head_Keeper := Temp_Addr;
          Pool.Block_Count := Pool.Block_Count + 1;
       end loop;
@@ -344,7 +348,7 @@ package body Storage_Pool_Handler is
 
    procedure Finalize (Pool : in out Detailed_Pool) is
    begin
-      if Block_Remain (Pool) /= Pool.block_Count then
+      if Block_Remain (Pool) /= Pool.Block_Count then
          Put_Line (Standard_Output, "Memory Leakage Detected!!! " &
                      Pool.User.all & "'s codes had memory leakage of" &
            Natural'Image ((Pool.Block_Count -
