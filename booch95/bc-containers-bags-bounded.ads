@@ -57,16 +57,16 @@ package BC.Containers.Bags.Bounded is
   -- True. If the item already exists, then increment the number of that
   -- item and set Added to False.
 
-  function Available (B : Bag) return Natural;
-  -- Return the number of unused slots in the bag. Note, since hash buckets
-  -- are of fixed size in the bounded bag it will probably not be possible
-  -- to use all these slots.
-
   procedure Remove (B : in out Bag; I : Item);
   -- If the item is not a member of the bag, raise BC.Not_Found. Otherwise,
   -- if there is exactly one of the item in the bag, remove the item in the
   -- bag; if there is more than one of the item in the bag, simply decrement
   -- its number.
+
+  function Available (B : Bag) return Natural;
+  -- Return the number of unused slots in the bag. Note, since hash buckets
+  -- are of fixed size in the bounded bag it will probably not be possible
+  -- to use all these slots.
 
   function Extent (B : Bag) return Natural;
   -- Return the number of distinct items in the bag.
