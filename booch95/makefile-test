@@ -29,6 +29,12 @@ test: testable
 	  ./$$t 2>$$t.log; \
 	done
 
+concurrent_test: concurrent_testable
+	for t in $(CONCURRENT_TESTABLE); do \
+	  echo running $$t; \
+	  ./$$t 2>$$t.log; \
+	done
+
 TESTABLE += avl_test
 avl_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@
@@ -51,6 +57,9 @@ list_test: force
 
 TESTABLE += map_test
 map_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+CONCURRENT_TESTABLE += map_test_concurrent
+map_test_concurrent: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += ordered_collection_test
@@ -87,36 +96,7 @@ tree_test: force
 
 testable: $(TESTABLE)
 
-# Aonix special tests (included here so we check they will at least compile
-# under Linux)
-
-aonix_test: aonix_testable
-	for t in $(AONIX_TESTABLE); do \
-	  echo running $$t; \
-	  ./$$t 2>$$t.log; \
-	done
-
-AONIX_TESTABLE += bag_test_aonix
-bag_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-AONIX_TESTABLE += map_test_aonix
-map_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-AONIX_TESTABLE += queue_test_aonix
-queue_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-AONIX_TESTABLE += set_test_aonix
-set_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-AONIX_TESTABLE += stack_test_aonix
-stack_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-aonix_testable: $(AONIX_TESTABLE)
+concurrent_testable: $(CONCURRENT_TESTABLE)
 
 .PHONY: force
 
