@@ -103,9 +103,9 @@
 
          b) Accompany the distribution with the machine-readable
             source of the Ada library with your modifications.
-            Accompany any non-standard executables with their
 
-         c) corresponding Standard Version executables, giving the
+         c) Accompany any non-standard executables with their
+            corresponding Standard Version executables, giving the
             non-standard executables non-standard names, and
             clearly documenting the differences in manual pages (or
             equivalent), together with instructions on where to get
