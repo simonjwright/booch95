@@ -1,4 +1,4 @@
---  Project file (GCC-3.1, GNAT-3.15) for Booch Components
+--  Project file (GCC-3, GNAT-3.15) for Booch Components
 --  $Id$
 
 project BC is
@@ -6,6 +6,8 @@ project BC is
   for Source_Dirs use (".");
 
   for Object_Dir use ".build";
+
+  for Exec_Dir use ".";
 
   package Builder is
      for Default_Switches ("Ada") use ("-m", "-g");
