@@ -55,6 +55,12 @@ package body BC.Support.Bounded_Hash_Tables is
       end Location;
 
 
+      procedure Initialize (T : in out Table) is
+      begin
+         Clear (T);
+      end Initialize;
+
+
       function "=" (L, R : Table) return Boolean is
       begin
          if System."=" (L'Address, R'Address) then
