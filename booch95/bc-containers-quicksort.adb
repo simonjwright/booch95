@@ -129,6 +129,6 @@ procedure BC.Containers.Quicksort (C : in out Container) is
 begin
    Booch (C, 1, Length (C));
 exception
-   when Should_Have_Been_Overridden => raise Container_Error;
+   when Should_Have_Been_Overridden => raise Sort_Error;
 end BC.Containers.Quicksort;
 
