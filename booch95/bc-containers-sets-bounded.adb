@@ -122,103 +122,7 @@ package body BC.Containers.Sets.Bounded is
       return Tables.Access_Item_At (S.Rep, Index);
    end Item_At;
 
-   procedure Reset (It : in out Bounded_Set_Iterator) is
-      S : Unconstrained_Set'Class
-        renames Unconstrained_Set'Class (It.For_The_Container.all);
-   begin
-      It.Index := 0;
-      if Extent (S) = 0 then
-         It.Bucket_Index := 0;
-      else
-         It.Bucket_Index := 1;
-         while It.Bucket_Index <= Number_Of_Buckets (S) loop
-            if S.Rep.Buckets (It.Bucket_Index) > 0 then
-               It.Index := S.Rep.Buckets (It.Bucket_Index);
-               exit;
-            end if;
-            It.Bucket_Index := It.Bucket_Index + 1;
-         end loop;
-      end if;
-   end Reset;
-
-   procedure Next (It : in out Bounded_Set_Iterator) is
-      S : Unconstrained_Set'Class
-        renames Unconstrained_Set'Class (It.For_The_Container.all);
-   begin
-      if It.Bucket_Index <= Number_Of_Buckets (S) then
-         if S.Rep.Contents (It.Index).Next > 0 then
-            It.Index := S.Rep.Contents (It.Index).Next;
-         else
-            It.Bucket_Index := It.Bucket_Index + 1;
-            It.Index := 0;
-            while It.Bucket_Index <= Number_Of_Buckets (S) loop
-               if S.Rep.Buckets (It.Bucket_Index) > 0 then
-                  It.Index := S.Rep.Buckets (It.Bucket_Index);
-                  exit;
-               end if;
-               It.Bucket_Index := It.Bucket_Index + 1;
-            end loop;
-         end if;
-      end if;
-   end Next;
-
-   function Is_Done (It : Bounded_Set_Iterator) return Boolean is
-      S : Unconstrained_Set'Class
-     renames Unconstrained_Set'Class (It.For_The_Container.all);
-   begin
-      if It.Bucket_Index = 0
-        or else It.Bucket_Index > Number_Of_Buckets (S) then
-         return True;
-      end if;
-      if It.Index > 0 then
-         return False;
-      end if;
-      declare
-         package Conversions is new System.Address_To_Access_Conversions
-           (Bounded_Set_Iterator'Class);
-         P : Conversions.Object_Pointer := Conversions.To_Pointer (It'Address);
-      begin
-         P.Bucket_Index := P.Bucket_Index + 1;
-         P.Index := 0;
-         while P.Bucket_Index <= Number_Of_Buckets (S) loop
-            if S.Rep.Buckets (P.Bucket_Index) > 0 then
-               P.Index := S.Rep.Buckets (P.Bucket_Index);
-               return False;
-            end if;
-            P.Bucket_Index := P.Bucket_Index + 1;
-         end loop;
-      end;
-      return True;
-   end Is_Done;
-
-   function Current_Item (It : Bounded_Set_Iterator) return Item is
-      S : Unconstrained_Set'Class
-     renames Unconstrained_Set'Class (It.For_The_Container.all);
-   begin
-      if Is_Done (It) then
-         raise BC.Not_Found;
-      end if;
-      return S.Rep.Contents (It.Index).Item;
-   end Current_Item;
-
-   function Current_Item_Ptr (It : Bounded_Set_Iterator) return Item_Ptr is
-      --  XXX this should probably not be permitted!
-      S : Unconstrained_Set'Class
-     renames Unconstrained_Set'Class (It.For_The_Container.all);
-   begin
-      if Is_Done (It) then
-         raise BC.Not_Found;
-      end if;
-      return Tables.Access_Item_At (S.Rep, It.Index);
-   end Current_Item_Ptr;
-
-   procedure Delete_Item_At (It : in out Bounded_Set_Iterator) is
-   begin
-      if Is_Done (It) then
-         raise BC.Not_Found;
-      end if;
-      raise BC.Not_Yet_Implemented;
-   end Delete_Item_At;
+   --  Null containers
 
    Empty_Container : Set;
    pragma Warnings (Off, Empty_Container);
@@ -227,5 +131,49 @@ package body BC.Containers.Sets.Bounded is
    begin
       return Empty_Container;
    end Null_Container;
+
+   --  Iterators
+
+   procedure Reset (It : in out Bounded_Set_Iterator) is
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      Tables.Reset (S.Rep, It.Bucket_Index, It.Index);
+   end Reset;
+
+   procedure Next (It : in out Bounded_Set_Iterator) is
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      Tables.Next (S.Rep, It.Bucket_Index, It.Index);
+   end Next;
+
+   function Is_Done (It : Bounded_Set_Iterator) return Boolean is
+      S : Unconstrained_Set'Class
+     renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      return Tables.Is_Done (S.Rep, It.Bucket_Index, It.Index);
+   end Is_Done;
+
+   function Current_Item (It : Bounded_Set_Iterator) return Item is
+      S : Unconstrained_Set'Class
+     renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Item_Ptr (S.Rep, It.Bucket_Index, It.Index).all;
+   end Current_Item;
+
+   function Current_Item_Ptr (It : Bounded_Set_Iterator) return Item_Ptr is
+      S : Unconstrained_Set'Class
+     renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Item_Ptr (S.Rep, It.Bucket_Index, It.Index);
+   end Current_Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Bounded_Set_Iterator) is
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      Tables.Delete_Item_At (S.Rep, It.Bucket_Index, It.Index);
+   end Delete_Item_At;
 
 end BC.Containers.Sets.Bounded;

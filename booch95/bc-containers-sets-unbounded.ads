@@ -94,6 +94,7 @@ private
    use IC;
    package Items is new BC.Support.Hash_Tables.Item_Signature
      (Item => Item,
+      Item_Ptr => Item_Ptr,
       Item_Container => IC.Unb_Node);
 
    --  We need a dummy type for the Value component of the hash table.
@@ -127,5 +128,21 @@ private
 
    function Item_At (S : Unconstrained_Set;
                      Bucket, Index : Positive) return Item_Ptr;
+
+   --  Iterators
+
+   type Unbounded_Set_Iterator is new Set_Iterator with null record;
+
+   procedure Reset (It : in out Unbounded_Set_Iterator);
+
+   procedure Next (It : in out Unbounded_Set_Iterator);
+
+   function Is_Done (It : Unbounded_Set_Iterator) return Boolean;
+
+   function Current_Item (It : Unbounded_Set_Iterator) return Item;
+
+   function Current_Item_Ptr (It : Unbounded_Set_Iterator) return Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Unbounded_Set_Iterator);
 
 end BC.Containers.Sets.Unbounded;

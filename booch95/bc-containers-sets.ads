@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -123,23 +123,9 @@ private
    function Item_At
      (S : Abstract_Set; Bucket, Index : Positive) return Item_Ptr;
 
-   type Set_Iterator is new Iterator with record
+   type Set_Iterator is abstract new Iterator with record
       Bucket_Index : Natural := 0;
       Index : Natural := 0;
    end record;
-
-   --  Overriding primitive supbrograms of the concrete actual Iterator.
-
-   procedure Reset (It : in out Set_Iterator);
-
-   procedure Next (It : in out Set_Iterator);
-
-   function Is_Done (It : Set_Iterator) return Boolean;
-
-   function Current_Item (It : Set_Iterator) return Item;
-
-   function Current_Item_Ptr (It : Set_Iterator) return Item_Ptr;
-
-   procedure Delete_Item_At (It : in out Set_Iterator);
 
 end BC.Containers.Sets;
