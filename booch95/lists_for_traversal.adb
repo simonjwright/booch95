@@ -26,4 +26,9 @@ package body Lists_For_Traversal is
     Ada.Text_Io.Put_Line ("finalizing" & Integer'Image (The_T.V));
   end Finalize;
 
+  function "=" (L, R : P) return Boolean is
+  begin
+    return Smart.Value (L).V = Smart.Value (R).V;
+  end "=";
+
 end Lists_For_Traversal;
