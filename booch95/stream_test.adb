@@ -155,7 +155,7 @@ begin
       Append (C1, (Of_Kind => C, C => 'Z'));
       Append (C1, (Of_Kind => Stream_Test_Support.F, F => 0.54321));
       Clear (C2);
-      Assertion (C1 /= C2, "ICB1: Sets are equal");
+      Assertion (C1 /= C2, "ICB1: Collections are equal");
       Collection'Output (Stream (F), C1);
       Reset (F, Mode => In_File);
       C2 := Collection'Input (Stream (F));
@@ -175,11 +175,35 @@ begin
       Append (C1, (Of_Kind => C, C => 'Z'));
       Append (C1, (Of_Kind => Stream_Test_Support.F, F => 0.54321));
       Clear (C2);
-      Assertion (C1 /= C2, "ICU1: Sets are equal");
+      Assertion (C1 /= C2, "ICU1: Collections are equal");
       Collection'Output (Stream (F), C1);
       Reset (F, Mode => In_File);
       C2 := Collection'Input (Stream (F));
       Assertion (C1 = C2, "ICU2: Collections are unequal");
+
+   end;
+
+   declare
+
+      B1, B2, S1, S2 : Base_Class_P;
+
+   begin
+
+      Reset (F, Mode => Out_File);
+
+      B1 := new Brother'(I => 16#aabb#);
+      S1 := new Sister'(B => True);
+
+      Base_Class_P'Output (Stream (F), B1);
+      Base_Class_P'Output (Stream (F), S1);
+
+      Reset (F, Mode => In_File);
+
+      B2 := Base_Class_P'Input (Stream (F));
+      S2 := Base_Class_P'Input (Stream (F));
+
+      Assertion (B2.all = B1.all, "P1: values are unequal");
+      Assertion (S2.all = S1.all, "P2: values are unequal");
 
    end;
 
