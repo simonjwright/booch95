@@ -1,22 +1,3 @@
--- The Ada 95 Booch Components (Version 1.0 beta 1)
--- Copyright (C)1994-1997 Grady Booch and David Weller.  All Rights Reserved.
--- 
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library 
---      for a copy.
---
---  This file contains the definition for the list-based class
---  used for the representation of unbounded structures.
-
 with Ada.Unchecked_Deallocation;
 package body BC.Support.Unbounded is
 
@@ -25,32 +6,21 @@ package body BC.Support.Unbounded is
    procedure Free is new
      Ada.Unchecked_Deallocation(Nodes.Node, Nodes.Node_Ref);
 
-   procedure Reattach(Obj : in Nodes.Node_Ref) is
-   begin
-      if Obj.Prev /= null then
-	 Obj.Prev.Next := Obj;
-      end if;
-      if Obj.Next /= null then
-	 Obj.Next.Prev := Obj;
-      end if;
-   end Reattach;
-
    function Create(From : Unb_Node) return Unb_Node is
       Obj : Unb_Node := From;
-      Ptr : Nodes.Node_Ref := From.Last;
+      Tmp : Nodes.Node_Ref := Obj.Last;
    begin
-      if Ptr /= null then
-         Obj.Last := new Nodes.Node'(Ptr.Elem,null,null);
-	 Reattach(Obj.Last);
+      if Tmp /= null then
+         Obj.Last := new Nodes.Node'(Elem=>Tmp.Elem,
+                                     Next=>null,Prev=>null);
          Obj.Rep := Obj.Last;
-         Ptr := Ptr.Prev;
-         while Ptr /= null loop
-            Obj.Rep := new Nodes.Node'(Ptr.Elem,null, Obj.Rep);
-	    Reattach(Obj.Rep);
-            Ptr := Ptr.Prev;
+         Tmp := Tmp.Prev;  -- move to previous node from orig list
+         while Tmp /= null loop
+            Obj.Rep := new Nodes.Node'(Elem=>Tmp.Elem,
+                                       Next=>Obj.Rep, Prev=>null);
+            Tmp := Tmp.Prev;
          end loop;
       end if;
-      Obj.Size := From.Size;
       return Obj;
    end Create;
 
@@ -89,10 +59,12 @@ package body BC.Support.Unbounded is
 
    procedure Insert(Obj : in out Unb_Node; Elem : Item) is
    begin
-      Obj.Rep := new Nodes.Node'(Elem, null, Obj.Rep);
-      Reattach(Obj.Rep);
+      Obj.Rep := new Nodes.Node'(Elem, Obj.Rep, null);
+      if Obj.Last.Prev /= null then
+         Obj.Last.Prev.Next := Obj.Last;
+      end if;
       if Obj.Last = null then
-	 Obj.Last := Obj.Rep;
+         Obj.Last := Obj.Rep;
       end if;
       Obj.Size := Obj.Size + 1;
       Obj.Cache := Obj.Rep;
@@ -106,25 +78,28 @@ package body BC.Support.Unbounded is
          Insert(Obj,Elem);
       else
          declare
-	    AObj      : aliased Unb_Node := Obj;
+        AObj      : aliased Unb_Node := Obj;
             Temp_Item : Item := Item_At(AObj'access, Before);  -- loads cache
             Temp_Node : Nodes.Node_Ref;
          begin
-            Temp_Node := new Nodes.Node'(Elem, Obj.Cache.Prev, Obj.Cache);
-	    Reattach(Temp_Node);
-	    if Temp_Node.Prev = null then
-	       Obj.Rep := Temp_Node;
-	    end if;
-	    Obj.Size := Obj.Size + 1;
-	    Obj.Cache := Temp_Node;
-	 end;
+            Temp_Node := new Nodes.Node'(Elem, Obj.Cache, Obj.Cache.Prev);
+      if Temp_Node.Prev /= null then
+         Temp_Node.Prev.Next := Temp_Node;
+      else
+               Obj.Rep := Temp_Node;
+        end if;
+        Obj.Size := Obj.Size + 1;
+        Obj.Cache := Temp_Node;
+     end;
       end if;
    end Insert;
 
    procedure Append (Obj : in out Unb_Node; Elem : Item) is
    begin
-      Obj.Last := new Nodes.Node'(Elem, Obj.Last, null);
-      Reattach(Obj.Last);
+      Obj.Last := new Nodes.Node'(Elem, null, Obj.Last);
+      if Obj.Last.Prev /= null then
+         Obj.Last.Prev.Next := Obj.Last;
+      end if;
       if Obj.Rep = null then
          Obj.Rep := Obj.Last;
       end if;
@@ -140,19 +115,21 @@ package body BC.Support.Unbounded is
          Append(Obj,Elem);
       else
          declare
-	    AObj      : aliased Unb_Node := Obj;
+        AObj      : aliased Unb_Node := Obj;
             Temp_Item : Item := Item_At(AObj'access, After);  -- loads cache
             Temp_Node : Nodes.Node_Ref;
         begin
-            Temp_Node := new Nodes.Node'(Elem, Obj.Cache, Obj.Cache.Next);
-	    Reattach(Temp_Node);
+            Temp_Node := new Nodes.Node'(Elem, Obj.Cache.Next, Obj.Cache);
+      if Temp_Node.Prev /= null then
+         Temp_Node.Prev.Next := Temp_Node;
+      end if;
             if Temp_Node.Next = null then
                Obj.Last := Temp_Node;
             end if;
             Obj.Size := Obj.Size + 1;
             Obj.Cache := Temp_Node;
             Obj.Cache_Index := Obj.Cache_Index + 1;
-	end;
+        end;
       end if;
    end Append;
 
@@ -164,32 +141,32 @@ package body BC.Support.Unbounded is
          Clear(Obj);
       else
          declare
-	    AObj      : aliased Unb_Node := Obj;
+        AObj      : aliased Unb_Node := Obj;
             Temp_Item : Item := Item_At(AObj'access, From);
             Ptr : Nodes.Node_Ref := AObj.Cache;
          begin
-	    Obj.Cache := AObj.Cache; -- Xfer Cache value back to Obj
             if Ptr.Prev = null then
-               Obj.Rep := Ptr.Next;
+               AObj.Rep := Ptr.Next;
             else
                Ptr.Prev.Next := Ptr.Next;
             end if;
             if Ptr.Next = null then
-               Obj.Last := Ptr.Prev;
+               AObj.Last := Ptr.Prev;
             else
                Ptr.Next.Prev := Ptr.Prev;
             end if;
-            Obj.Size := Obj.Size - 1;
+            AObj.Size := AObj.Size - 1;
             if Ptr.Next /= null then
-               Obj.Cache := Ptr.Next;
+               AObj.Cache := Ptr.Next;
             elsif Ptr.Prev /= null then
-               Obj.Cache := Ptr.Prev;
-               Obj.Cache_Index := Obj.Cache_Index - 1;
+               AObj.Cache := Ptr.Prev;
+               AObj.Cache_Index := AObj.Cache_Index - 1;
             else
-               Obj.Cache := null;
-               Obj.Cache_Index := 0;  
+               AObj.Cache := null;
+               AObj.Cache_Index := 0;
             end if;
             Free(Ptr);
+            Obj := AObj;
          end;
       end if;
    end Remove;
@@ -252,35 +229,37 @@ package body BC.Support.Unbounded is
    end Item_At;
 
    function Item_At(Obj : access Unb_Node; Index : Positive) return Item_Ptr is
-         Ptr : Nodes.Node_Ref := Obj.Rep;
    begin
       if Obj.Cache /= null then
          if Index = Obj.Cache_Index then
             return Obj.Cache.Elem'access;
-	 end if;
-      elsif Index = Obj.Cache_Index + 1 then
-	 Obj.Cache := Obj.Cache.Next;
-	 Obj.Cache_Index := Obj.Cache_Index + 1;
-	 return Obj.Cache.Elem'access;
-      elsif Index = Obj.Cache_Index - 1 then
-	 Obj.Cache := Obj.Cache.Prev;
-	 Obj.Cache_Index := Obj.Cache_Index - 1;
-	 return Obj.Cache.Elem'access;
+         elsif Index = Obj.Cache_Index + 1 then
+            Obj.Cache := Obj.Cache.Next;
+            Obj.Cache_Index := Obj.Cache_Index + 1;
+            return Obj.Cache.Elem'access;
+         elsif Index = Obj.Cache_Index - 1 then
+            Obj.Cache := Obj.Cache.Prev;
+            Obj.Cache_Index := Obj.Cache_Index - 1;
+            return Obj.Cache.Elem'access;
+         end if;
       end if;
-      for i in 1..Obj.Size loop
-	 if i = Index then
-	    Obj.Cache := Ptr;
-	    Obj.Cache_Index := i;
-	    return Ptr.Elem'access;
-	 else
-	    Ptr := Ptr.Next;
-	 end if;
-      end loop;
-      return Ptr.Elem'access;
+      declare
+         Ptr : Nodes.Node_Ref := Obj.Rep;
+      begin
+         for i in 1..Obj.Size loop
+            if i = Index then
+               Obj.Cache := Ptr;
+               Obj.Cache_Index := i;
+               return Ptr.Elem'access;
+            else
+               Ptr := Ptr.Next;
+            end if;
+         end loop;
+         return Ptr.Elem'access;
+      end;
    end Item_At;
 
-   function Location(Obj : access Unb_Node; Elem : Item; Start : Positive := 1) 
-		     return Natural is
+   function Location(Obj : access Unb_Node; Elem : Item; Start : Positive := 1) return Natural is
       Ptr : Nodes.Node_Ref := Obj.Rep;
    begin
       pragma Assert( Start < Obj.Size );

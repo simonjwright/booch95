@@ -1,19 +1,3 @@
--- The Ada 95 Booch Components (Version 1.0 beta 1)
--- Copyright (C)1994-1997 Grady Booch and David Weller.  All Rights Reserved.
--- 
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library 
---      for a copy.
---
 --   This file contains tests for the list classes.
 with Text_Io;
 with Root_Container;
@@ -39,8 +23,8 @@ procedure List_Test is
       assertion((Length(l1) = 0), "** S02: List Length is not initially zero");
       assertion(not Is_Shared(l1), "** S03: List is initially shared");
       Append(l1, '3');
-      Append(l1, '1', 1);
-      Append(l1, '2', 2);
+      Append(l1, '1', 0);
+      Append(l1, '2', 1);
       assertion(not Is_Null(l1), "** S04: List is empty");
       assertion((Length(l1) = 3), "** S05: List Length is not correct");
       assertion((Head(l1) = '3'), "** S06: List Head is not correct");
@@ -62,12 +46,12 @@ procedure List_Test is
       assertion(Is_Shared(t1), "** S17: List is not shared");
       Set_Head(t1, '7');
       assertion((l1 = t1), "** S18: Lists are not equal");
-      assertion((Item_At(l1, 1) = '7'), "** S19: List Head is not correct");
+      assertion((Item_At(l1, 0) = '7'), "** S19: List Head is not correct");
       assertion((Head(t1) = '7'), "** S20: List Head is not correct");
       Insert(l1, '8');
       assertion((l1 /= t1), "** S21: Lists are equal");
       assertion((Length(l1) = 4), "** S22: List Length is not correct");
-      assertion((Item_At(L1, 2) = '7'), "** S23: List Head is not correct");
+      assertion((Item_At(l1, 1) = '7'), "** S23: List Head is not correct");
       assertion((Length(t1) = 3), "** S24: List Length is not correct");
       assertion((Head(t1) = '7'), "** S25: List Head is not correct");
       t2 := t1;
@@ -141,11 +125,11 @@ procedure List_Test is
       Insert(l2, '4');
       Insert(l1, l2, 2);
       Clear(l2);
-      assertion((Item_At(l1, 1) = '5'), "** S64: List Item is not correct");
-      assertion((Item_At(l1, 2) = '4'), "** S65: List Item is not correct");
-      assertion((Item_At(l1, 3) = '3'), "** S66: List Item is not correct");
-      assertion((Item_At(l1, 4) = '2'), "** S67: List Item is not correct");
-      assertion((Item_At(l1, 5) = '1'), "** S68: List Item is not correct");
+      assertion((Item_At(l1, 0) = '5'), "** S64: List Item is not correct");
+      assertion((Item_At(l1, 1) = '4'), "** S65: List Item is not correct");
+      assertion((Item_At(l1, 2) = '3'), "** S66: List Item is not correct");
+      assertion((Item_At(l1, 3) = '2'), "** S67: List Item is not correct");
+      assertion((Item_At(l1, 4) = '1'), "** S68: List Item is not correct");
       Clear(t3);
       Append(l2, '7');
       Append(t3, '9');
@@ -160,14 +144,14 @@ procedure List_Test is
       Append(t3, '5');
       Append(t3, '4');
       Append(t3, '3');
-      Append(l2, t3, 3);
+      Append(l2, t3, 2);
       Clear(t3);
       assertion((Length(l2) = 9), "** S68: List Length is not correct");
-      assertion((Item_At(l2, 1) = '9'), "** S70: List Item is not correct");
-      assertion((Item_At(l2, 5) = '5'), "** S71: List Item is not correct");
-      assertion((Item_At(l2, 7) = '3'), "** S71: List Item is not correct");
-      assertion((Item_At(l2, 8) = '2'), "** S72: List Item is not correct");
-      assertion((Item_At(l2, 9) = '1'), "** S74: List Item is not correct");
+      assertion((Item_At(l2, 0) = '9'), "** S70: List Item is not correct");
+      assertion((Item_At(l2, 4) = '5'), "** S71: List Item is not correct");
+      assertion((Item_At(l2, 6) = '3'), "** S71: List Item is not correct");
+      assertion((Item_At(l2, 7) = '2'), "** S72: List Item is not correct");
+      assertion((Item_At(l2, 8) = '1'), "** S74: List Item is not correct");
       Share_Foot(t3, l2);
       assertion((Head(t3) = '1'), "** S75: List Item is not correct");
       Share_Head(t3, l2);
@@ -179,15 +163,15 @@ procedure List_Test is
       assertion((Head(l2) = '9'), "** S78: List Item is not correct");
       Clear(l1);
       l1 := l2;
-      Remove(l1, 1);
-      Remove(l1, 8);
-      Remove(l1, 4);
+      Remove(l1, 0);
+      Remove(l1, 7);
+      Remove(l1, 3);
       assertion((Length(l1) = 6), "** S79: List Length is not correct");
       assertion((Head(l1) = '8'), "** S80: List Item is not correct");
       assertion((Foot(l1) = '2'), "** S81: List Item is not correct");
       Share(t1, l1, 3);
       Share(t2, l1, 5);
-      Purge(l1, 4);
+      Purge(l1, 3);
       assertion((Length(l1) = 3), "** S82: List Length is not correct");
       assertion((Length(t1) = 1), "** S83: List Length is not correct");
       assertion((Length(t2) = 2), "** S84: List Length is not correct");
@@ -199,14 +183,14 @@ procedure List_Test is
       Append(l1, '3');
       Append(l1, '2');
       Append(l1, '1');
-      Share(t1, l1, 3);
-      Share(t2, l1, 5);
-      Purge(l1, 4, 3);
+      Share(t1, l1, 2);
+      Share(t2, l1, 4);
+      Purge(l1, 3, 3);
       assertion((Length(l1) = 5), "** S88: List Length is not correct");
       assertion((Length(t1) = 3), "** S89: List Length is not correct");
       assertion((Length(t2) = 2), "** S90: List Length is not correct");
       assertion((Head(l1) = '8'), "** S91: List Item is not correct");
-      assertion((Item_At(t1, 2) = '2'), "** S92: List Item is not correct");
+      assertion((Item_At(t1, 1) = '2'), "** S92: List Item is not correct");
       assertion((Head(t2) = '4'), "** S93: List Item is not correct");
       Preserve(l1, 1);
       assertion((Length(l1) = 5), "** S94: List Length is not correct");
@@ -215,7 +199,7 @@ procedure List_Test is
       Append(l1, '3');
       Append(l1, '4');
       Append(l1, '5');
-      Preserve(l1, 3, 4);
+      Preserve(l1, 2, 5);
       assertion((Length(l1) = 4), "** S96: List Length is not correct");
       assertion((Length(t1) = 5), "** S97: List Length is not correct");
    end Test_Single;
@@ -232,8 +216,8 @@ procedure List_Test is
       assertion((Length(l1) = 0), "** D02: List Length is not initially zero");
       assertion(not Is_Shared(l1), "** D03: List is initially shared");
       Append(l1, '3');
-      Append(l1, '1', 1);
-      Append(l1, '2', 2);
+      Append(l1, '1', 0);
+      Append(l1, '2', 1);
       assertion(not Is_Null(l1), "** D04: List is empty");
       assertion((Length(l1) = 3), "** D05: List Length is not correct");
       assertion((Head(l1) = '3'), "** D06: List Head is not correct");
@@ -255,12 +239,12 @@ procedure List_Test is
       assertion(Is_Shared(t1), "** D17: List is not shared");
       Set_Head(t1, '7');
       assertion((l1 = t1), "** D18: Lists are not equal");
-      assertion((Item_At(l1, 1) = '7'), "** D19: List Head is not correct");
+      assertion((Item_At(l1, 0) = '7'), "** D19: List Head is not correct");
       assertion((Head(t1) = '7'), "** D20: List Head is not correct");
       Insert(l1, '8');
       assertion((l1 /= t1), "** D21: Lists are equal");
       assertion((Length(l1) = 4), "** D22: List Length is not correct");
-      assertion((Item_At(l1, 2) = '7'), "** D23: List Head is not correct");
+      assertion((Item_At(l1, 1) = '7'), "** D23: List Head is not correct");
       assertion((Length(t1) = 3), "** D24: List Length is not correct");
       assertion((Head(t1) = '7'), "** D25: List Head is not correct");
       t2 := t1;
@@ -307,8 +291,8 @@ procedure List_Test is
       assertion(Is_Null(l1), "** D54: List is not null");
       assertion((Length(l2) = 3), "** D55: List Length is not correct");
       assertion(not Is_Shared(l2), "** D56: List is shared");
-      assertion((t2 = t3), "** D55a: Lists are not equal");
-      assertion((Length(t3) = 2), "** D56a: List Length is not correct");
+      assertion((t2 = t3), "** D55: Lists are not equal");
+      assertion((Length(t3) = 2), "** D56: List Length is not correct");
       assertion((Head(t3) = '2'), "** D57: List Head is not correct");
       l1 := t2;
       t2 := l2;
@@ -334,11 +318,11 @@ procedure List_Test is
       Insert(l2, '4');
       Insert(l1, l2, 2);
       Clear(l2);
-      assertion((Item_At(l1, 1) = '5'), "** D64: List Item is not correct");
-      assertion((Item_At(l1, 2) = '4'), "** D65: List Item is not correct");
-      assertion((Item_At(l1, 3) = '3'), "** D66: List Item is not correct");
-      assertion((Item_At(l1, 4) = '2'), "** D67: List Item is not correct");
-      assertion((Item_At(l1, 5) = '1'), "** D68: List Item is not correct");
+      assertion((Item_At(l1, 0) = '5'), "** D64: List Item is not correct");
+      assertion((Item_At(l1, 1) = '4'), "** D65: List Item is not correct");
+      assertion((Item_At(l1, 2) = '3'), "** D66: List Item is not correct");
+      assertion((Item_At(l1, 3) = '2'), "** D67: List Item is not correct");
+      assertion((Item_At(l1, 4) = '1'), "** D68: List Item is not correct");
       Clear(t3);
       Append(l2, '7');
       Append(t3, '9');
@@ -353,14 +337,14 @@ procedure List_Test is
       Append(t3, '5');
       Append(t3, '4');
       Append(t3, '3');
-      Append(l2, t3, 3);
+      Append(l2, t3, 2);
       Clear(t3);
-      assertion((Length(l2) = 9), "** D69: List Length is not correct");
-      assertion((Item_At(l2, 1) = '9'), "** D70: List Item is not correct");
-      assertion((Item_At(l2, 5) = '5'), "** D71: List Item is not correct");
-      assertion((Item_At(l2, 7) = '3'), "** D71: List Item is not correct");
-      assertion((Item_At(l2, 8) = '2'), "** D72: List Item is not correct");
-      assertion((Item_At(l2, 9) = '1'), "** D74: List Item is not correct");
+      assertion((Length(l2) = 9), "** D68: List Length is not correct");
+      assertion((Item_At(l2, 0) = '9'), "** D70: List Item is not correct");
+      assertion((Item_At(l2, 4) = '5'), "** D71: List Item is not correct");
+      assertion((Item_At(l2, 6) = '3'), "** D71: List Item is not correct");
+      assertion((Item_At(l2, 7) = '2'), "** D72: List Item is not correct");
+      assertion((Item_At(l2, 8) = '1'), "** D74: List Item is not correct");
       Share_Foot(t3, l2);
       assertion((Head(t3) = '1'), "** D75: List Item is not correct");
       Share_Head(t3, l2);
@@ -372,15 +356,15 @@ procedure List_Test is
       assertion((Head(l2) = '9'), "** D78: List Item is not correct");
       Clear(l1);
       l1 := l2;
-      Remove(l1, 1);
-      Remove(l1, 8);
-      Remove(l1, 4);
+      Remove(l1, 0);
+      Remove(l1, 7);
+      Remove(l1, 3);
       assertion((Length(l1) = 6), "** D79: List Length is not correct");
       assertion((Head(l1) = '8'), "** D80: List Item is not correct");
       assertion((Foot(l1) = '2'), "** D81: List Item is not correct");
       Share(t1, l1, 3);
       Share(t2, l1, 5);
-      Purge(l1, 4);
+      Purge(l1, 3);
       assertion((Length(l1) = 3), "** D82: List Length is not correct");
       assertion((Length(t1) = 1), "** D83: List Length is not correct");
       assertion((Length(t2) = 2), "** D84: List Length is not correct");
@@ -394,12 +378,12 @@ procedure List_Test is
       Append(l1, '1');
       Share(t1, l1, 3);
       Share(t2, l1, 5);
-      Purge(l1, 4, 3);
+      Purge(l1, 3, 3);
       assertion((Length(l1) = 5), "** D88: List Length is not correct");
       assertion((Length(t1) = 3), "** D89: List Length is not correct");
       assertion((Length(t2) = 2), "** D90: List Length is not correct");
       assertion((Head(l1) = '8'), "** D91: List Item is not correct");
-      assertion((Item_At(t1, 2) = '2'), "** D92: List Item is not correct");
+      assertion((Item_At(t1, 1) = '2'), "** D92: List Item is not correct");
       assertion((Head(t2) = '4'), "** D93: List Item is not correct");
       Preserve(l1, 1);
       assertion((Length(l1) = 5), "** D94: List Length is not correct");
@@ -408,7 +392,7 @@ procedure List_Test is
       Append(l1, '3');
       Append(l1, '4');
       Append(l1, '5');
-      Preserve(l1, 3, 4);
+      Preserve(l1, 2, 5);
       assertion((Length(l1) = 4), "** D96: List Length is not correct");
       assertion((Length(t1) = 5), "** D97: List Length is not correct");
       Share(t1, l1, 2);

@@ -1,55 +1,46 @@
-If this README file or the web page (www.rivatech.com/booch) are no
-help, please send e-mail to the author, David Weller, at 
-dweller@rivatech.com, or, if that fails, dweller@imagin.net.
+13 April 1996
 
-Documentation on usage of the components can be found at
-www.rivatech.com/booch.
+This is the first "public" beta release of the Ada 95 Booch Components.
+This reelase (0.4q) contains only the Queue form of the components,
+and is currently limited to the sequential (non-concurrent) forms.
+Future releases will included more functionality and (hopefully) fewer
+bugs.  For now, the components can be downloaded from
+ftp.dfw.net://pub/users/dweller.  The file will be named
+bcDDMMYY.tar.gz (where DD=Day, MM=Month, YY=Year).  For users that are
+running Microsoft(tm) DOS below version 7 (commonly called "Windows
+95"), you need to download the file bcDDMMYY.zip.
 
+For a complete list of known bugs, please read the Openbugs.txt file
+found in this release.
 
-This release of the Booch Components runs with the following
-compilers: 
+Contacting the author:
 
-    Aonix ObjectAda 7.1 (not sure about 7.0) 
-    SGI Ada 95 v1.2 
+David Weller is the author of the Ada 95 Booch Components.  He can be
+reached via the Internet at dweller@dfw.net.  
 
-This release currently does NOT work with the following compilers: 
+Submitting a defect report:
 
-    GNU Ada 95 Compiler (GNAT v3.09).  Bug report has been submitted.
+If you are submitting a comment related to the Booch Components, please 
+be sure to read all installation instructions, open bugs, known defects, 
+and the web page (www.ocsystems.com/booch) to ensure your have the
+most current information.  Be sure you use an "understandable" subject
+line in your e-mail, the author gets tons of mail for many different
+things.
 
-Compilers currently unknown (if you get it running, send me a note!) 
+Caveats:
 
-    OC Systems PowerAda 95 
-    Green Hills Ada 95 
-    RR Software Janus Ada 95 
-    Others(?) 
+Every effort will be made to have the most current software available.
+Please bear in mind that the author does this work completely on his
+own time.  Releases will be distributed as soon as possible.
 
+=====  Compiling =======
 
-This beta release contains the following components: 
+Compiling the sources is simple under GNAT:
+	gnatmake queue_test
 
-    Stacks 
-        Bounded 
-        Dynamic 
-        Unbounded 
-    Queues 
-        Bounded 
-        Dynamic 
-        Unbounded 
-    Lists 
-        Single 
-        Double 
+To turn assertions on, use
+	gnatmake queue_test -cargs -gnata
 
-Each form has a test program associated with it (list_test.adb,
-stack_test.adb, queue_test.adb).  Use those programs as an example of
-proper usage of
-the components. 
+Now, that wasn't so hard, was it?
 
-Please note that these components are considered a work-in-progress.
-As such, generic parameters, subprogram profiles, and other things may
-change that may impact your software.  We will take the greatest steps
-possible to ensure this is not a problem. 
-
-Note that assertions, which are supported with both Aonix ObjectAda
-and the GNU Ada compiler, are used in this software.  If your program
-fails for an unknown reason, recompile with assertions turned on and run
-again. 
-                                                              
+:End of File:
