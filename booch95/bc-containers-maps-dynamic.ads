@@ -27,6 +27,7 @@ generic
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
+  Initial_Size : Positive := 10;
 package BC.Containers.Maps.Dynamic is
 
   pragma Elaborate_Body;
@@ -98,23 +99,23 @@ private
   package KC is new BC.Support.Dynamic (Item => Key,
                                         Item_Ptr => Key_Ptr,
                                         Storage_Manager => Storage_Manager,
-                                        Storage => Storage);
+                                        Storage => Storage,
+                                        Initial_Size => Initial_Size);
   use KC;
   package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
-      Item_Container => KC.Dyn_Node,
-      Item_Container_Ptr => KC.Dyn_Node_Ref);
+      Item_Container => KC.Dyn_Node);
 
   package IC is new BC.Support.Dynamic (Item => Item,
                                         Item_Ptr => Item_Ptr,
                                         Storage_Manager => Storage_Manager,
-                                        Storage => Storage);
+                                        Storage => Storage,
+                                        Initial_Size => Initial_Size);
   use IC;
   package Items is new BC.Support.Hash_Tables.Value_Signature
      (Value => Item,
       Value_Ptr => Item_Ptr,
-      Value_Container => IC.Dyn_Node,
-      Value_Container_Ptr => IC.Dyn_Node_Ref);
+      Value_Container => IC.Dyn_Node);
 
   package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Keys,
