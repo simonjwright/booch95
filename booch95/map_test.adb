@@ -271,6 +271,7 @@ procedure Map_Test is
 --|   Dynamic_Char_Chunk_Map map_d_pu1(5), map_d_pu2(5);
   Map_D_Pu1, Map_D_Pu2 : MD.Dynamic_Map;
 --|   Unbounded_Char_Chunk_Map map_u_pu1, map_u_pu2;
+  Map_U_Pu1, Map_U_Pu2 : MU.Unbounded_Map;
 
 begin
 --|
@@ -290,7 +291,10 @@ begin
   Test (Map_D_Pu1, Map_D_Pu2);
 --|
 --|   message("...Unbounded Map");
+  Put_Line ("...Unbounded Map");
 --|   test(map_u_pu1, map_u_pu2);
+  Test (Map_U_Pu1, Map_U_Pu2);
+
 --|
 --|   message("...Map Active Iterator");
   Put_Line ("...Map Active Iterator");
@@ -303,7 +307,9 @@ begin
 --|   test_active_iterator(map_d_pu1);
   Test_Active_Iterator (Map_D_Pu1);
 --|   message("   Unbounded:");
+  Put_Line ("   Unbounded:");
 --|   test_active_iterator(map_u_pu1);
+  Test_Active_Iterator (Map_U_Pu1);
 --|
 --|   message("...Map Passive Iterator");
   Put_Line ("...Map Passive Iterator");
@@ -318,7 +324,10 @@ begin
   Test_Passive_Iterator (Map_D_Pu1);
   Test_Passive_Modifying_Iterator (Map_D_Pu1);
 --|   message("   Unbounded:");
+  Put_Line ("   Unbounded:");
 --|   test_passive_iterator(map_u_pu1);
+  Test_Passive_Iterator (Map_U_Pu1);
+  Test_Passive_Modifying_Iterator (Map_U_Pu1);
 --|
 --|   assertion(map_b_pu1.IsBound('6'), "** M01: Map binding is not correct");
   Assertion (MB.Is_Bound (Map_B_Pu1, '6'),
@@ -331,7 +340,10 @@ begin
 --|   assertion((map_d_pu2.Extent() == 0), "** M04: Map Extent is not correct");
   Assertion (MD.Extent (Map_D_Pu2) = 0, "** M04: Map Extent is not correct");
 --|   assertion(map_u_pu1.IsBound('6'), "** M05: Map binding is not correct");
+  Assertion (MU.Is_Bound (Map_U_Pu1, '6'),
+             "** M05: Map binding is not correct");
 --|   assertion((map_u_pu2.Extent() == 0), "** M06: Map Extent is not correct");
+  Assertion (MU.Extent (Map_U_Pu2) = 0, "** M06: Map Extent is not correct");
 --|
 --| //  Bounded_Char_Chunk_Map map_b_pu3(map_b_pu1);
 --|   Dynamic_Char_Chunk_Map map_d_pu3(map_d_pu1);
@@ -346,6 +358,11 @@ begin
     Assertion (MD."=" (Map_D_Pu1, Map_D_Pu3), "** M08: Maps are not equal");
   end;
 --|   assertion((map_u_pu1 == map_u_pu3), "** M09: Maps are not equal");
+  declare
+    Map_U_Pu3 : MU.Unbounded_Map := Map_U_Pu1;
+  begin
+    Assertion (MU."=" (Map_U_Pu1, Map_U_Pu3), "** M09: Maps are not equal");
+  end;
 --|
 --| //  map_b_pu3.Clear();
 --|   map_d_pu3.Clear();
