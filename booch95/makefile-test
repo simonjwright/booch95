@@ -1,4 +1,4 @@
-# Copyright (C) 2000 Simon Wright. All Rights Reserved.
+# Copyright (C) 2001 Simon Wright. All Rights Reserved.
 #
 #      This program is free software; you can redistribute it
 #      and/or modify it under the terms of the Ada Community
@@ -18,10 +18,12 @@
 
 # (GNU) Makefile for test of Booch Components distribution.
 
+GNATMAKE=gnatmake
+
 #####################
 # Default build rule
 %: %.adb
-	gnatmake $(GNATMAKE_FLAGS) $@
+	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
 
 ########
 # Tests
