@@ -175,6 +175,8 @@ ada_units.ad[bs] \
 ada_unit_support.ad[bs] \
 bag_test.ad[bs] \
 bag_test_support.ad[bs] \
+bc-containers-bags-bounded.ad[bs] \
+bc-containers-bags-dynamic.ad[bs] \
 bc-containers-bags-unbounded.ad[bs] \
 bc-containers-bags.ad[bs] \
 bc-containers-lists-double.ad[bs] \
