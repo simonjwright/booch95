@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -135,6 +135,7 @@ procedure Ring_Test is
    Ring_B_P1, Ring_B_P2 : RB.Ring;
    Ring_D_P1, Ring_D_P2 : RD.Ring;
    Ring_U_P1, Ring_U_P2 : RU.Ring;
+   Ring_UM_P1, Ring_UM_P2 : RUM.Ring;
 
 begin
 
@@ -147,6 +148,8 @@ begin
    Test_Primitive (Ring_D_P1, Ring_D_P2);
    Put_Line ("...Unbounded Ring");
    Test_Primitive (Ring_U_P1, Ring_U_P2);
+   Put_Line ("...Unmanaged Ring");
+   Test_Primitive (Ring_UM_P1, Ring_UM_P2);
 
    Put_Line ("...Ring Active Iterator");
    Put_Line ("   Bounded:");
@@ -155,6 +158,8 @@ begin
    Test_Active_Iterator (Ring_D_P1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (Ring_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Ring_U_P1);
 
    Put_Line ("...Ring Passive Iterator");
    Put_Line ("   Bounded:");
@@ -162,13 +167,19 @@ begin
    Put_Line ("   Dynamic:");
    Test_Passive_Iterator (Ring_D_P1);
    Put_Line ("   Unbounded:");
+   Test_Passive_Iterator (Ring_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Ring_UM_P1);
 
    Assertion (RB.Top (Ring_B_P1) = '9', "** M01: Ring top is not correct");
    Assertion (RB.Extent (Ring_B_P2) = 2, "** M02: Ring depth is not correct");
    Assertion (RD.Top (Ring_D_P1) = '9', "** M05: Ring top is not correct");
    Assertion (RD.Extent (Ring_D_P2) = 2, "** M06: Ring depth is not correct");
    Assertion (RU.Top (Ring_U_P1) = '9', "** M09: Ring top is not correct");
+   Assertion (RUM.Top (Ring_UM_P1) = '9', "** M09a: Ring top is not correct");
    Assertion (RU.Extent (Ring_U_P2) = 2, "** M10: Ring depth is not correct");
+   Assertion (RUM.Extent (Ring_UM_P2) = 2,
+              "** M10a: Ring depth is not correct");
    Assertion (RB.Available (Ring_B_P1) = 97,
               "** M13: Available space is not correct");
    Assertion (RB.Available (Ring_B_P2) = 98,
