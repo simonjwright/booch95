@@ -183,6 +183,9 @@ possibilities:
 
 <h3><a name="iteration">Iteration</a></h3>
 
+<p>Iteration is the process of visiting each member of a collection
+and doing something with or to it.
+
 <p>Two forms of iteration are supported: open and closed. Both require
 the creation of Iterators.
 
@@ -220,7 +223,7 @@ created by the concrete package:
    end;
 </pre>
 
-A closed-iterator version of the same would look like
+<o>A closed-iterator version of the same would look like
 
 <pre>
    declare
@@ -248,6 +251,21 @@ A closed-iterator version of the same would look like
 
    end;
 </pre>
+
+<p>This example uses the generic <tt>Visit</tt>, which takes the
+element to be processed as an <tt>in</tt> parameter. As well as this,
+there's the generic <tt>Modify</tt>, which takes the element as an
+<tt>in&nbsp;out</tt> parameter.
+
+<p>Both <tt>Visit</tt> and <tt>Modify</tt> come in three flavours:
+
+<ul>
+<li>plain
+<li>with an additional <tt>in</tt> parameter
+<li>with an additional <tt>in&nbsp;out</tt> parameter.
+</ul>
+
+<p>See <tt>BC.Containers</tt> for details.
 
 <h3><a name="selection">Selection</a></h3>
 
@@ -296,36 +314,38 @@ which is a bit of a mouthful.
 
 <p>The tricky bit is the instantiation of <tt>BC.Filter</tt>:
 
+<blockquote>
 <dl>
 
-<dt>Item<dd>is the thing we're filtering (<tt>Car</tt>),
+<dt><tt>Item</tt><dd>is the thing we're filtering (<tt>Car</tt>),
 
-<dt>Source<dd>is an instantion of <tt>BC.Containers</tt> with
+<dt><tt>Source</tt><dd>is an instantion of <tt>BC.Containers</tt> with
 <tt>Item</tt>s,
 
-<dt>From<dd>is the concrete Container type which contains the Items to
-be filtered; it has to be derived from the abstract <tt>Container</tt>
-in <tt>Source</tt>,
+<dt><tt>From</tt><dd>is the concrete Container type which contains the
+Items to be filtered; it has to be derived from the abstract
+<tt>Container</tt> in <tt>Source</tt>,
 
-<dt>Target<dd>is a (possibly different) instantion of
+<dt><tt>Target</tt><dd>is a (possibly different) instantion of
 <tt>BC.Containers</tt> with <tt>Item</tt>s,
 
-<dt>To<dd>is the concrete Container type which is to receive the Items
-when they have been filtered; it has to be derived from the abstract
-<tt>Container</tt> in <tt>Target</tt>, and may or may not be the same
-as <tt>From</tt>,
+<dt><tt>To</tt><dd>is the concrete Container type which is to receive
+the Items when they have been filtered; it has to be derived from the
+abstract <tt>Container</tt> in <tt>Target</tt>, and may or may not be
+the same as <tt>From</tt>,
 
-<dt>Pass<dd>is a function which takes an <tt>Item</tt> and returns
-<tt>True</tt> if it's to be kept. In our case, this is
+<dt><tt>Pass</tt><dd>is a function which takes an <tt>Item</tt> and
+returns <tt>True</tt> if it's to be kept. In our case, this is
 <tt>Wanted</tt>,
 
-<dt>Clear<dd>is a procedure which empties the "<tt>To</tt>"
+<dt><tt>Clear</tt><dd>is a procedure which empties a "<tt>To</tt>"
 <tt>Container</tt>,
 
-<dt>Add<dd>is a procedure which adds an <tt>Item</tt> to a
+<dt><tt>Add</tt><dd>is a procedure which adds an <tt>Item</tt> to a
 "<tt>To</tt>" <tt>Container</tt>.
 
 </dl>
+</blockquote>
 
 <h3><a name="sorting">Sorting</a></h3>
 
