@@ -52,201 +52,122 @@ procedure Set_Test is
                "** P01: Set is not initially empty");
     Assertion (Sets.Extent (S1) = 0,
                "** P02: Set Extent is not initially zero");
-    --| s1.Add('1');
     Sets.Add (S1, '1');
-    --| s1.Add('2');
     Sets.Add (S1, '2');
-    --| s1.Add('3');
     Sets.Add (S1, '3');
-    --| assertion(!(s1.IsEmpty()), "** P03: Set is empty");
     Assertion (not Sets.Is_Empty (S1), "** P03: Set is empty");
-    --| assertion((s1.Extent() == 3), "** P04: Set extent is not correct");
     Assertion (Sets.Extent (S1) = 3, "** P04: Set extent is not correct");
-    --| assertion(s1.IsMember('1'), "** P05: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '1'),
                "** P05: Set membership is not correct");
-    --| assertion(s1.IsMember('2'), "** P06: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '2'),
                "** P06: Set membership is not correct");
-    --| assertion(s1.IsMember('3'), "** P07: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '3'),
                "** P07: Set membership is not correct");
-    --| s1.Clear();
     Sets.Clear (S1);
-    --| assertion(s1.IsEmpty(), "** P08: Set is not empty");
     Assertion (Sets.Is_Empty (S1), "** P08: Set is not empty");
-    --| assertion((s1.Extent() == 0), "** P09: Set extent is not zero");
     Assertion (Sets.Extent (S1) = 0, "** P09: Set extent is not zero");
-    --| s1.Add('4');
     Sets.Add (S1, '4');
-    --| s1.Add('5');
     Sets.Add (S1, '5');
-    --| s1.Add('6');
     Sets.Add (S1, '6');
-    --| assertion(!(s1.IsEmpty()), "** P10: Set is empty");
     Assertion (not Sets.Is_Empty (S1), "** P10: Set is empty");
-    --| assertion((s1.Extent() == 3), "** P11: Set extent is not correct");
     Assertion (Sets.Extent (S1) = 3, "** P11: Set extent is not correct");
-    --| assertion(s1.IsMember('4'), "** P12: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '4'),
                "** P12: Set membership is not correct");
-    --| assertion(s1.IsMember('5'), "** P13: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '5'),
                "** P13: Set membership is not correct");
-    --| assertion(s1.IsMember('6'), "** P14: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '6'),
                "** P14: Set membership is not correct");
-    --| s1.Remove('4');
     Sets.Remove (S1, '4');
-    --| s1.Remove('6');
     Sets.Remove (S1, '6');
-    --| assertion(!(s1.IsEmpty()), "** P15: Set is empty");
     Assertion (not Sets.Is_Empty (S1), "** P15: Set is empty");
-    --| assertion((s1.Extent() == 1), "** P16: Set extent is not correct");
     Assertion (Sets.Extent (S1) = 1, "** P16: Set extent is not correct");
-    --| assertion(!(s1.IsMember('4')), "** P17: Set membership is not correct");
     Assertion (not Sets.Is_Member (S1, '4'),
                "** P17: Set membership is not correct");
-    --| assertion(s1.IsMember('5'), "** P18: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '5'),
                "** P18: Set membership is not correct");
-    --| assertion(!(s1.IsMember('6')), "** P19: Set membership is not correct");
     Assertion (not Sets.Is_Member (S1, '6'),
                "** P19: Set membership is not correct");
-    --| s1.Remove('5');
     Sets.Remove (S1, '5');
-    --| assertion(s1.IsEmpty(), "** P20: Set is not empty");
     Assertion (Sets.Is_Empty (S1), "** P20: Set is not empty");
-    --| assertion((s1.Extent() == 0), "** P21: Set extent is not zero");
     Assertion (Sets.Extent (S1) = 0, "** P21: Set extent is not zero");
-    --| s1.Add('7');
     Sets.Add (S1, '7');
-    --| s1.Add('8');
     Sets.Add (S1, '8');
-    --| s1.Add('9');
     Sets.Add (S1, '9');
-    --| s1.Remove('8');
     Sets.Remove (S1, '8');
-    --| s1.Remove('9');
     Sets.Remove (S1, '9');
-    --| assertion(!(s1.IsEmpty()), "** P22: Set is empty");
     Assertion (not Sets.Is_Empty (S1), "** P22: Set is empty");
-    --| assertion((s1.Extent() == 1), "** P23: Set extent is not correct");
     Assertion (Sets.Extent (S1) = 1, "** P23: Set extent is not correct");
-    --| assertion(s1.IsMember('7'), "** P24: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '7'),
                "** P24: Set membership is not correct");
-    --| s2 = s1;
     S2 := S1;
-    --| assertion(!(s1.IsEmpty()), "** P25: Set is empty");
     Assertion (not Sets.Is_Empty (S1), "** P25: Set is empty");
-    --| assertion((s1.Extent() == 1), "** P26: Set extent is not correct");
     Assertion (Sets.Extent (S1) = 1, "** P26: Set extent is not correct");
-    --| assertion(s1.IsMember('7'), "** P27: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '7'),
                "** P27: Set membership is not correct");
-    --| assertion(!(s2.IsEmpty()), "** P28: Set is empty");
     Assertion (not Sets.Is_Empty (S2), "** P28: Set is empty");
-    --| assertion((s2.Extent() == 1), "** P29: Set extent is not correct");
     Assertion (Sets.Extent (S2) = 1, "** P29: Set extent is not correct");
-    --| assertion(s2.IsMember('7'), "** P30: Set membership is not correct");
     Assertion (Sets.Is_Member (S2, '7'),
                "** P30: Set membership is not correct");
-    --| assertion((s1 == s2), "** P31: Sets are not equal");
     Assertion (Sets.Are_Equal (S1, S2), "** P31: Sets are not equal");
-    --| assertion(s2.IsSubset(s1), "** P32: Sets are not subsets");
     Assertion (Sets.Is_Subset (S2, S1), "** P32: Sets are not subsets");
-    --| assertion(!(s2.IsProperSubset(s1)), "** P33: Sets are proper subsets");
     Assertion (not Sets.Is_Proper_Subset (S2, S1),
                "** P33: Sets are proper subsets");
-    --| s1.Add('1');
     Sets.Add (S1, '1');
-    --| s1.Add('2');
     Sets.Add (S1, '2');
-    --| s1.Add('3');
     Sets.Add (S1, '3');
-    --| assertion(s2.IsSubset(s1), "** P34: Sets are not subsets");
     Assertion (Sets.Is_Subset (S2, S1), "** P34: Sets are not subsets");
-    --| assertion(s2.IsProperSubset(s1), "** P35: Sets are not proper subsets");
     Assertion (Sets.Is_Proper_Subset (S2, S1),
                "** P35: Sets are not proper subsets");
-    --| s2.Add('8');
     Sets.Add (S2, '8');
-    --| s2.Add('9');
     Sets.Add (S2, '9');
-    --| s1.Union(s2);
     Sets.Union (S1, S2);
-    --| assertion((s1.Extent() == 6), "** P36: Set extent is not correct");
     Assertion (Sets.Extent (S1) = 6, "** P36: Set extent is not correct");
-    --| assertion(s1.IsMember('8'), "** P37: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '8'),
                "** P37: Set membership is not correct");
-    --| assertion(s1.IsMember('9'), "** P38: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '9'),
                "** P38: Set membership is not correct");
-    --| s1.Remove('9');
     Sets.Remove (S1, '9');
-    --| assertion(!(s2.IsSubset(s1)), "** P39: Sets are subsets");
     Assertion (not Sets.Is_Subset (S2, S1),
                "** P39: Sets are subsets");
-    --| assertion(!(s2.IsProperSubset(s1)), "** P40: Sets are proper subsets");
     Assertion (not Sets.Is_Proper_Subset (S2, S1),
                "** P40: Sets are proper subsets");
-    --| s1.Intersection(s2);
     Sets.Intersection (S1, S2);
-    --| assertion((s1.Extent() == 2), "** P41: Set extent is not correct");
     Assertion (Sets.Extent (S1) = 2, "** P41: Set extent is not correct");
-    --| assertion(s1.IsMember('7'), "** P42: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '7'),
                "** P42: Set membership is not correct");
-    --| assertion(s1.IsMember('8'), "** P43: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '8'),
                "** P43: Set membership is not correct");
-    --| s1.Add('1');
     Sets.Add (S1, '1');
-    --| s1.Add('2');
     Sets.Add (S1, '2');
-    --| s1.Add('3');
     Sets.Add (S1, '3');
-    --| s1.Difference(s2);
     Sets.Difference (S1, S2);
-    --| assertion((s1.Extent() == 3), "** P44: Set extent is not correct");
     Assertion (Sets.Extent (S1) = 3, "** P44: Set extent is not correct");
-    --| assertion(s1.IsMember('1'), "** P45: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '1'),
                "** P45: Set membership is not correct");
-    --| assertion(s1.IsMember('2'), "** P46: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '2'),
                "** P46: Set membership is not correct");
-    --| assertion(s1.IsMember('3'), "** P47: Set membership is not correct");
     Assertion (Sets.Is_Member (S1, '3'),
                "** P47: Set membership is not correct");
-    --| s1.Remove('2');
     Sets.Remove (S1, '2');
-    --| s1.Remove('3');
     Sets.Remove (S1, '3');
-    --| assertion(s1.Add('3'), "** P48: Set add is not correct");
     begin
       Sets.Add (S1, '3');
     exception
       when others =>
         Put_Line ("** P48: Set add is not correct");
     end;
-    --| assertion(!s1.Add('3'), "** P49: Set add is not correct");
     begin
       Sets.Add (S1, '3');
     exception
       when BC.Duplicate => null;
       when others => Put_Line ("** P48: Set add is not correct");
     end;
-    --| assertion(s1.Remove('3'), "** P50: Set remove is not correct");
     begin
       Sets.Remove (S1, '3');
     exception
       when others =>
         Put_Line ("** P50: Set remove is not correct");
     end;
-    --| assertion(!s1.Remove('3'), "** P51: Set remove is not correct");
     begin
       Sets.Remove (S1, '3');
     exception
@@ -299,9 +220,7 @@ begin
   Put_Line ("...Bounded Set");
   Test (Set_B_Pu1, Set_B_Pu2);
   Put_Line ("...Dynamic Set");
-  --    Preallocate (Set_D_Pu1, 50);
   SD.Preallocate (Set_D_Pu1, 50);
-  --    Test (Set_D_Pu1, Set_D_Pu2);
   Test (Set_D_Pu1, Set_D_Pu2);
   Put_Line ("...Unbounded Set");
   Test (Set_U_Pu1, Set_U_Pu2);
@@ -330,8 +249,6 @@ begin
   Assertion (SD.Is_Member (Set_D_Pu1, '1'),
              "** M05: Set membership is not correct");
   Assertion (SD.Extent (Set_D_Pu2) = 3, "** M06: Set extent is not correct");
---| assertion(set_u_p1.IsMember('1'), "** M09: Set membership is not correct");
---| assertion((set_u_p2.Extent() == 3), "** M10: Set extent is not correct");
   Assertion (SU.Is_Member (Set_U_Pu1, '1'),
              "** M09: Set membership is not correct");
   Assertion (SU.Extent (Set_U_Pu2) = 3, "** M10: Set extent is not correct");
