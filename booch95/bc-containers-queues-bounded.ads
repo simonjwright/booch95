@@ -42,7 +42,7 @@ package BC.Containers.Queues.Bounded is
   -- Remove the item at the given index (may be a balking operation).
 
   function Available (Q : in Bounded_Queue) return Natural;
-  -- Indicated number of empty "Item slots" left in Queue
+  -- Indicates number of empty "Item slots" left in Queue
 
   function Length (Q : in Bounded_Queue) return Natural;
   -- Remove the item at the given index (may be a balking operation).
