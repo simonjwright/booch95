@@ -19,6 +19,7 @@
 
 with Ada.Streams;
 with BC.Containers.Collections.Bounded;
+with BC.Containers.Collections.Dynamic;
 with BC.Containers.Collections.Unbounded;
 with BC.Support.Standard_Storage;
 
@@ -42,11 +43,19 @@ package Stream_Test_Support is
    package ICB is new Abstract_Item_Collections.Bounded
      (Maximum_Size => 100);
 
+   package ICD is new Abstract_Item_Collections.Dynamic
+     (Storage => BC.Support.Standard_Storage.Pool);
+
    package ICU is new Abstract_Item_Collections.Unbounded
      (Storage => BC.Support.Standard_Storage.Pool);
 
    type Base is abstract tagged null record;
    type Base_Class_P is access Base'Class;
+
+   function Image (B : Base) return String is abstract;
+   function Image (B : Base_Class_P) return String;
+
+   function Eq (L, R : Base_Class_P) return Boolean;
 
    procedure Write_Base_Class_P
      (Stream : access Ada.Streams.Root_Stream_Type'Class;
@@ -63,8 +72,18 @@ package Stream_Test_Support is
       I : Integer;
    end record;
 
+   function Image (B : Brother) return String;
+
    type Sister is new Base with record
       B : Boolean;
    end record;
+
+   function Image (S : Sister) return String;
+
+   package Abstract_Base_Containers is new BC.Containers (Base_Class_P,
+                                                          "=" => Eq);
+
+   package Abstract_Base_Collections
+   is new Abstract_Base_Containers.Collections;
 
 end Stream_Test_Support;
