@@ -49,7 +49,7 @@ TESTABLE += tree_test
 DATE = $(shell date +%Y%m%d)
 
 DISTRIBUTION_FILES = \
-bc-$(DATE).tar.gz \
+bc-$(DATE).tgz \
 bc-$(DATE).zip \
 bc-$(DATE).src \
 ACL \
@@ -57,8 +57,9 @@ README
 
 dist: $(DISTRIBUTION_FILES)
 	-@rm -rf distribution
-	mkdir -p distribution/download
-	cp -p $(DISTRIBUTION_FILES) distribution/download/
+	mkdir distribution
+	(cd distribution; ln -s ../../exported-booch-components download)
+	cp -p $(DISTRIBUTION_FILES) distribution/download
 	cp -p ACL html/*.html html/*.gif distribution/
 
 ADA_SOURCE = \
@@ -80,6 +81,7 @@ bc-containers.ad[bs] \
 bc-smart.ad[bs] \
 bc-support-bounded.ad[bs] \
 bc-support-dynamic.ad[bs] \
+bc-support-exceptions.ad[bs] \
 bc-support-managed_storage.ad[bs] \
 bc-support-nodes.ad[bs] \
 bc-support-unbounded.ad[bs] \
@@ -88,10 +90,11 @@ bc-support.ad[bs] \
 bc.ad[bs] \
 character_references.ad[bs] \
 global_heap.ads \
+lists_for_timing.ads \
 list_test.ad[bs] \
+queues_for_timing.ads \
 queue_test.ad[bs] \
 root_bin_trees.ad[bs] \
-root_bounded.ad[bs] \
 root_bounded_queues.ad[bs] \
 root_bounded_stacks.ad[bs] \
 root_container.ad[bs] \
@@ -110,6 +113,9 @@ root_unbounded_queues.ad[bs] \
 root_unbounded_stacks.ad[bs] \
 smart_test.ad[bs] \
 stack_test.ad[bs] \
+storage.adb \
+time_lists.adb \
+time_queues.adb \
 tree_test.ad[bs]
 
 SOURCE = makefile ACL README $(ADA_SOURCE)
@@ -119,7 +125,7 @@ bc-$(DATE): force
 	mkdir $@
 	cp -p $(SOURCE) $@/
 
-bc-$(DATE).tar.gz: bc-$(DATE)
+bc-$(DATE).tgz: bc-$(DATE)
 	tar zcvf $@ $</
 
 bc-$(DATE).zip: bc-$(DATE)
