@@ -97,6 +97,7 @@ private
    use IC;
    package Items is new BC.Support.Hash_Tables.Item_Signature
      (Item => Item,
+      Item_Ptr => Item_Ptr,
       Item_Container => IC.Unb_Node);
 
    type Positive_Ptr is access all Positive;
