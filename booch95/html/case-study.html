@@ -127,7 +127,7 @@ place. Note the <tt>use type Cars.Car;</tt> to make
 <pre>
    with BC.Containers.Collections.Bounded;
    with Cars;
-   package My_Fleet_Combined is
+   package <a name="fleet-combined">My_Fleet_Combined</a> is
 
       use type Cars.Car;
 
@@ -150,7 +150,7 @@ place. Note the <tt>use type Cars.Car;</tt> to make
 <pre>
    with BC.Containers.Collections.Bounded;
    with Cars;
-   package My_Fleet_Hidden is
+   package <a name="fleet-hidden">My_Fleet_Hidden</a> is
 
       --  subprograms to add, find, and delete Cars
 
@@ -251,7 +251,81 @@ A closed-iterator version of the same would look like
 
 <h3><a name="selection">Selection</a></h3>
 
-<p><i>This will be a discussion on the use of <tt>BC.Filter</tt>.</i>
+<p>Suppose we want to find all the Cars in our Fleet that were
+registered before some date. You could imagine a function
+<tt>Before</tt>:
+
+<pre>
+   function Before (Date : Ada.Calendar.Time) return Fleets.Collection;
+</pre>
+
+which we'd probably declare in the public part of <a
+href="#fleet-combined"><tt>My_Fleet_Combined</tt></a>. Its body might
+look like
+ 
+<pre>
+   function Before (Date : Ada.Calendar.Time) return Fleets.Collection is
+
+      function Wanted (C : Car) return Boolean;
+
+      procedure Choose is new BC.Filter
+        (Item => Car,
+         Source => Abstract_Car_Containers,
+         From => Fleets.Collection,
+         Target => Abstract_Car_Containers,
+         To => Fleets.Collection,
+         Pass => Wanted,
+         Clear => Fleets.Clear,
+         Add => Fleets.Append);
+
+      function Wanted (C : Car) return Boolean is
+         use type Ada.Calendar.Time;
+      begin
+         return C.Registered < Date;
+      end Wanted;
+
+      Result : Fleets.Collection;
+
+   begin
+      Choose (The_Fleet, Result);
+      return Result;
+   end Before;
+</pre>
+
+which is a bit of a mouthful.
+
+<p>The tricky bit is the instantiation of <tt>BC.Filter</tt>:
+
+<dl>
+
+<dt>Item<dd>is the thing we're filtering (<tt>Car</tt>),
+
+<dt>Source<dd>is an instantion of <tt>BC.Containers</tt> with
+<tt>Item</tt>s,
+
+<dt>From<dd>is the concrete Container type which contains the Items to
+be filtered; it has to be derived from the abstract <tt>Container</tt>
+in <tt>Source</tt>,
+
+<dt>Target<dd>is a (possibly different) instantion of
+<tt>BC.Containers</tt> with <tt>Item</tt>s,
+
+<dt>To<dd>is the concrete Container type which is to receive the Items
+when they have been filtered; it has to be derived from the abstract
+<tt>Container</tt> in <tt>Target</tt>, and may or may not be the same
+as <tt>From</tt>,
+
+<dt>Pass<dd>is a function which takes an <tt>Item</tt> and returns
+<tt>True</tt> if it's to be kept. In our case, this is
+<tt>Wanted</tt>,
+
+<dt>Clear<dd>is a procedure which empties the "<tt>To</tt>"
+<tt>Container</tt>,
+
+<dt>Add<dd>is a procedure which adds an <tt>Item</tt> to a
+"<tt>To</tt>" <tt>Container</tt>.
+
+</dl>
 
 <h3><a name="sorting">Sorting</a></h3>
 
