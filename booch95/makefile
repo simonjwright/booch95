@@ -57,6 +57,10 @@ TESTABLE += queue_test
 queue_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+TESTABLE += ring_test
+ring_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
 TESTABLE += smart_test
 smart_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
@@ -107,6 +111,7 @@ aonix_testable: $(AONIX_TESTABLE)
 
 DEMOS += ada_units
 DEMOS += lists_traversal
+DEMOS += test_synchronization
 DEMOS += time_lists
 DEMOS += time_queues
 DEMOS += unmanaged_storage
@@ -117,6 +122,9 @@ ada_units: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
 lists_traversal: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+test_synchronization: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
 time_lists: force
@@ -180,6 +188,10 @@ bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
 bc-containers-queues-unbounded.ad[bs] \
 bc-containers-queues.ad[bs] \
+bc-containers-rings.ad[bs] \
+bc-containers-rings-unbounded.ad[bs] \
+bc-containers-rings-unbounded-guarded.ad[bs] \
+bc-containers-rings-unbounded-synchronized.ad[bs] \
 bc-containers-sets-bounded.ad[bs] \
 bc-containers-sets-dynamic.ad[bs] \
 bc-containers-sets-unbounded.ad[bs] \
@@ -209,6 +221,7 @@ bc-support-exceptions.ad[bs] \
 bc-support-hash_tables.ad[bs] \
 bc-support-managed_storage.ad[bs] \
 bc-support-nodes.ad[bs] \
+bc-support-synchronization.ad[bs] \
 bc-support-unbounded.ad[bs] \
 bc-support-unmanaged_storage.ad[bs] \
 bc-support.ad[bs] \
@@ -230,6 +243,8 @@ queues_for_timing.ad[bs] \
 queue_test.ad[bs] \
 queue_test_aonix.ad[bs] \
 queue_test_support.ad[bs] \
+ring_test.ad[bs] \
+ring_test_support.ad[bs] \
 smart_test.ad[bs] \
 smart_test_support.ad[bs] \
 set_test.ad[bs] \
@@ -239,6 +254,7 @@ stack_test.ad[bs] \
 stack_test_aonix.ad[bs] \
 stack_test_support.ad[bs] \
 storage.ad[bs] \
+test_synchronization.adb \
 time_lists.ad[bs] \
 time_queues.ad[bs] \
 tree_test.ad[bs] \
