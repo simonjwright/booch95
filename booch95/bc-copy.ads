@@ -17,7 +17,7 @@
 
 -- $Id$
 
-with Bc.Containers;
+with BC.Containers;
 generic
   type Item is private;
   with package Source is new BC.Containers (Item);
