@@ -17,8 +17,6 @@
 
 -- $Id$
 
-with Ada.Finalization;
-
 generic
   type Value is private;
   with function "=" (L, R : Item) return Boolean is <>;
@@ -94,15 +92,13 @@ package BC.Containers.Maps is
 
   generic
     with procedure Apply (I : Item; V : Value; OK : out Boolean);
-    Over_The_Container : Map'Class;
-  procedure Visit;
+  procedure Visit (Over_The_Container : Map'Class);
   -- Call Apply with a copy of each Item/Value pair in the Container. The
   -- iteration will terminate early if Apply sets OK to False.
 
   generic
     with procedure Apply (I : Item; V : in out Value; OK : out Boolean);
-    Over_The_Container : Map'Class;
-  procedure Modify;
+  procedure Modify (Over_The_Container : Map'Class);
   -- Call Apply for each Item/Value pair in the Container. The Item is a
   -- copy, the Value is the actual content. The iteration will terminate
   -- early if Apply sets OK to False.
