@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, Pat Rogers and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, Pat Rogers and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -195,7 +195,7 @@ package body BC.Support.Managed_Storage is
     end if;
     Ptr := The_Pool.Head;
     while Ptr /= null and then
-      ( Aligned_Size /= Ptr.Element_Size and Ptr.Alignment /= Alignment )
+      ( Aligned_Size /= Ptr.Element_Size or Ptr.Alignment /= Alignment )
     loop
       Ptr := Ptr.Next_Sized_Chunk;
     end loop;
