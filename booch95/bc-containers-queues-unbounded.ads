@@ -1,7 +1,25 @@
+-- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- All Rights Reserved.
+--
+--      This program is free software; you can redistribute it
+--      and/or modify it under the terms of the Ada Community
+--      License which comes with this Library.
+--
+--      This program is distributed in the hope that it will be
+--      useful, but WITHOUT ANY WARRANTY; without even the implied
+--      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+--      PURPOSE. See the Ada Community License for more details.
+--      You should have received a copy of the Ada Community
+--      License with this library, in the file named "Ada Community
+--      License" or "ACL". If not, contact the author of this library
+--      for a copy.
+--
+
+-- $Id$
+
 with BC.Support.Unbounded;
 generic
-   with package Unb_Queue_Nodes is new 
-     BC.Support.Unbounded(Item,Item_Ptr);
+   with package Unb_Queue_Nodes is new BC.Support.Unbounded (Item, Item_Ptr);
 package BC.Containers.Queues.Unbounded is
 
    type Unb_Queue is new Queue with private;
@@ -34,6 +52,6 @@ private
    procedure Initialize( Obj : in out Unb_Queue);
    procedure Adjust(Obj : in out Unb_Queue);
    procedure Finalize(Obj : in out Unb_Queue);
- 
+
 end BC.Containers.Queues.Unbounded;
 
