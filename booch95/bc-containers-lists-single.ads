@@ -45,13 +45,13 @@ package Bc.Containers.Lists.Single is
   -- Add the given list to the head of the list.
 
   procedure Insert (Obj : in out Single_List; Elem : Item; Before : Positive);
-  -- Add the item before the given index item in the list; if before is 0,
+  -- Add the item before the given index item in the list; if before is 1,
   -- the item is added to the head of the list.
 
   procedure Insert (Obj : in out Single_List;
                     From_List: in out Single_List;
                     Before : Positive);
-  -- Add the list before the given index item in the list; if before is 0,
+  -- Add the list before the given index item in the list; if before is 1,
   -- the list is added to the head of the list.
 
   procedure Append (Obj : in out Single_List; Elem : Item);
