@@ -36,7 +36,7 @@ procedure User_Set is
       OK := True;
     end Print;
     procedure Visitor is new Containers.Visit (Print);
-    It : Containers.Iterator
+    It : Containers.Iterator'Class
        := Containers.New_Iterator (Containers.Container'Class (S));
   begin
     Put ("Set " & Named & " ");

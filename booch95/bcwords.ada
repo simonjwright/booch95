@@ -45,7 +45,7 @@ procedure Word_Count is
   Word : Ada.Strings.Unbounded.Unbounded_String;
   Word_Bag : Word_Count_Support.BU.Unbounded_Bag;
   Word_Tree : Word_Count_Support.ST.AVL_Tree;
-  Word_Bag_Iter : Word_Count_Support.Containers.Iterator
+  Word_Bag_Iter : Word_Count_Support.Containers.Iterator'Class
      := Word_Count_Support.BU.New_Iterator (Word_Bag);
   procedure Word_Processor (Item : Ada.Strings.Unbounded.Unbounded_String;
                        Ok : out Boolean) is

@@ -43,12 +43,12 @@ procedure Time_Queues is
     procedure U_Application is new Queues_For_Timing.C.Visit (Apply);
     Start : Ada.Calendar.Time;
     Taken : Duration;
-    It : Queues_For_Timing.C.Iterator;
+    It : Queues_For_Timing.C.Iterator'Class
+       := Queues_For_Timing.C.New_Iterator
+             (Queues_For_Timing.C.Container'Class (B));
     use type Ada.Calendar.Time;
   begin
     Total := 0;
-    It := Queues_For_Timing.C.New_Iterator
-       (Queues_For_Timing.C.Container'Class (B));
     Start := Ada.Calendar.Clock;
     B_Application (It);
     Taken := Ada.Calendar.Clock - Start;
