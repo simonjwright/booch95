@@ -33,28 +33,32 @@ procedure Bag_Test is
     end if;
   end Assertion;
 
---    procedure Print_Bag (S : in out Bags.Bag'Class; Named : String) is
---      procedure Print (Item : Character; OK : out Boolean) is
---      begin
---        Put (" " & Item);
---        OK := True;
---      end Print;
---      procedure Visitor is new Containers.Visit (Print);
---    begin
---      Put ("Bag " & Named);
---      Visitor (S);
---      New_Line;
---    end Print_Bag;
+  procedure Print_Bag (B : Containers.Container'Class;
+                       Named : String) is
+    procedure Print (Item : Character; OK : out Boolean) is
+    begin
+      Put (" "
+           & Item
+           & " =>"
+           & Positive'Image (Bags.Count (Bags.Bag'Class (B), Item)));
+      OK := True;
+    end Print;
+    procedure Visitor is new Containers.Visit (Print);
+    Iter : Containers.Iterator := Containers.New_Iterator (B);
+  begin
+    Put ("Bag " & Named);
+    Visitor (Iter);
+    New_Line;
+  end Print_Bag;
 
   procedure Test (B1, B2 : in out Bags.Bag'Class) is
-    Status : Boolean;
   begin
     Assertion (Bags.Is_Empty (B1),
                "** P01: Bag is not initially empty");
     Assertion (Bags.Extent (B1) = 0,
                "** P02: Bag Extent is not initially zero");
     Assertion (Bags.Total_Size (B1) = 0,
-               "** P03: Bag TotalSize is not initially zero");
+               "** P03: Bag Total_Size is not initially zero");
     Bags.Add (B1, '1');
     Bags.Add (B1, '2');
     Bags.Add (B1, '2');
@@ -62,22 +66,22 @@ procedure Bag_Test is
     Assertion (not Bags.Is_Empty (B1), "** P04: Bag is empty");
     Assertion (Bags.Extent (B1) = 3, "** P05: Bag extent is not correct");
     Assertion (Bags.Total_Size (B1) = 4,
-               "** P06: Bag TotalSize is not correct");
+               "** P06: Bag Total_Size is not correct");
     Assertion (Bags.Is_Member (B1, '1'),
                "** P07: Bag membership is not correct");
     Assertion (Bags.Is_Member (B1, '2'),
                "** P08: Bag membership is not correct");
     Assertion (Bags.Is_Member (B1, '3'),
                "** P09: Bag membership is not correct");
-    Assertion (Bags.Count (B1. '2') = 2,
-	       "** P10: Bag Count is not correct");
-    Assertion (Bags.Count (B1. '3') = 1,
-	       "** P11: Bag Count is not correct");
+    Assertion (Bags.Count (B1, '2') = 2,
+               "** P10: Bag Count is not correct");
+    Assertion (Bags.Count (B1, '3') = 1,
+               "** P11: Bag Count is not correct");
     Bags.Clear (B1);
     Assertion (Bags.Is_Empty (B1), "** P12: Bag is not empty");
     Assertion (Bags.Extent (B1) = 0, "** P13: Bag extent is not zero");
     Assertion (Bags.Total_Size (B1) = 0,
-               "** P14: Bag TotalSize is not zero");
+               "** P14: Bag Total_Size is not zero");
     Bags.Add (B1, '4');
     Bags.Add (B1, '5');
     Bags.Add (B1, '6');
@@ -87,7 +91,7 @@ procedure Bag_Test is
     Assertion (not Bags.Is_Empty (B1), "** P15: Bag is empty");
     Assertion (Bags.Extent (B1) = 3, "** P16: Bag extent is not correct");
     Assertion (Bags.Total_Size (B1) = 6,
-               "** P17: Bag TotalSize is not zero");
+               "** P17: Bag Total_Size is not zero");
     Assertion (Bags.Is_Member (B1, '4'),
                "** P18: Bag membership is not correct");
     Assertion (Bags.Is_Member (B1, '5'),
@@ -99,98 +103,96 @@ procedure Bag_Test is
     Assertion (not Bags.Is_Empty (B1), "** P21: Bag is empty");
     Assertion (Bags.Extent (B1) = 2, "** P22: Bag extent is not correct");
     Assertion (Bags.Total_Size (B1) = 4,
-               "** P23: Bag TotalSize is not zero");
--- XXX
+               "** P23: Bag Total_Size is not zero");
     Assertion (not Bags.Is_Member (B1, '4'),
-               "** P17: Bag membership is not correct");
+               "** P24: Bag membership is not correct");
     Assertion (Bags.Is_Member (B1, '5'),
-               "** P18: Bag membership is not correct");
-    Assertion (not Bags.Is_Member (B1, '6'),
-               "** P19: Bag membership is not correct");
+               "** P25: Bag membership is not correct");
+    Assertion (Bags.Is_Member (B1, '6'),
+               "** P26: Bag membership is not correct");
     Bags.Remove (B1, '5');
-    Assertion (Bags.Is_Empty (B1), "** P20: Bag is not empty");
-    Assertion (Bags.Extent (B1) = 0, "** P21: Bag extent is not zero");
+    Bags.Remove (B1, '6');
+    Bags.Remove (B1, '6');
+    Bags.Remove (B1, '6');
+    Assertion (Bags.Is_Empty (B1), "** P27: Bag is not empty");
+    Assertion (Bags.Extent (B1) = 0, "** P28: Bag extent is not zero");
+    Assertion (Bags.Total_Size (B1) = 0,
+               "** P29: Bag Total_Size is not zero");
     Bags.Add (B1, '7');
     Bags.Add (B1, '8');
+    Bags.Add (B1, '8');
     Bags.Add (B1, '9');
-    Bags.Remove (B1, '8');
-    Bags.Remove (B1, '9');
-    Assertion (not Bags.Is_Empty (B1), "** P22: Bag is empty");
-    Assertion (Bags.Extent (B1) = 1, "** P23: Bag extent is not correct");
-    Assertion (Bags.Is_Member (B1, '7'),
-               "** P24: Bag membership is not correct");
+    Bags.Add (B1, '9');
+    Bags.Add (B1, '9');
+    Assertion (Bags.Extent (B1) = 3, "** P30: Bag extent is not correct");
+    Assertion (Bags.Total_Size (B1) = 6,
+               "** P31: Bag Total_Size is not zero");
     B2 := B1;
-    Assertion (not Bags.Is_Empty (B1), "** P25: Bag is empty");
-    Assertion (Bags.Extent (B1) = 1, "** P26: Bag extent is not correct");
-    Assertion (Bags.Is_Member (B1, '7'),
-               "** P27: Bag membership is not correct");
-    Assertion (not Bags.Is_Empty (B2), "** P28: Bag is empty");
-    Assertion (Bags.Extent (B2) = 1, "** P29: Bag extent is not correct");
-    Assertion (Bags.Is_Member (B2, '7'),
-               "** P30: Bag membership is not correct");
-    Assertion (Bags.Are_Equal (B1, B2), "** P31: Bags are not equal");
-    Assertion (Bags.Is_Subset (B2, B1), "** P32: Bags are not subsets");
+    Assertion (Bags.Extent (B1) = 3, "** P32: Bag extent is not correct");
+    Assertion (Bags.Total_Size (B1) = 6,
+               "** P33: Bag Total_Size is not zero");
+    Assertion (Bags.Extent (B2) = 3, "** P34: Bag extent is not correct");
+    Assertion (Bags.Total_Size (B2) = 6,
+               "** P35: Bag Total_Size is not zero");
+    Assertion (Bags.Are_Equal (B1, B2), "** P36: Bags are not equal");
+    Assertion (Bags.Is_Subset (B2, B1), "** P37: Bags are not subsets");
     Assertion (not Bags.Is_Proper_Subset (B2, B1),
-               "** P33: Bags are proper subsets");
+               "** P38: Bags are proper subsets");
     Bags.Add (B1, '1');
     Bags.Add (B1, '2');
-    Bags.Add (B1, '3');
-    Assertion (Bags.Is_Subset (B2, B1), "** P34: Bags are not subsets");
+    Bags.Add (B1, '2');
+    Bags.Add (B1, '9');
+    Assertion (Bags.Is_Subset (B2, B1), "** P39: Bags are not subsets");
     Assertion (Bags.Is_Proper_Subset (B2, B1),
-               "** P35: Bags are not proper subsets");
-    Bags.Add (B2, '8');
-    Bags.Add (B2, '9');
+               "** P40: Bags are not proper subsets");
+    Bags.Add (B2, '6');
+    Bags.Add (B2, '6');
     Bags.Union (B1, B2);
-    Assertion (Bags.Extent (B1) = 6, "** P36: Bag extent is not correct");
-    Assertion (Bags.Is_Member (B1, '8'),
-               "** P37: Bag membership is not correct");
-    Assertion (Bags.Is_Member (B1, '9'),
-               "** P38: Bag membership is not correct");
-    Bags.Remove (B1, '9');
-    Assertion (not Bags.Is_Subset (B2, B1),
-               "** P39: Bags are subsets");
-    Assertion (not Bags.Is_Proper_Subset (B2, B1),
-               "** P40: Bags are proper subsets");
+    Assertion (Bags.Extent (B1) = 6, "** P41: Bag Extent is not correct");
+    Assertion (Bags.Total_Size (B1) = 18,
+               "** P42: Bag Total_Size is not correct");
+    Assertion (Bags.Count (B1, '1') = 1, "** P43: Bag Count is not correct");
+    Assertion (Bags.Count (B1, '2') = 2, "** P44: Bag Count is not correct");
+    Assertion (Bags.Count (B1, '6') = 2, "** P45: Bag Count is not correct");
+    Assertion (Bags.Count (B1, '7') = 2, "** P46: Bag Count is not correct");
+    Assertion (Bags.Count (B1, '8') = 4, "** P47: Bag Count is not correct");
+    Assertion (Bags.Count (B1, '9') = 7, "** P48: Bag Count is not correct");
+    Bags.Remove (B2, '9');
+    Bags.Remove (B2, '9');
+    Bags.Remove (B2, '9');
+    Bags.Add (B2, '5');
+    Bags.Add (B2, '7');
+    Bags.Add (B2, '7');
     Bags.Intersection (B1, B2);
-    Assertion (Bags.Extent (B1) = 2, "** P41: Bag extent is not correct");
-    Assertion (Bags.Is_Member (B1, '7'),
-               "** P42: Bag membership is not correct");
-    Assertion (Bags.Is_Member (B1, '8'),
-               "** P43: Bag membership is not correct");
+    Assertion (Bags.Extent (B1) = 3, "** P49: Bag Extent is not correct");
+    Assertion (Bags.Total_Size (B1) = 6,
+               "** P50: Bag Total_Size is not correct");
+    Assertion (Bags.Count (B1, '6') = 2, "** P51: Bag Count is not correct");
+    Assertion (Bags.Count (B1, '7') = 2, "** P52: Bag Count is not correct");
+    Assertion (Bags.Count (B1, '8') = 2, "** P53: Bag Count is not correct");
     Bags.Add (B1, '1');
-    Bags.Add (B1, '2');
-    Bags.Add (B1, '3');
+    Bags.Add (B1, '1');
+    Bags.Add (B1, '1');
+    Bags.Add (B1, '8');
     Bags.Difference (B1, B2);
-    Assertion (Bags.Extent (B1) = 3, "** P44: Bag extent is not correct");
-    Assertion (Bags.Is_Member (B1, '1'),
-               "** P45: Bag membership is not correct");
-    Assertion (Bags.Is_Member (B1, '2'),
-               "** P46: Bag membership is not correct");
-    Assertion (Bags.Is_Member (B1, '3'),
-               "** P47: Bag membership is not correct");
-    Bags.Remove (B1, '2');
-    Bags.Remove (B1, '3');
-    Bags.Add (B1, '3', Added => Status);
-    if not Status then
-      Put_Line ("** P48: Bag add is not correct");
-    end if;
-    Bags.Add (B1, '3', Added => Status);
-    if Status then
-      Put_Line ("** P49: Bag add is not correct");
-    end if;
+    Assertion (Bags.Extent (B1) = 2, "** P54: Bag Extent is not correct");
+    Assertion (Bags.Total_Size (B1) = 4,
+               "** P55: Bag Total_Size is not correct");
+    Assertion (Bags.Count (B1, '1') = 3, "** P56: Bag Count is not correct");
+    Assertion (Bags.Count (B1, '8') = 1, "** P57: Bag Count is not correct");
+    Bags.Add (B1, '7');
+    Bags.Add (B1, '7');
+    Bags.Remove (B1, '7');
+    Bags.Remove (B1, '7');
     begin
-      Bags.Remove (B1, '3');
-    exception
-      when others =>
-        Put_Line ("** P50: Bag remove is not correct");
-    end;
-    begin
-      Bags.Remove (B1, '3');
-      Put_Line ("** P51: Bag remove is not correct");
+      Bags.Remove (B1, '7');
+      Put_Line ("** P62: Bag Remove is not correct");
     exception
       when BC.Not_Found => null;
-      when others => Put_Line ("** P51: Bag remove is not correct");
     end;
+    Bags.Remove (B1, '1');
+    Bags.Remove (B1, '1');
+    Bags.Remove (B1, '1');
   end Test;
 
   procedure Test_Active_Iterator (B : in out Bags.Bag'Class) is
@@ -198,34 +200,46 @@ procedure Bag_Test is
     Iter : Containers.Iterator := New_Iterator (B);
   begin
     while not Containers.Is_Done (Iter) loop
-      Put_Line ("      Item: "
-                & Containers.Current_Item (Iter));
+      Put_Line
+         ("      Item: "
+          & Containers.Current_Item (Iter)
+          & " =>"
+          & Positive'Image (Bags.Count (B, Containers.Current_Item (Iter))));
       Containers.Next (Iter);
     end loop;
   end Test_Active_Iterator;
 
-  procedure Process (Item : Character; OK : out Boolean) is
-  begin
-    Put_Line ("      Item: " & Item);
-    OK := True;
-  end Process;
-
-  procedure Process_Modifiable (Item : in out Character; OK : out Boolean) is
-  begin
-    Put_Line ("      Item (RW): " & Item);
-    OK := True;
-  end Process_Modifiable;
-
-  procedure Test_Passive_Iterator (B : in out Bags.Bag'Class) is
+  procedure Test_Passive_Iterator (B : in out Containers.Container'Class) is
+    procedure Process (Item : Character; OK : out Boolean) is
+    begin
+      Put_Line
+         ("      Item: "
+          & Item
+          & " =>"
+          & Positive'Image (Bags.Count (Bags.Bag'Class (B), Item)));
+      OK := True;
+    end Process;
     procedure Visitor is new Containers.Visit (Process);
+    Iter : Containers.Iterator := Containers.New_Iterator (B);
   begin
-    Visitor (B);
+    Visitor (Iter);
   end Test_Passive_Iterator;
 
-  procedure Test_Passive_Modifying_Iterator (B : in out Bags.Bag'Class) is
+  procedure Test_Passive_Modifying_Iterator
+     (B : in out Containers.Container'Class) is
+    procedure Process_Modifiable (Item : in out Character; OK : out Boolean) is
+    begin
+      Put_Line
+         ("      Item (RW): "
+          & Item
+          & " =>"
+          & Positive'Image (Bags.Count (Bags.Bag'Class (B), Item)));
+      OK := True;
+    end Process_Modifiable;
     procedure Modifier is new Containers.Modify (Process_Modifiable);
+    Iter : Containers.Iterator := Containers.New_Iterator (B);
   begin
-    Modifier (B);
+    Modifier (Iter);
   end Test_Passive_Modifying_Iterator;
 
 --    Bag_B_Pu1, Bag_B_Pu2 : BB.Bounded_Bag;
@@ -260,15 +274,16 @@ begin
   Test_Passive_Iterator (Bag_U_Pu1);
   Test_Passive_Modifying_Iterator (Bag_U_Pu1);
 
---    Assertion (SB.Is_Member (Bag_B_Pu1, '1'),
+--    Assertion (BB.Is_Member (Bag_B_Pu1, '1'),
 --               "** M01: Bag membership is not correct");
---    Assertion (SB.Extent (Bag_B_Pu2) = 3, "** M02: Bag extent is not correct");
---    Assertion (SD.Is_Member (Bag_D_Pu1, '1'),
+--    Assertion (BB.Extent (Bag_B_Pu2) = 3, "** M02: Bag extent is not correct");
+--    Assertion (BD.Is_Member (Bag_D_Pu1, '1'),
 --               "** M05: Bag membership is not correct");
---    Assertion (SD.Extent (Bag_D_Pu2) = 3, "** M06: Bag extent is not correct");
---    Assertion (SU.Is_Member (Bag_U_Pu1, '1'),
---               "** M09: Bag membership is not correct");
---    Assertion (SU.Extent (Bag_U_Pu2) = 3, "** M10: Bag extent is not correct");
+--    Assertion (BD.Extent (Bag_D_Pu2) = 3, "** M06: Bag extent is not correct");
+  Assertion (Bags.Total_Size (Bag_U_Pu1) = 1,
+             "** M07: Bag Total_Size is not correct");
+  Assertion (BU.Count (Bag_U_Pu2, '8') = 2,
+             "** M10: Bag Count is not correct");
 --    Assertion (SB.Available (Bag_B_Pu1) = 299,
 --               "** M13: Available space is not correct");
 --    Assertion (SB.Available (Bag_B_Pu2) = 297,
