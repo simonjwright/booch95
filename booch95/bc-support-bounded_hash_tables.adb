@@ -1,4 +1,4 @@
---   Copyright (C) 2001 Simon Wright.
+--   Copyright (C) 2001-2002 Simon Wright.
 --   All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -47,7 +47,7 @@ package body BC.Support.Bounded_Hash_Tables is
          Result : Index := Start;
       begin
          while Result /= 0 loop
-            if Items."=" (T.Contents (Result).Item, I) then
+            if Items.Eq (T.Contents (Result).Item, I) then
                return Result;
             end if;
             Result := T.Contents (Result).Next;
@@ -77,7 +77,7 @@ package body BC.Support.Bounded_Hash_Tables is
                         C : constant Cell := L.Contents (I);
                      begin
                         if not Is_Bound (R, C.Item)
-                          or else Values."/=" (C.Value, Value_Of (R, C.Item))
+                          or else not Values.Eq (C.Value, Value_Of (R, C.Item))
                         then
                            return False;
                         end if;
@@ -150,7 +150,7 @@ package body BC.Support.Bounded_Hash_Tables is
       begin
          loop
             exit when Current = 0;
-            exit when Items."=" (T.Contents (Current).Item, I);
+            exit when Items.Eq (T.Contents (Current).Item, I);
             Previous := Current;
             Current := T.Contents (Current).Next;
          end loop;
