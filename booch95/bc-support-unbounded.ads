@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller, Pat Rogers and
+--  Copyright (C) 1994-2002 Grady Booch, David Weller, Pat Rogers and
 --  Simon Wright.
 --  All Rights Reserved.
 --
@@ -22,6 +22,7 @@
 --  $Author$
 
 with Ada.Finalization;
+with Ada.Streams;
 with System.Storage_Pools;
 
 generic
@@ -99,5 +100,16 @@ private
 
    procedure Adjust (U : in out Unb_Node);
    procedure Finalize (U : in out Unb_Node);
+
+   procedure Write_Unb_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : Unb_Node);
+
+   procedure Read_Unb_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : out Unb_Node);
+
+   for Unb_Node'Write use Write_Unb_Node;
+   for Unb_Node'Read use Read_Unb_Node;
 
 end BC.Support.Unbounded;

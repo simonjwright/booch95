@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -279,5 +279,33 @@ package body BC.Support.Bounded is
       end loop;
       return 0;
    end Location;
+
+   procedure Write_Bnd_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : Bnd_Node) is
+      Pos : Elem_Range;
+   begin
+      Integer'Write (Stream, Obj.Size);
+      for I in 0 .. Obj.Size - 1 loop
+         Pos := Obj.Start + Elem_Range (I) mod Max_Size;
+         Item'Output (Stream, Obj.Elems (Pos));
+      end loop;
+   end Write_Bnd_Node;
+
+   procedure Read_Bnd_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : out Bnd_Node) is
+      Count : Integer;
+   begin
+      Clear (Obj);
+      Integer'Read (Stream, Count);
+      for I in 1 .. Count loop
+         declare
+            Elem : constant Item := Item'Input (Stream);
+         begin
+            Append (Obj, Elem);
+         end;
+      end loop;
+   end Read_Bnd_Node;
 
 end BC.Support.Bounded;

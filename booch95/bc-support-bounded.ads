@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -19,6 +19,8 @@
 --  $Revision$
 --  $Date$
 --  $Author$
+
+with Ada.Streams;
 
 generic
    type Item is private;
@@ -105,5 +107,16 @@ private
       Start : Elem_Range := 0;
       Size : Size_Range := 0;
    end record;
+
+   procedure Write_Bnd_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : Bnd_Node);
+
+   procedure Read_Bnd_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : out Bnd_Node);
+
+   for Bnd_Node'Write use Write_Bnd_Node;
+   for Bnd_Node'Read use Read_Bnd_Node;
 
 end BC.Support.Bounded;

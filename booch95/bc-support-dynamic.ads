@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller, Pat Rogers and
+--  Copyright (C) 1994-2002 Grady Booch, David Weller, Pat Rogers and
 --  Simon Wright.
 --  All Rights Reserved.
 --
@@ -22,6 +22,7 @@
 --  $Author$
 
 with Ada.Finalization;
+with Ada.Streams;
 with System.Storage_Pools;
 
 generic
@@ -105,5 +106,16 @@ private
    procedure Initialize (D : in out Dyn_Node);
    procedure Adjust (D : in out Dyn_Node);
    procedure Finalize (D : in out Dyn_Node);
+
+   procedure Write_Dyn_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : Dyn_Node);
+
+   procedure Read_Dyn_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : out Dyn_Node);
+
+   for Dyn_Node'Write use Write_Dyn_Node;
+   for Dyn_Node'Read use Read_Dyn_Node;
 
 end BC.Support.Dynamic;
