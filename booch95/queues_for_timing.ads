@@ -13,7 +13,7 @@ package Queues_For_Timing is
   package C is new BC.Containers (Integer, Integer_P);
   package Q is new C.Queues;
   package N is new BC.Support.Bounded (Integer, Integer_P, Size);
-  package B is new Q.Bounded (Size, N);
+  package B is new Q.Bounded (Size);
   P : BC.Support.Managed_Storage.Pool (16#100_000#);
   package D is new Q.Dynamic (BC.Support.Managed_Storage.Pool, P);
   package U is new Q.Unbounded (BC.Support.Managed_Storage.Pool, P);
