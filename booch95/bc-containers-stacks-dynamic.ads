@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -80,7 +80,10 @@ private
   function Cardinality (Obj : Dynamic_Stack) return Natural;
 
   package Dynamic_Stack_Nodes
-  is new BC.Support.Dynamic (Item, Item_Ptr, Storage_Manager, Storage);
+  is new BC.Support.Dynamic (Item => Item,
+                             Item_Ptr => Item_Ptr,
+                             Storage_Manager => Storage_Manager,
+                             Storage => Storage);
 
   type Dynamic_Stack is new Stack with record
     Rep : Dynamic_Stack_Nodes.Dyn_Node_Ref;

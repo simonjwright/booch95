@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -66,7 +66,10 @@ package BC.Containers.Queues.Unbounded is
 private
 
   package Unbounded_Queue_Nodes
-  is new BC.Support.Unbounded (Item, Item_Ptr, Storage_Manager, Storage);
+  is new BC.Support.Unbounded (Item => Item,
+                               Item_Ptr => Item_Ptr,
+                               Storage_Manager => Storage_Manager,
+                               Storage => Storage);
 
   type Unbounded_Queue is new Queue with record
     Rep : Unbounded_Queue_Nodes.Unb_Node_Ref
