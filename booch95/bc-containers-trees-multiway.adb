@@ -27,7 +27,6 @@
 --  $Author$
 
 with Ada.Unchecked_Deallocation;
-with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Trees.Multiway is
 
@@ -56,13 +55,6 @@ package body BC.Containers.Trees.Multiway is
 
    procedure Delete
    is new Ada.Unchecked_Deallocation (Multiway_Node, Multiway_Node_Ref);
-
-
-   --  We can't take 'Access of non-aliased components. But if we
-   --  alias discriminated objects they become constrained - even if
-   --  the discriminant has a default.
-   package Allow_Element_Access
-   is new System.Address_To_Access_Conversions (Item);
 
 
    procedure Purge (Curr : in out Multiway_Node_Ref);
