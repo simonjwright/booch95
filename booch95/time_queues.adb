@@ -9,8 +9,10 @@ procedure Time_Queues is
   D_Iter : aliased Queues_For_Timing.C.Passive_Iterator (D'Access);
   U_Iter : aliased Queues_For_Timing.C.Passive_Iterator (U'Access);
   procedure Iterate is
+    Total : Integer;
     procedure Apply (Elem : Integer; Ok : out Boolean) is
     begin
+      Total := Total + Elem;
       Ok := True;
     end Apply;
     function Q_Application is new Queues_For_Timing.C.Visit (Apply);
@@ -19,21 +21,28 @@ procedure Time_Queues is
     Taken : Duration;
     use type Ada.Calendar.Time;
   begin
+
+    Total := 0;
     Start := Ada.Calendar.Clock;
     Result := Q_Application (B_Iter'Access);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
-       (".. bounded queue took" & Taken'Img & " sec.");
+       (".. bounded queue took" & Taken'Img & " sec, sum" & Total'Img);
+
+    Total := 0;
     Start := Ada.Calendar.Clock;
     Result := Q_Application (D_Iter'Access);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
-       (".. dynamic queue took" & Taken'Img & " sec.");
+       (".. dynamic queue took" & Taken'Img & " sec, sum" & Total'Img);
+
+    Total := 0;
     Start := Ada.Calendar.Clock;
     Result := Q_Application (U_Iter'Access);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
-       (".. unbounded queue took" & Taken'Img & " sec.");
+       (".. unbounded queue took" & Taken'Img & " sec, sum" & Total'Img);
+
   end Iterate;
   procedure Time (N : Integer) is
   begin
@@ -41,6 +50,7 @@ procedure Time_Queues is
        ("timing iteration over containers of length" & N'Img);
     Queues_For_Timing.B.Clear (B);
     Queues_For_Timing.D.Clear (D);
+    Queues_For_Timing.D.Preallocate (D, 1024);
     Queues_For_Timing.U.Clear (U);
     for I in 1 .. N loop
       Queues_For_Timing.B.Append (B, I);
@@ -50,10 +60,7 @@ procedure Time_Queues is
     Iterate;
   end Time;
 begin
---   Time (8192);
---   Time (4096);
---   Time (2048);
---   Time (1024);
+  Time (1);
   Time (2);
   Time (4);
   Time (8);
