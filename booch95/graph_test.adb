@@ -616,8 +616,7 @@ procedure Graph_Test is
   procedure Test_Directed_Active_Iterator (G : in out DG.Graph) is
     V : DG.Vertex;
     Dummy : Boolean;
-    Iter : AG.Graph_Iterator (G'Access);
-    use AG;
+    Iter : DG.Graph_Iterator (G'Access);
     use DG;
   begin
     while not Is_Done (Iter) loop
@@ -677,8 +676,7 @@ procedure Graph_Test is
   procedure Test_Undirected_Active_Iterator (G : in out UG.Graph) is
     V : UG.Vertex;
     Dummy : Boolean;
-    Iter : AG.Graph_Iterator (G'Access);
-    use AG;
+    Iter : UG.Graph_Iterator (G'Access);
     use UG;
   begin
     while not Is_Done (Iter) loop
