@@ -61,7 +61,7 @@ package body BC.Containers.Bags is
       while not Is_Done (It) loop
          declare
             This_Item : Item renames Current_Item (It);
-            This_Count : Positive := Count (O, This_Item);
+            This_Count : constant Positive := Count (O, This_Item);
          begin
             if not Is_Member (B, This_Item) then
                Attach (B, This_Item, This_Count);
@@ -75,7 +75,7 @@ package body BC.Containers.Bags is
 
    procedure Intersection
      (B : in out Abstract_Bag'Class; O : Abstract_Bag'Class) is
-      Tmp : Abstract_Bag'Class := B;
+      Tmp : constant Abstract_Bag'Class := B;
       It : Iterator'Class := New_Iterator (Tmp);
    begin
       --  XXX left out the optimisation which checks whether L, R are
@@ -83,13 +83,13 @@ package body BC.Containers.Bags is
       while not Is_Done (It) loop
          declare
             This_Item : Item renames Current_Item (It);
-            B_Count : Positive := Count (B, This_Item);
+            B_Count : constant Positive := Count (B, This_Item);
          begin
             if not Is_Member (O, This_Item) then
                Detach (B, This_Item);
             else
                declare
-                  O_Count : Positive := Count (O, This_Item);
+                  O_Count : constant Positive := Count (O, This_Item);
                begin
                   if B_Count > O_Count then
                      Set_Value (B, This_Item, O_Count);
@@ -113,8 +113,8 @@ package body BC.Containers.Bags is
          begin
             if Is_Member (B, This_Item) then
                declare
-                  B_Count : Positive := Count (B, This_Item);
-                  O_Count : Positive := Count (O, This_Item);
+                  B_Count : constant Positive := Count (B, This_Item);
+                  O_Count : constant Positive := Count (O, This_Item);
                begin
                   if B_Count <= O_Count then
                      Detach (B, This_Item);
@@ -150,7 +150,7 @@ package body BC.Containers.Bags is
       end if;
       while not Is_Done (It) loop
          declare
-            This_Item : Item := Current_Item (It);
+            This_Item : constant Item := Current_Item (It);
          begin
             --  why don't I just do "or else Count (B, This_Item) >
             --  Count (O, This_Item)"? .. because it triggered a
@@ -159,8 +159,8 @@ package body BC.Containers.Bags is
                return False;
             else
                declare
-                  B_Count : Positive := Count (B, This_Item);
-                  O_Count : Positive := Count (O, This_Item);
+                  B_Count : constant Positive := Count (B, This_Item);
+                  O_Count : constant Positive := Count (O, This_Item);
                begin
                   if B_Count > O_Count then
                      return False;
@@ -191,8 +191,8 @@ package body BC.Containers.Bags is
                return False;
             else
                declare
-                  B_Count : Positive := Count (B, This_Item);
-                  O_Count : Positive := Count (O, This_Item);
+                  B_Count : constant Positive := Count (B, This_Item);
+                  O_Count : constant Positive := Count (O, This_Item);
                begin
                   if B_Count > O_Count then
                      return False;
