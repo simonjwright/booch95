@@ -101,12 +101,11 @@ private
 
    package Tables is new BC.Support.Bounded_Hash_Tables.Tables
      (Items => Items,
-      Values => Values,
-      Buckets => Buckets,
-      Maximum_Size => Maximum_Size);
+      Values => Values);
 
    type Bag is new Abstract_Bag with record
-      Rep : Tables.Table;
+      Rep : Tables.Table (Number_Of_Buckets => Buckets,
+                          Maximum_Size => Maximum_Size);
    end record;
 
    procedure Attach (B : in out Bag; I : Item; C : Positive);
