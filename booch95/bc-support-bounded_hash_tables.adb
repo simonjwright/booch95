@@ -204,48 +204,28 @@ package body BC.Support.Bounded_Hash_Tables is
       end Access_Value_Of;
 
 
-      function Length (T : Table; Bucket : Bucket_Index) return Natural is
-         Result : Natural := 0;
-         C : Index := T.Buckets (Bucket);
-      begin
-         while C /= 0 loop
-            Result := Result + 1;
-            C := T.Contents (C).Next;
-         end loop;
-         return Result;
-      end Length;
-
-
       -- We can't take 'Access of non-aliased components. But if we alias
       -- discriminated objects they become constrained - even if the
       -- discriminant has a default.
       package Allow_Item_Access
       is new System.Address_To_Access_Conversions (Items.Item);
 
-      function Item_At
-        (T : Table; Bucket : Bucket_Index; Position : Cell_Index)
+      function Access_Item_At (T : Table; Position : Cell_Index)
         return Items.Item_Ptr is
-         C : Cell_Index := T.Buckets (Bucket);
       begin
-         for I in 1 .. Position - 1 loop
-            C := T.Contents (C).Next;
-         end loop;
          return Items.Item_Ptr
-           (Allow_Item_Access.To_Pointer (T.Contents (C).Item'Address));
-      end Item_At;
+            (Allow_Item_Access.To_Pointer
+             (T.Contents (Position).Item'Address));
+      end Access_Item_At;
 
 
-      function Value_At
-        (T : Table; Bucket : Bucket_Index; Position : Cell_Index)
+      function Access_Value_At (T : Table; Position : Cell_Index)
         return Values.Value_Ptr is
-         C : Cell_Index := T.Buckets (Bucket);
       begin
-         for I in 1 .. Position - 1 loop
-            C := T.Contents (C).Next;
-         end loop;
          return Values.Value_Ptr
-           (Allow_Value_Access.To_Pointer (T.Contents (C).Value'Address));
-      end Value_At;
+            (Allow_Value_Access.To_Pointer
+             (T.Contents (Position).Value'Address));
+      end Access_Value_At;
 
 
    end Tables;
