@@ -34,3 +34,76 @@ TESTABLE += smart_test
 TESTABLE += stack_test
 TESTABLE += tree_test
 
+DISTRIBUTION_FILES = \
+bc.tar.gz \
+bc.zip \
+bc.src \
+ACL \
+README
+
+dist: $(DISTRIBUTION_FILES)
+	-@rm -rf distribution
+	mkdir distribution
+	cp $(DISTRIBUTION_FILES) distribution/
+	cp `find ./html -type f -maxdepth 1 -print` distribution/
+
+ADA_SOURCE = \
+bc-containers-lists-double.ad[bs] \
+bc-containers-lists-single.ad[bs] \
+bc-containers-lists.ad[bs] \
+bc-containers-queues-bounded.ad[bs] \
+bc-containers-queues-dynamic.ad[bs] \
+bc-containers-queues-unbounded.ad[bs] \
+bc-containers-queues.ad[bs] \
+bc-containers-stacks-bounded.ad[bs] \
+bc-containers-stacks-dynamic.ad[bs] \
+bc-containers-stacks-unbounded.ad[bs] \
+bc-containers-stacks.ad[bs] \
+bc-containers-trees-binary.ad[bs] \
+bc-containers-trees-multiway.ad[bs] \
+bc-containers-trees.ad[bs] \
+bc-containers.ad[bs] \
+bc-smart.ad[bs] \
+bc-support-bounded.ad[bs] \
+bc-support-dynamic.ad[bs] \
+bc-support-nodes.ad[bs] \
+bc-support-unbounded.ad[bs] \
+bc-support.ad[bs] \
+bc.ad[bs] \
+character_references.ad[bs] \
+list_test.ad[bs] \
+queue_test.ad[bs] \
+root_bin_trees.ad[bs] \
+root_bounded.ad[bs] \
+root_bounded_queues.ad[bs] \
+root_bounded_stacks.ad[bs] \
+root_container.ad[bs] \
+root_dlist.ad[bs] \
+root_dynamic.ad[bs] \
+root_dynamic_queues.ad[bs] \
+root_dynamic_stacks.ad[bs] \
+root_lists.ad[bs] \
+root_mway_trees.ad[bs] \
+root_queues.ad[bs] \
+root_slist.ad[bs] \
+root_smart.ad[bs] \
+root_smart_pointer.ad[bs] \
+root_stacks.ad[bs] \
+root_trees.ad[bs] \
+root_unbounded.ad[bs] \
+root_unbounded_queues.ad[bs] \
+root_unbounded_stacks.ad[bs] \
+smart_test.ad[bs] \
+stack_test.ad[bs] \
+tree_test.ad[bs]
+
+SOURCE = makefile $(ADA_SOURCE)
+
+bc.tar.gz:
+	tar zcvf bc.tar.gz $(SOURCE)
+
+bc.zip:
+	zip -l bc.zip $(SOURCE)
+
+bc.src:
+	cat $(ADA_SOURCE) > bc.src
