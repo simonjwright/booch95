@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -110,6 +110,6 @@ private
 
   function Current_Item_Ptr (It : Collection_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : Collection_Iterator);
+  procedure Delete_Item_At (It : in out Collection_Iterator);
 
 end BC.Containers.Collections;
