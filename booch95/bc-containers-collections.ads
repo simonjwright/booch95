@@ -20,6 +20,8 @@
 generic
 package BC.Containers.Collections is
 
+  pragma Elaborate_Body;
+
   type Collection is abstract new Container with private;
 
   -- A collection denotes an indexed collection of items, drawn from

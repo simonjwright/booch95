@@ -23,6 +23,8 @@ generic
   Maximum_Size : Positive;
 package BC.Containers.Queues.Bounded is
 
+  pragma Elaborate_Body;
+
   type Bounded_Queue is new Queue with private;
 
   procedure Clear (Q : in out Bounded_Queue);
@@ -48,8 +50,6 @@ package BC.Containers.Queues.Bounded is
 
   function Front (Q : in Bounded_Queue) return Item;
   -- Return a copy of the item at the front of the queue.
-
-  -- XXX need accessor generic
 
   function Location (Q : in Bounded_Queue; Elem : Item) return Natural;
   -- Return the first index at which the item is found; return 0 if the

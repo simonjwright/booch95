@@ -29,6 +29,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Bags.Dynamic is
 
+  pragma Elaborate_Body;
+
   -- A bag denotes a collection of items, drawn from some well-defined
   -- universe. A bag may contain duplicate items. A bag actually owns only
   -- one copy of each unique item: duplicates are counted, but are not
