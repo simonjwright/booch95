@@ -61,6 +61,10 @@ TESTABLE += ordered_collection_test
 ordered_collection_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+TESTABLE += ordered_queue_test
+ordered_queue_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
 TESTABLE += queue_test
 queue_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
@@ -108,8 +112,12 @@ AONIX_TESTABLE += map_test_aonix
 map_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
-TESTABLE += ordered_collection_test_aonix
+AONIX_TESTABLE += ordered_collection_test_aonix
 ordered_collection_test_aonix: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+AONIX_TESTABLE += ordered_queue_test_aonix
+ordered_queue_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 AONIX_TESTABLE += queue_test_aonix
