@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1999-2000 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -44,7 +44,6 @@ package BC.Support.Synchronization is
   function None_Pending (On_The_Semaphore : Semaphore) return Boolean;
 
 
-
   type Monitor_Base is abstract tagged limited private;
   procedure Seize_For_Reading (The_Monitor : in out Monitor_Base)
     is abstract;
@@ -73,23 +72,20 @@ package BC.Support.Synchronization is
   procedure Release_From_Writing (The_Monitor : in out Multiple_Monitor);
 
 
-  type Lock (Using : access Semaphore_Base'Class)
-  is new Ada.Finalization.Limited_Controlled with private;
-  procedure Initialize (The_Lock : in out Lock);
-  procedure Finalize (The_Lock : in out Lock);
+  type Lock_Base
+    is abstract new Ada.Finalization.Limited_Controlled with private;
 
+  type Lock_P is access all Lock_Base'Class;
+  procedure Delete (The_Lock : in out Lock_P);
 
-  type Read_Lock (Using : access Monitor_Base'Class)
-  is new Ada.Finalization.Limited_Controlled with private;
-  procedure Initialize (The_Lock : in out Read_Lock);
-  procedure Finalize (The_Lock : in out Read_Lock);
+  type Lock (Using : Semaphore_P)
+  is new Lock_Base with private;
 
+  type Read_Lock (Using : Monitor_P)
+  is new Lock_Base with private;
 
-  type Write_Lock (Using : access Monitor_Base'Class)
-  is new Ada.Finalization.Limited_Controlled with private;
-  procedure Initialize (The_Lock : in out Write_Lock);
-  procedure Finalize (The_Lock : in out Write_Lock);
-
+  type Write_Lock (Using : Monitor_P)
+  is new Lock_Base with private;
 
 private
 
@@ -112,6 +108,7 @@ private
     S : Semaphore_Type_P;
   end record;
   procedure Initialize (The_Semaphore : in out Semaphore);
+  procedure Adjust (The_Semaphore : in out Semaphore);
   procedure Finalize (The_Semaphore : in out Semaphore);
 
   type Monitor_Base is abstract tagged limited null record;
@@ -127,8 +124,8 @@ private
 
   protected type Monitor_Type is
     entry Seize (Kind : Seize_Kind);
-    procedure Release_For_Reading;
-    procedure Release_For_Writing;
+    procedure Release_From_Reading;
+    procedure Release_From_Writing;
   private
     entry Waiting_To_Write;
     Reader_Count : Natural := 0;
@@ -139,13 +136,22 @@ private
     M : Monitor_Type;
   end record;
 
-  type Lock (Using : access Semaphore_Base'Class)
-  is new Ada.Finalization.Limited_Controlled with null record;
+  type Lock_Base
+    is abstract new Ada.Finalization.Limited_Controlled with null record;
 
-  type Read_Lock (Using : access Monitor_Base'Class)
-  is new Ada.Finalization.Limited_Controlled with null record;
+  type Lock (Using : Semaphore_P)
+  is new Lock_Base with null record;
+  procedure Initialize (The_Lock : in out Lock);
+  procedure Finalize (The_Lock : in out Lock);
 
-  type Write_Lock (Using : access Monitor_Base'Class)
-  is new Ada.Finalization.Limited_Controlled with null record;
+  type Read_Lock (Using : Monitor_P)
+  is new Lock_Base with null record;
+  procedure Initialize (The_Lock : in out Read_Lock);
+  procedure Finalize (The_Lock : in out Read_Lock);
+
+  type Write_Lock (Using : Monitor_P)
+  is new Lock_Base with null record;
+  procedure Initialize (The_Lock : in out Write_Lock);
+  procedure Finalize (The_Lock : in out Write_Lock);
 
 end BC.Support.Synchronization;
