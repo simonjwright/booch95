@@ -51,7 +51,7 @@ package BC.Containers.Stacks.Bounded is
   -- Return True if and only if both stacks have the same depth and the
   -- same items in the same order; return False otherwise.
 
-  function New_Iterator (For_The_Stack : Bounded_Stack) return Iterator;
+  function New_Iterator (For_The_Stack : Bounded_Stack) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Stack.
 
 private

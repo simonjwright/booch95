@@ -35,8 +35,8 @@ package body BC.Containers.Stacks is
       return False;
     end if;
     declare
-      Left_Iter : Iterator := New_Iterator (Left);
-      Right_Iter : Iterator := New_Iterator (Right);
+      Left_Iter : Iterator'Class := New_Iterator (Left);
+      Right_Iter : Iterator'Class := New_Iterator (Right);
     begin
       while not Is_Done (Left_Iter) and then
          not Is_Done (Right_Iter) loop
@@ -51,7 +51,7 @@ package body BC.Containers.Stacks is
   end Are_Equal;
 
   procedure Copy (From : Stack'Class; To : in out Stack'Class) is
-    Iter : Iterator := New_Iterator (From);
+    Iter : Iterator'Class := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
       Clear (To);
@@ -77,14 +77,10 @@ package body BC.Containers.Stacks is
 
   -- Iterators
 
-  procedure Initialize (It : in out Stack_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
   procedure Reset (It : in out Stack_Iterator) is
+    S : Stack'Class renames Stack'Class (It.For_The_Container.all);
   begin
-    if Depth (It.S.all) = 0 then
+    if Depth (S) = 0 then
       It.Index := 0;
     else
       It.Index := 1;
@@ -97,8 +93,9 @@ package body BC.Containers.Stacks is
   end Next;
 
   function Is_Done (It : Stack_Iterator) return Boolean is
+    S : Stack'Class renames Stack'Class (It.For_The_Container.all);
   begin
-    return It.Index = 0 or else It.Index > Depth (It.S.all);
+    return It.Index = 0 or else It.Index > Depth (S);
   end Is_Done;
 
   function Current_Item (It : Stack_Iterator) return Item is
@@ -106,23 +103,24 @@ package body BC.Containers.Stacks is
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.S.all, It.Index).all;
+    return Item_At (It.For_The_Container.all, It.Index).all;
   end Current_Item;
 
-  function Current_Item (It : Stack_Iterator) return Item_Ptr is
+  function Current_Item_Ptr (It : Stack_Iterator) return Item_Ptr is
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.S.all, It.Index);
-  end Current_Item;
+    return Item_At (It.For_The_Container.all, It.Index);
+  end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Stack_Iterator) is
+    S : Stack'Class renames Stack'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    Remove (It.S.all, It.Index);
+    Remove (S, It.Index);
   end Delete_Item_At;
 
 end BC.Containers.Stacks;

@@ -69,7 +69,7 @@ package BC.Containers.Stacks.Dynamic is
   function Chunk_Size (S : Dynamic_Stack) return Natural;
   -- Returns the Chunk_Size
 
-  function New_Iterator (For_The_Stack : Dynamic_Stack) return Iterator;
+  function New_Iterator (For_The_Stack : Dynamic_Stack) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Stack.
 
 private
