@@ -19,12 +19,20 @@
 
 with Ada.Unchecked_Deallocation;
 with BC.Support.Exceptions;
+with System.Address_To_Access_Conversions;
 
 package body BC.Support.Bounded is
 
   package BSE renames BC.Support.Exceptions;
   procedure Assert
   is new BSE.Assert ("BC.Support.Bounded");
+
+  -- We can't take 'Access of components of constant (in parameter)
+  -- objects; but we need to be able to do this so that we can return
+  -- pointers to individual elements. This technique is due to Matthew
+  -- Heaney.
+  package Allow_Access
+  is new System.Address_To_Access_Conversions (Elem_Array);
 
   function Create (Obj : in Bnd_Node) return Bnd_Node_Ref is
   begin
@@ -138,13 +146,15 @@ package body BC.Support.Bounded is
     return Obj.Elems (1);
   end First;
 
-  function First (Obj : access Bnd_Node) return Item_Ptr is
+  function First (Obj : Bnd_Node) return Item_Ptr is
+    E : Allow_Access.Object_Pointer
+       := Allow_Access.To_Pointer (Obj.Elems'Address);
   begin
     Assert (Obj.Size > 0,
             BC.Underflow'Identity,
             "First",
             BSE.Empty);
-    return Obj.Elems (1)'Access;
+    return E (1)'Access;
   end First;
 
   function Last (Obj : Bnd_Node) return Item is
@@ -156,16 +166,18 @@ package body BC.Support.Bounded is
     return Obj.Elems(Obj.Size);
   end Last;
 
-  function Last (Obj : access Bnd_Node) return Item_Ptr is
+  function Last (Obj : Bnd_Node) return Item_Ptr is
+    E : Allow_Access.Object_Pointer
+       := Allow_Access.To_Pointer (Obj.Elems'Address);
   begin
     Assert (Obj.Size > 0,
             BC.Underflow'Identity,
             "Last",
             BSE.Empty);
-    return Obj.Elems (Obj.Size)'Access;
+    return E (Obj.Size)'Access;
   end Last;
 
-  function Item_At (Obj : Bnd_Node; Index : Natural) return Item is
+  function Item_At (Obj : Bnd_Node; Index : Positive) return Item is
   begin
     Assert (Index in 1 .. Obj.Size,
             BC.Range_Error'Identity,
@@ -174,20 +186,28 @@ package body BC.Support.Bounded is
     return Obj.Elems (Index);
   end Item_At;
 
-  function Item_At (Obj : access Bnd_Node; Index : Natural) return Item_Ptr is
+  function Item_At (Obj : Bnd_Node; Index : Positive) return Item_Ptr is
+    E : Allow_Access.Object_Pointer
+       := Allow_Access.To_Pointer (Obj.Elems'Address);
   begin
     Assert (Index in 1 .. Obj.Size,
             BC.Range_Error'Identity,
             "Item_At",
             BSE.Invalid_Index);
-    return Obj.Elems (Index)'Access;
+    return E (Index)'Access;
   end Item_At;
 
-  function Location (Obj : access Bnd_Node;
+  function Location (Obj : Bnd_Node;
                      Elem : Item;
                      Start : Natural := 1) return Natural is
   begin
-    Assert (Start in 1 .. Obj.Size,
+    -- XXX the C++ (which indexes from 0) nevertheless checks "start <= count"
+    -- We have to special-case the empty Node; the C++ indexes from 0, so
+    -- it can legally start with index 0 when the Node is empty.
+    if Obj.Size = 0 then
+      return 0;
+    end if;
+    Assert (Start <= Obj.Size,
             BC.Range_Error'Identity,
             "Start",
             BSE.Invalid_Index);
