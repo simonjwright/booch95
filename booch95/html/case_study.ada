@@ -1,3 +1,5 @@
+--  $Id$
+
 with Ada.Calendar;
 with Ada.Strings.Bounded;
 package Cars is
@@ -205,4 +207,23 @@ procedure Sort_Demo is
 begin
    null;
 end Sort_Demo;
+
+with Abstract_Car_Containers;
+with BC.Containers.Maps;
+with Cars;
+package Abstract_Car_Maps
+is new Abstract_Car_Containers.Maps (Key => Cars.Plate_String,
+                                       "=" => Cars.Plate_Strings."=");
+
+with Cars;
+function Plate_Hash (P : Cars.Plate_String) return Natural;
+
+with Abstract_Car_Maps;
+with BC.Containers.Maps.Bounded;
+with Plate_Hash;
+package Mapped_Fleets is new Abstract_Car_Maps.Bounded
+  (Hash => Plate_Hash,
+   Buckets => 5,
+   Maximum_Size => 30);
+
 
