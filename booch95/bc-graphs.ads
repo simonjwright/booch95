@@ -18,10 +18,14 @@
 -- $Id$
 
 with Ada.Finalization;
+with System.Storage_Pools;
 
 generic
   type Vertex_Item is private;
   type Arc_Item is private;
+  type Storage_Manager (<>)
+  is new System.Storage_Pools.Root_Storage_Pool with private;
+  Storage : in out Storage_Manager;
 package BC.Graphs is
 
   -- A directed graph is an unrooted collection of vertices and directed
@@ -173,8 +177,10 @@ private
 
   type Vertex_Node;
   type Vertex_Node_Ptr is access Vertex_Node;
+  for Vertex_Node_Ptr'Storage_Pool use Storage;
   type Arc_Node;
   type Arc_Node_Ptr is access Arc_Node;
+  for Arc_Node_Ptr'Storage_Pool use Storage;
 
   -- A Vertex Node is a simple node consisting of an item, a pointer to the
   -- enclosing graph, a pointer to the next vertex, pointers to the
