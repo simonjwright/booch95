@@ -108,6 +108,7 @@ private
       Hash => Hash);
 
    type Positive_Ptr is access all Positive;
+   for Positive_Ptr'Storage_Size use 0;
    package Values is new BC.Support.Bounded_Hash_Tables.Value_Signature
      (Value => Positive,
       Value_Ptr => Positive_Ptr,
