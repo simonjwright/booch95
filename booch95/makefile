@@ -29,7 +29,7 @@ all::
 
 MEMORY_CHECK = \
   -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
-GNATMAKE_FLAGS = -O2 -g -gnata
+GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu
 
 test: testable
 	for t in $(TESTABLE); do \
@@ -164,13 +164,16 @@ lists_traversal.ad[bs] \
 list_test.ad[bs] \
 list_test_support.ad[bs] \
 map_test.ad[bs] \
+map_test_aonix.ad[bs] \
 map_test_support.ad[bs] \
 queues_for_timing.ad[bs] \
 queue_test.ad[bs] \
+queue_test_aonix.ad[bs] \
 queue_test_support.ad[bs] \
 smart_test.ad[bs] \
 smart_test_support.ad[bs] \
 stack_test.ad[bs] \
+stack_test_aonix.ad[bs] \
 stack_test_support.ad[bs] \
 storage.ad[bs] \
 time_lists.ad[bs] \
