@@ -579,7 +579,7 @@ package body BC.Containers.Lists.Single is
        (Allow_Element_Access.To_Pointer (It.Index.Element'Address));
   end Current_Item_Ptr;
 
-  procedure Delete_Item_At (It : List_Iterator) is
+  procedure Delete_Item_At (It : in out List_Iterator) is
     L : List'Class renames List'Class (It.For_The_Container.all);
     Prev : Nodes.Single_Node_Ref;
     Curr : Nodes.Single_Node_Ref := L.Rep;
