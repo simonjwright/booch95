@@ -81,18 +81,4 @@ package body BC.Containers is
       return True;
    end Modify;
 
-   function Item_At (Obj : Container; Index : Natural) return Item_Ptr is
-   begin
-      pragma Assert ( False, "Failure to override Item_At operation");
-      raise Abstraction_Violation;
-      return null;
-   end Item_At;
-
-   function Cardinality (Obj : Container) return Integer is
-   begin
-      pragma Assert ( False, "Failure to override Cardinality operation");
-      raise Abstraction_Violation;
-      return 0;
-   end Cardinality;
-
 end BC.Containers;
