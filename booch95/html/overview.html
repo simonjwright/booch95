@@ -45,22 +45,23 @@ dramatically between releases over the next few iterations. You'll
 probably need to change your source at each issue; you'll certainly
 need to recompile).</p>
 
-<P>The version to be released will have the following components
-available (the <font color=red>red</font> parts are new since David's
-last release):</P>
+<P>The current version has the following components available (the
+<font color=red>red</font> parts are new since the last release):</P>
 
 <UL>
-<LI>Bounded Stacks 
-<LI>Dynamic Stacks
-<LI>Unbounded Stacks
+<li><font color=red>Directed Graphs</font>
+<li><font color=red>Undirected Graphs</font>
+<LI>Single Lists 
+<LI>Double Lists
 <LI>Bounded Queues 
 <LI>Dynamic Queues
 <LI>Unbounded Queues
-<LI>Single Lists 
-<LI>Double Lists
-<LI><font color=red>Binary Trees</font>
-<LI><font color=red>Multiway Trees</font>
-<li><font color=red>Smart Pointers</font>
+<LI>Bounded Stacks 
+<LI>Dynamic Stacks
+<LI>Unbounded Stacks
+<LI>Binary Trees
+<LI>Multiway Trees
+<li>Smart Pointers
 </UL>
 
 <P>See the <A HREF="documentation.html">Component Documentation</A> for
@@ -107,7 +108,11 @@ This means we need either a generic or a procedure access parameter (I
 think the latter will be impossible; either we'll be taking the access
 at too low a level, or we'll find ourselves wanting to take
 <tt>'Access</tt> of a procedure inside a generic where the type was
-declared outside ..)
+declared outside ..)<br>
+
+You can see an example of this alternate style in the concrete Graph
+packages <tt>BC.Graphs.Directed</tt> and <tt>BC.Graphs.Undirected</tt>;
+note, however, that <b>these generics will break under GNAT 3.10p!</b><br>
 
 </dd>
 
@@ -117,7 +122,7 @@ declared outside ..)
 
 <P><A HREF="index.html">[index]</A></p>
 
-<p><i>Last update: 4.x.98</i></p>
+<p><i>Last update: 20.x.98</i></p>
 
 </BODY>
 </HTML>

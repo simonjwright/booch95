@@ -198,7 +198,8 @@ is specified when the pool is created.</dd>
 </p>
 
 <p>Note that the supplied <tt>BC.Support.Managed_Storage</tt> will
-<strong>not</strong> support allocation of items larger than its chunk size.</p>
+<strong>not</strong> support allocation of items larger than its chunk
+size.</p>
 
 <!---------------------------------------------------------------------->
 
@@ -226,12 +227,12 @@ This was done for two reasons: </P>
 iterator objects working upon the same object. 
 <P></P>
 <LI>Iteration slightly breaks the encapsulation of an object's state; by separating
-the bahavious of iteration from the rest of an abstraction's protocol, we
-provide a much clearner separation of the two. 
+the behaviour of iteration from the rest of an abstraction's protocol, we
+provide a much cleaner separation of the two. 
 </UL>
 <P>There are two forms: active and passive. Active iteration requires the client
 explicitly advance the iterator. For passive, the client supplies a single
-function &quot;Apply&quot; to work across the structure. </P>
+procedure &quot;Apply&quot; to work across the structure. </P>
 <P>There are many different approaches to iteration in Ada 95. The current
 mechanism was selected for its direct simplicity and efficiency. 
 
@@ -269,6 +270,9 @@ Trees
 <font color=red>
 <p>Here are the components presently available.</p>
 <pre>
+Graphs
+  Directed : U
+  Undir    : U
 Lists
   Single   : U
   Double   : U
@@ -288,7 +292,7 @@ Trees
 <P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
 <P><A HREF="index.html">[index]</A></p>
 
-<p><i>Last update: 4.x.98</i></p>
+<p><i>Last update: 20.x.98</i></p>
 
 <!------------------------------------------------------------------->
 
