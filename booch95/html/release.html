@@ -30,6 +30,43 @@
 
 <dl>
 
+<dt>21st February 1999</dt>
+
+<dd>
+Containers require a (defaultable) <tt>"="</tt> operation for
+Items.<p>
+
+Added Bags (only in the Unbounded form so far).<p>
+
+Added Sets.<p>
+
+Reworked Iteration; passive iteration now obtains the Container over
+which to iterate via an Iterator bound to the container. This allows
+different styles of iteration with one interface.<p>
+ 
+Graphs have three Vertex iterators: incoming only, outgoing only, both
+ways.<p>
+
+Binary trees have in-order, pre-order and post-order iterators;
+Multiway trees have pre-order and post-order iterators. Only passive
+iteration is available, and the style is different from that of other
+Containers.<p>
+
+If a section of a list which didn't contain a shared node was purged,
+an invalid pointer access (Constraint_Error) would occur. This error
+was in the C++ (where it was OK, it seems, to <tt>free()</tt> a null
+pointer).<p>
+
+Assignment involving unbounded forms didn't correctly invalidate the
+chache in the copy.<p>
+
+Began a <a href="demos.html">demos</a> page.<p>
+
+Began a "contributions" section, with initial contributions from <a
+href="mailto:Daniel.Gaudry@wanadoo.fr">Daniel Gaudry</a>.<p>
+
+</dd>
+
 <dt>29 January 1999</dt>
 
 <dd>
