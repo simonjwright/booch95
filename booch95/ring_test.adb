@@ -26,11 +26,6 @@ procedure Ring_Test is
   use Ring_Test_Support;
   use Containers;
   use Rings;
---   use SB;
---   use SD;
-  use RU;
-
-  --    Global_Items : array(1..10) of aliased Chunk;
 
   procedure Process (C : Character; OK : out Boolean) is
   begin
@@ -136,8 +131,9 @@ procedure Ring_Test is
 --   Ring_B_P1, Ring_B_P2 : RB.Bounded_Ring;
 --   Ring_D_P1, Ring_D_P2 : RD.Dynamic_Ring;
 --   Ring_U_P1, Ring_U_P2 : RU.Unbounded_Ring;
-  Ring_U_P1, Ring_U_P2 : RU.Guarded_Unbounded_Ring;
---   Ring_U_P1, Ring_U_P2 : RU.Synchronized_Unbounded_Ring;
+  Ring_U_P1, Ring_U_P2 : RU.Unbounded_Ring;
+  Ring_UG_P1, Ring_UG_P2 : RUG.Guarded_Unbounded_Ring;
+  Ring_US_P1, Ring_US_P2 : RUS.Synchronized_Unbounded_Ring;
 
 begin
 
@@ -152,6 +148,10 @@ begin
 
   Put_Line ("...Unbounded Ring");
   Test_Primitive (Ring_U_P1, Ring_U_P2);
+  Put_Line ("...Unbounded Guarded Ring");
+  Test_Primitive (Ring_UG_P1, Ring_UG_P2);
+  Put_Line ("...Unbounded Synchronized Ring");
+  Test_Primitive (Ring_US_P1, Ring_US_P2);
 
   Put_Line ("...Ring Active Iterator");
 --   Put_Line ("   Bounded:");
@@ -160,6 +160,10 @@ begin
 --   Test_Active_Iterator (Ring_D_P1);
   Put_Line ("   Unbounded:");
   Test_Active_Iterator (Ring_U_P1);
+  Put_Line ("   Unbounded Guarded:");
+  Test_Active_Iterator (Ring_UG_P1);
+  Put_Line ("   Unbounded Synchronized:");
+  Test_Active_Iterator (Ring_US_P1);
 
   Put_Line ("...Ring Passive Iterator");
 --   Put_Line ("   Bounded:");
@@ -168,6 +172,10 @@ begin
 --   Test_Passive_Iterator (Ring_D_P1);
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Ring_U_P1);
+  Put_Line ("   Unbounded Guarded:");
+  Test_Passive_Iterator (Ring_UG_P1);
+  Put_Line ("   Unbounded Synchronized:");
+  Test_Passive_Iterator (Ring_US_P1);
 
   Put_Line ("Completed Ring tests");
 
