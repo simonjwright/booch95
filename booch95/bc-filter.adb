@@ -1,4 +1,4 @@
---  Copyright (C) 2001 Simon Wright.
+--  Copyright (C) 2001-2002 Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
