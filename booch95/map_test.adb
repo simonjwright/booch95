@@ -269,6 +269,7 @@ procedure Map_Test is
 --|   Bounded_Char_Chunk_Map map_b_pu1, map_b_pu2;
   Map_B_Pu1, Map_B_Pu2 : MB.Bounded_Map;
 --|   Dynamic_Char_Chunk_Map map_d_pu1(5), map_d_pu2(5);
+  Map_D_Pu1, Map_D_Pu2 : MD.Dynamic_Map;
 --|   Unbounded_Char_Chunk_Map map_u_pu1, map_u_pu2;
 
 begin
@@ -282,8 +283,11 @@ begin
   Test (Map_B_Pu1, Map_B_Pu2);
 --|
 --|   message("...Dynamic Map");
+  Put_Line ("...Dynamic Map");
 --|   map_d_pu1.Preallocate(50);
+  MD.Preallocate (Map_D_Pu1, 50);
 --|   test(map_d_pu1, map_d_pu2);
+  Test (Map_D_Pu1, Map_D_Pu2);
 --|
 --|   message("...Unbounded Map");
 --|   test(map_u_pu1, map_u_pu2);
@@ -295,7 +299,9 @@ begin
 --|   test_active_iterator(map_b_pu1);
   Test_Active_Iterator (Map_B_Pu1);
 --|   message("   Dynamic:");
+  Put_Line ("   Dynamic:");
 --|   test_active_iterator(map_d_pu1);
+  Test_Active_Iterator (Map_D_Pu1);
 --|   message("   Unbounded:");
 --|   test_active_iterator(map_u_pu1);
 --|
@@ -307,7 +313,10 @@ begin
   Test_Passive_Iterator (Map_B_Pu1);
   Test_Passive_Modifying_Iterator (Map_B_Pu1);
 --|   message("   Dynamic:");
+  Put_Line ("   Dynamic:");
 --|   test_passive_iterator(map_d_pu1);
+  Test_Passive_Iterator (Map_D_Pu1);
+  Test_Passive_Modifying_Iterator (Map_D_Pu1);
 --|   message("   Unbounded:");
 --|   test_passive_iterator(map_u_pu1);
 --|
@@ -317,7 +326,10 @@ begin
 --|   assertion((map_b_pu2.Extent() == 0), "** M02: Map Extent is not correct");
   Assertion (MB.Extent (Map_B_Pu2) = 0, "** M02: Map Extent is not correct");
 --|   assertion(map_d_pu1.IsBound('6'), "** M03: Map binding is not correct");
+  Assertion (MD.Is_Bound (Map_D_Pu1, '6'),
+             "** M03: Map binding is not correct");
 --|   assertion((map_d_pu2.Extent() == 0), "** M04: Map Extent is not correct");
+  Assertion (MD.Extent (Map_D_Pu2) = 0, "** M04: Map Extent is not correct");
 --|   assertion(map_u_pu1.IsBound('6'), "** M05: Map binding is not correct");
 --|   assertion((map_u_pu2.Extent() == 0), "** M06: Map Extent is not correct");
 --|
@@ -327,6 +339,12 @@ begin
 --|
 --| //  assertion((map_b_pu1 == map_b_pu3), "** M07: Maps are not equal");
 --|   assertion((map_d_pu1 == map_d_pu3), "** M08: Maps are not equal");
+  -- I don't understand this one ..
+  declare
+    Map_D_Pu3 : MD.Dynamic_Map := Map_D_Pu1;
+  begin
+    Assertion (MD."=" (Map_D_Pu1, Map_D_Pu3), "** M08: Maps are not equal");
+  end;
 --|   assertion((map_u_pu1 == map_u_pu3), "** M09: Maps are not equal");
 --|
 --| //  map_b_pu3.Clear();
