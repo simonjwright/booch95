@@ -36,13 +36,15 @@ package body BC.Containers.Rings.Unbounded is
 
   procedure Insert (R : in out Unbounded_Ring; Elem : Item) is
   begin
-    Unbounded_Ring_Nodes.Insert (R.Rep.all, Elem);
     if R.Top = 0 then
       R.Top := 1;
       R.Mark := 1;
-    end if;
-    if R.Mark > 1 then
-      R.Mark := R.Mark + 1;
+      Unbounded_Ring_Nodes.Insert (R.Rep.all, Elem);
+    else
+      if R.Mark /= 0 then
+        R.Mark := R.Mark + 1;
+      end if;
+      Unbounded_Ring_Nodes.Insert (R.Rep.all, Elem, Before => R.Top);
     end if;
   end Insert;
 
