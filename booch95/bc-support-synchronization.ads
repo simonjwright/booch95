@@ -1,4 +1,4 @@
---  Copyright 1999-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1999-2004x Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -106,8 +106,7 @@ package BC.Support.Synchronization is
    --    -- the monitor is unlocked as L is finalized, even if an exception
    --    -- occurs
 
-   type Lock_Base
-      is abstract new Ada.Finalization.Limited_Controlled with private;
+   type Lock_Base is abstract tagged limited private;
 
    --  A simple Lock provides mutual exclusion
    type Lock (Using : access Semaphore_Base'Class)
