@@ -26,16 +26,6 @@ package body BC.Containers.Bags.Dynamic is
   procedure Assert
   is new BSE.Assert ("BC.Containers.Bags.Dynamic");
 
-  function Create (Size : Positive) return Bag is
-    Result : Bag;
-  begin
-    for B in 1 .. Buckets loop
-      IC.Set_Chunk_Size (Tables.Item_Bucket (Result.Rep, B).all, Size);
-      VC.Set_Chunk_Size (Tables.Value_Bucket (Result.Rep, B).all, Size);
-    end loop;
-    return Result;
-  end Create;
-
   procedure Clear (B : in out Bag) is
   begin
     Tables.Clear (B.Rep);
@@ -94,22 +84,22 @@ package body BC.Containers.Bags.Dynamic is
   procedure Preallocate (B : in out Bag; Size : Positive) is
   begin
     for Bucket in 1 .. Buckets loop
-      IC.Preallocate (Tables.Item_Bucket (B.Rep, Bucket).all, Size);
-      VC.Preallocate (Tables.Value_Bucket (B.Rep,Bucket ).all, Size);
+      IC.Preallocate (B.Rep.Items (Bucket), Size);
+      VC.Preallocate (B.Rep.Values (Bucket), Size);
     end loop;
   end Preallocate;
 
   procedure Set_Chunk_Size (B : in out Bag; Size : Positive) is
   begin
     for Bucket in 1 .. Buckets loop
-      IC.Set_Chunk_Size (Tables.Item_Bucket (B.Rep, Bucket).all, Size);
-      VC.Set_Chunk_Size (Tables.Value_Bucket (B.Rep, Bucket).all, Size);
+      IC.Set_Chunk_Size (B.Rep.Items (Bucket), Size);
+      VC.Set_Chunk_Size (B.Rep.Values (Bucket), Size);
     end loop;
   end Set_Chunk_Size;
 
   function Chunk_Size (B : Bag) return Positive is
   begin
-    return IC.Chunk_Size (Tables.Item_Bucket (B.Rep, 1).all);
+    return IC.Chunk_Size (B.Rep.Items (1));
   end Chunk_Size;
 
   package Address_Conversions
@@ -148,20 +138,21 @@ package body BC.Containers.Bags.Dynamic is
 
   function Length (B : Bag; Bucket : Positive) return Natural is
   begin
-    return IC.Length (Tables.Item_Bucket (B.Rep, Bucket).all);
+    return IC.Length (B.Rep.Items (Bucket));
   end Length;
 
   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (Tables.Item_Bucket (B.Rep, Bucket).all, Index);
+    return IC.Item_At (B.Rep.Items (Bucket), Index);
   end Item_At;
 
   function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
   begin
-    return VC.Item_At (Tables.Value_Bucket (B.Rep, Bucket).all, Index);
+    return VC.Item_At (B.Rep.Values (Bucket), Index);
   end Value_At;
 
   Empty_Container : Bag;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Bag is
   begin
