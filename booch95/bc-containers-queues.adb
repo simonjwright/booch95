@@ -17,12 +17,33 @@
 
 -- $Id$
 
+with System;
+
 package body BC.Containers.Queues is
+
+  procedure Process_Front (Q : in out Queue'Class) is
+  begin
+    Process (Item_At (Q, 1).all);
+  end Process_Front;
+
+  procedure Copy (From : Queue'Class; To : in out Queue'Class) is
+    Iter : Iterator := New_Iterator (From);
+  begin
+    if System."/=" (From'Address, To'Address) then
+      Clear (To);
+      Reset (Iter);
+      while not Is_Done (Iter) loop
+        Append (To, Current_Item (Iter));
+        Next (Iter);
+      end loop;
+    end if;
+  end Copy;
 
   function Are_Equal (Left, Right : Queue'Class) return Boolean is
   begin
-    -- XXX left out the optimisation which checks whether L, R are
-    -- identical.
+    if System."=" (Left'Address, Right'Address) then
+      return True;
+    end if;
     if Cardinality (Left) /= Cardinality (Right) then
       return False;
     end if;
@@ -41,17 +62,6 @@ package body BC.Containers.Queues is
       return True;
     end;
   end Are_Equal;
-
-  procedure Copy (From : Queue'Class; To : in out Queue'Class) is
-    Iter : Iterator := New_Iterator (From);
-  begin
-    Clear (To);
-    Reset (Iter);
-    while not Is_Done (Iter) loop
-      Append (To, Current_Item (Iter));
-      Next (Iter);
-    end loop;
-  end Copy;
 
   procedure Initialize (It : in out Queue_Iterator) is
   begin
