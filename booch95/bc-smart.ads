@@ -30,6 +30,10 @@ package BC.Smart is
   -- A Pointer variable encapsulates a reference-counted accessor of type P
   -- (to a T).
 
+  Null_Pointer : constant Pointer;
+  -- Assign this to your pointer variable when you have finished with
+  -- the
+
   function Create (Value : P) return Pointer;
   pragma Inline (Create);
   -- Returns a new encapsulation. You must NOT deallocate the Value passed;
@@ -38,6 +42,10 @@ package BC.Smart is
   function Value (Ptr : Pointer) return P;
   pragma Inline (Value);
   -- returns the encapsulated pointer.
+
+  Null_Pointer : constant Pointer;
+  -- Assign this to a Pointer when you've finished with its contents.
+  -- Alternatively, call Clear.
 
 private
 
@@ -53,6 +61,9 @@ private
 
   procedure Adjust (Obj : in out Pointer);
   procedure Finalize (Obj : in out Pointer);
+
+  Null_Pointer : constant Pointer
+     := (Ada.Finalization.Controlled with Rep => null);
 
 end BC.Smart;
 
