@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -19,6 +19,7 @@
 
 generic
   type Item is private;
+  with function "=" (L, R : Item) return Boolean is <>;
   type Item_Ptr is access all Item;
   Maximum_Size : Positive;
 package BC.Support.Bounded is
