@@ -59,6 +59,10 @@ package BC.Containers.Sets.Unbounded is
    --  Added to True. If the item already exists, then set Added to
    --  False.
 
+   procedure Add (S : in out Set; I : Item);
+   --  Add the item to the set. If the item is not already a distinct
+   --  member of the set, copy the item and add it to the set.
+
    procedure Remove (S : in out Set; I : Item);
    --  If the item is not a member of the set, raise
    --  BC.Not_Found. Otherwise, remove the item from the set.

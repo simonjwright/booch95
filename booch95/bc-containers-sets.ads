@@ -47,7 +47,7 @@ package BC.Containers.Sets is
    --  Added to True. If the item already exists, then set Added to
    --  False.
 
-   procedure Add (S : in out Abstract_Set'Class; I : Item);
+   procedure Add (S : in out Abstract_Set; I : Item) is abstract;
    --  Add the item to the set. If the item is not already a distinct
    --  member of the set, copy the item and add it to the set.
 
