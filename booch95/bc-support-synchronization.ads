@@ -78,13 +78,13 @@ package BC.Support.Synchronization is
   type Lock_P is access all Lock_Base'Class;
   procedure Delete (The_Lock : in out Lock_P);
 
-  type Lock (Using : Semaphore_P)
+  type Lock (Using : access Semaphore_Base'Class)
   is new Lock_Base with private;
 
-  type Read_Lock (Using : Monitor_P)
+  type Read_Lock (Using : access Monitor_Base'Class)
   is new Lock_Base with private;
 
-  type Write_Lock (Using : Monitor_P)
+  type Write_Lock (Using : access Monitor_Base'Class)
   is new Lock_Base with private;
 
 private
@@ -139,17 +139,17 @@ private
   type Lock_Base
     is abstract new Ada.Finalization.Limited_Controlled with null record;
 
-  type Lock (Using : Semaphore_P)
+  type Lock (Using : access Semaphore_Base'Class)
   is new Lock_Base with null record;
   procedure Initialize (The_Lock : in out Lock);
   procedure Finalize (The_Lock : in out Lock);
 
-  type Read_Lock (Using : Monitor_P)
+  type Read_Lock (Using : access Monitor_Base'Class)
   is new Lock_Base with null record;
   procedure Initialize (The_Lock : in out Read_Lock);
   procedure Finalize (The_Lock : in out Read_Lock);
 
-  type Write_Lock (Using : Monitor_P)
+  type Write_Lock (Using : access Monitor_Base'Class)
   is new Lock_Base with null record;
   procedure Initialize (The_Lock : in out Write_Lock);
   procedure Finalize (The_Lock : in out Write_Lock);
