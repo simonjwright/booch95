@@ -21,7 +21,7 @@ with Ada.Finalization;
 
 generic
   type Item is private;
-  type Item_Ptr is access all Item;
+--    type Item_Ptr is access all Item;
   with function "=" (L, R : Item) return Boolean is <>;
   with function Hash (V : Item) return Positive is <>;
   type Value is private;
@@ -30,7 +30,7 @@ generic
   Buckets : Natural;
   type Item_Container is private;
   type Item_Container_Ptr is access all Item_Container;
---  with function Create (From : Item_Container) return Item_Container is <>;
+  with function Create (From : Item_Container) return Item_Container_Ptr is <>;
   with procedure Clear (C : in out Item_Container) is <>;
   with procedure Insert (C : in out Item_Container; I : Item) is <>;
   with procedure Append (C : in out Item_Container; I : Item) is <>;
@@ -44,7 +44,8 @@ generic
      (C : Item_Container; I : Item; Start : Positive) return Natural is <>;
   type Value_Container is private;
   type Value_Container_Ptr is access all Value_Container;
---  with function Create (From : Value_Container) return Value_Container is <>;
+  with function Create
+     (From : Value_Container) return Value_Container_Ptr is <>;
   with procedure Clear (C : in out Value_Container) is <>;
   with procedure Insert (C : in out Value_Container; V : Value) is <>;
   with procedure Append (C : in out Value_Container; V : Value) is <>;
@@ -68,17 +69,17 @@ package BC.Support.Hash_Tables is
 --| //  BCHashTa.h
 --| //
 --| //  This file contains the declaration of the open hash table class.
---|  
+--|
 --| #ifndef BCHASHTA_H
 --| #define BCHASHTA_H 1
---| 
+--|
 --| #include "BCType.h"
 --| #include "BCExcept.h"
 --| #include "BCNodes.h"
---| 
+--|
 --| // Class denoting an open hash table
---| 
---| template<class Item, class Value, BC_Index Buckets, 
+--|
+--| template<class Item, class Value, BC_Index Buckets,
 --|          class ItemContainer, class ValueContainer>
 --| class BC_TTable {
   --| public:
@@ -110,7 +111,7 @@ package BC.Support.Hash_Tables is
 
   type Table is new Ada.Finalization.Controlled with private;
 
---| 
+--|
 --|   BC_TTable()
 --|     : fSize(0),
 --|       fHash(0) {}
@@ -121,7 +122,7 @@ package BC.Support.Hash_Tables is
 --|   ~BC_TTable()
 --|     {Clear();}
 --X this is the Finalize()
---| 
+--|
 --|   BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>& operator=
 --|     (const BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>&);
 --|   BC_Boolean operator==
@@ -132,14 +133,14 @@ package BC.Support.Hash_Tables is
 --|   BC_Boolean operator!=
 --|     (const BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>& t) const
 --|       {return !operator==(t);}
---| 
+--|
 --|   void SetHashFunction(BC_Index (*hash)(const Item&))
 --|     {BC_Assert((!fHash), BC_XDuplicate("BC_TTable::SetHashFunction", BC_kDuplicate));
 --|      fHash = hash;}
 --|   void Clear();
 
   procedure Clear (T : in out Table);
-  -- Empty the hash table of all item/value pairs. 
+  -- Empty the hash table of all item/value pairs.
 
 --|   BC_Boolean Bind(const Item&, const Value&);
 
@@ -162,12 +163,12 @@ package BC.Support.Hash_Tables is
   -- already exists in that bucket, remove the item/value pair; otherwise,
   -- BC.Not_Found.
 
---| 
+--|
 --|   BC_Index Extent() const
 --|     {return fSize;}
 
   function Extent (T : Table) return Natural;
-  -- Return the number of item/value pairs in the hash table. 
+  -- Return the number of item/value pairs in the hash table.
 
 --|   BC_Boolean IsBound(const Item&) const;
 
@@ -212,14 +213,14 @@ package BC.Support.Hash_Tables is
 --|                BC_XRangeError("BC_TTable::ItemBucket", BC_kInvalidIndex));
 --|      return &fValueRep[bucket];}
 
---| 
+--|
 --| protected:
---| 
+--|
 --|   ItemContainer fItemRep[Buckets];
 --|   ValueContainer fValueRep[Buckets];
 --|   BC_Index fSize;
 --|   BC_Index (*fHash)(const Item&);
---|   
+--|
 --| };
 
 private
@@ -233,9 +234,10 @@ private
     Size : Natural := 0;
   end record;
 
+  procedure Adjust (T : in out Table);
   procedure Finalize (T : in out Table);
 
---| 
+--|
 --| #endif
 
 end BC.Support.Hash_Tables;
