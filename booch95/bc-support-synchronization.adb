@@ -21,9 +21,18 @@ with Ada.Unchecked_Deallocation;
 
 package body BC.Support.Synchronization is
 
+  -- Semaphore_Base --
+
+  procedure Delete (The_Semaphore : in out Semaphore_P) is
+    procedure Free is new Ada.Unchecked_Deallocation
+       (Semaphore_Base'Class, Semaphore_P);
+  begin
+    Free (The_Semaphore);
+  end Delete;
+
   -- Semaphore --
 
-  protected body Semaphore is
+  protected body Semaphore_Type is
 
     entry Seize when True is
       use type Ada.Task_Identification.Task_Id;
@@ -51,18 +60,40 @@ package body BC.Support.Synchronization is
       Count := 1;
     end Waiting;
 
-  end Semaphore;
+  end Semaphore_Type;
 
-  procedure Delete (The_Semaphore : in out Semaphore_P) is
-    procedure Free is new Ada.Unchecked_Deallocation (Semaphore, Semaphore_P);
+  procedure Initialize (The_Semaphore : in out Semaphore) is
   begin
-    Free (The_Semaphore);
-  end Delete;
+    The_Semaphore.S := new Semaphore_Type;
+  end Initialize;
+
+  procedure Finalize (The_Semaphore : in out Semaphore) is
+    procedure Free is new Ada.Unchecked_Deallocation
+       (Semaphore_Type, Semaphore_Type_P);
+  begin
+    Free (The_Semaphore.S);
+  end Finalize;
+
+  procedure Seize (The_Semaphore : in out Semaphore) is
+  begin
+    The_Semaphore.S.Seize;
+  end Seize;
+
+  procedure Release (The_Semaphore : in out Semaphore) is
+  begin
+    The_Semaphore.S.Release;
+  end Release;
+
+  function None_Pending (On_The_Semaphore : Semaphore) return Boolean is
+  begin
+    return On_The_Semaphore.S.None_Pending;
+  end None_Pending;
 
   -- Monitor --
 
   procedure Delete (The_Monitor : in out Monitor_P) is
-    procedure Free is new Ada.Unchecked_Deallocation (Monitor'Class, Monitor_P);
+    procedure Free is new Ada.Unchecked_Deallocation
+       (Monitor_Base'Class, Monitor_P);
   begin
     Free (The_Monitor);
   end Delete;
@@ -71,22 +102,22 @@ package body BC.Support.Synchronization is
 
   procedure Seize_For_Reading (The_Monitor : in out Single_Monitor) is
   begin
-    The_Monitor.The_Semaphore.Seize;
+    Seize (The_Monitor.The_Semaphore);
   end ;
 
   procedure Seize_For_Writing (The_Monitor : in out Single_Monitor) is
   begin
-    The_Monitor.The_Semaphore.Seize;
+    Seize (The_Monitor.The_Semaphore);
   end ;
 
   procedure Release_From_Reading (The_Monitor : in out Single_Monitor) is
   begin
-    The_Monitor.The_Semaphore.Release;
+    Release (The_Monitor.The_Semaphore);
   end ;
 
   procedure Release_From_Writing (The_Monitor : in out Single_Monitor) is
   begin
-    The_Monitor.The_Semaphore.Release;
+    Release (The_Monitor.The_Semaphore);
   end ;
 
   -- Multiple_Monitor --
@@ -145,12 +176,12 @@ package body BC.Support.Synchronization is
 
   procedure Initialize (The_Lock : in out Lock) is
   begin
-    The_Lock.Using.Seize;
+    Seize (The_Lock.Using.all);
   end ;
 
   procedure Finalize (The_Lock : in out Lock) is
   begin
-    The_Lock.Using.Release;
+    Release (The_Lock.Using.all);
   end ;
 
   -- Read_Lock --
