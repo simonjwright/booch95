@@ -94,11 +94,10 @@ private
 
    package Collection_Nodes
    is new BC.Support.Bounded (Item => Item,
-                              Item_Ptr => Item_Ptr,
-                              Default_Maximum_Size => Maximum_Size);
+                              Item_Ptr => Item_Ptr);
 
    type Collection is new Abstract_Ordered_Collection with record
-      Rep : Collection_Nodes.Bnd_Node;
+      Rep : Collection_Nodes.Bnd_Node (Maximum_Size => Maximum_Size);
    end record;
 
 end BC.Containers.Collections.Ordered.Bounded;

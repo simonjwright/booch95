@@ -68,12 +68,11 @@ private
 
    package Stack_Nodes
    is new BC.Support.Bounded (Item => Item,
-                              Item_Ptr => Item_Ptr,
-                              Default_Maximum_Size => Maximum_Size);
+                              Item_Ptr => Item_Ptr);
    use Stack_Nodes;
 
    type Stack is new Abstract_Stack with record
-      Rep : Stack_Nodes.Bnd_Node;
+      Rep : Stack_Nodes.Bnd_Node (Maximum_Size => Maximum_Size);
    end record;
 
 end BC.Containers.Stacks.Bounded;
