@@ -29,12 +29,14 @@ package body BC.Containers.Bags.Bounded is
    procedure Assert
    is new BSE.Assert ("BC.Containers.Bags.Bounded");
 
-   procedure Clear (B : in out Bag) is
+   procedure Clear (B : in out Unconstrained_Bag) is
    begin
       Tables.Clear (B.Rep);
    end Clear;
 
-   procedure Add (B : in out Bag; I : Item; Added : out Boolean) is
+   procedure Add (B : in out Unconstrained_Bag;
+                  I : Item;
+                  Added : out Boolean) is
    begin
       if Tables.Is_Bound (B.Rep, I) then
          Tables.Rebind (B.Rep, I, Tables.Value_Of (B.Rep, I) + 1);
@@ -45,7 +47,7 @@ package body BC.Containers.Bags.Bounded is
       end if;
    end Add;
 
-   procedure Remove (B : in out Bag; I : Item) is
+   procedure Remove (B : in out Unconstrained_Bag; I : Item) is
       Count : Positive;
    begin
       Assert (Tables.Is_Bound (B.Rep, I),
@@ -60,17 +62,17 @@ package body BC.Containers.Bags.Bounded is
       end if;
    end Remove;
 
-   function Available (B : Bag) return Natural is
+   function Available (B : Unconstrained_Bag) return Natural is
    begin
       return Maximum_Size - B.Rep.Size;
    end Available;
 
-   function Extent (B : Bag) return Natural is
+   function Extent (B : Unconstrained_Bag) return Natural is
    begin
       return Tables.Extent (B.Rep);
    end Extent;
 
-   function Count (B : Bag; I : Item) return Natural is
+   function Count (B : Unconstrained_Bag; I : Item) return Natural is
    begin
       if not Tables.Is_Bound (B.Rep, I) then
          return 0;
@@ -79,20 +81,21 @@ package body BC.Containers.Bags.Bounded is
       end if;
    end  Count;
 
-   function Is_Empty (B : Bag) return Boolean is
+   function Is_Empty (B : Unconstrained_Bag) return Boolean is
    begin
       return Tables.Extent (B.Rep) = 0;
    end Is_Empty;
 
-   function Is_Member (B : Bag; I : Item) return Boolean is
+   function Is_Member (B : Unconstrained_Bag; I : Item) return Boolean is
    begin
       return Tables.Is_Bound (B.Rep, I);
    end Is_Member;
 
    package Address_Conversions
-   is new System.Address_To_Access_Conversions (Bag);
+   is new System.Address_To_Access_Conversions (Unconstrained_Bag);
 
-   function New_Iterator (For_The_Bag : Bag) return Iterator'Class is
+   function New_Iterator
+     (For_The_Bag : Unconstrained_Bag) return Iterator'Class is
       Result : Bounded_Bag_Iterator;
    begin
       Result.For_The_Container :=
@@ -103,41 +106,46 @@ package body BC.Containers.Bags.Bounded is
 
    --  Private implementations
 
-   procedure Attach (B : in out Bag; I : Item; C : Positive) is
+   procedure Attach (B : in out Unconstrained_Bag; I : Item; C : Positive) is
    begin
       Tables.Bind (B.Rep, I, C);
    end Attach;
 
-   procedure Detach (B : in out Bag; I : Item) is
+   procedure Detach (B : in out Unconstrained_Bag; I : Item) is
    begin
       Tables.Unbind (B.Rep, I);
    end Detach;
 
-   procedure Set_Value (B : in out Bag; I : Item; C : Positive) is
+   procedure Set_Value (B : in out Unconstrained_Bag;
+                        I : Item;
+                        C : Positive) is
    begin
       Tables.Rebind (B.Rep, I, C);
    end Set_Value;
 
-   function Number_Of_Buckets (B : Bag) return Natural is
+   function Number_Of_Buckets (B : Unconstrained_Bag) return Natural is
       pragma Warnings (Off, B);
    begin
       return Buckets;
    end Number_Of_Buckets;
 
-   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
+   function Item_At (B : Unconstrained_Bag;
+                     Bucket, Index : Positive) return Item_Ptr is
       pragma Warnings (Off, Bucket);
    begin
       return Tables.Access_Item_At (B.Rep, Index);
    end Item_At;
 
-   function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
+   function Value_At (B : Unconstrained_Bag;
+                      Bucket, Index : Positive) return Positive is
       pragma Warnings (Off, Bucket);
    begin
       return B.Rep.Contents (Index).Value;
    end Value_At;
 
    procedure Reset (It : in out Bounded_Bag_Iterator) is
-      B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+      B : Unconstrained_Bag'Class
+        renames Unconstrained_Bag'Class (It.For_The_Container.all);
    begin
       It.Index := 0;
       if Extent (B) = 0 then
@@ -155,7 +163,8 @@ package body BC.Containers.Bags.Bounded is
    end Reset;
 
    procedure Next (It : in out Bounded_Bag_Iterator) is
-      B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+      B : Unconstrained_Bag'Class
+        renames Unconstrained_Bag'Class (It.For_The_Container.all);
    begin
       if It.Bucket_Index <= Number_Of_Buckets (B) then
          if B.Rep.Contents (It.Index).Next > 0 then
@@ -175,7 +184,8 @@ package body BC.Containers.Bags.Bounded is
    end Next;
 
    function Is_Done (It : Bounded_Bag_Iterator) return Boolean is
-      B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+      B : Unconstrained_Bag'Class
+     renames Unconstrained_Bag'Class (It.For_The_Container.all);
    begin
       if It.Bucket_Index = 0
         or else It.Bucket_Index > Number_Of_Buckets (B) then
@@ -203,7 +213,8 @@ package body BC.Containers.Bags.Bounded is
    end Is_Done;
 
    function Current_Item (It : Bounded_Bag_Iterator) return Item is
-      B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+      B : Unconstrained_Bag'Class
+     renames Unconstrained_Bag'Class (It.For_The_Container.all);
    begin
       if Is_Done (It) then
          raise BC.Not_Found;
@@ -213,7 +224,8 @@ package body BC.Containers.Bags.Bounded is
 
    function Current_Item_Ptr (It : Bounded_Bag_Iterator) return Item_Ptr is
       --  XXX this should probably not be permitted!
-      B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+      B : Unconstrained_Bag'Class
+     renames Unconstrained_Bag'Class (It.For_The_Container.all);
    begin
       if Is_Done (It) then
          raise BC.Not_Found;
@@ -232,7 +244,7 @@ package body BC.Containers.Bags.Bounded is
    Empty_Container : Bag;
    pragma Warnings (Off, Empty_Container);
 
-   function Null_Container return Bag is
+   function Null_Container return Unconstrained_Bag is
    begin
       return Empty_Container;
    end Null_Container;
