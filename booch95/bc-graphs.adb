@@ -359,14 +359,14 @@ package body BC.Graphs is
   end Current_Vertex;
 
 
-  procedure Visit_Vertices (Over_The_Graph : Graph'Class) is
-    It : Graph_Iterator := New_Graph_Iterator (Over_The_Graph);
+  procedure Visit_Vertices (Using : in out Graph_Iterator) is
     Success : Boolean;
   begin
-    while not Is_Done (It) loop
-      Apply (Current_Vertex (It), Success);
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Current_Vertex (Using), Success);
       exit when not Success;
-      Next (It);
+      Next (Using);
     end loop;
   end Visit_Vertices;
 
@@ -399,14 +399,14 @@ package body BC.Graphs is
   end Current_Arc;
 
 
-  procedure Visit_Arcs (Over_The_Vertex : Vertex'Class) is
-    It : Vertex_Iterator := New_Vertex_Iterator (Over_The_Vertex);
+  procedure Visit_Arcs (Using : in out Vertex_Iterator) is
     Success : Boolean;
   begin
-    while not Is_Done (It) loop
-      Apply (Current_Arc (It), Success);
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Current_Arc (Using), Success);
       exit when not Success;
-      Next (It);
+      Next (Using);
     end loop;
   end Visit_Arcs;
 
