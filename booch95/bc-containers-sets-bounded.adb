@@ -17,9 +17,14 @@
 
 -- $Id$
 
+with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Sets.Bounded is
+
+  package BSE renames BC.Support.Exceptions;
+  procedure Assert
+  is new BSE.Assert ("BC.Containers.Sets.Bounded");
 
   procedure Clear (S : in out Bounded_Set) is
   begin
@@ -38,6 +43,10 @@ package body BC.Containers.Sets.Bounded is
 
   procedure Remove (S : in out Bounded_Set; I : Item) is
   begin
+    Assert (Tables.Is_Bound (S.Rep, I),
+            BC.Not_Found'Identity,
+            "Remove",
+            BSE.Missing);
     Tables.Unbind (S.Rep, I);
   end Remove;
 
