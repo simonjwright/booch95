@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -22,74 +22,74 @@ package BC.Graphs.Undirected is
 
   pragma Elaborate_Body;
 
-  type Undirected_Graph is new Graph with private;
-  type Undirected_Vertex is new Vertex with private;
-  type Undirected_Arc is new Arc with private;
+  type Graph is new Abstract_Graph with private;
+  type Vertex is new Abstract_Vertex with private;
+  type Arc is new Abstract_Arc with private;
 
-  ---------------------------------
-  -- Undirected_Graph operations --
-  ---------------------------------
+  ----------------------
+  -- Graph operations --
+  ----------------------
 
-  procedure Create_Arc (G : in out Undirected_Graph;
-                        A : in out Undirected_Arc'Class;
+  procedure Create_Arc (G : in out Graph;
+                        A : in out Arc'Class;
                         I : Arc_Item;
-                        First : in out Undirected_Vertex'Class;
-                        Second : in out Undirected_Vertex'Class);
+                        First : in out Vertex'Class;
+                        Second : in out Vertex'Class);
   -- Create a new arc between the given vertices and add it to the graph,
   -- setting the second argument of this function as an alias to this new
   -- arc.
 
-  ----------------------------------
-  -- Undirected_Vertex operations --
-  ----------------------------------
+  -----------------------
+  -- Vertex operations --
+  -----------------------
 
-  function Arity (V : Undirected_Vertex) return Natural;
+  function Arity (V : Vertex) return Natural;
   -- Return the number of arcs connected to the vertex; self-arcs are
   -- counted only once.
 
-  -------------------------------
-  -- Undirected_Arc operations --
-  -------------------------------
+  --------------------
+  -- Arc operations --
+  --------------------
 
-  procedure Set_First_Vertex (A : in out Undirected_Arc;
-                              V : access Undirected_Vertex'Class);
+  procedure Set_First_Vertex (A : in out Arc;
+                              V : access Vertex'Class);
   -- Change the first vertex of the arc to the given vertex. This change
   -- requires that the arc be removed from the collection of arcs in the
   -- original vertex and added to the collection of arcs in the given
   -- vertex.
 
-  procedure Set_Second_Vertex (A : in out Undirected_Arc;
-                               V : access Undirected_Vertex'Class);
+  procedure Set_Second_Vertex (A : in out Arc;
+                               V : access Vertex'Class);
   -- Change the second vertex of the arc to the given vertex. This change
   -- requires that the arc be removed from the collection of arcs in the
   -- original vertex and added to the collection of arcs in the given
   -- vertex.
 
-  procedure First_Vertex (A : Undirected_Arc;
-                          V : in out Undirected_Vertex'Class);
+  procedure First_Vertex (A : Arc;
+                          V : in out Vertex'Class);
   -- Return the first vertex associated with the arc.
 
-  procedure Second_Vertex (A : Undirected_Arc;
-                           V : in out Undirected_Vertex'Class);
+  procedure Second_Vertex (A : Arc;
+                           V : in out Vertex'Class);
   -- Return the second vertex associated with the arc.
 
   -----------------------
   -- Iteration support --
   -----------------------
 
-  function New_Graph_Iterator (For_The_Graph : Undirected_Graph)
+  function New_Graph_Iterator (For_The_Graph : Graph)
                                return Graph_Iterator'Class;
   -- Return a reset Iterator bound to the specific Graph.
 
-  function New_Vertex_Iterator (For_The_Vertex : Undirected_Vertex)
+  function New_Vertex_Iterator (For_The_Vertex : Vertex)
                                 return Vertex_Iterator'Class;
   -- Return a reset Iterator bound to the specific Vertex.
 
 private
 
-  type Undirected_Graph is new Graph with null record;
-  type Undirected_Vertex is new Vertex with null record;
-  type Undirected_Arc is new Arc with null record;
+  type Graph is new Abstract_Graph with null record;
+  type Vertex is new Abstract_Vertex with null record;
+  type Arc is new Abstract_Arc with null record;
 
   type Undirected_Graph_Iterator is new Graph_Iterator with record
     Index : Vertex_Node_Ptr;
@@ -101,7 +101,8 @@ private
 
   function Is_Done (It : Undirected_Graph_Iterator) return Boolean;
 
-  function Current_Vertex (It : Undirected_Graph_Iterator) return Vertex'Class;
+  function Current_Vertex (It : Undirected_Graph_Iterator)
+                          return Abstract_Vertex'Class;
 
   type Undirected_Vertex_Iterator is new Vertex_Iterator with record
     Index : Arc_Node_Ptr;
@@ -114,6 +115,7 @@ private
 
   function Is_Done (It : Undirected_Vertex_Iterator) return Boolean;
 
-  function Current_Arc (It : Undirected_Vertex_Iterator) return Arc'Class;
+  function Current_Arc (It : Undirected_Vertex_Iterator)
+                       return Abstract_Arc'Class;
 
 end BC.Graphs.Undirected;

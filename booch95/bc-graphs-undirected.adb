@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -27,15 +27,15 @@ package body BC.Graphs.Undirected is
   is new BSE.Assert ("BC.Graphs.Undirected");
 
 
-  ---------------------------------
-  -- Undirected_Graph operations --
-  ---------------------------------
+  ----------------------
+  -- Graph operations --
+  ----------------------
 
-  procedure Create_Arc (G : in out Undirected_Graph;
-                        A : in out Undirected_Arc'Class;
+  procedure Create_Arc (G : in out Graph;
+                        A : in out Arc'Class;
                         I : Arc_Item;
-                        First : in out Undirected_Vertex'Class;
-                        Second : in out Undirected_Vertex'Class) is
+                        First : in out Vertex'Class;
+                        Second : in out Vertex'Class) is
   begin
     Clear (A);
     A.Rep := new Arc_Node'(Ada.Finalization.Controlled with
@@ -61,11 +61,11 @@ package body BC.Graphs.Undirected is
   end Create_Arc;
 
 
-  ----------------------------------
-  -- Undirected_Vertex operations --
-  ----------------------------------
+  -----------------------
+  -- Vertex operations --
+  -----------------------
 
-  function Arity (V : Undirected_Vertex) return Natural is
+  function Arity (V : Vertex) return Natural is
     Count : Natural := 0;
     Curr : Arc_Node_Ptr;
   begin
@@ -89,12 +89,12 @@ package body BC.Graphs.Undirected is
   end Arity;
 
 
-  -------------------------------
-  -- Undirected_Arc operations --
-  -------------------------------
+  --------------------
+  -- Arc operations --
+  --------------------
 
-  procedure Set_First_Vertex (A : in out Undirected_Arc;
-                              V : access Undirected_Vertex'Class) is
+  procedure Set_First_Vertex (A : in out Arc;
+                              V : access Vertex'Class) is
     Prev, Curr : Arc_Node_Ptr;
   begin
     Assert (A.Rep /= null,
@@ -126,8 +126,8 @@ package body BC.Graphs.Undirected is
   end Set_First_Vertex;
 
 
-  procedure Set_Second_Vertex (A : in out Undirected_Arc;
-                               V : access Undirected_Vertex'Class) is
+  procedure Set_Second_Vertex (A : in out Arc;
+                               V : access Vertex'Class) is
     Prev, Curr : Arc_Node_Ptr;
   begin
     Assert (A.Rep /= null,
@@ -159,8 +159,8 @@ package body BC.Graphs.Undirected is
   end Set_Second_Vertex;
 
 
-  procedure First_Vertex (A : Undirected_Arc;
-                          V : in out Undirected_Vertex'Class) is
+  procedure First_Vertex (A : Arc;
+                          V : in out Vertex'Class) is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
@@ -174,8 +174,8 @@ package body BC.Graphs.Undirected is
   end First_Vertex;
 
 
-  procedure Second_Vertex (A : Undirected_Arc;
-                           V : in out Undirected_Vertex'Class) is
+  procedure Second_Vertex (A : Arc;
+                           V : in out Vertex'Class) is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
@@ -189,16 +189,16 @@ package body BC.Graphs.Undirected is
   end Second_Vertex;
 
 
-  --------------------------------
-  -- Undirected_Graph iterators --
-  --------------------------------
+  ---------------------
+  -- Graph iterators --
+  ---------------------
 
 
   package Graph_Address_Conversions
-  is new System.Address_To_Access_Conversions (Undirected_Graph);
+  is new System.Address_To_Access_Conversions (Graph);
 
   function New_Graph_Iterator
-     (For_The_Graph : Undirected_Graph) return Graph_Iterator'Class is
+     (For_The_Graph : Graph) return Graph_Iterator'Class is
     Result : Undirected_Graph_Iterator
        := (For_The_Graph => Graph_Address_Conversions.To_Pointer
            (For_The_Graph'Address).all'Access,
@@ -209,10 +209,10 @@ package body BC.Graphs.Undirected is
 
 
   package Vertex_Address_Conversions
-  is new System.Address_To_Access_Conversions (Undirected_Vertex);
+  is new System.Address_To_Access_Conversions (Vertex);
 
   function New_Vertex_Iterator
-     (For_The_Vertex : Undirected_Vertex) return Vertex_Iterator'Class is
+     (For_The_Vertex : Vertex) return Vertex_Iterator'Class is
     Result : Undirected_Vertex_Iterator;
   begin
     Result.For_The_Vertex :=
@@ -248,21 +248,21 @@ package body BC.Graphs.Undirected is
 
 
   function Current_Vertex
-     (It : Undirected_Graph_Iterator) return Vertex'Class is
+     (It : Undirected_Graph_Iterator) return Abstract_Vertex'Class is
   begin
     Assert (It.Index /= null,
             BC.Is_Null'Identity,
-            "Current_Item(Undirected_Graph_Iterator)",
+            "Current_Vertex(Graph_Iterator)",
             BSE.Is_Null);
     It.Index.Count := It.Index.Count + 1;
-    return Undirected_Vertex'
+    return Vertex'
        (Ada.Finalization.Controlled with Rep => It.Index);
   end Current_Vertex;
 
 
-  ---------------------------------
-  -- Undirected_Vertex iterators --
-  ---------------------------------
+  ----------------------
+  -- Vertex iterators --
+  ----------------------
 
   procedure Reset (It : in out Undirected_Vertex_Iterator) is
   begin
@@ -314,14 +314,15 @@ package body BC.Graphs.Undirected is
   end Is_Done;
 
 
-  function Current_Arc (It : Undirected_Vertex_Iterator) return Arc'Class is
+  function Current_Arc (It : Undirected_Vertex_Iterator)
+                       return Abstract_Arc'Class is
   begin
     Assert (It.Index /= null,
             BC.Is_Null'Identity,
-            "Current_Item(Undirected_Arc_Iterator)",
+            "Current_Arc(Arc_Iterator)",
             BSE.Is_Null);
     It.Index.Count := It.Index.Count + 1;
-    return Undirected_Arc'(Ada.Finalization.Controlled with Rep => It.Index);
+    return Arc'(Ada.Finalization.Controlled with Rep => It.Index);
   end Current_Arc;
 
 
