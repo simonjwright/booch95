@@ -99,12 +99,16 @@ package BC.Containers.Bags is
 
   function Is_Subset (B : Bag'Class; O : Bag'Class) return Boolean;
   -- Return True if and only if the bag B has the same or fewer distinct
-  -- items than in the bag O and equal or fewer numbers of each such item
+  -- items than in the bag O and equal or less numbers of each such item
   -- than in the bag O.
 
   function Is_Proper_Subset (B : Bag'Class; O : Bag'Class) return Boolean;
-  -- Return True if and only if the bag B has fewer distinct items than in
-  --the bag O and fewer numbers of each item than in the bag O.
+  -- Return True if and only if
+  -- all the distinct items in the bag B are also in the bag O, and
+  -- either at least one of the items in the bag B has a lower number
+  -- than the number in the bag O,
+  -- or there is at least one distinct item in the bag O that is not
+  -- in the bag B.
 
 private
 
