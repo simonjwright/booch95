@@ -216,14 +216,37 @@ package body BC.Graphs.Directed is
   package Vertex_Address_Conversions
   is new System.Address_To_Access_Conversions (Directed_Vertex);
 
+
   function New_Vertex_Iterator
      (For_The_Vertex : Directed_Vertex) return Vertex_Iterator is
     P : Vertex_Address_Conversions.Object_Pointer
        := Vertex_Address_Conversions.To_Pointer (For_The_Vertex'Address);
   begin
-    return Vertex_Iterator (VSP.Create (new Directed_Vertex_Iterator (P)));
+    return Vertex_Iterator
+       (VSP.Create (new Directed_Vertex_Outgoing_Iterator (P)));
   end New_Vertex_Iterator;
 
+
+  function New_Vertex_Incoming_Iterator
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator is
+    P : Vertex_Address_Conversions.Object_Pointer
+       := Vertex_Address_Conversions.To_Pointer (For_The_Vertex'Address);
+  begin
+    return Vertex_Iterator
+       (VSP.Create (new Directed_Vertex_Incoming_Iterator (P)));
+  end New_Vertex_Incoming_Iterator;
+
+
+  procedure Visit_Incoming_Arcs (Over_The_Vertex : Directed_Vertex) is
+    It : Vertex_Iterator := New_Vertex_Incoming_Iterator (Over_The_Vertex);
+    Success : Boolean;
+  begin
+    while not Is_Done (It) loop
+      Apply (Current_Arc (It), Success);
+      exit when not Success;
+      Next (It);
+    end loop;
+  end Visit_Incoming_Arcs;
 
   -------------------------------
   -- Private iteration support --
@@ -270,13 +293,17 @@ package body BC.Graphs.Directed is
   -- Directed_Vertex iterators --
   -------------------------------
 
-  procedure Initialize (It : in out Directed_Vertex_Iterator) is
+  --------------
+  -- Outgoing --
+  --------------
+
+  procedure Initialize (It : in out Directed_Vertex_Outgoing_Iterator) is
   begin
     Reset (It);
   end Initialize;
 
 
-  procedure Reset (It : in out Directed_Vertex_Iterator) is
+  procedure Reset (It : in out Directed_Vertex_Outgoing_Iterator) is
   begin
     if It.D.Rep /= null then
       It.Index := It.D.Rep.Outgoing;
@@ -286,7 +313,7 @@ package body BC.Graphs.Directed is
   end Reset;
 
 
-  procedure Next (It : in out Directed_Vertex_Iterator) is
+  procedure Next (It : in out Directed_Vertex_Outgoing_Iterator) is
   begin
     if It.Index /= null then
       It.Index := It.Index.Next_Outgoing;
@@ -294,17 +321,64 @@ package body BC.Graphs.Directed is
   end Next;
 
 
-  function Is_Done (It : Directed_Vertex_Iterator) return Boolean is
+  function Is_Done (It : Directed_Vertex_Outgoing_Iterator) return Boolean is
   begin
     return It.Index = null;
   end Is_Done;
 
 
-  function Current_Arc (It : Directed_Vertex_Iterator) return Arc'Class is
+  function Current_Arc (It : Directed_Vertex_Outgoing_Iterator)
+                        return Arc'Class is
   begin
     Assert (It.Index /= null,
             BC.Is_Null'Identity,
-            "Current_Item(Directed_Arc_Iterator)",
+            "Current_Item(Directed_Vertex_Outgoing_Iterator)",
+            BSE.Is_Null);
+    It.Index.Count := It.Index.Count + 1;
+    return Directed_Arc'(Ada.Finalization.Controlled with Rep => It.Index);
+  end Current_Arc;
+
+
+  --------------
+  -- Incoming --
+  --------------
+
+  procedure Initialize (It : in out Directed_Vertex_Incoming_Iterator) is
+  begin
+    Reset (It);
+  end Initialize;
+
+
+  procedure Reset (It : in out Directed_Vertex_Incoming_Iterator) is
+  begin
+    if It.D.Rep /= null then
+      It.Index := It.D.Rep.Incoming;
+    else
+      It.Index := null;
+    end if;
+  end Reset;
+
+
+  procedure Next (It : in out Directed_Vertex_Incoming_Iterator) is
+  begin
+    if It.Index /= null then
+      It.Index := It.Index.Next_Incoming;
+    end if;
+  end Next;
+
+
+  function Is_Done (It : Directed_Vertex_Incoming_Iterator) return Boolean is
+  begin
+    return It.Index = null;
+  end Is_Done;
+
+
+  function Current_Arc (It : Directed_Vertex_Incoming_Iterator)
+                        return Arc'Class is
+  begin
+    Assert (It.Index /= null,
+            BC.Is_Null'Identity,
+            "Current_Item(Directed_Vertex_Incoming_Iterator)",
             BSE.Is_Null);
     It.Index.Count := It.Index.Count + 1;
     return Directed_Arc'(Ada.Finalization.Controlled with Rep => It.Index);
