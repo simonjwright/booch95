@@ -109,4 +109,6 @@ private
 
   function Current_Item (It : Collection_Iterator) return Item_Ptr;
 
+  procedure Delete_Item_At (It : Collection_Iterator);
+
 end BC.Containers.Collections;

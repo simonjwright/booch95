@@ -108,4 +108,12 @@ package body BC.Containers.Collections is
     return Item_At (It.C.all, It.Index);
   end Current_Item;
 
+  procedure Delete_Item_At (It : Collection_Iterator) is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    raise BC.Not_Yet_Implemented;
+  end Delete_Item_At;
+
 end BC.Containers.Collections;
