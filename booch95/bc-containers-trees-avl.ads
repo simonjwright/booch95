@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -26,7 +26,7 @@
 --  $Date$
 --  $Author$
 
-with Ada.Finalization;
+with BC.Support.AVL_Trees;
 with System.Storage_Pools;
 
 generic
@@ -36,10 +36,12 @@ package BC.Containers.Trees.AVL is
 
    pragma Elaborate_Body;
 
-   type AVL_Tree is private;
+   type AVL_Tree is new BC.Containers.Container with private;
 
    function "=" (L, R : AVL_Tree) return Boolean;
    --  return True if both trees contain the same Elements.
+
+   function Null_Container return AVL_Tree;
 
    procedure Clear (T : in out AVL_Tree);
    --  Make the tree null and reclaim the storage associated with its items.
@@ -66,6 +68,9 @@ package BC.Containers.Trees.AVL is
    function Is_Member (T : AVL_Tree; Element : Item) return Boolean;
    --  Return True if and only if the item exists in the tree.
 
+   function New_Iterator (For_The_Tree : AVL_Tree) return Iterator'Class;
+   --  Return a reset Iterator bound to the specific tree.
+
    generic
       with procedure Apply (Elem : in out Item);
    procedure Access_Actual_Item (In_The_Tree : AVL_Tree;
@@ -90,27 +95,31 @@ package BC.Containers.Trees.AVL is
 
 private
 
-   type AVL_Node;
-   type AVL_Node_Ref is access AVL_Node;
-   for AVL_Node_Ref'Storage_Pool use Storage;
+   package Support is new BC.Support.AVL_Trees
+     (Item => Item,
+      "<" => "<",
+      Storage => Storage);
 
-   type Node_Balance is (Left, Middle, Right);
-
-   type AVL_Node is record
-      Element : Item;
-      Left, Right : AVL_Node_Ref;
-      Balance : Node_Balance := Middle;
+   type AVL_Tree is new BC.Containers.Container with record
+      Rep : Support.AVL_Tree;
    end record;
 
-   type AVL_Tree is new Ada.Finalization.Controlled with record
-      Rep : AVL_Node_Ref;
-      Size : Natural := 0;
+   --  Iterator implementations.
+
+   type AVL_Tree_Iterator is new Iterator with record
+      Previous, Current : Support.AVL_Node_Ref;
    end record;
 
-   procedure Initialize (T : in out AVL_Tree);
+   procedure Reset (It : in out AVL_Tree_Iterator);
 
-   procedure Adjust (T : in out AVL_Tree);
+   procedure Next (It : in out AVL_Tree_Iterator);
 
-   procedure Finalize (T : in out AVL_Tree);
+   function Is_Done (It : AVL_Tree_Iterator) return Boolean;
+
+   function Current_Item (It : AVL_Tree_Iterator) return Item;
+
+   procedure Delete_Item_At (It : in out AVL_Tree_Iterator);
+
+   function Current_Item_Ptr (It : AVL_Tree_Iterator) return Item_Ptr;
 
 end BC.Containers.Trees.AVL;
