@@ -1,5 +1,5 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,7 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Containers;
 with BC.Containers.Trees;
@@ -26,17 +26,17 @@ with Global_Heap;
 
 package Tree_Test_Support is
 
-  package Containers is new BC.Containers (Item => Character);
+   package Containers is new BC.Containers (Item => Character);
 
-  package Trees is new Containers.Trees;
+   package Trees is new Containers.Trees;
 
-  package TA is new Trees.AVL (Storage_Manager => Global_Heap.Pool,
-                                  Storage => Global_Heap.Storage);
+   package TA is new Trees.AVL (Storage_Manager => Global_Heap.Pool,
+                                Storage => Global_Heap.Storage);
 
-  package TB is new Trees.Binary (Storage_Manager => Global_Heap.Pool,
-                                  Storage => Global_Heap.Storage);
+   package TB is new Trees.Binary (Storage_Manager => Global_Heap.Pool,
+                                   Storage => Global_Heap.Storage);
 
-  package TM is new Trees.Multiway (Storage_Manager => Global_Heap.Pool,
+   package TM is new Trees.Multiway (Storage_Manager => Global_Heap.Pool,
                                      Storage => Global_Heap.Storage);
 
 end Tree_Test_Support;
