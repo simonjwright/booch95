@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -40,8 +40,8 @@ package body BC.Support.Hash_Tables is
             for B in 1 .. Buckets loop
                for Index in 1 .. Items.Length (L.Items (B)) loop
                   declare
-                     This_Item : Items.Item
-        renames Items.Item_At (L.Items (B), Index);
+                     This_Item : Items.Item renames
+                       Items.Item_At (L.Items (B), Index);
                      function "=" (L, R : Values.Value) return Boolean
                        renames Values."=";
                      --  There seems to be a problem wrt the 'function "="
