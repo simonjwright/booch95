@@ -14,11 +14,13 @@
 
 <dl>
 
-<dt dd mmm yyyy
+<dt> dd mmm yyyy
 
 <dd>
 
 <h3>Interface changes</h3>
+
+<h4>Constraints revisited</h4>
 
 <p>For Bags, Maps and Sets in each form, and in all Bounded forms, the
 basic container is now unconstrained with a constrained subtype: for
@@ -38,6 +40,7 @@ Unbounded Bags, for instance, the declarations are
 </pre>
 
 <p>whereas for bounded bags the declarations are
+<pre>
    generic
       with function Hash (V : Item) return Natural is <>;
       Buckets : Positive;
@@ -50,11 +53,14 @@ Unbounded Bags, for instance, the declarations are
 
       subtype Bag is Unconstrained_Bag (Number_Of_Buckets => Buckets,
 					Maximum_Size => Maximum_Size);
-<pre>
+</pre>
 
 <p>The intention is that users shouldn't need to change their source.
 
-</pre>
+<h4>Concurrency</h4>
+
+<p>The slender support for concurrency (Guarded and Synchronized
+forms) has been removed.
 
 <h3>Documentation changes</h3>
 
