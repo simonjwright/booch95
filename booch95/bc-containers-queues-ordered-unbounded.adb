@@ -21,53 +21,53 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Queues.Ordered.Unbounded is
 
-  procedure Clear (Obj : in out Unbounded_Ordered_Queue) is
+  procedure Clear (Q : in out Unbounded_Ordered_Queue) is
   begin
-    Unbounded_Ordered_Queue_Nodes.Clear (Obj.Rep.all);
+    Unbounded_Ordered_Queue_Nodes.Clear (Q.Rep.all);
   end Clear;
 
-  procedure Append (Obj : in out Unbounded_Ordered_Queue; Elem : Item) is
+  procedure Append (Q : in out Unbounded_Ordered_Queue; Elem : Item) is
   begin
-    for Index in 1 .. Unbounded_Ordered_Queue_Nodes.Length (Obj.Rep.all)
+    for Index in 1 .. Unbounded_Ordered_Queue_Nodes.Length (Q.Rep.all)
     loop
-      if Elem < Unbounded_Ordered_Queue_Nodes.Item_At (Obj.Rep.all, Index)
+      if Elem < Unbounded_Ordered_Queue_Nodes.Item_At (Q.Rep.all, Index)
       then
-        Unbounded_Ordered_Queue_Nodes.Insert (Obj.Rep.all, Elem, Index);
+        Unbounded_Ordered_Queue_Nodes.Insert (Q.Rep.all, Elem, Index);
         return;
       end if;
     end loop;
-    Unbounded_Ordered_Queue_Nodes.Append (Obj.Rep.all, Elem);
+    Unbounded_Ordered_Queue_Nodes.Append (Q.Rep.all, Elem);
   end Append;
 
-  procedure Pop (Obj : in out Unbounded_Ordered_Queue) is
+  procedure Pop (Q : in out Unbounded_Ordered_Queue) is
   begin
-    Unbounded_Ordered_Queue_Nodes.Remove (Obj.Rep.all, 1);
+    Unbounded_Ordered_Queue_Nodes.Remove (Q.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Obj : in out Unbounded_Ordered_Queue; From : Positive) is
+  procedure Remove (Q : in out Unbounded_Ordered_Queue; From : Positive) is
   begin
-    Unbounded_Ordered_Queue_Nodes.Remove (Obj.Rep.all, From);
+    Unbounded_Ordered_Queue_Nodes.Remove (Q.Rep.all, From);
   end Remove;
 
-  function Length (Obj : Unbounded_Ordered_Queue) return Natural is
+  function Length (Q : Unbounded_Ordered_Queue) return Natural is
   begin
-    return Unbounded_Ordered_Queue_Nodes.Length (Obj.Rep.all);
+    return Unbounded_Ordered_Queue_Nodes.Length (Q.Rep.all);
   end Length;
 
-  function Is_Empty (Obj : Unbounded_Ordered_Queue) return Boolean is
+  function Is_Empty (Q : Unbounded_Ordered_Queue) return Boolean is
   begin
-    return Unbounded_Ordered_Queue_Nodes.Length (Obj.Rep.all) = 0;
+    return Unbounded_Ordered_Queue_Nodes.Length (Q.Rep.all) = 0;
   end Is_Empty;
 
-  function Front (Obj : Unbounded_Ordered_Queue) return Item is
+  function Front (Q : Unbounded_Ordered_Queue) return Item is
   begin
-    return Unbounded_Ordered_Queue_Nodes.First (Obj.Rep.all);
+    return Unbounded_Ordered_Queue_Nodes.First (Q.Rep.all);
   end Front;
 
   function Location
-     (Obj : Unbounded_Ordered_Queue; Elem : Item) return Natural is
+     (Q : Unbounded_Ordered_Queue; Elem : Item) return Natural is
   begin
-    return Unbounded_Ordered_Queue_Nodes.Location (Obj.Rep.all, Elem);
+    return Unbounded_Ordered_Queue_Nodes.Location (Q.Rep.all, Elem);
   end Location;
 
   function "=" (Left, Right : Unbounded_Ordered_Queue) return Boolean is
@@ -87,35 +87,35 @@ package body BC.Containers.Queues.Ordered.Unbounded is
     return Iterator (SP.Create (new Queue_Iterator (P)));
   end New_Iterator;
 
-  procedure Purge (Obj : in out Unbounded_Ordered_Queue) is
+  procedure Purge (Q : in out Unbounded_Ordered_Queue) is
   begin
-    Unbounded_Ordered_Queue_Nodes.Clear (Obj.Rep.all);
+    Unbounded_Ordered_Queue_Nodes.Clear (Q.Rep.all);
   end Purge;
 
-  function Cardinality (Obj : Unbounded_Ordered_Queue) return Natural is
+  function Cardinality (Q : Unbounded_Ordered_Queue) return Natural is
   begin
-    return Unbounded_Ordered_Queue_Nodes.Length (Obj.Rep.all);
+    return Unbounded_Ordered_Queue_Nodes.Length (Q.Rep.all);
   end Cardinality;
 
   function Item_At
-     (Obj : Unbounded_Ordered_Queue; Index : Positive) return Item_Ptr is
+     (Q : Unbounded_Ordered_Queue; Index : Positive) return Item_Ptr is
   begin
-    return Unbounded_Ordered_Queue_Nodes.Item_At (Obj.Rep.all, Index);
+    return Unbounded_Ordered_Queue_Nodes.Item_At (Q.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (Obj : in out Unbounded_Ordered_Queue) is
+  procedure Initialize (Q : in out Unbounded_Ordered_Queue) is
   begin
     null;
   end Initialize;
 
-  procedure Adjust (Obj : in out Unbounded_Ordered_Queue) is
+  procedure Adjust (Q : in out Unbounded_Ordered_Queue) is
   begin
-    Obj.Rep := Unbounded_Ordered_Queue_Nodes.Create (From => Obj.Rep.all);
+    Q.Rep := Unbounded_Ordered_Queue_Nodes.Create (From => Q.Rep.all);
   end Adjust;
 
-  procedure Finalize (Obj : in out Unbounded_Ordered_Queue) is
+  procedure Finalize (Q : in out Unbounded_Ordered_Queue) is
   begin
-    Unbounded_Ordered_Queue_Nodes.Free (Obj.Rep); -- does a Clear()
+    Unbounded_Ordered_Queue_Nodes.Free (Q.Rep); -- does a Clear()
   end Finalize;
 
 end BC.Containers.Queues.Ordered.Unbounded;
