@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,52 +21,51 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Stacks.Unbounded is
 
-  function "=" (Left, Right : Unbounded_Stack) return Boolean is
-    use Unbounded_Stack_Nodes;
+  function "=" (Left, Right : Stack) return Boolean is
+    use Stack_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Clear (S : in out Unbounded_Stack) is
+  procedure Clear (S : in out Stack) is
   begin
-    Unbounded_Stack_Nodes.Clear (S.Rep.all);
+    Stack_Nodes.Clear (S.Rep.all);
   end Clear;
 
-  procedure Push (S : in out Unbounded_Stack; Elem : Item) is
+  procedure Push (S : in out Stack; Elem : Item) is
   begin
-    Unbounded_Stack_Nodes.Insert (S.Rep.all, Elem);
+    Stack_Nodes.Insert (S.Rep.all, Elem);
   end Push;
 
-  procedure Pop (S : in out Unbounded_Stack) is
+  procedure Pop (S : in out Stack) is
   begin
-    Unbounded_Stack_Nodes.Remove (S.Rep.all, 1);
+    Stack_Nodes.Remove (S.Rep.all, 1);
   end Pop;
 
-  function Depth(S : Unbounded_Stack) return Natural is
+  function Depth(S : Stack) return Natural is
   begin
-    return Unbounded_Stack_Nodes.Length (S.Rep.all);
+    return Stack_Nodes.Length (S.Rep.all);
   end Depth;
 
-  function Is_Empty (S : Unbounded_Stack) return Boolean is
+  function Is_Empty (S : Stack) return Boolean is
   begin
-    return Unbounded_Stack_Nodes.Length (S.Rep.all) = 0;
+    return Stack_Nodes.Length (S.Rep.all) = 0;
   end Is_Empty;
 
-  function Top (S : Unbounded_Stack) return Item is
+  function Top (S : Stack) return Item is
   begin
-    return Unbounded_Stack_Nodes.First (S.Rep.all);
+    return Stack_Nodes.First (S.Rep.all);
   end Top;
 
-  function Top (S : Unbounded_Stack) return Item_Ptr is
+  function Top (S : Stack) return Item_Ptr is
   begin
-    return Unbounded_Stack_Nodes.First (S.Rep.all);
+    return Stack_Nodes.First (S.Rep.all);
   end Top;
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Unbounded_Stack);
+  is new System.Address_To_Access_Conversions (Stack);
 
-  function New_Iterator
-     (For_The_Stack : Unbounded_Stack) return Iterator'Class is
+  function New_Iterator (For_The_Stack : Stack) return Iterator'Class is
     Result : Stack_Iterator;
   begin
     Result.For_The_Container :=
@@ -75,39 +74,39 @@ package body BC.Containers.Stacks.Unbounded is
     return Result;
   end New_Iterator;
 
-  function Item_At (S : Unbounded_Stack; Index : Positive) return Item_Ptr is
+  function Item_At (S : Stack; Index : Positive) return Item_Ptr is
   begin
-    return Unbounded_Stack_Nodes.Item_At (S.Rep.all, Index);
+    return Stack_Nodes.Item_At (S.Rep.all, Index);
   end Item_At;
 
-  procedure Add (S : in out Unbounded_Stack; Elem : Item) is
+  procedure Add (S : in out Stack; Elem : Item) is
   begin
-    Unbounded_Stack_Nodes.Append (S.Rep.all, Elem);
+    Stack_Nodes.Append (S.Rep.all, Elem);
   end Add;
 
-  procedure Remove (S : in out Unbounded_Stack; From : Positive) is
+  procedure Remove (S : in out Stack; From : Positive) is
   begin
-    Unbounded_Stack_Nodes.Remove (S.Rep.all, From);
+    Stack_Nodes.Remove (S.Rep.all, From);
   end Remove;
 
-  procedure Initialize (S : in out Unbounded_Stack) is
+  procedure Initialize (S : in out Stack) is
   begin
     null;
   end Initialize;
 
-  procedure Adjust (S : in out Unbounded_Stack) is
+  procedure Adjust (S : in out Stack) is
   begin
-    S.Rep := Unbounded_Stack_Nodes.Create (From => S.Rep.all);
+    S.Rep := Stack_Nodes.Create (From => S.Rep.all);
   end Adjust;
 
-  procedure Finalize (S : in out Unbounded_Stack) is
+  procedure Finalize (S : in out Stack) is
   begin
-    Unbounded_Stack_Nodes.Free (S.Rep);
+    Stack_Nodes.Free (S.Rep);
   end Finalize;
 
-  Empty_Container : Unbounded_Stack;
+  Empty_Container : Stack;
 
-  function Null_Container return Unbounded_Stack is
+  function Null_Container return Stack is
   begin
     return Empty_Container;
   end Null_Container;

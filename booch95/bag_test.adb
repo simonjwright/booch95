@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -40,7 +40,7 @@ procedure Bag_Test is
       Put (" "
            & Item
            & " =>"
-           & Positive'Image (Bags.Count (Bags.Bag'Class (B), Item)));
+           & Positive'Image (Bags.Count (Bags.Abstract_Bag'Class (B), Item)));
       OK := True;
     end Print;
     procedure Visitor is new Containers.Visit (Print);
@@ -51,7 +51,7 @@ procedure Bag_Test is
     New_Line;
   end Print_Bag;
 
-  procedure Test (B1, B2 : in out Bags.Bag'Class) is
+  procedure Test (B1, B2 : in out Bags.Abstract_Bag'Class) is
   begin
     Assertion (Bags.Is_Empty (B1),
                "** P01: Bag is not initially empty");
@@ -196,7 +196,7 @@ procedure Bag_Test is
     Bags.Add (B1, 'z');
   end Test;
 
-  procedure Test_Active_Iterator (B : in out Bags.Bag'Class) is
+  procedure Test_Active_Iterator (B : in out Bags.Abstract_Bag'Class) is
     use Containers; use Bags;
     Iter : Containers.Iterator'Class := New_Iterator (B);
   begin
@@ -217,7 +217,7 @@ procedure Bag_Test is
          ("      Item: "
           & Item
           & " =>"
-          & Positive'Image (Bags.Count (Bags.Bag'Class (B), Item)));
+          & Positive'Image (Bags.Count (Bags.Abstract_Bag'Class (B), Item)));
       OK := True;
     end Process;
     procedure Visitor is new Containers.Visit (Process);
@@ -234,7 +234,7 @@ procedure Bag_Test is
          ("      Item (RW): "
           & Item
           & " =>"
-          & Positive'Image (Bags.Count (Bags.Bag'Class (B), Item)));
+          & Positive'Image (Bags.Count (Bags.Abstract_Bag'Class (B), Item)));
       OK := True;
     end Process_Modifiable;
     procedure Modifier is new Containers.Modify (Process_Modifiable);
@@ -243,9 +243,9 @@ procedure Bag_Test is
     Modifier (Iter);
   end Test_Passive_Modifying_Iterator;
 
-  Bag_B_P1, Bag_B_P2 : BB.Bounded_Bag;
-  Bag_D_P1, Bag_D_P2 : BD.Dynamic_Bag;
-  Bag_U_P1, Bag_U_P2 : BU.Unbounded_Bag;
+  Bag_B_P1, Bag_B_P2 : BB.Bag;
+  Bag_D_P1, Bag_D_P2 : BD.Bag;
+  Bag_U_P1, Bag_U_P2 : BU.Bag;
 
 begin
   Put_Line ("Starting bag tests");

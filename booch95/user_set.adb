@@ -1,4 +1,4 @@
--- Copyright (C) 1999,2000 Simon Wright.
+-- Copyright (C) 1999,2000,2001 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -29,7 +29,7 @@ procedure User_Set is
   use Ada.Text_Io;
   use User_Set_Support;
 
-  procedure Print_Set (S : in out Sets.Set'Class; Named : String) is
+  procedure Print_Set (S : in out Sets.Abstract_Set'Class; Named : String) is
     procedure Print (Item : User_Character; OK : out Boolean) is
     begin
       Put (" " & Character (Item));
@@ -44,7 +44,7 @@ procedure User_Set is
     New_Line;
   end Print_Set;
 
-  procedure Test (S : in out Sets.Set'Class) is
+  procedure Test (S : in out Sets.Abstract_Set'Class) is
   begin
     Sets.Add (S, 'a');
     Sets.Add (S, 'B');
@@ -62,9 +62,9 @@ procedure User_Set is
     Print_Set (S, "S");
   end Test;
 
-  B : SB.Bounded_Set;
-  D : SD.Dynamic_Set;
-  U : SU.Unbounded_Set;
+  B : SB.Set;
+  D : SD.Set;
+  U : SU.Set;
 
 begin
   Put_Line ("Hash of 'a' is " & Integer'Image (User_Char_Hash ('a')));

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,88 +21,86 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Queues.Ordered.Dynamic is
 
-  function Create (Size : Positive) return Dynamic_Ordered_Queue is
-    Temp : Dynamic_Ordered_Queue;
+  function Create (Size : Positive) return Queue is
+    Temp : Queue;
   begin
-    Temp.Rep := Dynamic_Ordered_Queue_Nodes.Create (Size);
+    Temp.Rep := Queue_Nodes.Create (Size);
     return Temp;
   end Create;
 
-  procedure Clear (Q : in out Dynamic_Ordered_Queue) is
+  procedure Clear (Q : in out Queue) is
   begin
-    Dynamic_Ordered_Queue_Nodes.Clear (Q.Rep.all);
+    Queue_Nodes.Clear (Q.Rep.all);
   end Clear;
 
-  procedure Append (Q : in out Dynamic_Ordered_Queue; Elem : Item) is
+  procedure Append (Q : in out Queue; Elem : Item) is
   begin
-    for Index in 1 .. Dynamic_Ordered_Queue_Nodes.Length (Q.Rep.all)
+    for Index in 1 .. Queue_Nodes.Length (Q.Rep.all)
     loop
-      if Elem < Dynamic_Ordered_Queue_Nodes.Item_At (Q.Rep.all, Index)
+      if Elem < Queue_Nodes.Item_At (Q.Rep.all, Index)
       then
-        Dynamic_Ordered_Queue_Nodes.Insert (Q.Rep.all, Elem, Index);
+        Queue_Nodes.Insert (Q.Rep.all, Elem, Index);
         return;
       end if;
     end loop;
-    Dynamic_Ordered_Queue_Nodes.Append (Q.Rep.all, Elem);
+    Queue_Nodes.Append (Q.Rep.all, Elem);
   end Append;
 
-  procedure Pop (Q : in out Dynamic_Ordered_Queue) is
+  procedure Pop (Q : in out Queue) is
   begin
-    Dynamic_Ordered_Queue_Nodes.Remove (Q.Rep.all, 1);
+    Queue_Nodes.Remove (Q.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Q : in out Dynamic_Ordered_Queue; From : Positive) is
+  procedure Remove (Q : in out Queue; From : Positive) is
   begin
-    Dynamic_Ordered_Queue_Nodes.Remove (Q.Rep.all, From);
+    Queue_Nodes.Remove (Q.Rep.all, From);
   end Remove;
 
-  function Length (Q : Dynamic_Ordered_Queue) return Natural is
+  function Length (Q : Queue) return Natural is
   begin
-    return Dynamic_Ordered_Queue_Nodes.Length (Q.Rep.all);
+    return Queue_Nodes.Length (Q.Rep.all);
   end Length;
 
-  function Is_Empty (Q : Dynamic_Ordered_Queue) return Boolean is
+  function Is_Empty (Q : Queue) return Boolean is
   begin
-    return Dynamic_Ordered_Queue_Nodes.Length (Q.Rep.all) = 0;
+    return Queue_Nodes.Length (Q.Rep.all) = 0;
   end Is_Empty;
 
-  function Front (Q : Dynamic_Ordered_Queue) return Item is
+  function Front (Q : Queue) return Item is
   begin
-    return Dynamic_Ordered_Queue_Nodes.First (Q.Rep.all);
+    return Queue_Nodes.First (Q.Rep.all);
   end Front;
 
-  function Location
-     (Q : Dynamic_Ordered_Queue; Elem : Item) return Natural is
+  function Location (Q : Queue; Elem : Item) return Natural is
   begin
-    return Dynamic_Ordered_Queue_Nodes.Location (Q.Rep.all, Elem);
+    return Queue_Nodes.Location (Q.Rep.all, Elem);
   end Location;
 
-  function "=" (Left, Right : Dynamic_Ordered_Queue) return Boolean is
-    use Dynamic_Ordered_Queue_Nodes;
+  function "=" (Left, Right : Queue) return Boolean is
+    use Queue_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Preallocate (Q : in out Dynamic_Ordered_Queue; Size : Natural) is
+  procedure Preallocate (Q : in out Queue; Size : Natural) is
   begin
-    Dynamic_Ordered_Queue_Nodes.Preallocate (Q.Rep.all, Size);
+    Queue_Nodes.Preallocate (Q.Rep.all, Size);
   end Preallocate;
 
-  procedure Set_Chunk_Size (Q : in out Dynamic_Ordered_Queue; Size : Natural) is
+  procedure Set_Chunk_Size (Q : in out Queue; Size : Natural) is
   begin
-    Dynamic_Ordered_Queue_Nodes.Set_Chunk_Size (Q.Rep.all, Size);
+    Queue_Nodes.Set_Chunk_Size (Q.Rep.all, Size);
   end Set_Chunk_Size;
 
-  function Chunk_Size (Q : Dynamic_Ordered_Queue) return Natural is
+  function Chunk_Size (Q : Queue) return Natural is
   begin
-    return Dynamic_Ordered_Queue_Nodes.Chunk_Size (Q.Rep.all);
+    return Queue_Nodes.Chunk_Size (Q.Rep.all);
   end Chunk_Size;
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Dynamic_Ordered_Queue);
+  is new System.Address_To_Access_Conversions (Queue);
 
-  function New_Iterator
-     (For_The_Queue : Dynamic_Ordered_Queue) return Iterator'Class is
+  function New_Iterator (For_The_Queue : Queue) return Iterator'Class is
     Result : Queue_Iterator;
   begin
     Result.For_The_Container :=
@@ -111,33 +109,32 @@ package body BC.Containers.Queues.Ordered.Dynamic is
     return Result;
   end New_Iterator;
 
-  function Item_At
-     (Q : Dynamic_Ordered_Queue; Index : Positive) return Item_Ptr is
+  function Item_At (Q : Queue; Index : Positive) return Item_Ptr is
   begin
-    return Dynamic_Ordered_Queue_Nodes.Item_At (Q.Rep.all, Index);
+    return Queue_Nodes.Item_At (Q.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (Q : in out Dynamic_Ordered_Queue) is
+  procedure Initialize (Q : in out Queue) is
   begin
-    Q.Rep := Dynamic_Ordered_Queue_Nodes.Create;
+    Q.Rep := Queue_Nodes.Create;
   end Initialize;
 
-  procedure Adjust (Q : in out Dynamic_Ordered_Queue) is
+  procedure Adjust (Q : in out Queue) is
   begin
-    Q.Rep := Dynamic_Ordered_Queue_Nodes.Create (From => Q.Rep.all);
+    Q.Rep := Queue_Nodes.Create (From => Q.Rep.all);
   end Adjust;
 
-  procedure Finalize (Q : in out Dynamic_Ordered_Queue) is
-    use type Dynamic_Ordered_Queue_Nodes.Dyn_Node_Ref;
+  procedure Finalize (Q : in out Queue) is
+    use type Queue_Nodes.Dyn_Node_Ref;
   begin
     if Q.Rep /= null then
-      Dynamic_Ordered_Queue_Nodes.Free (Q.Rep); -- does a Clear()
+      Queue_Nodes.Free (Q.Rep); -- does a Clear()
     end if;
   end Finalize;
 
-  Empty_Container : Dynamic_Ordered_Queue;
+  Empty_Container : Queue;
 
-  function Null_Container return Dynamic_Ordered_Queue is
+  function Null_Container return Queue is
   begin
     return Empty_Container;
   end Null_Container;

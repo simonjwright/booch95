@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -26,9 +26,7 @@ procedure Deque_Test is
   use Deque_Test_Support;
   use Containers;
   use Deques;
-  use DB;
-  use DD;
-  use DU;
+  use DB, DD, DU;
 
   procedure Process (C : Character; OK : out Boolean) is
   begin
@@ -55,7 +53,7 @@ procedure Deque_Test is
     end loop;
   end Test_Active_Iterator;
 
-  procedure Test_Primitive (D1, D2 : in out Deque'Class) is
+  procedure Test_Primitive (D1, D2 : in out Abstract_Deque'Class) is
   begin
     Assertion (Is_Empty (D1), "** P01: Deque is not initially empty");
     Assertion (Length (D1) = 0, "** P02: Deque length is not initially zero");
@@ -160,7 +158,7 @@ procedure Deque_Test is
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
-  procedure Test_Iterator_Deletion (D : in out Deque'Class) is
+  procedure Test_Iterator_Deletion (D : in out Abstract_Deque'Class) is
     Iter : Iterator'Class := New_Iterator (D);
     Delete : Boolean;
   begin
@@ -200,9 +198,9 @@ procedure Deque_Test is
     Assertion (Length (D) = 0, "** I07: Deque length is not zero");
   end Test_Iterator_Deletion;
 
-  Deque_B_P1, Deque_B_P2 : DB.Bounded_Deque;
-  Deque_D_P1, Deque_D_P2 : DD.Dynamic_Deque;
-  Deque_U_P1, Deque_U_P2 : DU.Unbounded_Deque;
+  Deque_B_P1, Deque_B_P2 : DB.Deque;
+  Deque_D_P1, Deque_D_P2 : DD.Deque;
+  Deque_U_P1, Deque_U_P2 : DU.Deque;
 
 begin
   Put_Line ("Starting deque tests");
@@ -233,7 +231,8 @@ begin
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Deque_U_P1);
 
-  Assertion ((Front (Deque_B_P1) = '9'), "** M01: Deque front is not correct");
+  Assertion ((Front (Deque_B_P1) = '9'),
+             "** M01: Deque front is not correct");
   Assertion ((Length (Deque_B_P2) = 0), "** M02: Deque length is not correct");
   Assertion ((Front (Deque_D_P1) = '9'), "** M05: Deque front is not correct");
   Assertion ((Length (Deque_D_P2) = 0), "** M06: Deque length is not correct");

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,11 +21,12 @@ with System;
 
 package body BC.Containers.Queues is
 
-  procedure Pop_Value (Q : in out Queue; Elem : out Item) is
+  procedure Pop_Value (Q : in out Abstract_Queue; Elem : out Item) is
     -- This primitive is implemented in terms of other primitives that
     -- are (at this level) abstract; so the calls must be dispatching;
     -- so we need a classwide value.
-    procedure Actual_Pop_Value (Q : in out Queue'Class; Elem : out Item) is
+    procedure Actual_Pop_Value (Q : in out Abstract_Queue'Class;
+                                Elem : out Item) is
     begin
       Elem := Front (Q);
       Pop (Q);
@@ -34,12 +35,13 @@ package body BC.Containers.Queues is
     Actual_Pop_Value (Q, Elem);
   end Pop_Value;
 
-  procedure Process_Front (Q : in out Queue'Class) is
+  procedure Process_Front (Q : in out Abstract_Queue'Class) is
   begin
     Process (Item_At (Q, 1).all);
   end Process_Front;
 
-  procedure Copy (From : Queue'Class; To : in out Queue'Class) is
+  procedure Copy (From : Abstract_Queue'Class;
+                  To : in out Abstract_Queue'Class) is
     Iter : Iterator'Class := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
@@ -52,7 +54,7 @@ package body BC.Containers.Queues is
     end if;
   end Copy;
 
-  function Are_Equal (Left, Right : Queue'Class) return Boolean is
+  function Are_Equal (Left, Right : Abstract_Queue'Class) return Boolean is
   begin
     if System."=" (Left'Address, Right'Address) then
       return True;
@@ -77,7 +79,8 @@ package body BC.Containers.Queues is
   end Are_Equal;
 
   procedure Reset (It : in out Queue_Iterator) is
-    Q : Queue'Class renames Queue'Class (It.For_The_Container.all);
+    Q : Abstract_Queue'Class
+       renames Abstract_Queue'Class (It.For_The_Container.all);
   begin
     if Length (Q) = 0 then
       It.Index := 0;
@@ -92,7 +95,8 @@ package body BC.Containers.Queues is
   end Next;
 
   function Is_Done (It : Queue_Iterator) return Boolean is
-    Q : Queue'Class renames Queue'Class (It.For_The_Container.all);
+    Q : Abstract_Queue'Class
+    renames Abstract_Queue'Class (It.For_The_Container.all);
   begin
     return It.Index = 0 or else It.Index > Length (Q);
   end Is_Done;
@@ -114,7 +118,8 @@ package body BC.Containers.Queues is
   end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Queue_Iterator) is
-    Q : Queue'Class renames Queue'Class (It.For_The_Container.all);
+    Q : Abstract_Queue'Class
+       renames Abstract_Queue'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;

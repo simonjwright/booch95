@@ -32,47 +32,47 @@ package BC.Containers.Maps is
   -- different types, although they may may represent the same
   -- types. Either may be a primitive type or user-defined.
 
-  type Map is abstract new Container with private;
+  type Abstract_Map is abstract new Container with private;
 
-  function Are_Equal (L, R : Map'Class) return Boolean;
+  function Are_Equal (L, R : Abstract_Map'Class) return Boolean;
   -- Return True if and only if both maps have the same extent and the same
   -- key/item pairs; return False otherwise.
   -- Can't call this "=" because of the standard one for Map.
 
-  procedure Clear (M : in out Map)
+  procedure Clear (M : in out Abstract_Map)
     is abstract;
   -- Empty the map of all key/item pairs.
 
-  procedure Bind (M : in out Map; K : Key; I : Item)
+  procedure Bind (M : in out Abstract_Map; K : Key; I : Item)
     is abstract;
   -- If the key already exists in the map, raise BC.Duplicate. Otherwise,
   -- add the key/item pair to the map.
 
-  procedure Rebind (M : in out Map; K : Key; I : Item)
+  procedure Rebind (M : in out Abstract_Map; K : Key; I : Item)
     is abstract;
   -- If the key does not exist in the map, raise BC.Not_Found. Otherwise,
   -- change the key's binding to the given value.
 
-  procedure Unbind (M : in out Map; K : Key)
+  procedure Unbind (M : in out Abstract_Map; K : Key)
     is abstract;
   -- If the key does not exist in the map, raise BC.Not_Found. Otherwise,
   -- remove the key/item binding.
 
-  function Extent (M : Map) return Natural
+  function Extent (M : Abstract_Map) return Natural
     is abstract;
   -- Return the number of key/item bindings in the map.
 
-  function Is_Empty (M : Map) return Boolean
+  function Is_Empty (M : Abstract_Map) return Boolean
     is abstract;
   -- Return True if and only if there are no key/item bindings in the
   -- map; otherwise, return False.
 
-  function Is_Bound (M : Map; K : Key) return Boolean
+  function Is_Bound (M : Abstract_Map; K : Key) return Boolean
     is abstract;
   -- Return True if and only if there is a binding for the given key in
   -- the map; otherwise, return False.
 
-  function Item_Of (M : Map; K : Key) return Item
+  function Item_Of (M : Abstract_Map; K : Key) return Item
     is abstract;
   -- If the key does not exist in the map, raises BC.Not_Found. Otherwise,
   -- return a copy of the item bound to the given key.
@@ -101,20 +101,20 @@ package BC.Containers.Maps is
 
 private
 
-  type Map is abstract new Container with null record;
+  type Abstract_Map is abstract new Container with null record;
 
   type Key_Ptr is access all Key;
   for Key_Ptr'Storage_Size use 0;
 
-  procedure Attach (M : in out Map; K : Key; I : Item);
+  procedure Attach (M : in out Abstract_Map; K : Key; I : Item);
 
-  function Number_Of_Buckets (M : Map) return Natural;
+  function Number_Of_Buckets (M : Abstract_Map) return Natural;
 
-  function Length (M : Map; Bucket : Positive) return Natural;
+  function Length (M : Abstract_Map; Bucket : Positive) return Natural;
 
-  function Item_At (M : Map; Bucket, Index : Positive) return Item_Ptr;
+  function Item_At (M : Abstract_Map; Bucket, Index : Positive) return Item_Ptr;
 
-  function Key_At (M : Map; Bucket, Index : Positive) return Key_Ptr;
+  function Key_At (M : Abstract_Map; Bucket, Index : Positive) return Key_Ptr;
 
   -- The new subprograms for Map iteration (which allow access to the
   -- Key as well as the Item) require the inherited For_The_Container

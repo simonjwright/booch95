@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -25,16 +25,16 @@ package BC.Containers.Rings.Bounded is
 
   pragma Elaborate_Body;
 
-  type Bounded_Ring is new Ring with private;
+  type Ring is new Abstract_Ring with private;
 
-  function Null_Container return Bounded_Ring;
+  function Null_Container return Ring;
 
-  function "=" (Left, Right : in Bounded_Ring) return Boolean;
+  function "=" (Left, Right : in Ring) return Boolean;
 
-  procedure Clear (R : in out Bounded_Ring);
+  procedure Clear (R : in out Ring);
   -- Empty the ring of all items. The mark is cleared.
 
-  procedure Insert (R : in out Bounded_Ring; Elem : Item);
+  procedure Insert (R : in out Ring; Elem : Item);
   -- If the ring was empty, set the ring's mark and top to designate
   -- this item.
   -- Otherwise,
@@ -42,49 +42,49 @@ package BC.Containers.Rings.Bounded is
   --   the previous top is located one place forward of the new top;
   --   the mark remains on the previously marked item.
 
-  procedure Pop (R : in out Bounded_Ring);
+  procedure Pop (R : in out Ring);
   -- Remove the top item from the ring.
   -- If the ring is still not empty, the new top is the item that was
   -- previously one place forward from the top.
   -- If the removed item was the marked item, the mark now designates
   -- the new top.
 
-  procedure Rotate (R : in out Bounded_Ring; Dir : Direction := Forward);
+  procedure Rotate (R : in out Ring; Dir : Direction := Forward);
   -- Rotate the top of the ring in the given direction. The ring's
   -- mark is unaffected. If there is exactly one item in the ring,
   -- rotating either direction always returns to the same item.
 
-  function Available (R : in Bounded_Ring) return Natural;
+  function Available (R : in Ring) return Natural;
   -- Indicates number of empty "Item slots" left in Ring
 
-  function Extent (R : Bounded_Ring) return Natural;
+  function Extent (R : Ring) return Natural;
   -- Return the number of items in the ring.
 
-  function Is_Empty (R : Bounded_Ring) return Boolean;
+  function Is_Empty (R : Ring) return Boolean;
   -- Return True if and only if there are no items in the ring.
 
-  function Top (R : Bounded_Ring) return Item;
+  function Top (R : Ring) return Item;
   -- Return a copy of the item at the top of the ring.
 
-  function New_Iterator (For_The_Ring : Bounded_Ring) return Iterator'Class;
+  function New_Iterator (For_The_Ring : Ring) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Ring.
 
 private
 
-  procedure Add (R : in out Bounded_Ring; Elem : Item);
-  function Item_At (R : Bounded_Ring; Index : Positive) return Item_Ptr;
+  procedure Add (R : in out Ring; Elem : Item);
+  function Item_At (R : Ring; Index : Positive) return Item_Ptr;
 
-  package Bounded_Ring_Nodes
+  package Ring_Nodes
   is new BC.Support.Bounded (Item => Item,
                              Item_Ptr => Item_Ptr,
                              Maximum_Size => Maximum_Size);
 
-  type Bounded_Ring is new Ring with record
-    Rep : Bounded_Ring_Nodes.Bnd_Node_Ref := new Bounded_Ring_Nodes.Bnd_Node;
+  type Ring is new Abstract_Ring with record
+    Rep : Ring_Nodes.Bnd_Node_Ref := new Ring_Nodes.Bnd_Node;
   end record;
 
-  procedure Initialize (R : in out Bounded_Ring);
-  procedure Adjust (R : in out Bounded_Ring);
-  procedure Finalize (R : in out Bounded_Ring);
+  procedure Initialize (R : in out Ring);
+  procedure Adjust (R : in out Ring);
+  procedure Finalize (R : in out Ring);
 
 end BC.Containers.Rings.Bounded;

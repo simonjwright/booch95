@@ -1,4 +1,4 @@
--- Copyright (C) 1998 Simon Wright.
+-- Copyright (C) 1998,2001 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -31,7 +31,7 @@ package Queues_For_Timing is
   package Q is new C.Queues;
   package B is new Q.Bounded (Size);
   P : BC.Support.Managed_Storage.Pool (10_000);
-  package D is new Q.Dynamic (BC.Support.Managed_Storage.Pool, P);
+  package D is new Q.Dynamic (10, BC.Support.Managed_Storage.Pool, P);
   package U is new Q.Unbounded (BC.Support.Managed_Storage.Pool, P);
 --   P : BC.Support.Unmanaged_Storage.Pool;
 --   package D is new Q.Dynamic (BC.Support.Unmanaged_Storage.Pool, P);

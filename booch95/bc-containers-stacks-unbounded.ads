@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -28,57 +28,57 @@ package BC.Containers.Stacks.Unbounded is
 
   pragma Elaborate_Body;
 
-  type Unbounded_Stack is new Stack with private;
+  type Stack is new Abstract_Stack with private;
   -- This Stack exhibits unlimited growth and collapsing, limited only by
   -- available memory.  Assignment is "deep".
 
-  function Null_Container return Unbounded_Stack;
+  function Null_Container return Stack;
 
-  function "=" (Left, Right : in Unbounded_Stack) return Boolean;
+  function "=" (Left, Right : in Stack) return Boolean;
   -- Return True if and only if both stacks have the same depth and the
   -- same items in the same order; return False otherwise.
 
-  procedure Clear (S : in out Unbounded_Stack);
+  procedure Clear (S : in out Stack);
   -- Empty the Stack of all items.
 
-  procedure Push (S : in out Unbounded_Stack; Elem : Item);
+  procedure Push (S : in out Stack; Elem : Item);
   -- Add a copy of the item to the top of the Stack.
 
-  procedure Pop (S : in out Unbounded_Stack);
+  procedure Pop (S : in out Stack);
   -- Remove the item from the top of the Stack.
 
-  function Depth (S : in Unbounded_Stack) return Natural;
+  function Depth (S : in Stack) return Natural;
   -- Returns the number of items in the Stack
 
-  function Is_Empty (S : in Unbounded_Stack) return Boolean;
+  function Is_Empty (S : in Stack) return Boolean;
   -- Returns True if and only if no items are in the stack
 
-  function Top (S : in Unbounded_Stack) return Item;
+  function Top (S : in Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
 
-  function New_Iterator (For_The_Stack : Unbounded_Stack) return Iterator'Class;
+  function New_Iterator (For_The_Stack : Stack) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Stack.
 
 private
 
-  function Item_At (S : Unbounded_Stack; Index : Positive) return Item_Ptr;
+  function Item_At (S : Stack; Index : Positive) return Item_Ptr;
 
-  procedure Add (S : in out Unbounded_Stack; Elem : Item);
-  procedure Remove (S : in out Unbounded_Stack; From : Positive);
+  procedure Add (S : in out Stack; Elem : Item);
+  procedure Remove (S : in out Stack; From : Positive);
 
-  package Unbounded_Stack_Nodes
+  package Stack_Nodes
   is new BC.Support.Unbounded (Item => Item,
                                Item_Ptr => Item_Ptr,
                                Storage_Manager => Storage_Manager,
                                Storage => Storage);
 
-  type Unbounded_Stack is new Stack with record
-    Rep : Unbounded_Stack_Nodes.Unb_Node_Ref
-       := new Unbounded_Stack_Nodes.Unb_Node;
+  type Stack is new Abstract_Stack with record
+    Rep : Stack_Nodes.Unb_Node_Ref
+       := new Stack_Nodes.Unb_Node;
   end record;
 
-  procedure Initialize (S : in out Unbounded_Stack);
-  procedure Adjust (S : in out Unbounded_Stack);
-  procedure Finalize (S : in out Unbounded_Stack);
+  procedure Initialize (S : in out Stack);
+  procedure Adjust (S : in out Stack);
+  procedure Finalize (S : in out Stack);
 
 end BC.Containers.Stacks.Unbounded;

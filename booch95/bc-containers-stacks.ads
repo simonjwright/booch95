@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -22,7 +22,7 @@ package BC.Containers.Stacks is
 
   pragma Elaborate_Body;
 
-  type Stack is abstract new Container with private;
+  type Abstract_Stack is abstract new Container with private;
 
   -- A sequence in which items may be added from one end and removed from
   -- the opposite end.  This class is abstract and serves only to enforce
@@ -31,43 +31,44 @@ package BC.Containers.Stacks is
   -- Operations of equality, inequality, and assignment are "deep" for
   -- all Stack forms
 
-  procedure Clear (S : in out Stack) is abstract;
+  procedure Clear (S : in out Abstract_Stack) is abstract;
   -- Empty the Stack of all items.
 
-  procedure Push (S : in out Stack; Elem : Item) is abstract;
+  procedure Push (S : in out Abstract_Stack; Elem : Item) is abstract;
   -- Add a copy of the item to the top of the Stack.
 
-  procedure Pop (S : in out Stack) is abstract;
+  procedure Pop (S : in out Abstract_Stack) is abstract;
   -- Remove the item from the top of the Stack.
 
-  function Depth (S : in Stack) return Natural is abstract;
+  function Depth (S : in Abstract_Stack) return Natural is abstract;
   -- Returns the number of items in the Stack
 
-  function Is_Empty (S : in Stack) return Boolean is abstract;
+  function Is_Empty (S : in Abstract_Stack) return Boolean is abstract;
   -- Returns True if and only if no items are in the stack
 
-  function Top (S : in Stack) return Item is abstract;
+  function Top (S : in Abstract_Stack) return Item is abstract;
   -- Return a copy of the item at the top of the Stack.
 
   generic
     with procedure Process (Elem : in out Item);
-  procedure Process_Top (S : in out Stack'Class);
+  procedure Process_Top (S : in out Abstract_Stack'Class);
   -- Access the item at the top of the Stack.
 
-  function Are_Equal (Left, Right : Stack'Class) return Boolean;
+  function Are_Equal (Left, Right : Abstract_Stack'Class) return Boolean;
   -- Return True if and only if both stacks have the same depth and the
   -- same items in the same order; return False otherwise.
 
-  procedure Copy (From : Stack'Class; To : in out Stack'Class);
+  procedure Copy (From : Abstract_Stack'Class;
+                  To : in out Abstract_Stack'Class);
   -- This operation MUST be called for dissimilar Stacks in place of
   -- assignment.
 
 private
 
-  type Stack is abstract new Container with null record;
+  type Abstract_Stack is abstract new Container with null record;
 
-  procedure Add (S : in out Stack; Elem : Item);
-  procedure Remove (S : in out Stack; From : Positive);
+  procedure Add (S : in out Abstract_Stack; Elem : Item);
+  procedure Remove (S : in out Abstract_Stack; From : Positive);
 
   type Stack_Iterator is new Iterator with record
     Index : Natural;

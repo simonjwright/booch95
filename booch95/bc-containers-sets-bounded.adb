@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -26,12 +26,12 @@ package body BC.Containers.Sets.Bounded is
   procedure Assert
   is new BSE.Assert ("BC.Containers.Sets.Bounded");
 
-  procedure Clear (S : in out Bounded_Set) is
+  procedure Clear (S : in out Set) is
   begin
     Tables.Clear (S.Rep);
   end Clear;
 
-  procedure Add (S : in out Bounded_Set; I : Item; Added : out Boolean) is
+  procedure Add (S : in out Set; I : Item; Added : out Boolean) is
   begin
     if Tables.Is_Bound (S.Rep, I) then
       Added := False;
@@ -41,7 +41,7 @@ package body BC.Containers.Sets.Bounded is
     end if;
   end Add;
 
-  procedure Remove (S : in out Bounded_Set; I : Item) is
+  procedure Remove (S : in out Set; I : Item) is
   begin
     Assert (Tables.Is_Bound (S.Rep, I),
             BC.Not_Found'Identity,
@@ -50,7 +50,7 @@ package body BC.Containers.Sets.Bounded is
     Tables.Unbind (S.Rep, I);
   end Remove;
 
-  function Available (S : Bounded_Set) return Natural is
+  function Available (S : Set) return Natural is
     Count : Natural := 0;
   begin
     for B in 1 .. Buckets loop
@@ -59,25 +59,25 @@ package body BC.Containers.Sets.Bounded is
     return Count;
   end Available;
 
-  function Extent (S : Bounded_Set) return Natural is
+  function Extent (S : Set) return Natural is
   begin
     return Tables.Extent (S.Rep);
   end Extent;
 
-  function Is_Empty (S : Bounded_Set) return Boolean is
+  function Is_Empty (S : Set) return Boolean is
   begin
     return Tables.Extent (S.Rep) = 0;
   end Is_Empty;
 
-  function Is_Member (S : Bounded_Set; I : Item) return Boolean is
+  function Is_Member (S : Set; I : Item) return Boolean is
   begin
     return Tables.Is_Bound (S.Rep, I);
   end Is_Member;
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Bounded_Set);
+  is new System.Address_To_Access_Conversions (Set);
 
-  function New_Iterator (For_The_Set : Bounded_Set) return Iterator'Class is
+  function New_Iterator (For_The_Set : Set) return Iterator'Class is
     Result : Set_Iterator;
   begin
     Result.For_The_Container :=
@@ -90,35 +90,34 @@ package body BC.Containers.Sets.Bounded is
 
   -- XXX there is another Attach() which I don't understand
 
-  procedure Attach (S : in out Bounded_Set; I : Item) is
+  procedure Attach (S : in out Set; I : Item) is
   begin
     Tables.Bind (S.Rep, I, True);
   end Attach;
 
-  procedure Detach (S : in out Bounded_Set; I : Item) is
+  procedure Detach (S : in out Set; I : Item) is
   begin
     Tables.Unbind (S.Rep, I);
   end Detach;
 
-  function Number_Of_Buckets (S : Bounded_Set) return Natural is
+  function Number_Of_Buckets (S : Set) return Natural is
   begin
     return Buckets;
   end Number_Of_Buckets;
 
-  function Length (S : Bounded_Set; Bucket : Positive) return Natural is
+  function Length (S : Set; Bucket : Positive) return Natural is
   begin
     return IC.Length (Tables.Item_Bucket (S.Rep, Bucket).all);
   end Length;
 
-  function Item_At
-     (S : Bounded_Set; Bucket, Index : Positive) return Item_Ptr is
+  function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr is
   begin
     return IC.Item_At (Tables.Item_Bucket (S.Rep, Bucket).all, Index);
   end Item_At;
 
-  Empty_Container : Bounded_Set;
+  Empty_Container : Set;
 
-  function Null_Container return Bounded_Set is
+  function Null_Container return Set is
   begin
     return Empty_Container;
   end Null_Container;

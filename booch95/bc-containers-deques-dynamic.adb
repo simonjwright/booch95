@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,95 +21,95 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Deques.Dynamic is
 
-  function Create (Size : Positive) return Dynamic_Deque is
-    Temp : Dynamic_Deque;
+  function Create (Size : Positive) return Deque is
+    Temp : Deque;
   begin
-    Temp.Rep := Dynamic_Deque_Nodes.Create (Size);
+    Temp.Rep := Deque_Nodes.Create (Size);
     return Temp;
   end Create;
 
-  procedure Clear (D : in out Dynamic_Deque) is
+  procedure Clear (D : in out Deque) is
   begin
-    Dynamic_Deque_Nodes.Clear (D.Rep.all);
+    Deque_Nodes.Clear (D.Rep.all);
   end Clear;
 
-  procedure Append (D : in out Dynamic_Deque;
+  procedure Append (D : in out Deque;
                     Elem : Item;
                     Location : Deque_End := Back) is
   begin
     if Location = Back then
-      Dynamic_Deque_Nodes.Append (D.Rep.all, Elem);
+      Deque_Nodes.Append (D.Rep.all, Elem);
     else
-      Dynamic_Deque_Nodes.Insert (D.Rep.all, Elem);
+      Deque_Nodes.Insert (D.Rep.all, Elem);
     end if;
   end Append;
 
-  procedure Pop (D : in out Dynamic_Deque; Location : Deque_End := Front) is
+  procedure Pop (D : in out Deque; Location : Deque_End := Front) is
   begin
     if Location = Front then
-      Dynamic_Deque_Nodes.Remove (D.Rep.all, 1);
+      Deque_Nodes.Remove (D.Rep.all, 1);
     else
-      Dynamic_Deque_Nodes.Remove (D.Rep.all,
-				  Dynamic_Deque_Nodes.Length (D.Rep.all));
+      Deque_Nodes.Remove (D.Rep.all,
+                          Deque_Nodes.Length (D.Rep.all));
     end if;
   end Pop;
 
-  procedure Remove (D : in out Dynamic_Deque; From : Positive) is
+  procedure Remove (D : in out Deque; From : Positive) is
   begin
-    Dynamic_Deque_Nodes.Remove (D.Rep.all, From);
+    Deque_Nodes.Remove (D.Rep.all, From);
   end Remove;
 
-  function Length (D : Dynamic_Deque) return Natural is
+  function Length (D : Deque) return Natural is
   begin
-    return Dynamic_Deque_Nodes.Length (D.Rep.all);
+    return Deque_Nodes.Length (D.Rep.all);
   end Length;
 
-  function Is_Empty (D : Dynamic_Deque) return Boolean is
+  function Is_Empty (D : Deque) return Boolean is
   begin
-    return Dynamic_Deque_Nodes.Length (D.Rep.all) = 0;
+    return Deque_Nodes.Length (D.Rep.all) = 0;
   end Is_Empty;
 
-  function Front (D : Dynamic_Deque) return Item is
+  function Front (D : Deque) return Item is
   begin
-    return Dynamic_Deque_Nodes.First (D.Rep.all);
+    return Deque_Nodes.First (D.Rep.all);
   end Front;
 
-  function Back (D : Dynamic_Deque) return Item is
+  function Back (D : Deque) return Item is
   begin
-    return Dynamic_Deque_Nodes.Last (D.Rep.all);
+    return Deque_Nodes.Last (D.Rep.all);
   end Back;
 
-  function Location (D : Dynamic_Deque; Elem : Item) return Natural is
+  function Location (D : Deque; Elem : Item) return Natural is
   begin
-    return Dynamic_Deque_Nodes.Location (D.Rep.all, Elem);
+    return Deque_Nodes.Location (D.Rep.all, Elem);
   end Location;
 
-  function "=" (Left, Right : Dynamic_Deque) return Boolean is
-    use Dynamic_Deque_Nodes;
+  function "=" (Left, Right : Deque) return Boolean is
+    use Deque_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Preallocate (D : in out Dynamic_Deque; Size : Natural) is
+  procedure Preallocate (D : in out Deque; Size : Natural) is
   begin
-    Dynamic_Deque_Nodes.Preallocate (D.Rep.all, Size);
+    Deque_Nodes.Preallocate (D.Rep.all, Size);
   end Preallocate;
 
-  procedure Set_Chunk_Size (D : in out Dynamic_Deque; Size : Natural) is
+  procedure Set_Chunk_Size (D : in out Deque; Size : Natural) is
   begin
-    Dynamic_Deque_Nodes.Set_Chunk_Size (D.Rep.all, Size);
+    Deque_Nodes.Set_Chunk_Size (D.Rep.all, Size);
   end Set_Chunk_Size;
 
-  function Chunk_Size (D : Dynamic_Deque) return Natural is
+  function Chunk_Size (D : Deque) return Natural is
   begin
-    return Dynamic_Deque_Nodes.Chunk_Size (D.Rep.all);
+    return Deque_Nodes.Chunk_Size (D.Rep.all);
   end Chunk_Size;
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Dynamic_Deque);
+  is new System.Address_To_Access_Conversions (Deque);
 
   function New_Iterator
-     (For_The_Deque : Dynamic_Deque) return Iterator'Class is
+     (For_The_Deque : Deque) return Iterator'Class is
     Result : Deque_Iterator;
   begin
     Result.For_The_Container :=
@@ -118,32 +118,32 @@ package body BC.Containers.Deques.Dynamic is
     return Result;
   end New_Iterator;
 
-  function Item_At (D : Dynamic_Deque; Index : Positive) return Item_Ptr is
+  function Item_At (D : Deque; Index : Positive) return Item_Ptr is
   begin
-    return Dynamic_Deque_Nodes.Item_At (D.Rep.all, Index);
+    return Deque_Nodes.Item_At (D.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (D : in out Dynamic_Deque) is
+  procedure Initialize (D : in out Deque) is
   begin
-    D.Rep := Dynamic_Deque_Nodes.Create;
+    D.Rep := Deque_Nodes.Create;
   end Initialize;
 
-  procedure Adjust (D : in out Dynamic_Deque) is
+  procedure Adjust (D : in out Deque) is
   begin
-    D.Rep := Dynamic_Deque_Nodes.Create (From => D.Rep.all);
+    D.Rep := Deque_Nodes.Create (From => D.Rep.all);
   end Adjust;
 
-  procedure Finalize (D : in out Dynamic_Deque) is
-    use type Dynamic_Deque_Nodes.Dyn_Node_Ref;
+  procedure Finalize (D : in out Deque) is
+    use type Deque_Nodes.Dyn_Node_Ref;
   begin
     if D.Rep /= null then
-      Dynamic_Deque_Nodes.Free (D.Rep); -- does a Clear()
+      Deque_Nodes.Free (D.Rep); -- does a Clear()
     end if;
   end Finalize;
 
-  Empty_Container : Dynamic_Deque;
+  Empty_Container : Deque;
 
-  function Null_Container return Dynamic_Deque is
+  function Null_Container return Deque is
   begin
     return Empty_Container;
   end Null_Container;

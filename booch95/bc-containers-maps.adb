@@ -26,7 +26,7 @@ package body BC.Containers.Maps is
   procedure Assert
   is new BSE.Assert ("BC.Containers.Maps");
 
-  function Are_Equal (L, R : Map'Class) return Boolean is
+  function Are_Equal (L, R : Abstract_Map'Class) return Boolean is
     It : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (L));
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -45,7 +45,8 @@ package body BC.Containers.Maps is
   end Are_Equal;
 
   procedure Reset (It : in out Map_Iterator) is
-    M : Map'Class renames Map'Class (It.For_The_Container.all);
+    M : Abstract_Map'Class
+       renames Abstract_Map'Class (It.For_The_Container.all);
   begin
     It.Index := 0;
     if Extent (M) = 0 then
@@ -63,7 +64,8 @@ package body BC.Containers.Maps is
   end Reset;
 
   procedure Next (It : in out Map_Iterator) is
-    M : Map'Class renames Map'Class (It.For_The_Container.all);
+    M : Abstract_Map'Class
+       renames Abstract_Map'Class (It.For_The_Container.all);
   begin
     if It.Bucket_Index <= Number_Of_Buckets (M) then
       if It.Index < Length (M, It.Bucket_Index) then
@@ -83,7 +85,8 @@ package body BC.Containers.Maps is
   end Next;
 
   function Is_Done (It : Map_Iterator) return Boolean is
-    M : Map'Class renames Map'Class (It.For_The_Container.all);
+    M : Abstract_Map'Class
+    renames Abstract_Map'Class (It.For_The_Container.all);
   begin
     if It.Bucket_Index = 0
        or else It.Bucket_Index > Number_Of_Buckets (M) then
@@ -111,7 +114,8 @@ package body BC.Containers.Maps is
   end Is_Done;
 
   function Current_Item (It : Map_Iterator) return Item is
-    M : Map'Class renames Map'Class (It.For_The_Container.all);
+    M : Abstract_Map'Class
+    renames Abstract_Map'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -121,7 +125,8 @@ package body BC.Containers.Maps is
 
   function Current_Item (It : Map_Iterator) return Item_Ptr is
     -- XXX this should probably not be permitted!
-    M : Map'Class renames Map'Class (It.For_The_Container.all);
+    M : Abstract_Map'Class
+    renames Abstract_Map'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -138,7 +143,8 @@ package body BC.Containers.Maps is
   end Delete_Item_At;
 
   function Current_Key (It : Map_Iterator) return Key is
-    M : Map'Class renames Map'Class (It.For_The_Container.all);
+    M : Abstract_Map'Class
+    renames Abstract_Map'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -149,7 +155,8 @@ package body BC.Containers.Maps is
   end Current_Key;
 
   procedure Visit (Using : in out Map_Iterator'Class) is
-    M : Map'Class renames Map'Class (Using.For_The_Container.all);
+    M : Abstract_Map'Class
+       renames Abstract_Map'Class (Using.For_The_Container.all);
     Status : Boolean;
   begin
     Reset (Using);
@@ -167,7 +174,8 @@ package body BC.Containers.Maps is
   end Visit;
 
   procedure Modify (Using : in out Map_Iterator'Class) is
-    M : Map'Class renames Map'Class (Using.For_The_Container.all);
+    M : Abstract_Map'Class
+       renames Abstract_Map'Class (Using.For_The_Container.all);
     Status : Boolean;
   begin
     Reset (Using);
@@ -186,30 +194,31 @@ package body BC.Containers.Maps is
 
   -- Subprograms to be overridden
 
-  procedure Attach (M : in out Map; K : Key; I : Item) is
+  procedure Attach (M : in out Abstract_Map; K : Key; I : Item) is
   begin
     raise Should_Have_Been_Overridden;
   end Attach;
 
-  function Number_Of_Buckets (M : Map) return Natural is
+  function Number_Of_Buckets (M : Abstract_Map) return Natural is
   begin
     raise Should_Have_Been_Overridden;
     return 0;
   end Number_Of_Buckets;
 
-  function Length (M : Map; Bucket : Positive) return Natural is
+  function Length (M : Abstract_Map; Bucket : Positive) return Natural is
   begin
     raise Should_Have_Been_Overridden;
     return 0;
   end Length;
 
-  function Item_At (M : Map; Bucket, Index : Positive) return Item_Ptr is
+  function Item_At (M : Abstract_Map;
+                    Bucket, Index : Positive) return Item_Ptr is
   begin
     raise Should_Have_Been_Overridden;
     return null;
   end Item_At;
 
-  function Key_At (M : Map; Bucket, Index : Positive) return Key_Ptr is
+  function Key_At (M : Abstract_Map; Bucket, Index : Positive) return Key_Ptr is
   begin
     raise Should_Have_Been_Overridden;
     return null;

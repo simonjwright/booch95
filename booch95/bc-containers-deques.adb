@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,17 +21,18 @@ with System;
 
 package body BC.Containers.Deques is
 
-  procedure Process_Front (D : in out Deque'Class) is
+  procedure Process_Front (D : in out Abstract_Deque'Class) is
   begin
     Process (Item_At (D, 1).all);
   end Process_Front;
 
-  procedure Process_Back (D : in out Deque'Class) is
+  procedure Process_Back (D : in out Abstract_Deque'Class) is
   begin
     Process (Item_At (D, Length (D)).all);
   end Process_Back;
 
-  procedure Copy (From : Deque'Class; To : in out Deque'Class) is
+  procedure Copy (From : Abstract_Deque'Class;
+                  To : in out Abstract_Deque'Class) is
     Iter : Iterator'Class := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
@@ -44,7 +45,7 @@ package body BC.Containers.Deques is
     end if;
   end Copy;
 
-  function Are_Equal (Left, Right : Deque'Class) return Boolean is
+  function Are_Equal (Left, Right : Abstract_Deque'Class) return Boolean is
   begin
     if System."=" (Left'Address, Right'Address) then
       return True;
@@ -69,7 +70,8 @@ package body BC.Containers.Deques is
   end Are_Equal;
 
   procedure Reset (It : in out Deque_Iterator) is
-    D : Deque'Class renames Deque'Class (It.For_The_Container.all);
+    D : Abstract_Deque'Class
+       renames Abstract_Deque'Class (It.For_The_Container.all);
   begin
     if Length (D) = 0 then
       It.Index := 0;
@@ -84,13 +86,15 @@ package body BC.Containers.Deques is
   end Next;
 
   function Is_Done (It : Deque_Iterator) return Boolean is
-    D : Deque'Class renames Deque'Class (It.For_The_Container.all);
+    D : Abstract_Deque'Class
+    renames Abstract_Deque'Class (It.For_The_Container.all);
   begin
     return It.Index = 0 or else It.Index > Length (D);
   end Is_Done;
 
   function Current_Item (It : Deque_Iterator) return Item is
-    D : Deque'Class renames Deque'Class (It.For_The_Container.all);
+    D : Abstract_Deque'Class
+    renames Abstract_Deque'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -99,7 +103,8 @@ package body BC.Containers.Deques is
   end Current_Item;
 
   function Current_Item_Ptr (It : Deque_Iterator) return Item_Ptr is
-    D : Deque'Class renames Deque'Class (It.For_The_Container.all);
+    D : Abstract_Deque'Class
+    renames Abstract_Deque'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -108,7 +113,8 @@ package body BC.Containers.Deques is
   end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Deque_Iterator) is
-    D : Deque'Class renames Deque'Class (It.For_The_Container.all);
+    D : Abstract_Deque'Class
+       renames Abstract_Deque'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;

@@ -45,56 +45,56 @@ package BC.Containers.Maps.Dynamic is
   -- the number of buckets. The quality of the hash function has a
   -- significant impact upon performance.
 
-  type Dynamic_Map is new Map with private;
+  type Map is new Abstract_Map with private;
 
-  function Null_Container return Dynamic_Map;
+  function Null_Container return Map;
 
-  function Create (Size : Positive) return Dynamic_Map;
+  function Create (Size : Positive) return Map;
   -- Creates a new Dynamic Map each of whose buckets is preallocated for
   -- 'Size' elements
 
-  procedure Clear (M : in out Dynamic_Map);
+  procedure Clear (M : in out Map);
   -- Empty the map of all key/item pairs.
 
-  procedure Bind (M : in out Dynamic_Map; K : Key; I : Item);
+  procedure Bind (M : in out Map; K : Key; I : Item);
   -- If the key already exists in the map, raise BC.Duplicate. Otherwise,
   -- add the key/item pair to the map.
 
-  procedure Rebind (M : in out Dynamic_Map; K : Key; I : Item);
+  procedure Rebind (M : in out Map; K : Key; I : Item);
   -- If the key does not exist in the map, raise BC.Not_Found. Otherwise,
   -- change the key's binding to the given value.
 
-  procedure Unbind (M : in out Dynamic_Map; K : Key);
+  procedure Unbind (M : in out Map; K : Key);
   -- If the key does not exist in the map, raise BC.Not_Found. Otherwise,
   -- remove the key/item binding.
 
-  function Extent (M : Dynamic_Map) return Natural;
+  function Extent (M : Map) return Natural;
   -- Return the number of key/item bindings in the map.
 
-  function Is_Empty (M : Dynamic_Map) return Boolean;
+  function Is_Empty (M : Map) return Boolean;
   -- Return True if and only if there are no key/item bindings in the
   -- map; otherwise, return False.
 
-  function Is_Bound (M : Dynamic_Map; K : Key) return Boolean;
+  function Is_Bound (M : Map; K : Key) return Boolean;
   -- Return True if and only if there is a binding for the given key in
   -- the map; otherwise, return False.
 
-  function Item_Of (M : Dynamic_Map; K : Key) return Item;
+  function Item_Of (M : Map; K : Key) return Item;
   -- If the key does not exist in the map, raises BC.Not_Found. Otherwise,
   -- return a copy of the item bound to the given key.
 
-  procedure Preallocate (M : in out Dynamic_Map; Size : Positive);
+  procedure Preallocate (M : in out Map; Size : Positive);
   -- Allocates 'Size' additional storage elements for each bucket of the
   -- Map
 
-  procedure Set_Chunk_Size (M : in out Dynamic_Map; Size : Positive);
+  procedure Set_Chunk_Size (M : in out Map; Size : Positive);
   -- Establishes the Size each bucket of the Map will grow if the Map
   -- exhausts its current size.
 
-  function Chunk_Size (M : Dynamic_Map) return Positive;
+  function Chunk_Size (M : Map) return Positive;
   -- Returns the Chunk_Size.
 
-  function New_Iterator (For_The_Map : Dynamic_Map) return Iterator'Class;
+  function New_Iterator (For_The_Map : Map) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Map.
 
 private
@@ -125,20 +125,20 @@ private
       Values => Items,
       Buckets => Buckets);
 
-  type Dynamic_Map is new Map with record
+  type Map is new Abstract_Map with record
     Rep : Tables.Table;
   end record;
 
-  procedure Attach (M : in out Dynamic_Map; K : Key; I : Item);
+  procedure Attach (M : in out Map; K : Key; I : Item);
 
-  function Number_Of_Buckets (M : Dynamic_Map) return Natural;
+  function Number_Of_Buckets (M : Map) return Natural;
 
-  function Length (M : Dynamic_Map; Bucket : Positive) return Natural;
+  function Length (M : Map; Bucket : Positive) return Natural;
 
   function Item_At
-     (M : Dynamic_Map; Bucket, Index : Positive) return Item_Ptr;
+     (M : Map; Bucket, Index : Positive) return Item_Ptr;
 
   function Key_At
-     (M : Dynamic_Map; Bucket, Index : Positive) return Key_Ptr;
+     (M : Map; Bucket, Index : Positive) return Key_Ptr;
 
 end BC.Containers.Maps.Dynamic;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,79 +21,78 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Stacks.Dynamic is
 
-  function Create (Size : Positive) return Dynamic_Stack is
-    Temp : Dynamic_Stack;
+  function Create (Size : Positive) return Stack is
+    Temp : Stack;
   begin
-    Temp.Rep := Dynamic_Stack_Nodes.Create (Size);
+    Temp.Rep := Stack_Nodes.Create (Size);
     return Temp;
   end Create;
 
-  function "=" (Left, Right : Dynamic_Stack) return Boolean is
-    use Dynamic_Stack_Nodes;
+  function "=" (Left, Right : Stack) return Boolean is
+    use Stack_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Clear (S : in out Dynamic_Stack) is
+  procedure Clear (S : in out Stack) is
   begin
-    Dynamic_Stack_Nodes.Clear (S.Rep.all);
+    Stack_Nodes.Clear (S.Rep.all);
   end Clear;
 
-  procedure Push (S : in out Dynamic_Stack; Elem : Item) is
+  procedure Push (S : in out Stack; Elem : Item) is
   begin
-    Dynamic_Stack_Nodes.Insert (S.Rep.all, Elem);
+    Stack_Nodes.Insert (S.Rep.all, Elem);
   end Push;
 
-  procedure Pop (S : in out Dynamic_Stack) is
+  procedure Pop (S : in out Stack) is
   begin
-    Dynamic_Stack_Nodes.Remove (S.Rep.all, 1);
+    Stack_Nodes.Remove (S.Rep.all, 1);
   end Pop;
 
-  function Depth (S : in Dynamic_Stack) return Natural is
+  function Depth (S : in Stack) return Natural is
   begin
-    return Dynamic_Stack_Nodes.Length (S.Rep.all);
+    return Stack_Nodes.Length (S.Rep.all);
   end Depth;
 
-  function Is_Empty (S : Dynamic_Stack) return Boolean is
+  function Is_Empty (S : Stack) return Boolean is
   begin
-    return Dynamic_Stack_Nodes.Length (S.Rep.all) = 0;
+    return Stack_Nodes.Length (S.Rep.all) = 0;
   end Is_Empty;
 
-  function Top (S : Dynamic_Stack) return Item is
+  function Top (S : Stack) return Item is
   begin
-    return Dynamic_Stack_Nodes.First (S.Rep.all);
+    return Stack_Nodes.First (S.Rep.all);
   end Top;
 
-  function Top (S : in Dynamic_Stack) return Item_Ptr is
+  function Top (S : in Stack) return Item_Ptr is
   begin
-    return Dynamic_Stack_Nodes.First (S.Rep.all);
+    return Stack_Nodes.First (S.Rep.all);
   end Top;
 
-  function Location (S : Dynamic_Stack; Elem : Item) return Natural is
+  function Location (S : Stack; Elem : Item) return Natural is
   begin
-    return Dynamic_Stack_Nodes.Location (S.Rep.all, Elem);
+    return Stack_Nodes.Location (S.Rep.all, Elem);
   end Location;
 
-  procedure Preallocate (S : in out Dynamic_Stack; Size : Natural) is
+  procedure Preallocate (S : in out Stack; Size : Natural) is
   begin
-    Dynamic_Stack_Nodes.Preallocate (S.Rep.all, Size);
+    Stack_Nodes.Preallocate (S.Rep.all, Size);
   end Preallocate;
 
-  procedure Set_Chunk_Size (S : in out Dynamic_Stack; Size : Natural) is
+  procedure Set_Chunk_Size (S : in out Stack; Size : Natural) is
   begin
-    Dynamic_Stack_Nodes.Set_Chunk_Size (S.Rep.all, Size);
+    Stack_Nodes.Set_Chunk_Size (S.Rep.all, Size);
   end Set_Chunk_Size;
 
-  function Chunk_Size (S : Dynamic_Stack) return Natural is
+  function Chunk_Size (S : Stack) return Natural is
   begin
-    return Dynamic_Stack_Nodes.Chunk_Size (S.Rep.all);
+    return Stack_Nodes.Chunk_Size (S.Rep.all);
   end Chunk_Size;
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Dynamic_Stack);
+  is new System.Address_To_Access_Conversions (Stack);
 
-  function New_Iterator
-     (For_The_Stack : Dynamic_Stack) return Iterator'Class is
+  function New_Iterator (For_The_Stack : Stack) return Iterator'Class is
     Result : Stack_Iterator;
   begin
     Result.For_The_Container :=
@@ -102,42 +101,42 @@ package body BC.Containers.Stacks.Dynamic is
     return Result;
   end New_Iterator;
 
-  function Item_At (S : Dynamic_Stack; Index : Positive) return Item_Ptr is
+  function Item_At (S : Stack; Index : Positive) return Item_Ptr is
   begin
-    return Dynamic_Stack_Nodes.Item_At (S.Rep.all, Index);
+    return Stack_Nodes.Item_At (S.Rep.all, Index);
   end Item_At;
 
-  procedure Add (S : in out Dynamic_Stack; Elem : Item) is
+  procedure Add (S : in out Stack; Elem : Item) is
   begin
-    Dynamic_Stack_Nodes.Append (S.Rep.all, Elem);
+    Stack_Nodes.Append (S.Rep.all, Elem);
   end Add;
 
-  procedure Remove (S : in out Dynamic_Stack; From : Positive) is
+  procedure Remove (S : in out Stack; From : Positive) is
   begin
-    Dynamic_Stack_Nodes.Remove (S.Rep.all, From);
+    Stack_Nodes.Remove (S.Rep.all, From);
   end Remove;
 
-  procedure Initialize (S : in out Dynamic_Stack) is
+  procedure Initialize (S : in out Stack) is
   begin
-    S.Rep := Dynamic_Stack_Nodes.Create;
+    S.Rep := Stack_Nodes.Create;
   end Initialize;
 
-  procedure Adjust (S : in out Dynamic_Stack) is
+  procedure Adjust (S : in out Stack) is
   begin
-    S.Rep := Dynamic_Stack_Nodes.Create (S.Rep.all);
+    S.Rep := Stack_Nodes.Create (S.Rep.all);
   end Adjust;
 
-  procedure Finalize (S : in out Dynamic_Stack) is
-    use type Dynamic_Stack_Nodes.Dyn_Node_Ref;
+  procedure Finalize (S : in out Stack) is
+    use type Stack_Nodes.Dyn_Node_Ref;
   begin
     if S.Rep /= null then
-      Dynamic_Stack_Nodes.Free (S.Rep);
+      Stack_Nodes.Free (S.Rep);
     end if;
   end Finalize;
 
-  Empty_Container : Dynamic_Stack;
+  Empty_Container : Stack;
 
-  function Null_Container return Dynamic_Stack is
+  function Null_Container return Stack is
   begin
     return Empty_Container;
   end Null_Container;

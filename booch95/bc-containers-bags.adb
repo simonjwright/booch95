@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -26,7 +26,7 @@ package body BC.Containers.Bags is
   procedure Assert
   is new BSE.Assert ("BC.Containers.Bags");
 
-  function Are_Equal (L, R : Bag'Class) return Boolean is
+  function Are_Equal (L, R : Abstract_Bag'Class) return Boolean is
     It : Iterator'Class := New_Iterator (L);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -46,13 +46,13 @@ package body BC.Containers.Bags is
     return True;
   end Are_Equal;
 
-  procedure Add (B : in out Bag'Class; I : Item) is
+  procedure Add (B : in out Abstract_Bag'Class; I : Item) is
     Dummy : Boolean;
   begin
     Add (B, I, Added => Dummy);
   end Add;
 
-  procedure Union (B : in out Bag'Class; O : Bag'Class) is
+  procedure Union (B : in out Abstract_Bag'Class; O : Abstract_Bag'Class) is
     It : Iterator'Class := New_Iterator (O);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -72,7 +72,8 @@ package body BC.Containers.Bags is
     end loop;
   end Union;
 
-  procedure Intersection (B : in out Bag'Class; O : Bag'Class) is
+  procedure Intersection
+     (B : in out Abstract_Bag'Class; O : Abstract_Bag'Class) is
     It : Iterator'Class := New_Iterator (B);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -99,7 +100,8 @@ package body BC.Containers.Bags is
     end loop;
   end Intersection;
 
-  procedure Difference (B : in out Bag'Class; O : Bag'Class) is
+  procedure Difference
+     (B : in out Abstract_Bag'Class; O : Abstract_Bag'Class) is
     It : Iterator'Class := New_Iterator (O);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -125,7 +127,7 @@ package body BC.Containers.Bags is
     end loop;
   end Difference;
 
-  function Total_Size (B : Bag'Class) return Natural is
+  function Total_Size (B : Abstract_Bag'Class) return Natural is
     It : Iterator'Class := New_Iterator (B);
     Result : Natural := 0;
   begin
@@ -136,7 +138,8 @@ package body BC.Containers.Bags is
     return Result;
   end Total_Size;
 
-  function Is_Subset (B : Bag'Class; O : Bag'Class) return Boolean is
+  function Is_Subset
+     (B : Abstract_Bag'Class; O : Abstract_Bag'Class) return Boolean is
     It : Iterator'Class := New_Iterator (B);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -169,7 +172,8 @@ package body BC.Containers.Bags is
     return True;
   end Is_Subset;
 
-  function Is_Proper_Subset (B : Bag'Class; O : Bag'Class) return Boolean is
+  function Is_Proper_Subset
+     (B : Abstract_Bag'Class; O : Abstract_Bag'Class) return Boolean is
     It : Iterator'Class := New_Iterator (B);
     Is_Proper : Boolean := False;
   begin
@@ -204,22 +208,22 @@ package body BC.Containers.Bags is
 
   -- Subprograms to be overridden
 
-  procedure Attach (B : in out Bag; I : Item; C : Positive) is
+  procedure Attach (B : in out Abstract_Bag; I : Item; C : Positive) is
   begin
     raise Should_Have_Been_Overridden;
   end Attach;
 
-  procedure Detach (B : in out Bag; I : Item) is
+  procedure Detach (B : in out Abstract_Bag; I : Item) is
   begin
     raise Should_Have_Been_Overridden;
   end Detach;
 
-  procedure Set_Value (B : in out Bag; I : Item; C : Positive) is
+  procedure Set_Value (B : in out Abstract_Bag; I : Item; C : Positive) is
   begin
     raise Should_Have_Been_Overridden;
   end Set_Value;
 
-  function Multiplicity (B : Bag'Class) return Natural is
+  function Multiplicity (B : Abstract_Bag'Class) return Natural is
     It : Iterator'Class := New_Iterator (B);
     Result : Natural := 0;
   begin
@@ -230,25 +234,27 @@ package body BC.Containers.Bags is
     return Result;
   end Multiplicity;
 
-  function Number_Of_Buckets (B : Bag) return Natural is
+  function Number_Of_Buckets (B : Abstract_Bag) return Natural is
   begin
     raise Should_Have_Been_Overridden;
     return 0;
   end Number_Of_Buckets;
 
-  function Length (B : Bag; Bucket : Positive) return Natural is
+  function Length (B : Abstract_Bag; Bucket : Positive) return Natural is
   begin
     raise Should_Have_Been_Overridden;
     return 0;
   end Length;
 
-  function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
+  function Item_At
+     (B : Abstract_Bag; Bucket, Index : Positive) return Item_Ptr is
   begin
     raise Should_Have_Been_Overridden;
     return null;
   end Item_At;
 
-  function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
+  function Value_At
+     (B : Abstract_Bag; Bucket, Index : Positive) return Positive is
   begin
     raise Should_Have_Been_Overridden;
     return 1;
@@ -257,7 +263,8 @@ package body BC.Containers.Bags is
   -- Iterators
 
   procedure Reset (It : in out Bag_Iterator) is
-    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+    B : Abstract_Bag'Class
+       renames Abstract_Bag'Class (It.For_The_Container.all);
   begin
     It.Index := 0;
     if Extent (B) = 0 then
@@ -275,7 +282,8 @@ package body BC.Containers.Bags is
   end Reset;
 
   procedure Next (It : in out Bag_Iterator) is
-    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+    B : Abstract_Bag'Class
+       renames Abstract_Bag'Class (It.For_The_Container.all);
   begin
     if It.Bucket_Index <= Number_Of_Buckets (B) then
       if It.Index < Length (B, It.Bucket_Index) then
@@ -295,7 +303,8 @@ package body BC.Containers.Bags is
   end Next;
 
   function Is_Done (It : Bag_Iterator) return Boolean is
-    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+    B : Abstract_Bag'Class
+    renames Abstract_Bag'Class (It.For_The_Container.all);
   begin
     if It.Bucket_Index = 0
        or else It.Bucket_Index > Number_Of_Buckets (B)
@@ -331,7 +340,8 @@ package body BC.Containers.Bags is
   end Is_Done;
 
   function Current_Item (It : Bag_Iterator) return Item is
-    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+    B : Abstract_Bag'Class
+    renames Abstract_Bag'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -341,7 +351,8 @@ package body BC.Containers.Bags is
 
   function Current_Item_Ptr (It : Bag_Iterator) return Item_Ptr is
     -- XXX this should probably not be permitted!
-    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
+    B : Abstract_Bag'Class
+    renames Abstract_Bag'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;

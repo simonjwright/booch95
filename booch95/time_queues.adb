@@ -27,9 +27,9 @@ with Queues_For_Timing;
 
 procedure Time_Queues is
 
-  B : Queues_For_Timing.B.Bounded_Queue;
-  D : Queues_For_Timing.D.Dynamic_Queue;
-  U : Queues_For_Timing.U.Unbounded_Queue;
+  B : Queues_For_Timing.B.Queue;
+  D : Queues_For_Timing.D.Queue;
+  U : Queues_For_Timing.U.Queue;
 
   procedure Iterate is
     Total : Integer;

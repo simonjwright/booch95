@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -28,67 +28,67 @@ package BC.Containers.Deques.Unbounded is
 
   pragma Elaborate_Body;
 
-  type Unbounded_Deque is new Deque with private;
+  type Deque is new Abstract_Deque with private;
   -- This Deque exhibits unlimited growth and collapsing, limited only by
   -- available memory.  Assignment is "deep".
 
-  function Null_Container return Unbounded_Deque;
+  function Null_Container return Deque;
 
-  procedure Clear (D : in out Unbounded_Deque);
+  procedure Clear (D : in out Deque);
   -- Empty the deque of all items.
 
-  procedure Append (D : in out Unbounded_Deque;
+  procedure Append (D : in out Deque;
                     Elem : Item;
                     Location : Deque_End := Back);
   -- Add the item to the deque at the given location; the item itself
   -- is copied.
 
-  procedure Pop (D : in out Unbounded_Deque; Location : Deque_End := Front);
+  procedure Pop (D : in out Deque; Location : Deque_End := Front);
   -- Remove the item from the deque at the given location.
 
-  procedure Remove (D : in out Unbounded_Deque; From : Positive);
+  procedure Remove (D : in out Deque; From : Positive);
   -- Remove the item at the given index.
 
-  function Length (D : in Unbounded_Deque) return Natural;
+  function Length (D : in Deque) return Natural;
   -- Return the number of items in the deque.
 
-  function Is_Empty (D : in Unbounded_Deque) return Boolean;
+  function Is_Empty (D : in Deque) return Boolean;
   -- Return True if and only if there are no items in the deque.
 
-  function Front (D : in Unbounded_Deque) return Item;
+  function Front (D : in Deque) return Item;
   -- Return a copy of the item at the front of the deque.
 
-  function Back (D : in Unbounded_Deque) return Item;
+  function Back (D : in Deque) return Item;
   -- Return a copy of the item at the back of the deque.
 
-  function Location (D : in Unbounded_Deque; Elem : Item) return Natural;
+  function Location (D : in Deque; Elem : Item) return Natural;
   -- Return the first index at which the item is found; return 0 if the
   -- item does not exist in the deque.
 
-  function "=" (Left, Right : in Unbounded_Deque) return Boolean;
+  function "=" (Left, Right : in Deque) return Boolean;
   -- Return True if and only if both deques have the same length and the same
   -- items in the same order; return False otherwise.
 
-  function New_Iterator (For_The_Deque : Unbounded_Deque) return Iterator'Class;
+  function New_Iterator (For_The_Deque : Deque) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Deque.
 
 private
 
-  package Unbounded_Deque_Nodes
+  package Deque_Nodes
   is new BC.Support.Unbounded (Item => Item,
                                Item_Ptr => Item_Ptr,
                                Storage_Manager => Storage_Manager,
                                Storage => Storage);
 
-  type Unbounded_Deque is new Deque with record
-    Rep : Unbounded_Deque_Nodes.Unb_Node_Ref
-       := new Unbounded_Deque_Nodes.Unb_Node;
+  type Deque is new Abstract_Deque with record
+    Rep : Deque_Nodes.Unb_Node_Ref
+       := new Deque_Nodes.Unb_Node;
   end record;
 
-  function Item_At (D : Unbounded_Deque; Index : Positive) return Item_Ptr;
+  function Item_At (D : Deque; Index : Positive) return Item_Ptr;
 
-  procedure Initialize (D : in out Unbounded_Deque);
-  procedure Adjust (D : in out Unbounded_Deque);
-  procedure Finalize (D : in out Unbounded_Deque);
+  procedure Initialize (D : in out Deque);
+  procedure Adjust (D : in out Deque);
+  procedure Finalize (D : in out Deque);
 
 end BC.Containers.Deques.Unbounded;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,7 +21,8 @@ generic
   with function "<" (L, R : Item) return Boolean is <>;
 package BC.Containers.Collections.Ordered is
 
-  type Ordered_Collection is abstract new Collection with private;
+  type Abstract_Ordered_Collection
+    is abstract new Abstract_Collection with private;
 
   -- An ordered collection denotes a sorted indexed collection of
   -- items, drawn from some well-defined universe. An ordered
@@ -30,6 +31,7 @@ package BC.Containers.Collections.Ordered is
 
 private
 
-  type Ordered_Collection is abstract new Collection with null record;
+  type Abstract_Ordered_Collection
+    is abstract new Abstract_Collection with null record;
 
 end BC.Containers.Collections.Ordered;
