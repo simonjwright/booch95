@@ -34,7 +34,7 @@ package BC.Containers.Queues.Bounded is
   procedure Pop (Obj : in out Bounded_Queue);
   -- Remove the item from the front of the queue.
 
-  procedure Remove (Obj : in out Bounded_Queue; From : Natural);
+  procedure Remove (Obj : in out Bounded_Queue; From : Positive);
   -- Remove the item at the given index (may be a balking operation).
 
   function Available (Obj : in Bounded_Queue) return Natural;

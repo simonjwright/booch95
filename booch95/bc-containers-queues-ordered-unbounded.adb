@@ -31,8 +31,8 @@ package body BC.Containers.Queues.Ordered.Unbounded is
     for Pos in reverse 1 .. Unbounded_Ordered_Queue_Nodes.Length (Obj.Rep.all)
     loop
       if Unbounded_Ordered_Queue_Nodes.Item_At (Obj.Rep.all, Pos) < Elem then
-	Unbounded_Ordered_Queue_Nodes.Append (Obj.Rep.all, Elem, After => Pos);
-	return;
+        Unbounded_Ordered_Queue_Nodes.Append (Obj.Rep.all, Elem, After => Pos);
+        return;
       end if;
     end loop;
     Unbounded_Ordered_Queue_Nodes.Insert (Obj.Rep.all, Elem);
@@ -43,7 +43,7 @@ package body BC.Containers.Queues.Ordered.Unbounded is
     Unbounded_Ordered_Queue_Nodes.Remove (Obj.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Obj : in out Unbounded_Ordered_Queue; From : Natural) is
+  procedure Remove (Obj : in out Unbounded_Ordered_Queue; From : Positive) is
   begin
     Unbounded_Ordered_Queue_Nodes.Remove (Obj.Rep.all, From);
   end Remove;

@@ -44,7 +44,7 @@ package BC.Containers.Queues.Dynamic is
   procedure Pop (Obj : in out Dynamic_Queue);
   -- Remove the item from the front of the queue.
 
-  procedure Remove (Obj : in out Dynamic_Queue; From : Natural);
+  procedure Remove (Obj : in out Dynamic_Queue; From : Positive);
   -- Remove the item at the given index.
 
   function Length (Obj : in Dynamic_Queue) return Natural;
