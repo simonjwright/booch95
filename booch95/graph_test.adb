@@ -38,6 +38,7 @@ procedure Graph_Test is
                            A1, A2, A3 : in out DG.Arc) is
     --| BC_TDirectedArc<Char, CPtr, BC_CManaged> a4;
     A4 : DG.Arc;
+    use AG;
     use DG;
   begin
     --| assertion(g.IsEmpty(), "** D01: Graph is not initially empty");
@@ -305,15 +306,289 @@ procedure Graph_Test is
     Set_From_Vertex (A4, V1'Access);
   end Test_Directed;
 
+  procedure Test_Undirected (G : in out UG.Graph;
+                           V1, V2, V3 : in out UG.Vertex;
+                           A1, A2, A3 : in out UG.Arc) is
+    --|  BC_TUndirectedArc<Char, CPtr, BC_CManaged> a4;
+    A4 : UG.Arc;
+    use AG;
+    use UG;
+  begin
+    --| assertion(g.IsEmpty(), "** U01: Graph is not initially empty");
+    Assertion (Is_Empty (G), "** U01: Graph is not initially empty");
+    --| assertion((g.NumberOfVertices() == 0), "** U02: Number of vertices is not correct");
+    Assertion (Number_Of_Vertices (G) = 0,
+               "** U02: Number of vertices is not correct");
+    --| assertion(v1.IsNull(), "** U03: Vertex is not initially null");
+    Assertion (Is_Null (V1),
+               "** U03: Vertex is not initially null");
+    --| assertion(a1.IsNull(), "** U04: Arc is not initially null");
+    Assertion (Is_Null (A1),
+               "** U04: Arc is not initially null");
+    --| g.CreateVertex(v1, 'a');
+    Create_Vertex (G, V1, 'a');
+    --| g.CreateVertex(v2, 'b');
+    Create_Vertex (G, V2, 'b');
+    --| g.CreateVertex(v3, 'c');
+    Create_Vertex (G, V3, 'c');
+    --| g.CreateVertex(v3, 'd');
+    Create_Vertex (G, V3, 'd');
+    --| g.CreateVertex(v3, 'e');
+    Create_Vertex (G, V3, 'e');
+    --| g.CreateVertex(v3, 'f');
+    Create_Vertex (G, V3, 'f');
+    --| g.CreateVertex(v3, 'g');
+    Create_Vertex (G, V3, 'g');
+    --| assertion(!g.IsEmpty(), "** U05: Graph is empty");
+    Assertion (not Is_Empty (G),
+               "** U05: Graph is empty");
+    --| assertion((g.NumberOfVertices() == 7), "** U06: Number of vertices is not correct");
+    Assertion (Number_Of_Vertices (G) = 7,
+               "** U06: Number of vertices is not correct");
+    --| assertion(!v1.IsNull(), "** U07: Vertex is null");
+    Assertion (not Is_Null (V1),
+               "** U07: Vertex is null");
+    --| assertion(v1.IsShared(), "** U08: Vertex is not shared");
+    Assertion (Is_Shared (V1),
+               "** U08: Vertex is not shared");
+    --| assertion((v1.Item() == 'a'), "** U09: Vertex Item is not correct");
+    Assertion (Item (V1) = 'a',
+               "** U09: Vertex Item is not correct");
+    --| assertion(g.IsMember(v1), "** U10: Vertex is not a member of the graph");
+    Assertion (Is_Member (G, V1),
+               "** U10: Vertex is not a member of the graph");
+    --| assertion(!v3.IsNull(), "** U11: Vertex is null");
+    Assertion (not Is_Null (V3),
+               "** U11: Vertex is null");
+    --| assertion(v3.IsShared(), "** U12: Vertex is not shared");
+    Assertion (Is_Shared (V3),
+               "** U12: Vertex is not shared");
+    --| assertion((v3.Item() == 'g'), "** U13: Vertex Item is not correct");
+    Assertion (Item (V3) = 'g',
+               "** U13: Vertex Item is not correct");
+    --| assertion(g.IsMember(v3), "** U14: Vertex is not a member of the graph");
+    Assertion (Is_Member (G, V3),
+               "** U14: Vertex is not a member of the graph");
+    --| assertion((v1.EnclosingGraph().NumberOfVertices() == 7), "** U15: Number of vertices is not correct");
+    Assertion (Number_Of_Vertices (UG.Graph (Enclosing_Graph (V1).all)) =7,
+               "** U15: Number of vertices is not correct");
+    --| v3 = v1;
+    V3 := V1;
+    --| assertion((v3.EnclosingGraph().NumberOfVertices() == 7), "** U16: Number of vertices is not correct");
+    Assertion (Number_Of_Vertices (UG.Graph (Enclosing_Graph (V3).all)) =7,
+               "** U16: Number of vertices is not correct");
+    --| v3.Clear();
+    Clear (V3);
+    --| assertion(v3.IsNull(), "** U17: Vertex is null");
+    Assertion (Is_Null (V3),
+               "** U17: Vertex is not null");
+    --| assertion(!v3.IsShared(), "** U18: Vertex is not shared");
+    Assertion (not Is_Shared (V3),
+               "** U18: Vertex is shared");
+    --| assertion(!g.IsMember(v3), "** U19: Vertex is not a member of the graph");
+    Assertion (not Is_Member (G, V3),
+               "** U19: Vertex is a member of the graph");
+    --| assertion(g.IsMember(v1), "** U20: Vertex is not a member of the graph");
+    Assertion (Is_Member (G, V1),
+               "** U20: Vertex is not a member of the graph");
+    --| v3 = v1;
+    V3 := V1;
+    --| assertion((v1 == v3), "** U21: Vertices are not equal");
+    Assertion (V1 = V3,
+               "** U21: Vertices are not equal");
+    --| v1.SetItem('A');
+    Set_Item (V1, 'A');
+    --| assertion((v3.Item() == 'A'), "** U22: Vertex Item is not correct");
+    Assertion (Item (V3) = 'A',
+               "** U22: Vertex Item is not correct");
+    --| g.DestroyVertex(v1);
+    Destroy_Vertex (G, V1);
+    --| assertion((g.NumberOfVertices() == 6), "** U23: Number of vertices is not correct");
+    Assertion (Number_Of_Vertices (G) = 6,
+               "** U23: Number of vertices is not correct");
+    --| assertion(!g.IsMember(v1), "** U24: Vertex is not a member of the graph");
+    Assertion (not Is_Member (G, V1),
+               "** U24: Vertex is a member of the graph");
+    --| assertion(v1.IsNull(), "** U25: Vertex is null");
+    Assertion (Is_Null (V1),
+               "** U25: Vertex is not null");
+    --| assertion(!v1.IsShared(), "** U26: Vertex is not shared");
+    Assertion (not Is_Shared (V1),
+               "** U26: Vertex is shared");
+    --| assertion(!g.IsMember(v3), "** U27: Vertex is not a member of the graph");
+    Assertion (not Is_Member (G, V3),
+               "** U27: Vertex is a member of the graph");
+    --| assertion(!v3.IsNull(), "** U28: Vertex is null");
+    Assertion (not Is_Null (V3),
+               "** U28: Vertex is null");
+    --| assertion(!v3.IsShared(), "** U29: Vertex is not shared");
+    Assertion (not Is_Shared (V3),
+               "** U29: Vertex is shared");
+    --| assertion((v1 != v3), "** U30: Vertices are not equal");
+    Assertion (V1 /= V3,
+               "** U30: Vertices are not equal");
+    --| assertion(g.IsMember(v2), "** U31: Vertex is not a member of the graph");
+    Assertion (Is_Member (G, V2),
+               "** U31: Vertex is not a member of the graph");
+    --| g.Clear();
+    Clear (G);
+    --| assertion((g.NumberOfVertices() == 0), "** U32: Number of vertices is not correct");
+    Assertion (Number_Of_Vertices (G) = 0,
+               "** U32: Number of vertices is not correct");
+    --| assertion(!g.IsMember(v2), "** U33: Vertex is not a member of the graph");
+    Assertion (not Is_Member (G, V2),
+               "** U33: Vertex is a member of the graph");
+    --| assertion(!v2.IsNull(), "** U34: Vertex is null");
+    Assertion (not Is_Null (V2),
+               "** U34: Vertex is null");
+    --| assertion(!v2.IsShared(), "** U35: Vertex is not shared");
+    Assertion (not Is_Shared (V2),
+               "** U35: Vertex is shared");
+    --| assertion((v2.Arity() == 0), "** U36: Arity of incoming arcs is not correct");
+    Assertion (Arity (V2) = 0,
+               "** U36: Arity of incoming arcs is not correct");
+    --| g.CreateVertex(v1, 'a');
+    Create_Vertex (G, V1, 'a');
+    --| g.CreateVertex(v2, 'b');
+    Create_Vertex (G, V2, 'b');
+    --| g.CreateVertex(v3, 'c');
+    Create_Vertex (G, V3, 'c');
+    --| g.CreateArc(a1, &gItems[0], v1, v2);
+    Create_Arc (G, A1, '0', V1, V2); -- NB, these test the 'reference'
+    --| g.CreateArc(a2, &gItems[1], v2, v3);
+    Create_Arc (G, A2, '1', V2, V3);
+    --| g.CreateArc(a4, &gItems[2], v3, v1);
+    Create_Arc (G, A4, '2', V3, V1);
+    --| g.CreateArc(a3, &gItems[3], v3, v2);
+    Create_Arc (G, A3, '3', V3, V2);
+    --| assertion(g.IsMember(a1), "** U37: Arc is not a member of the graph");
+    Assertion (Is_Member (G, A1),
+               "** U37: Arc is not a member of the graph");
+    --| assertion((v2.Arity() == 3), "** U38: Arity is not correct");
+    Assertion (Arity (V2) = 3,
+               "** U38: Arity is not correct");
+    --| assertion((v3.Arity() == 3), "** U39: Arity is not correct");
+    Assertion (Arity (V3) = 3,
+               "** U39: Arity is not correct");
+    --| g.DestroyArc(a3);
+    Destroy_Arc (G, A3);
+    --| assertion(a3.IsNull(), "** U40: Vertex is null");
+    Assertion (Is_Null (A3),
+               "** U40: Arc is not null");
+    --| assertion(!g.IsMember(a3), "** U41: Arc is not a member of the graph");
+    Assertion (not Is_Member (G, A3),
+               "** U41: Arc is a member of the graph");
+    --| assertion((v2.Arity() == 2), "** U42: Arity is not correct");
+    Assertion (Arity (V2) = 2,
+               "** U42: Arity is not correct");
+    --| assertion((v3.Arity() == 2), "** U43: Arity is not correct");
+    Assertion (Arity (V3) = 2,
+               "** U43: Arity is not correct");
+    --| g.CreateArc(a3, &gItems[3], v3, v2);
+    Create_Arc (G, A3, '3', V3, V2);
+    --| a3.SecondVertex(v1);
+    Second_Vertex (A3, V1);
+    --| assertion((v1 == v2), "** U44: Vertices are not equal");
+    Assertion (V1 = V2,
+               "** U44: Vertices are not equal");
+    --| a3.FirstVertex(v1);
+    First_Vertex (A3, V1);
+    --| assertion((v1 == v3), "** U45: Vertices are not equal");
+    Assertion (V1 = V3,
+               "** U45: Vertices are not equal");
+    --| a1.FirstVertex(v1);
+    First_Vertex (A1, V1);
+    --| assertion((v1.Item() == 'a'), "** U46: Vertex Item is not correct");
+    Assertion (Item (V1) = 'a',
+               "** U46: Vertex Item is not correct");
+    --| a3.SetSecondVertex(v1);
+    Set_Second_Vertex (A3, V1'Access);
+    --| assertion((v1.Arity() == 3), "** U47: Arity is not correct");
+    Assertion (Arity (V1) = 3,
+               "** U47: Arity is not correct");
+    --| assertion((v2.Arity() == 2), "** U48: Arity is not correct");
+    Assertion (Arity (V2) = 2,
+               "** U48: Arity is not correct");
+    --| assertion((a3.Item() == &gItems[3]), "** U49: Arc Item is not correct");
+    Assertion (Item (A3) = '3',
+               "** U49: Arc Item is not correct");
+    --| a3.SetItem(&gItems[4]);
+    Set_Item (A3, '4');
+    --| assertion((a3.Item() == &gItems[4]), "** U50: Arc Item is not correct");
+    Assertion (Item (A3) = '4',
+               "** U50: Arc Item is not correct");
+    --| assertion((a3.EnclosingGraph().NumberOfVertices() == 3), "** U51: Number of vertices is not correct");
+    Assertion (Number_Of_Vertices (UG.Graph (Enclosing_Graph (A3).all)) = 3,
+               "** U51: Number of vertices is not correct");
+    --| a2 = a3;
+    A2 := A3;
+    --| a2.Clear();
+    Clear (A2);
+    --| assertion(!g.IsMember(a2), "** U52: Arc is a member of the graph");
+    Assertion (not Is_Member (G, A2),
+               "** U52: Arc is a member of the graph");
+    --| assertion(g.IsMember(a3), "** U53: Arc is not a member of the graph");
+    Assertion (Is_Member (G, A3),
+               "** U53: Arc is not a member of the graph");
+    --| a3.SetFirstVertex(v2);
+    Set_First_Vertex (A3, V2'Access);
+    --| assertion((v2.Arity() == 3), "** U54: Arity is not correct");
+    Assertion (Arity (V2) = 3,
+               "** U54: Arity is not correct");
+    --| assertion((v3.Arity() == 2), "** U55: Arity is not correct");
+    Assertion (Arity (V3) = 2,
+               "** U55: Arity is not correct");
+    --| g.CreateArc(a3, &gItems[7], v3, v3);
+    Create_Arc (G, A3, '7', V3, V3);
+    --| assertion((v3.Arity() == 3), "** U56: Arity is not correct");
+    Assertion (Arity (V3) = 3,
+               "** U56: Arity is not correct");
+    --| v3.SetItem('C');
+    Set_Item (V3, 'C');
+    --| g.DestroyVertex(v3);
+    Destroy_Vertex (G, V3);
+    --| assertion(v3.IsNull(), "** U57: Vertex is null");
+    Assertion (Is_Null (V3),
+               "** U57: Vertex is not null");
+    --| assertion(!a3.IsNull(), "** U58: Arc is null");
+    Assertion (not Is_Null (A3),
+                "** U58: Arc is null");
+    --| assertion((v1.Arity() == 3), "** U59: Arity is not correct");
+    Assertion (Arity (V1) = 3,
+               "** U59: Arity is not correct");
+    --| assertion((v2.Arity() == 3), "** U60: Arity is not correct");
+    Assertion (Arity (V2) = 3,
+               "** U60: Arity is not correct");
+    --| g.CreateVertex(v1, 'c');
+    Create_Vertex (G, V1, 'c');
+    --| g.CreateArc(a3, &gItems[5], v1, v1);
+    Create_Arc (G, A3, '5', V1, V1);
+    --| g.CreateArc(a3, &gItems[7], v1, v2);
+    Create_Arc (G, A3, '7', V1, V2);
+    --| g.CreateVertex(v1, 'd');
+    Create_Vertex (G, V1, 'd');
+    --| g.CreateArc(a3, &gItems[8], v1, v2);
+    Create_Arc (G, A3, '8', V1, V2);
+    --| a4.SetFirstVertex(v1);
+    Set_First_Vertex (A4, V1'Access);
+  end Test_Undirected;
+
   D_G : DG.Graph;
   D_V1, D_V2, D_V3 : DG.Vertex;
   D_A1, D_A2, D_A3 : DG.Arc;
+
+  U_G : UG.Graph;
+  U_V1, U_V2, U_V3 : UG.Vertex;
+  U_A1, U_A2, U_A3 : UG.Arc;
 
 begin
   Put_Line ("Starting graph tests");
 
   Put_Line ("...Directed Graph");
   Test_Directed (D_G, D_V1, D_V2, D_V3, D_A1, D_A2, D_A3);
+
+  Put_Line ("...Undirected Graph");
+  Test_Undirected (U_G, U_V1, U_V2, U_V3, U_A1, U_A2, U_A3);
 
   Put_Line ("Completed graph tests");
 
