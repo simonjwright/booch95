@@ -297,7 +297,7 @@ dist: $(DISTRIBUTION_FILES)
 	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
 	cp -p README distribution/download/
 	cp -p WAVEFRONT-README distribution/wavefront/README
-	cp -p COPYING html/*.html html/x.ada html/*.gif html/*.jpg \
+	cp -p COPYING html/*.{html,gif,jpg,png} html/x.ada \
 	  html/coldframe-hash.{tgz,zip} distribution/
 
 SOURCE = makefile COPYING README $(ADA_SOURCE)
