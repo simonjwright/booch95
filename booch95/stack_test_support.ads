@@ -1,5 +1,5 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-1998,2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,7 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Containers;
 with BC.Containers.Stacks;
@@ -26,16 +26,16 @@ with Global_Heap;
 
 package Stack_Test_Support is
 
-  package Containers is new BC.Containers (Item => Character);
+   package Containers is new BC.Containers (Item => Character);
 
-  package Stacks is new Containers.Stacks;
+   package Stacks is new Containers.Stacks;
 
-  package SB is new Stacks.Bounded (Maximum_Size => 100);
+   package SB is new Stacks.Bounded (Maximum_Size => 100);
 
-  package SD is new Stacks.Dynamic (Storage_Manager => Global_Heap.Pool,
-                                    Storage => Global_Heap.Storage);
+   package SD is new Stacks.Dynamic (Storage_Manager => Global_Heap.Pool,
+                                     Storage => Global_Heap.Storage);
 
-  package SU is new Stacks.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                      Storage => Global_Heap.Storage);
+   package SU is new Stacks.Unbounded (Storage_Manager => Global_Heap.Pool,
+                                       Storage => Global_Heap.Storage);
 
 end Stack_Test_Support;

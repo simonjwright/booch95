@@ -1,5 +1,5 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-1998,2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,25 +15,25 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with Ada.Finalization;
 with BC.Smart;
 
 package Smart_Test_Support is
 
-  -- This type is used to test BC.Smart. It's Controlled simply so that we
-  -- can see when instances are deleted.
-  type T is new Ada.Finalization.Controlled with record
-    C : Character;
-  end record;
-  type P is access T;
+   --  This type is used to test BC.Smart. It's Controlled simply so
+   --  that we can see when instances are deleted.
+   type T is new Ada.Finalization.Controlled with record
+      C : Character;
+   end record;
+   type P is access T;
 
-  procedure Finalize (The_T : in out T);
+   procedure Finalize (The_T : in out T);
 
-  package Smart is new BC.Smart (T => T, P => P);
+   package Smart is new BC.Smart (T => T, P => P);
 
-  function Create (Ch : Character) return Smart.Pointer;
-  function Value (P : Smart.Pointer) return Character;
+   function Create (Ch : Character) return Smart.Pointer;
+   function Value (P : Smart.Pointer) return Character;
 
 end Smart_Test_Support;

@@ -1,5 +1,5 @@
--- Copyright (C) 1998 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1998,2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,49 +15,50 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$         --
 
 with Ada.Finalization;
 
 generic
-  type T (<>) is limited private;
-  type P is access T;
+   type T (<>) is limited private;
+   type P is access T;
 package BC.Smart is
 
-  pragma Elaborate_Body;
+   pragma Elaborate_Body;
 
-  type Pointer is private;
-  -- A Pointer variable encapsulates a reference-counted accessor of type P
-  -- (to a T).
+   type Pointer is private;
+   --  A Pointer variable encapsulates a reference-counted accessor of
+   --  type P (to a T).
 
-  Null_Pointer : constant Pointer;
-  -- Assign this to a Pointer when you've finished with its contents.
+   Null_Pointer : constant Pointer;
+   --  Assign this to a Pointer when you've finished with its contents.
 
-  function Create (Value : P) return Pointer;
-  pragma Inline (Create);
-  -- Returns a new encapsulation. You must NOT deallocate the Value passed;
-  -- it will be deallocated when there are no more references to it.
+   function Create (Value : P) return Pointer;
+   pragma Inline (Create);
+   --  Returns a new encapsulation. You must NOT deallocate the Value
+   --  passed; it will be deallocated when there are no more
+   --  references to it.
 
-  function Value (Ptr : Pointer) return P;
-  pragma Inline (Value);
-  -- returns the encapsulated pointer.
+   function Value (Ptr : Pointer) return P;
+   pragma Inline (Value);
+   --  returns the encapsulated pointer.
 
 private
 
-  type Node is record
-    Count : Natural := 0;
-    Value : P;
-  end record;
-  type Ref is access Node;
+   type Node is record
+      Count : Natural := 0;
+      Value : P;
+   end record;
+   type Ref is access Node;
 
-  type Pointer is new Ada.Finalization.Controlled with record
-    Rep : Ref;
-  end record;
+   type Pointer is new Ada.Finalization.Controlled with record
+      Rep : Ref;
+   end record;
 
-  procedure Adjust (Obj : in out Pointer);
-  procedure Finalize (Obj : in out Pointer);
+   procedure Adjust (Obj : in out Pointer);
+   procedure Finalize (Obj : in out Pointer);
 
-  Null_Pointer : constant Pointer
+   Null_Pointer : constant Pointer
      := Pointer'(Ada.Finalization.Controlled with Rep => null);
 
 end BC.Smart;
