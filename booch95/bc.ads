@@ -19,10 +19,24 @@
 
 package BC is
 
-  -- This is the Top level package in the Booch Component Hierarchy.
+  -- This is the top level package in the Booch Component Hierarchy.
 
-  -- It serves as the repository of all exceptions possible in the
-  -- components (none at present).
+  -- The following exceptions may be raised by improper use of the Components.
+
+  Container_Error : exception;
+  Duplicate : exception;
+  Illegal_Pattern : exception;
+  Is_Null : exception;
+  Lexical_Error : exception;
+  Math_Error : exception;
+  Not_Found : exception;
+  Not_Null : exception;
+  Not_Root : exception;
+  Overflow : exception;
+  Range_Error : exception;
+  Storage_Error : exception;
+  Synchronization_Error : exception;
+  Underflow : exception;
 
   Should_Have_Been_Overridden : exception;
   -- Raised if the Components have failed to override a primitive
