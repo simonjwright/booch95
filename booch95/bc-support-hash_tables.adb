@@ -148,6 +148,7 @@ package body BC.Support.Hash_Tables is
                        Bucket : out Positive;
                        Index : out Positive) is
       begin
+         Index := Positive'Last;         --  we have to ensure it's > 0
          if T.Size = 0 then
             Bucket := T.Number_Of_Buckets + 1;
          else
