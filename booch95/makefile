@@ -1,4 +1,4 @@
-# Copyright (C) 1998-2001 Simon Wright. All Rights Reserved.
+# Copyright (C) 1998-2002 Simon Wright. All Rights Reserved.
 #
 #      This program is free software; you can redistribute it
 #      and/or modify it under the terms of the Ada Community
@@ -30,7 +30,7 @@ all::
 
 #GCOV_FLAGS = -ftest-coverage -fprofile-arcs
 
-GNATMAKE_FLAGS = -O2 -g -gnatqQafy -gnatwaL -j2 -m
+GNATMAKE_FLAGS = -O2 -g -gnatqQafy -gnatwaL -j2 -m -k
 GNATMAKE_FLAGS += $(GCOV_FLAGS)
 
 ADA_SOURCE = \
