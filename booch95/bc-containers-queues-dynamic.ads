@@ -87,14 +87,11 @@ private
   is new BC.Support.Dynamic (Item => Item,
                              Item_Ptr => Item_Ptr,
                              Storage_Manager => Storage_Manager,
-                             Storage => Storage);
+                             Storage => Storage,
+                             Initial_Size => Initial_Size);
 
   type Queue is new Abstract_Queue with record
-    Rep : Queue_Nodes.Dyn_Node_Ref;
+    Rep : Queue_Nodes.Dyn_Node;
   end record;
-
-  procedure Initialize (Q : in out Queue);
-  procedure Adjust (Q : in out Queue);
-  procedure Finalize (Q : in out Queue);
 
 end BC.Containers.Queues.Dynamic;
