@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -32,6 +32,7 @@ procedure Ordered_Queue_Test is
    use QB;
    use QD;
    use QU;
+   use QUM;
 
    procedure Process (C : Character; OK : out Boolean);
    procedure Process (C : Character; OK : out Boolean) is
@@ -187,6 +188,7 @@ procedure Ordered_Queue_Test is
    Queue_B_P1, Queue_B_P2 : QB.Queue;
    Queue_D_P1, Queue_D_P2 : QD.Queue;
    Queue_U_P1, Queue_U_P2 : QU.Queue;
+   Queue_UM_P1, Queue_UM_P2 : QUM.Queue;
 
 begin
    Put_Line ("Starting ordered queue tests");
@@ -201,13 +203,18 @@ begin
    Put_Line ("...Unbounded Ordered Queue");
    Test_Primitive (Queue_U_P1, Queue_U_P2);
 
+   Put_Line ("...Unmanaged Ordered Queue");
+   Test_Primitive (Queue_UM_P1, Queue_UM_P2);
+
    Put_Line ("... Ordered Queue Active Iterator");
    Put_Line ("   Bounded:");
    Test_Active_Iterator (Queue_B_P1);
    Put_Line ("   Dynamic:");
    Test_Active_Iterator (Queue_D_P1);
-   Put_Line ("   Ordered:");
+   Put_Line ("   Unbounded:");
    Test_Active_Iterator (Queue_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Queue_UM_P1);
 
    Put_Line ("... Ordered Queue Passive Iterator");
    Put_Line ("   Bounded:");
@@ -216,6 +223,8 @@ begin
    Test_Passive_Iterator (Queue_D_P1);
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (Queue_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Queue_UM_P1);
 
    Assertion ((Front (Queue_B_P1) = '9'),
               "** M01: Queue front is not correct");
@@ -242,6 +251,8 @@ begin
    Test_Iterator_Deletion (Queue_D_P1);
    Put_Line ("   Unbounded:");
    Test_Iterator_Deletion (Queue_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Iterator_Deletion (Queue_UM_P1);
 
    Put_Line ("Completed ordered queue tests");
 

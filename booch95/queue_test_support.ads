@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -20,6 +20,7 @@ with BC.Containers.Queues;
 with BC.Containers.Queues.Bounded;
 with BC.Containers.Queues.Dynamic;
 with BC.Containers.Queues.Unbounded;
+with BC.Containers.Queues.Unmanaged;
 with BC.Support.Standard_Storage;
 with Global_Heap;
 
@@ -38,5 +39,7 @@ package Queue_Test_Support is
 
    package QU is new Queues.Unbounded
      (Storage => BC.Support.Standard_Storage.Pool);
+
+   package QUM is new Queues.Unmanaged;
 
 end Queue_Test_Support;
