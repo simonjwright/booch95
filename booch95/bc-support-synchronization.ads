@@ -96,7 +96,9 @@ package BC.Support.Synchronization is
    --    -- the monitor is unlocked as L is finalized, even if an exception
    --    -- occurs
 
-   type Lock_Base is abstract tagged limited private;
+--     type Lock_Base is abstract tagged limited private;
+   type Lock_Base
+      is abstract new Ada.Finalization.Limited_Controlled with private;
 
    --  A simple Lock provides mutual exclusion
    type Lock (Using : access Semaphore_Base'Class)
@@ -167,7 +169,9 @@ private
    end record;
 
    type Lock_Base
-      is abstract new Ada.Finalization.Limited_Controlled with null record;
+   is abstract new Ada.Finalization.Limited_Controlled with record
+      Finalized : Boolean := False;
+   end record;
 
    type Lock (Using : access Semaphore_Base'Class)
    is new Lock_Base with null record;
