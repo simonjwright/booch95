@@ -19,17 +19,17 @@
 
 --  This file contains tests for the list classes.
 
-with Text_Io;
-with Root_Container;
-with Root_SList;
-with Root_Dlist;
-with Character_References;
+with Ada.Text_IO;
+with List_Test_Support;
 
 procedure List_Test is
 
-  use Text_Io;
-  use Character_References;
-  use Root_Dlist; use Root_Slist; use Root_Container;
+  use Ada.Text_IO;
+  use List_Test_Support;
+  use Containers;
+  use Lists;
+  use LS;
+  use LD;
 
   procedure Assertion (Cond : Boolean; Message : String) is
   begin
@@ -432,19 +432,16 @@ procedure List_Test is
     Test_Double (L1, L2, T1, T2, T3);
   end Test_Double;
 
-  procedure Process (C : in Char_Ptr; OK : out Boolean) is
-    use Text_IO;
+  procedure Process (C : in Character; OK : out Boolean) is
   begin
-    Put_Line ("Item: " & C.all );
+    Put_Line ("Item: " & C);
     Ok := True;
   end Process;
 
-  function Mod_Op is new Modify (Apply=> Process);
-
-  procedure Test_Active_Iterator (L : access Container'Class) is
-    Iter : Iterator (L);
+  procedure Test_Active_Iterator (L : Container'Class) is
+    Iter : Iterator := New_Iterator (L);
     Success : Boolean;
-    Temp : Char_Ptr;
+    Temp : Character;
   begin
     while not Is_Done (Iter) loop
       Temp := Current_Item (Iter);
@@ -453,16 +450,16 @@ procedure List_Test is
     end loop;
   end Test_Active_Iterator;
 
-  procedure Test_Passive_Iterator (L : access Container'Class) is
-    PIter : aliased Passive_Iterator (L);
-    Success : Boolean;
+  procedure Test_Passive_Iterator (L : Container'Class) is
+    procedure Iterate is new Visit
+       (Apply => Process, Over_The_Container => L);
   begin
-    Success := Mod_Op (PIter'access); -- just discard Success for now..
+    Iterate;
   end Test_Passive_Iterator;
 
-  Slist_P1, Slist_P2 : aliased Single_List;
+  Slist_P1, Slist_P2 : Single_List;
 
-  Dlist_P1, Dlist_P2 : aliased Double_List;
+  Dlist_P1, Dlist_P2 : Double_List;
 
 begin
   Put_Line ("Starting list tests");
@@ -475,15 +472,15 @@ begin
 
   Put_Line ("...List Active Iterator");
   Put_Line ("   Single");
-  Test_Active_Iterator (Slist_P1'access);
+  Test_Active_Iterator (Slist_P1);
   Put_Line ("   Double");
-  Test_Active_Iterator (Dlist_P1'access);
+  Test_Active_Iterator (Dlist_P1);
 
   Put_Line ("...List Passive Iterator");
   Put_Line ("   Single");
-  Test_Passive_Iterator (Slist_P1'access);
+  Test_Passive_Iterator (Slist_P1);
   Put_Line ("   Double");
-  Test_Passive_Iterator (Dlist_P1'access);
+  Test_Passive_Iterator (Dlist_P1);
 
   Put_Line ("Completed list tests");
 end List_Test;
