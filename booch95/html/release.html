@@ -36,14 +36,30 @@
 
 <h3>Interface changes</h3>
 
+<p><font color="red">The way Storage Management is specified has
+changed significantly</font>: you now supply a single generic
+parameter of type
+<tt>System.Storage_Pools.Root_Storage_Pool'Class</tt>.
+
+<br>This will be painful to start with, but should simplify matters in
+the long run.
+
 <p>The version of <tt>Sets.Add</tt> that doesn't tell you if the newly
 added Item was in fact already there becomes a primitive operation
 rather than a class-wide one.
+
+<p><tt>BC.Containers.Maps.Hash_Statistics</tt> didn't work for Bounded
+Maps.
 
 
 <h3>Documentation changes</h3>
 
 <p>Added commentary to <tt>BC.Copy</tt>, <tt>BC.Filter</tt>.
+
+
+<h3>Implementation changes</h3>
+
+<p>Continued indenting to the GNAT defaults.
 
 
 <p>
