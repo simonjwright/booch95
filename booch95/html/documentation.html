@@ -197,10 +197,13 @@ the user from having to include a separate &quot;Exceptions&quot; package. Excep
 behaviour of the BCs is standard and portable, unlike other languages. </p>
 
 <font color=red>
-<p>At present there are actually no declared exceptions. Internally, the BCs use
-<tt>pragma Assert</tt> which is reasonably portable and follows the original
-C++ scheme; it does mean that you'll need to compile with vendor-specific
-switches in order to get error messages (other than just 'Constraint Error').
+<p>At present the only declared exception is
+<tt>Should_Have_Been_Overridden</tt>, which will only be raised if the
+implementor has forgotten to override a private subprogram of an
+abstract class. Internally, the BCs use <tt>pragma Assert</tt> which
+is reasonably portable and follows the original C++ scheme; it does
+mean that you'll need to compile with vendor-specific switches in
+order to get error messages (other than just 'Constraint Error').
 This decision may be revisited.</p>
 </font>
 
@@ -278,7 +281,7 @@ Trees
 <P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
 <P><A HREF="index.html">[index]</A></p>
 
-<p><i>Last update: 30.vii.98</i></p>
+<p><i>Last update: 24.viii.98</i></p>
 
 <!------------------------------------------------------------------->
 
