@@ -100,7 +100,7 @@ package BC.Containers.Maps.Dynamic is
   function Chunk_Size (M : Dynamic_Map) return Positive;
   -- Returns the Chunk_Size.
 
-  function New_Iterator (For_The_Map : Dynamic_Map) return Iterator;
+  function New_Iterator (For_The_Map : Dynamic_Map) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Map.
 
 private
@@ -146,8 +146,5 @@ private
 
   function Value_At
      (M : Dynamic_Map; Bucket, Index : Positive) return Value_Ptr;
-
-  type Dynamic_Map_Iterator (B : access Dynamic_Map'Class)
-  is new Map_Iterator (B) with null record;
 
 end BC.Containers.Maps.Dynamic;
