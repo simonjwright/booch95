@@ -60,7 +60,7 @@ mists of antiquity).
 
 <h2><a name="which-components">Which components to use?</a></h2>
 
-<p>We're clearly going to need some sort of container to implement
+<p>You're clearly going to need some sort of container to implement
 Fleet.
 
 <p>If you just want a standard container to support iteration,
@@ -74,8 +74,8 @@ more complex than you'll need.
 <h3><a name="separate-instantiation">Separate instantiation</a></h3>
 
 <p>The first thing to do is to instantiate the top-level abstract
-Containers for Car. Note, we have to supply an equality operator
-(<tt>"="</tt>) for <tt>Car</tt>; we could also just <tt>use</tt>
+Containers for Car. Note, you have to supply an equality operator
+(<tt>"="</tt>) for <tt>Car</tt>; you could also just <tt>use</tt>
 <tt>Cars</tt>.
 
 <pre>
@@ -86,7 +86,12 @@ Containers for Car. Note, we have to supply an equality operator
 </pre>
 
 <p>Next, using the new Abstract_Car_Containers, instantiate the
-abstract Collections:
+abstract Collections. This is quite confusing the first few times you
+come across it! The thing you have to instantiate is not
+<tt>BC.Containers.Collections</tt> but the new <tt><i>instantiation of
+BC.Containers</i>.Collections</tt>
+(<tt>Abstract_Car_Containers.Collections</tt>) that you effectively
+made above:
 
 <pre>
    with Abstract_Car_Containers;
@@ -98,7 +103,8 @@ abstract Collections:
 <p>You now have to choose the representation to be used for the
 concrete Collection. To start with, assume that you'll never have more
 than 30 Cars to deal with. This means that you can use the Bounded
-form.
+form. Again, what you instantiate is the child of the newly
+instantiated <tt>Abstract_Car_Collections</tt>.
 
 <pre>
    with Abstract_Car_Collections;
@@ -269,7 +275,7 @@ there's the generic <tt>Modify</tt>, which takes the element as an
 
 <h3><a name="selection">Selection</a></h3>
 
-<p>Suppose we want to find all the Cars in our Fleet that were
+<p>Suppose you want to find all the Cars in our Fleet that were
 registered before some date. You could imagine a function
 <tt>Before</tt>:
 
@@ -277,7 +283,7 @@ registered before some date. You could imagine a function
    function Before (Date : Ada.Calendar.Time) return Fleets.Collection;
 </pre>
 
-which we'd probably declare in the public part of <a
+which you'd probably declare in the public part of <a
 href="#fleet-combined"><tt>My_Fleet_Combined</tt></a>. Its body might
 look like
  
@@ -312,30 +318,31 @@ look like
 
 which is a bit of a mouthful.
 
-<p>The tricky bit is the instantiation of <tt>BC.Filter</tt>:
+<p>The tricky bit is the instantiation of <tt>BC.Filter</tt> (which,
+of course, you have to <tt>with</tt>):
 
 <blockquote>
 <dl>
 
-<dt><tt>Item</tt><dd>is the thing we're filtering (<tt>Car</tt>),
+<dt><tt>Item</tt><dd>is the thing you're filtering (<tt>Car</tt>),
 
 <dt><tt>Source</tt><dd>is an instantion of <tt>BC.Containers</tt> with
 <tt>Item</tt>s,
 
 <dt><tt>From</tt><dd>is the concrete Container type which contains the
-<tt>Item</tt>s to be filtered; it has to be derived from the abstract
-<tt>Container</tt> in <tt>Source</tt>,
+<tt>Item</tt>s to be filtered; it has to have beeen derived from the
+abstract <tt>Container</tt> in <tt>Source</tt>,
 
 <dt><tt>Target</tt><dd>is a (possibly different) instantion of
 <tt>BC.Containers</tt> with <tt>Item</tt>s,
 
 <dt><tt>To</tt><dd>is the concrete Container type which is to receive
-the <tt>Item</tt>s when they have been filtered; it has to be derived
-from the abstract <tt>Container</tt> in <tt>Target</tt>, and may or
-may not be the same as <tt>From</tt>,
+the <tt>Item</tt>s when they have been filtered; it has to have been
+derived from the abstract <tt>Container</tt> in <tt>Target</tt>, and
+may or may not be the same as <tt>From</tt>,
 
 <dt><tt>Pass</tt><dd>is a function which takes an <tt>Item</tt> and
-returns <tt>True</tt> if it's to be kept. In our case, this is
+returns <tt>True</tt> if it's to be kept. In this case, this is
 <tt>Wanted</tt>,
 
 <dt><tt>Clear</tt><dd>is a procedure which empties a <tt>To</tt>
@@ -349,9 +356,44 @@ Container,
 
 <h3><a name="sorting">Sorting</a></h3>
 
-<p><i>This will be a discussion on the use of
-<tt>BC.Containers.Quicksort</tt> and
-<tt>BC.Containers.Shellsort</tt>.</i>
+<p>Suppose you want to keep your Fleet sorted (earliest first). You
+need
+
+<pre>
+  procedure Sort;
+</pre>
+
+which, as before, gets declared in the public part of <a
+href="#fleet-combined"><tt>My_Fleet_Combined</tt></a>.
+
+<pre>
+   procedure Sort is
+
+      function Earlier (L, R : Car) return Boolean;
+
+      procedure Sort is new Abstract_Car_Containers.Quicksort
+        ("<" => Earlier,
+         Container => Fleets.Collection,
+         Length => Fleets.Length);
+
+      function Earlier (L, R : Car) return Boolean is
+         use type Ada.Calendar.Time;
+      begin
+         return L.Registered < R.Registered;
+      end Earlier;
+
+   begin
+      Sort (The_Fleet);
+   end Sort;
+</pre>
+
+As before, you "with" <tt>BC.Containers.Quicksort</tt>, but when
+you do the instantiation it's of
+<tt>Abstract_Car_Containers.Quicksort</tt>.
+
+<p>As an alternative to Quicksort you can use
+<tt>BC.Containers.Shellsort</tt>; the quicksort is (usually) quicker
+but uses recursion, so may take more stack space.
 
 <h2><a name="other-components">What other Components might be
 useful?</a></h2>
