@@ -297,57 +297,32 @@ atomic transaction, the Guarded protocol should be used.
 
 
 <H2><A NAME="conclusion">Conclusion</A></H2>
-<P>Here's a table of the components and the forms to be supported.<BR>
- (U=Unbounded, B=Bounded, D=dynamic, G=Guarded, S=Synchronized) </P>
+<P>Here's a table of the components and the forms to be supported<BR>
+ (U=Unbounded, B=Bounded, D=Dynamic, G=Guarded, S=Synchronized).<br>
+The available components are shown in <font color="red">red</font>.</P>
 <PRE>
-Bags        : UBDGS
-Collections : UBDGS
-  (ordered) : UBDGS
-Dequeues    : UBDGS
+Bags         : <font color="red">UBD</font>GS
+Collections  : <font color="red">U</font>BDGS
+  (ordered)  : <font color="red">U</font>BDGS
+Dequeues     : UBDGS
 Graphs
-  Directed  : U
-  Undir     : U
+  Directed   : <font color="red">U</font>
+  Undirected : <font color="red">U</font>
 Lists
-  Single    : U
-  Double    : U
-Maps        : UBDGS
-Queues      : UBDGS
-  (ordered) : UBDGS
-Rings       : UBDGS
-Sets        : UBDGS
-Stacks      : UBDGS
-Sequences   : UBDGS
+  Single     : <font color="red">U</font>
+  Double     : <font color="red">U</font>
+Maps         : <font color="red">UBD</font>GS
+Queues       : <font color="red">UBD</font>GS
+  (ordered)  : <font color="red">U</font>BDGS
+Rings        : <font color="red">U</font>BD<font color="red">GS</font>
+Sets         : <font color="red">UBD</font>GS
+Stacks       : <font color="red">UBD</font>GS
 Trees
-  AVL       : U
-  Binary    : U
-  Multiway  : U
+  AVL        : <font color="red">U</font>
+  Binary     : <font color="red">U</font>
+  Multiway   : <font color="red">U</font>
 </PRE>
 <P>
-
-<font color=red>
-<p>Here are the components presently available.</p>
-<pre>
-Bags        : UBD
-Collections : U
-  (ordered) : U
-Graphs
-  Directed  : U
-  Undir     : U
-Lists
-  Single    : U
-  Double    : U
-Maps        : UBD
-Queues      : UBD
-  (ordered) : U
-Rings       : UGS
-Sets        : UBD
-Stacks      : UBD
-Trees
-  AVL       : U
-  Binary    : U
-  Multiway  : U
-</pre>
-</font>
 
 
 <!--footer----------------------------------------------------------->
