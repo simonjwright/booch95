@@ -117,7 +117,7 @@ package body BC.Containers.Queues is
     return Item_At (It.For_The_Container.all, It.Index);
   end Current_Item_Ptr;
 
-  procedure Delete_Item_At (It : Queue_Iterator) is
+  procedure Delete_Item_At (It : in out Queue_Iterator) is
     Q : Abstract_Queue'Class
        renames Abstract_Queue'Class (It.For_The_Container.all);
   begin
