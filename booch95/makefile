@@ -134,7 +134,8 @@ ADA_SOURCE += \
 bc-containers-queues-ordered.ad[bs] \
 bc-containers-queues-ordered-bounded.ad[bs] \
 bc-containers-queues-ordered-dynamic.ad[bs] \
-bc-containers-queues-ordered-unbounded.ad[bs]
+bc-containers-queues-ordered-unbounded.ad[bs] \
+bc-containers-queues-ordered-unmanaged.ad[bs]
 TESTABLE += ordered_queue_test
 TEST_SRC += ordered_queue_test.ad[bs] ordered_queue_test_support.ad[bs]
 ordered_queue_test: force
@@ -143,6 +144,7 @@ ADA_SOURCE += \
 bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
 bc-containers-queues-unbounded.ad[bs] \
+bc-containers-queues-unmanaged.ad[bs] \
 bc-containers-queues.ad[bs]
 TESTABLE += queue_test
 TEST_SRC += queue_test.ad[bs] queue_test_support.ad[bs]
