@@ -45,6 +45,15 @@ package body BC.Support.Bounded is
     return new Bnd_Node'(Elems => Obj.Elems, Size => Obj.Size);
   end Create;
 
+  function "=" (Left, Right : Bnd_Node) return Boolean is
+  begin
+    if Left.Size /= Right.Size then
+      return False;
+    else
+      return Left.Elems (1 .. Left.Size) = Right.Elems (1 .. Left.Size);
+    end if;
+  end "=";
+
   procedure Clear (Obj : in out Bnd_Node) is
   begin
     Obj.Size := 0;
