@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller, Pat Rogers and
+-- Copyright (C) 1994-2001 Grady Booch, David Weller, Pat Rogers and
 -- Simon Wright.
 -- All Rights Reserved.
 --
@@ -18,6 +18,7 @@
 
 -- $Id$
 
+with Ada.Finalization;
 with BC.Support.Nodes;
 with System.Storage_Pools;
 
@@ -35,12 +36,6 @@ package BC.Support.Unbounded is
   type Unb_Node is private;
   -- An unpacked container whose items are stored on the heap.
   -- Items are effectively indexed from 1.
-
-  type Unb_Node_Ref is access all Unb_Node;
-
-  function Create (From : Unb_Node) return Unb_Node_Ref;
-  -- Construct a new unbounded container that is identical to the given
-  -- container
 
   function "=" (Left, Right : Unb_Node) return Boolean;
 
@@ -85,21 +80,19 @@ package BC.Support.Unbounded is
   -- Returns the first index in which the given item is found. Returns 0
   -- if unsuccessful.
 
-  procedure Free (Obj : in out Unb_Node_Ref);
-  -- Dispose of the node referred to, having first cleared it
-
 private
 
   package Nodes is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
-  type Unb_Node is tagged record
+  type Unb_Node is new Ada.Finalization.Controlled with record
     Rep : Nodes.Node_Ref;
     Last : Nodes.Node_Ref;
     Size : Natural := 0;
     Cache : Nodes.Node_Ref;
     Cache_Index : Natural := 0; -- 0 means invalid
   end record;
-  -- We make this type tagged solely so that it's a "by-reference" type (we
-  -- don't want a copy to be passed, we want the actual node).
+
+  procedure Adjust (U : in out Unb_Node);
+  procedure Finalize (U : in out Unb_Node);
 
 end BC.Support.Unbounded;
