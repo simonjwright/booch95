@@ -20,8 +20,8 @@
 with BC.Containers;
 with BC.Containers.Collections;
 with BC.Containers.Collections.Ordered;
--- with BC.Containers.Collections.Ordered.Bounded;
--- with BC.Containers.Collections.Ordered.Dynamic;
+with BC.Containers.Collections.Ordered.Bounded;
+with BC.Containers.Collections.Ordered.Dynamic;
 with BC.Containers.Collections.Ordered.Unbounded;
 with Global_Heap;
 
@@ -33,10 +33,10 @@ package Ordered_Collection_Test_Support is
 
   package Collections is new Base_Collections.Ordered;
 
---   package CB is new Collections.Bounded (Maximum_Size => 100);
+  package CB is new Collections.Bounded (Maximum_Size => 100);
 
---   package CD is new Collections.Dynamic (Storage_Manager => Global_Heap.Pool,
---                                     Storage => Global_Heap.Storage);
+  package CD is new Collections.Dynamic (Storage_Manager => Global_Heap.Pool,
+                                    Storage => Global_Heap.Storage);
 
   package CU is new Collections.Unbounded (Storage_Manager => Global_Heap.Pool,
                                            Storage => Global_Heap.Storage);
