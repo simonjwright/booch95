@@ -43,7 +43,7 @@ package body BC.Containers.Queues.Bounded is
     Bounded_Queue_Nodes.Remove (Q.Rep.all, From);
   end Remove;
 
-  function Available (Q: in Bounded_Queue) return Natural is
+  function Available (Q : in Bounded_Queue) return Natural is
   begin
     return Bounded_Queue_Nodes.Available (Q.Rep.all);
   end Available;
