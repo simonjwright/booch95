@@ -17,6 +17,7 @@
 
 --  $Id$
 
+with Ada.Streams;
 with BC.Containers.Collections.Bounded;
 with BC.Containers.Collections.Unbounded;
 with BC.Support.Standard_Storage;
@@ -33,14 +34,37 @@ package Stream_Test_Support is
       end case;
    end record;
 
-   package Abstract_Containers is new BC.Containers (Item);
+   package Abstract_Item_Containers is new BC.Containers (Item);
 
-   package Abstract_Collections is new Abstract_Containers.Collections;
+   package Abstract_Item_Collections
+   is new Abstract_Item_Containers.Collections;
 
-   package ICB is new Abstract_Collections.Bounded
+   package ICB is new Abstract_Item_Collections.Bounded
      (Maximum_Size => 100);
 
-   package ICU is new Abstract_Collections.Unbounded
+   package ICU is new Abstract_Item_Collections.Unbounded
      (Storage => BC.Support.Standard_Storage.Pool);
+
+   type Base is abstract tagged null record;
+   type Base_Class_P is access Base'Class;
+
+   procedure Write_Base_Class_P
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : Base_Class_P);
+
+   procedure Read_Base_Class_P
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : out Base_Class_P);
+
+   for Base_Class_P'Write use Write_Base_Class_P;
+   for Base_Class_P'Read use Read_Base_Class_P;
+
+   type Brother is new Base with record
+      I : Integer;
+   end record;
+
+   type Sister is new Base with record
+      B : Boolean;
+   end record;
 
 end Stream_Test_Support;
