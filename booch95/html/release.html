@@ -25,7 +25,10 @@ use of semaphores and monitors.
 
 <h3>Implementation changes</h3>
 
-<p>None.
+<p>The support hash table packages on which Bags, Maps and Sets rely
+used default subprogram parameters, which would fail if compiled in
+the presence of (for example) an enumeration type named
+<tt>Location</tt>.
 
 <h3>Documentation changes</h3>
 
