@@ -85,6 +85,7 @@ package BC.Support.Bounded is
   -- if unsuccessful.
 
   procedure Free (Obj : in out Bnd_Node_Ref);
+  -- Dispose of the Node referred to, having first Cleared it
 
 private
 
