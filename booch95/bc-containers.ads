@@ -71,13 +71,23 @@ package BC.Containers is
 
 private
 
-  type Container is abstract new Ada.Finalization.Controlled with null record;
-
   -- We need access to Items; but we must make sure that no actual
   -- allocations occur using this type.
 
   type Item_Ptr is access all Item;
   for Item_Ptr'Storage_Size use 0;
+
+  type Container is abstract new Ada.Finalization.Controlled with null record;
+
+  -- Private primitive operations.
+  -- These should ideally be abstract; instead, we provide implementations,
+  -- but they raise Should_Have_Been_Overridden.
+
+  function Cardinality (C : Container) return Natural;
+
+  procedure Purge (C : in out Container);
+
+  function Item_At (C : Container; Index : Positive) return Item_Ptr;
 
   -- Actual_Iterators are strongly dependent on the concrete Container
   -- implementation. The externally-visible Iterator is implemented as
