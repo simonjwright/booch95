@@ -22,7 +22,13 @@ package BC is
   -- This is the Top level package in the Booch Component Hierarchy.
 
   -- It serves as the repository of all exceptions possible in the
-  -- components (none at present)
+  -- components (none at present).
+
+  Should_Have_Been_Overridden : exception;
+  -- Raised if the Components have failed to override a primitive
+  -- subprogram that should have been overridden for a derived type.
+  -- Used only where the subprogram is private (and therefore can't be
+  -- abstract).
 
 end BC;
 
