@@ -18,6 +18,7 @@
 -- $Id$
 
 with Ada.Text_Io;
+with BC.Containers.Shellsort;
 with BC.Containers.Quicksort;
 with Collection_Test_Support;
 
@@ -40,11 +41,20 @@ procedure Sort_Test is
     New_Line;
   end Print;
 
-  procedure Sort is new Containers.Quicksort
+  procedure SSort is new Containers.Shellsort
      (Container => CU.Collection,
       Length => CU.Length);
 
-  procedure Reverse_Sort is new Containers.Quicksort
+  procedure Reverse_SSort is new Containers.Shellsort
+     (Container => CU.Collection,
+      "<" => ">",
+      Length => CU.Length);
+
+  procedure QSort is new Containers.Quicksort
+     (Container => CU.Collection,
+      Length => CU.Length);
+
+  procedure Reverse_QSort is new Containers.Quicksort
      (Container => CU.Collection,
       "<" => ">",
       Length => CU.Length);
@@ -60,41 +70,45 @@ procedure Sort_Test is
 
 begin
 
+  Put_Line ("Shellsort:");
+
+  CU.Clear (C);
+
   Add (C, "holy_moses");
-  Sort (C);
+  SSort (C);
   Print (C);
-  Reverse_Sort (C);
+  Reverse_SSort (C);
   Print (C);
 
   New_Line;
 
   Add (C, "take_a_look");
-  Sort (C);
+  SSort (C);
   Print (C);
-  Reverse_Sort (C);
+  Reverse_SSort (C);
   Print (C);
 
   New_Line;
   Put_Line ("equal keys, starting from empty");
 
   CU.Clear (C);
-  Sort (C);
+  SSort (C);
   Print (C);
 
   Add (C, "a");
-  Sort (C);
+  SSort (C);
   Print (C);
 
   Add (C, "a");
-  Sort (C);
+  SSort (C);
   Print (C);
 
   Add (C, "a");
-  Sort (C);
+  SSort (C);
   Print (C);
 
   Add (C, "a");
-  Sort (C);
+  SSort (C);
   Print (C);
 
   New_Line;
@@ -102,9 +116,62 @@ begin
   CU.Clear (C);
   Add (C, "b");
   Add (C, "a");
-  Sort (C);
+  SSort (C);
   Print (C);
-  Reverse_Sort (C);
+  Reverse_SSort (C);
+  Print (C);
+
+  New_Line;
+
+  Put_Line ("Quicksort:");
+
+  CU.Clear (C);
+
+  Add (C, "holy_moses");
+  QSort (C);
+  Print (C);
+  Reverse_QSort (C);
+  Print (C);
+
+  New_Line;
+
+  Add (C, "take_a_look");
+  QSort (C);
+  Print (C);
+  Reverse_QSort (C);
+  Print (C);
+
+  New_Line;
+  Put_Line ("equal keys, starting from empty");
+
+  CU.Clear (C);
+  QSort (C);
+  Print (C);
+
+  Add (C, "a");
+  QSort (C);
+  Print (C);
+
+  Add (C, "a");
+  QSort (C);
+  Print (C);
+
+  Add (C, "a");
+  QSort (C);
+  Print (C);
+
+  Add (C, "a");
+  QSort (C);
+  Print (C);
+
+  New_Line;
+  Put_Line ("length 2");
+  CU.Clear (C);
+  Add (C, "b");
+  Add (C, "a");
+  QSort (C);
+  Print (C);
+  Reverse_QSort (C);
   Print (C);
 
 end Sort_Test;
