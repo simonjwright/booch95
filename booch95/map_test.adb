@@ -240,6 +240,14 @@ procedure Map_Test is
     OK := True;
   end Process;
 
+  procedure Process_Modifiable (Item : Character;
+                     Value : in out Chunk_Ptr;
+                     OK : out Boolean) is
+  begin
+    Put_Line ("      Item: " & Item & " Value (RW): " & Image (Value.all));
+    OK := True;
+  end Process_Modifiable;
+
 --| void test_passive_iterator (BC_TMap<Char, CPtr>& m)
 --| {
 --|   Passive_Iterator iter(m);
@@ -251,6 +259,12 @@ procedure Map_Test is
   begin
     Visitor;
   end Test_Passive_Iterator;
+
+  procedure Test_Passive_Modifying_Iterator (M : in out Maps.Map'Class) is
+    procedure Modifier is new Maps.Modify (Process_Modifiable, M);
+  begin
+    Modifier;
+  end Test_Passive_Modifying_Iterator;
 
 --|   Bounded_Char_Chunk_Map map_b_pu1, map_b_pu2;
   Map_B_Pu1, Map_B_Pu2 : MB.Bounded_Map;
@@ -291,6 +305,7 @@ begin
   Put_Line ("   Bounded:");
 --|   test_passive_iterator(map_b_pu1);
   Test_Passive_Iterator (Map_B_Pu1);
+  Test_Passive_Modifying_Iterator (Map_B_Pu1);
 --|   message("   Dynamic:");
 --|   test_passive_iterator(map_d_pu1);
 --|   message("   Unbounded:");
