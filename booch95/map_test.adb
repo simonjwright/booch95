@@ -19,6 +19,7 @@
 
 with Ada.Exceptions;
 with Ada.Text_IO;
+with Assertions;
 with BC;
 with Chunks;
 with Map_Test_Support;
@@ -26,12 +27,12 @@ with Map_Test_Support;
 procedure Map_Test is
 
    use Ada.Text_IO;
+   use Assertions;
    use Map_Test_Support;
    use Containers;
    use Maps;
    use Chunks;
 
-   procedure Assertion (B : Boolean; S : String);
    procedure Process (Key : Character; Item : Chunk_Ptr; OK : out Boolean);
    procedure Process_Modifiable (Key : Character;
                                  Item : in out Chunk_Ptr;
@@ -42,12 +43,54 @@ procedure Map_Test is
    procedure Test_Passive_Modifying_Iterator (M : in out Abstract_Map'Class);
    procedure Test_Simple_Active_Iterator (M : in out Abstract_Map'Class);
 
-   procedure Assertion (B : Boolean; S : String) is
-   begin
-      if not B then
-         Put_Line (S);
-      end if;
-   end Assertion;
+   package Iteration_Check is
+      type Result is record
+         Key : Character;
+         Item : Chunks.Chunk_Ptr;
+      end record;
+      type Results is array (Positive range <>) of Result;
+      procedure Reset;
+      procedure Register (Key : Character; Item : Chunks.Chunk_Ptr);
+      procedure Check (Expected : Results;
+                       Message : String;
+                       Items_Only : Boolean := False);
+   end Iteration_Check;
+
+   package body Iteration_Check is
+
+      Last_Result : Integer := 0;
+
+      The_Results : Results (1 .. 32);
+
+      procedure Reset is
+      begin
+         Last_Result := 0;
+      end Reset;
+
+      procedure Register (Key : Character; Item : Chunks.Chunk_Ptr) is
+      begin
+         Last_Result := Last_Result + 1;
+         The_Results (Last_Result) := (Key => Key, Item => Item);
+      end Register;
+
+      procedure Check (Expected : Results;
+                       Message : String;
+                       Items_Only : Boolean := False) is
+      begin
+         Assertion (Expected'Length = Last_Result,
+                    Message & ", length error");
+         if Items_Only then
+            for I in Expected'Range loop
+               The_Results (I).Key := Expected (I).Key;
+            end loop;
+         end if;
+         if Expected'Length = Last_Result then
+            Assertion (Expected = The_Results (1 .. Last_Result),
+                       Message & ", mismatch");
+         end if;
+      end Check;
+
+   end Iteration_Check;
 
    procedure Test (M1, M2 : in out Abstract_Map'Class) is
    begin
@@ -154,30 +197,38 @@ procedure Map_Test is
    end Test;
 
    procedure Test_Simple_Active_Iterator (M : in out Abstract_Map'Class) is
-      Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
+      Iter : Iterator'Class := New_Iterator (M);
    begin
-      while not Is_Done (Map_Iter) loop
-         Put_Line ("      Key: "
-                   & Current_Key (Map_Iter));
-         Next (Map_Iter);
+      Iteration_Check.Reset;
+      while not Is_Done (Iter) loop
+         Iteration_Check.Register ('x', Current_Item (Iter));
+         Next (Iter);
       end loop;
+      Iteration_Check.Check ((('6', Gitems (6)'Access),
+                              ('7', Gitems (5)'Access),
+                              ('5', Gitems (7)'Access)),
+                             "I01: standard iterator",
+                             Items_Only => True);
    end Test_Simple_Active_Iterator;
 
    procedure Test_Active_Iterator (M : in out Abstract_Map'Class) is
       Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
+      Dummy : Boolean;
    begin
+      Iteration_Check.Reset;
       while not Is_Done (Map_Iter) loop
-         Put_Line ("      Key: "
-                   & Current_Key (Map_Iter)
-                   & " Item: "
-                   & Image (Current_Item (Map_Iter).all));
+         Process (Current_Key (Map_Iter), Current_Item (Map_Iter), Dummy);
          Next (Map_Iter);
       end loop;
+      Iteration_Check.Check ((('6', Gitems (6)'Access),
+                              ('7', Gitems (5)'Access),
+                              ('5', Gitems (7)'Access)),
+                             "I02: active map iterator");
    end Test_Active_Iterator;
 
    procedure Process (Key : Character; Item : Chunk_Ptr; OK : out Boolean) is
    begin
-      Put_Line ("      Key: " & Key & " Item: " & Image (Item.all));
+      Iteration_Check.Register (Key, Item);
       OK := True;
    end Process;
 
@@ -185,7 +236,7 @@ procedure Map_Test is
                                  Item : in out Chunk_Ptr;
                                  OK : out Boolean) is
    begin
-      Put_Line ("      Key: " & Key & " Item (RW): " & Image (Item.all));
+      Iteration_Check.Register (Key, Item);
       OK := True;
    end Process_Modifiable;
 
@@ -193,14 +244,24 @@ procedure Map_Test is
       procedure Visitor is new Maps.Visit (Process);
       Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
    begin
+      Iteration_Check.Reset;
       Visitor (Using => Map_Iter);
+      Iteration_Check.Check ((('6', Gitems (6)'Access),
+                              ('7', Gitems (5)'Access),
+                              ('5', Gitems (7)'Access)),
+                             "I03: passive map iterator");
    end Test_Passive_Iterator;
 
    procedure Test_Passive_Modifying_Iterator (M : in out Abstract_Map'Class) is
       procedure Modifier is new Maps.Modify (Process_Modifiable);
       Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
    begin
+      Iteration_Check.Reset;
       Modifier (Using => Map_Iter);
+      Iteration_Check.Check ((('6', Gitems (6)'Access),
+                              ('7', Gitems (5)'Access),
+                              ('5', Gitems (7)'Access)),
+                             "I04: passive modifying map iterator");
    end Test_Passive_Modifying_Iterator;
 
    type B is record
@@ -289,6 +350,8 @@ begin
    Assertion (MB.Available (The_B.Map_B_Pu2) = 100,
               "** M11: Available space is not correct");
    Put_Line ("Completed map tests");
+
+   Assertions.Report;
 
 exception
    when E : others =>

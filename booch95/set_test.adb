@@ -19,15 +19,16 @@
 
 with Ada.Exceptions;
 with Ada.Text_IO;
+with Assertions;
 with BC;
 with Set_Test_Support;
 
 procedure Set_Test is
 
    use Ada.Text_IO;
+   use Assertions;
    use Set_Test_Support;
 
-   procedure Assertion (B : Boolean; S : String);
    procedure Print_Set (S : in out Sets.Abstract_Set'Class; Named : String);
    procedure Process (Item : Character; OK : out Boolean);
    procedure Process_Modifiable (Item : in out Character; OK : out Boolean);
@@ -37,12 +38,40 @@ procedure Set_Test is
    procedure Test_Passive_Modifying_Iterator
      (S : in out Containers.Container'Class);
 
-   procedure Assertion (B : Boolean; S : String) is
-   begin
-      if not B then
-         Put_Line (S);
-      end if;
-   end Assertion;
+   package Iteration_Check is
+      procedure Reset;
+      procedure Register (C : Character);
+      procedure Check (Expected : String; Message : String);
+   end Iteration_Check;
+
+   package body Iteration_Check is
+
+      Last_Char : Integer := 0;
+
+      Results : String (1 .. 32);
+
+      procedure Reset is
+      begin
+         Last_Char := 0;
+      end Reset;
+
+      procedure Register (C : Character) is
+      begin
+         Last_Char := Last_Char + 1;
+         Results (Last_Char) := C;
+      end Register;
+
+      procedure Check (Expected : String; Message : String) is
+      begin
+         Assertion (Expected'Length = Last_Char,
+                    Message & ", length error");
+         if Expected'Length = Last_Char then
+            Assertion (Expected = Results (1 .. Last_Char),
+                       Message & ", mismatch");
+         end if;
+      end Check;
+
+   end Iteration_Check;
 
    procedure Print_Set (S : in out Sets.Abstract_Set'Class; Named : String) is
       procedure Print (Item : Character; OK : out Boolean);
@@ -192,23 +221,25 @@ procedure Set_Test is
    procedure Test_Active_Iterator (S : in out Sets.Abstract_Set'Class) is
       use Containers; use Sets; use SB;
       Iter : Containers.Iterator'Class := New_Iterator (S);
+      Dummy : Boolean;
    begin
+      Iteration_Check.Reset;
       while not Containers.Is_Done (Iter) loop
-         Put_Line ("      Item: "
-                   & Containers.Current_Item (Iter));
+         Process (Current_Item (Iter), Dummy);
          Containers.Next (Iter);
       end loop;
+      Iteration_Check.Check ("1z", "I01: active iterator");
    end Test_Active_Iterator;
 
    procedure Process (Item : Character; OK : out Boolean) is
    begin
-      Put_Line ("      Item: " & Item);
+      Iteration_Check.Register (Item);
       OK := True;
    end Process;
 
    procedure Process_Modifiable (Item : in out Character; OK : out Boolean) is
    begin
-      Put_Line ("      Item (RW): " & Item);
+      Iteration_Check.Register (Item);
       OK := True;
    end Process_Modifiable;
 
@@ -216,7 +247,9 @@ procedure Set_Test is
       procedure Visitor is new Containers.Visit (Process);
       Iter : Containers.Iterator'Class := Containers.New_Iterator (S);
    begin
+      Iteration_Check.Reset;
       Visitor (Using => Iter);
+      Iteration_Check.Check ("1z", "I02: passive iterator");
    end Test_Passive_Iterator;
 
    procedure Test_Passive_Modifying_Iterator
@@ -224,7 +257,9 @@ procedure Set_Test is
       procedure Modifier is new Containers.Modify (Process_Modifiable);
       Iter : Containers.Iterator'Class := Containers.New_Iterator (S);
    begin
+      Iteration_Check.Reset;
       Modifier (Using => Iter);
+      Iteration_Check.Check ("1z", "I03: passive modifying iterator");
    end Test_Passive_Modifying_Iterator;
 
    Set_B_Pu1, Set_B_Pu2 : SB.Set;
@@ -275,6 +310,8 @@ begin
    Assertion (SB.Available (Set_B_Pu2) = 97,
               "** M14: Available space is not correct");
    Put_Line ("Completed set tests");
+
+   Assertions.Report;
 
 exception
    when E : others =>
