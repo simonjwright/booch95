@@ -39,6 +39,7 @@ bc-filter.ad[bs]
 
 ADA_SOURCE += \
 bc-support-bounded.ad[bs] \
+bc-support-bounded_hash_tables.ad[bs] \
 bc-support-dynamic.ad[bs] \
 bc-support-exceptions.ad[bs] \
 bc-support-hash_tables.ad[bs] \
