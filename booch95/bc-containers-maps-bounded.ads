@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -111,12 +111,13 @@ private
    package Keys is new BC.Support.Bounded_Hash_Tables.Item_Signature
      (Item => Key,
       Item_Ptr => Key_Ptr,
-      Eq => "=");
+      Eq => Maps."=",
+      Hash => Hash);
 
    package Items is new BC.Support.Bounded_Hash_Tables.Value_Signature
      (Value => Item,
       Value_Ptr => Item_Ptr,
-      Eq => "=");
+      Eq => Containers."=");
 
    package Tables is new BC.Support.Bounded_Hash_Tables.Tables
      (Items => Keys,
