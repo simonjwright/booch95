@@ -21,18 +21,17 @@
 --  $Author$
 
 procedure BC.Filter (Input : From; Output : in out To) is
-   procedure Ins (I : Item; OK : out Boolean);
-   pragma Inline (Ins);
-   procedure Filt is new Source.Visit (Ins);
-   procedure Ins (I : Item; OK : out Boolean) is
-   begin
-      if Pass (I) then
-         Add (Output, I);
-      end if;
-      OK := True;
-   end Ins;
    It : Source.Iterator'Class := New_Iterator (Input);
 begin
    Clear (Output);
-   Filt (It);
+   while not Source.Is_Done (It) loop
+      declare
+         I : constant Item := Source.Current_Item (It);
+      begin
+         if Pass (I) then
+            Add (Output, I);
+         end if;
+      end;
+      Source.Next (It);
+   end loop;
 end BC.Filter;

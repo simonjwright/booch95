@@ -1,4 +1,4 @@
---  Copyright (C) 2001 Simon Wright.
+--  Copyright (C) 2001-2002 Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,16 +21,15 @@
 --  $Author$
 
 procedure BC.Copy (Input : From; Output : in out To) is
-   procedure Ins (I : Item; OK : out Boolean);
-   pragma Inline (Ins);
-   procedure Cp is new Source.Visit (Ins);
-   procedure Ins (I : Item; OK : out Boolean) is
-   begin
-      Add (Output, I);
-      OK := True;
-   end Ins;
    It : Source.Iterator'Class := New_Iterator (Input);
 begin
    Clear (Output);
-   Cp (It);
+   while not Source.Is_Done (It) loop
+      declare
+         I : constant Item := Source.Current_Item (It);
+      begin
+         Add (Output, I);
+      end;
+      Source.Next (It);
+   end loop;
 end BC.Copy;
