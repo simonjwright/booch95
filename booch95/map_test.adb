@@ -26,6 +26,8 @@ procedure Map_Test is
 
   use Ada.Text_Io;
   use Map_Test_Support;
+  use Containers;
+  use Maps;
   use Chunks;
 
   procedure Assertion (B : Boolean; S : String) is
@@ -151,8 +153,8 @@ procedure Map_Test is
   end Process;
 
   procedure Process_Modifiable (Item : Character;
-                     Value : in out Chunk_Ptr;
-                     OK : out Boolean) is
+                                Value : in out Chunk_Ptr;
+                                OK : out Boolean) is
   begin
     Put_Line ("      Item: " & Item & " Value (RW): " & Image (Value.all));
     OK := True;
@@ -160,14 +162,16 @@ procedure Map_Test is
 
   procedure Test_Passive_Iterator (M : in out Maps.Map'Class) is
     procedure Visitor is new Maps.Visit (Process);
+    Iter : Iterator := New_Iterator (M);
   begin
-    Visitor (Over_The_Container => M);
+    Visitor (Using => Iter);
   end Test_Passive_Iterator;
 
   procedure Test_Passive_Modifying_Iterator (M : in out Maps.Map'Class) is
     procedure Modifier is new Maps.Modify (Process_Modifiable);
+    Iter : Iterator := New_Iterator (M);
   begin
-    Modifier (Over_The_Container => M);
+    Modifier (Using => Iter);
   end Test_Passive_Modifying_Iterator;
 
   Map_B_Pu1, Map_B_Pu2 : MB.Bounded_Map;
