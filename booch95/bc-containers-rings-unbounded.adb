@@ -102,11 +102,13 @@ package body BC.Containers.Rings.Unbounded is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Unbounded_Ring);
 
-  function New_Iterator (For_The_Ring : Unbounded_Ring) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Ring'Address);
+  function New_Iterator (For_The_Ring : Unbounded_Ring) return Iterator'Class is
+    Result : Ring_Iterator;
   begin
-    return Iterator (SP.Create (new Ring_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Ring'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   procedure Add (R : in out Unbounded_Ring; Elem : Item) is

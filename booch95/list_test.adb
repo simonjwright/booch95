@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -439,7 +439,7 @@ procedure List_Test is
   end Process;
 
   procedure Test_Active_Iterator (L : Container'Class) is
-    Iter : Iterator := New_Iterator (L);
+    Iter : Iterator'Class := New_Iterator (L);
     Success : Boolean;
     Temp : Character;
   begin
@@ -452,13 +452,13 @@ procedure List_Test is
 
   procedure Test_Passive_Iterator (L : Container'Class) is
     procedure Iterate is new Visit (Apply => Process);
-    Iter : Iterator := New_Iterator (L);
+    Iter : Iterator'Class := New_Iterator (L);
   begin
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
   procedure Test_Iterator_Deletion (L : in out Single_List) is
-    Iter : Iterator := New_Iterator (L);
+    Iter : Iterator'Class := New_Iterator (L);
     Delete : Boolean;
   begin
     Clear (L);
@@ -498,7 +498,7 @@ procedure List_Test is
   end Test_Iterator_Deletion;
 
   procedure Test_Iterator_Deletion (L : in out Double_List) is
-    Iter : Iterator := New_Iterator (L);
+    Iter : Iterator'Class := New_Iterator (L);
     Delete : Boolean;
   begin
     Clear (L);

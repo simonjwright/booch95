@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -41,7 +41,7 @@ procedure Ring_Test is
   end Assertion;
 
   procedure Test_Active_Iterator (R : Container'Class) is
-    Iter : Iterator := New_Iterator (R);
+    Iter : Iterator'Class := New_Iterator (R);
     Success : Boolean;
     Temp : Character;
   begin
@@ -54,7 +54,7 @@ procedure Ring_Test is
 
   procedure Test_Passive_Iterator (R : Container'Class) is
     procedure Iterate is new Visit (Apply => Process);
-    Iter : Iterator := New_Iterator (R);
+    Iter : Iterator'Class := New_Iterator (R);
   begin
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
