@@ -135,3 +135,42 @@ begin
 
    end;
 end Iterate;
+
+with Abstract_Car_Containers;
+with Ada.Calendar;
+with BC.Filter;
+with Cars; use Cars;
+with Fleets;
+with My_Fleet; use My_Fleet;
+procedure Filter_Demo is
+
+   function Before (Date : Ada.Calendar.Time) return Fleets.Collection is
+
+      function Wanted (C : Car) return Boolean;
+
+      procedure Choose is new BC.Filter
+        (Item => Car,
+         Source => Abstract_Car_Containers,
+         From => Fleets.Collection,
+         Target => Abstract_Car_Containers,
+         To => Fleets.Collection,
+         Pass => Wanted,
+         Clear => Fleets.Clear,
+         Add => Fleets.Append);
+
+      function Wanted (C : Car) return Boolean is
+         use type Ada.Calendar.Time;
+      begin
+         return C.Registered < Date;
+      end Wanted;
+
+      Result : Fleets.Collection;
+
+   begin
+      Choose (The_Fleet, Result);
+      return Result;
+   end Before;
+
+begin
+   null;
+end Filter_Demo;
