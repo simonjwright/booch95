@@ -18,7 +18,7 @@
 -- $Id$
 
 with Ada.Finalization;
-with Bc.Support.Nodes;
+with BC.Support.Nodes;
 with System.Storage_Pools;
 
 generic
@@ -113,7 +113,7 @@ package BC.Containers.Trees.Binary is
 
 private
 
-  package Nodes is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
+  package Nodes is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
   procedure Purge (Node : in out Nodes.Binary_Node_Ref);
 

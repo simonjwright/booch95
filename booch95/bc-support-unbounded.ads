@@ -59,7 +59,7 @@ package BC.Support.Unbounded is
 
 private
 
-  package Nodes is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
+  package Nodes is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
   type Unb_Node is tagged record
     Rep : Nodes.Node_Ref;
