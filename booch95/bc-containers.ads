@@ -50,6 +50,12 @@ package BC.Containers is
   -- Return a copy of the current Item.
 
   generic
+    with procedure Apply (Elem : in out Item);
+    In_The_Iterator : Iterator;
+  procedure Access_Current_Item;
+  -- Call Apply for the Iterator's current Item.
+
+  generic
     with procedure Apply (Elem : in Item; OK : out Boolean);
     Over_The_Container : Container'Class;
   procedure Visit;
@@ -66,6 +72,12 @@ package BC.Containers is
 private
 
   type Container is abstract new Ada.Finalization.Controlled with null record;
+
+  -- We need access to Items; but we must make sure that no actual
+  -- allocations occur using this type.
+
+  type Item_Ptr is access all Item;
+  for Item_Ptr'Storage_Size use 0;
 
   -- Actual_Iterators are strongly dependent on the concrete Container
   -- implementation. The externally-visible Iterator is implemented as
@@ -86,6 +98,8 @@ private
   function Is_Done (Obj : Actual_Iterator) return Boolean is abstract;
 
   function Current_Item (Obj : Actual_Iterator) return Item is abstract;
+
+  function Current_Item (Obj : Actual_Iterator) return Item_Ptr is abstract;
 
   package SP is new BC.Smart (T => Actual_Iterator'Class, P => Iterator_P);
 
