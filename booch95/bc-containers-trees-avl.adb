@@ -228,22 +228,47 @@ package body BC.Containers.Trees.AVL is
     end case;
   end Balance_Right;
 
-  procedure Delete (T1, T2 : in out Nodes.AVL_Node_Ref;
-                    Decreased : in out Boolean) is
+  -- On entry, To_Be_Deleted is the node which contains the value that
+  -- is to be deleted. Candidate_Replacement starts off as the left
+  -- child of To_Be_Deleted, but the procedure recurses until
+  -- Candidate_Replacement is the rightmost (largest) child of the
+  -- left subtree of To_Be_Deleted.
+  --
+  -- The value at Candidate_Replacement is then transferred to the
+  -- node To_Be_Deleted, and the pointer To_Be_Deleted is made to
+  -- point to the rightmost child (so that that what eventually gets
+  -- deleted is that rightmost child).
+  --
+  -- The tree is rebalanced as the recursion unwinds.
+  procedure Delete
+     (To_Be_Deleted, Candidate_Replacement : in out Nodes.AVL_Node_Ref;
+      Decreased : in out Boolean) is
     use type Nodes.AVL_Node_Ref;
   begin
-    if T2.Right /= null then
-      Delete (T1, T2.Right, Decreased);
-      if T2.Left = null and then T2.Right = null then
-        T2.Balance := Nodes.Middle;
-      end if;
-      if Decreased then
-        Balance_Right (T2, Decreased);
+    if Candidate_Replacement.Right /= null then
+      -- Recurse down the right branch
+      Delete (To_Be_Deleted, Candidate_Replacement.Right, Decreased);
+      if Candidate_Replacement.Left = null
+         and then Candidate_Replacement.Right = null then
+        Candidate_Replacement.Balance := Nodes.Middle;
+      elsif Decreased then
+        Balance_Right (Candidate_Replacement, Decreased);
       end if;
     else
-      T1.Element := T2.Element;
-      T1 := T2;
-      T2 := T2.Left;
+      -- We've found the rightmost child.
+      -- Copy the value there to the node that contained the value
+      -- to be deleted.
+      To_Be_Deleted.Element := Candidate_Replacement.Element;
+      -- Replace the pointer to the node that contained the value to
+      -- be deleted with a pointer to the rightmost child of the left
+      -- subtree (no longer needed, and to be deleted by the caller).
+      To_Be_Deleted := Candidate_Replacement;
+      -- Candidate_Replacement is the actual pointer in the parent
+      -- node; it needs to point to the left subtree, if any, of the
+      -- node that was the rightmost child and which we are about to
+      -- delete.
+      Candidate_Replacement := Candidate_Replacement.Left;
+      -- We've definitely reduced the depth.
       Decreased := True;
     end if;
   end Delete;
