@@ -21,77 +21,47 @@ package body BC.Containers is
 
   procedure Reset (Obj : in out Iterator) is
   begin
-    if Cardinality (Obj.C.all) > 0 then
-      Obj.Index := 1;
-    else
-      Obj.Index := -1;
-    end if;
+    Reset (SP.Value (SP.Pointer (Obj)).all);
   end Reset;
 
   procedure Next (Obj : in out Iterator) is
   begin
-    Obj.Index := Obj.Index + 1;
+    Next (SP.Value (SP.Pointer (Obj)).all);
   end Next;
 
   function Is_Done (Obj : Iterator) return Boolean is
   begin
-    return (Obj.Index < 0) or else (Obj.Index > Cardinality (Obj.C.all));
+    return Is_Done (SP.Value (SP.Pointer (Obj)).all);
   end Is_Done;
 
   function Current_Item (Obj : Iterator) return Item is
   begin
-    return Item_At (Obj.C.all, Obj.Index).all;
+    return Current_Item (SP.Value (SP.Pointer (Obj)).all);
   end Current_Item;
 
-  function Current_Item (Obj : Iterator) return Item_Ptr is
+  procedure Visit is
+    It : Iterator := New_Iterator (Over_The_Container);
+    Success : Boolean;
   begin
-    return Item_At (Obj.C.all, Obj.Index);
-  end Current_Item;
+    while not Is_Done (It) loop
+      Apply (Current_Item (It), Success);
+      exit when not Success;
+      Next (It);
+    end loop;
+  end Visit;
 
-  function Visit (Obj : access Passive_Iterator) return Boolean is
-    Iter : Iterator (Obj.C);
+  procedure Modify is
+    It : Iterator := New_Iterator (Over_The_Container);
     Temp : Item;
     Success : Boolean;
   begin
-    while not Is_Done (Iter) loop
-      Temp := Current_Item (Iter);
+    raise Program_Error;
+    while not Is_Done (It) loop
+      Temp := Current_Item (It);
       Apply (Temp, Success);
-      if Success then
-        Next (Iter);
-      else
-        return False;
-      end if;
+      exit when not Success;
+      Next (It);
     end loop;
-    return True;
-  end Visit;
-
-  function Modify (Obj : access Passive_Iterator) return Boolean is
-    Iter : Iterator (Obj.C);
-    Temp : Item_Ptr;
-    Success : Boolean;
-  begin
-    while not Is_Done (Iter) loop
-      Temp := Current_Item (Iter);
-      Apply (Temp, Success);
-      if Success then
-        Next (Iter);
-      else
-        return False;
-      end if;
-    end loop;
-    return True;
   end Modify;
-
-  function Item_At (Obj : Container; Index : Natural) return Item_Ptr is
-  begin
-    raise Should_Have_Been_Overridden;
-    return null;
-  end Item_At;
-
-  function Cardinality (Obj : Container) return Integer is
-  begin
-    raise Should_Have_Been_Overridden;
-    return 0;
-  end Cardinality;
 
 end BC.Containers;
