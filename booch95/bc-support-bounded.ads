@@ -34,11 +34,6 @@ package BC.Support.Bounded is
   -- type.  As such, it is not intended to be used directly by the
   -- end-user.
 
-  type Bnd_Node_Ref is access all Bnd_Node;
-
-  function Create (From : in Bnd_Node) return Bnd_Node_Ref;
-  -- Construct a new bounded container that is identical to the given container
-
   procedure Clear (Obj : in out Bnd_Node);
   -- Empty the container of all Items
 
@@ -85,9 +80,6 @@ package BC.Support.Bounded is
                      Start : in Positive := 1) return Natural;
   -- Returns the first index in which the given item is found. Returns 0
   -- if unsuccessful.
-
-  procedure Free (Obj : in out Bnd_Node_Ref);
-  -- Dispose of the Node referred to, having first Cleared it
 
   pragma Inline (Insert);
   pragma Inline (Append);
