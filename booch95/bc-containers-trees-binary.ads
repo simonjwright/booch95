@@ -19,8 +19,12 @@
 
 with Ada.Finalization;
 with Bc.Support.Nodes;
+with System.Storage_Pools;
 
 generic
+  type Storage_Manager (<>)
+  is new System.Storage_Pools.Root_Storage_Pool with private;
+  Storage : in out Storage_Manager;
 package BC.Containers.Trees.Binary is
 
   type Binary_Tree is new Ada.Finalization.Controlled with private;
@@ -60,13 +64,12 @@ package BC.Containers.Trees.Binary is
 
 private
 
-  package Nodes is new Bc.Support.Nodes (Item);
-  use Nodes;
+  package Nodes is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
 
-  procedure Purge (Node : in out Binary_Node_Ref);
+  procedure Purge (Node : in out Nodes.Binary_Node_Ref);
 
   type Binary_Tree is new Ada.Finalization.Controlled with record
-    Rep : Binary_Node_Ref;
+    Rep : Nodes.Binary_Node_Ref;
   end record;
 
   procedure Initialize (Obj : in out Binary_Tree);
