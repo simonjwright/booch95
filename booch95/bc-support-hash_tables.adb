@@ -50,28 +50,6 @@ package body BC.Support.Hash_Tables is
 --|   operator=(t);
 --| }
 --|
---| template<class Item, class Value, BC_Index Buckets,
---|          class ItemContainer, class ValueContainer>
---| BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>&
---|   BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>::
---|     operator=(const BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>& t)
---| {
---|   if (this == &t)
---|     return *this;
---|   else {
---|     Clear();
---|     fHash = t.fHash;
---|     BC_Assert((fHash != 0), BC_XIsNull("BC_TTable::operator=", BC_kNull));
---|     for (BC_Index bucketIndex = 0; (bucketIndex < Buckets); bucketIndex++)
---|       for (BC_Index index = 0; (index < t.fItemRep[bucketIndex].Length()); index++) {
---|         BC_Index bucket = fHash(t.fItemRep[bucketIndex][index]) % Buckets;
---|         fItemRep[bucket].Append(t.fItemRep[bucketIndex][index]);
---|         fValueRep[bucket].Append(t.fValueRep[bucketIndex][index]);
---|       }
---|     fSize = t.fSize;
---|     return *this;
---|   }
---| }
 
 --| template<class Item, class Value, BC_Index Buckets,
 --|          class ItemContainer, class ValueContainer>
@@ -328,6 +306,36 @@ package body BC.Support.Hash_Tables is
       return P.all'Access;
     end;
   end Value_Bucket;
+
+--| template<class Item, class Value, BC_Index Buckets,
+--|          class ItemContainer, class ValueContainer>
+--| BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>&
+--|   BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>::
+--|     operator=(const BC_TTable<Item, Value, Buckets, ItemContainer, ValueContainer>& t)
+--| {
+--|   if (this == &t)
+--|     return *this;
+--|   else {
+--|     Clear();
+--|     fHash = t.fHash;
+--|     BC_Assert((fHash != 0), BC_XIsNull("BC_TTable::operator=", BC_kNull));
+--|     for (BC_Index bucketIndex = 0; (bucketIndex < Buckets); bucketIndex++)
+--|       for (BC_Index index = 0; (index < t.fItemRep[bucketIndex].Length()); index++) {
+--|         BC_Index bucket = fHash(t.fItemRep[bucketIndex][index]) % Buckets;
+--|         fItemRep[bucket].Append(t.fItemRep[bucketIndex][index]);
+--|         fValueRep[bucket].Append(t.fValueRep[bucketIndex][index]);
+--|       }
+--|     fSize = t.fSize;
+--|     return *this;
+--|   }
+--| }
+  procedure Adjust (T : in out Table) is
+  begin
+    for B in 1 .. Buckets loop
+      T.Items (B) := Create (T.Items (B)).all;
+      T.Values (B) := Create (T.Values (B)).all;
+    end loop;
+  end Adjust;
 
   procedure Finalize (T : in out Table) is
   begin
