@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -44,8 +44,6 @@ package body BC.Support.Unbounded is
 
   procedure Delete_Node is new
      Ada.Unchecked_Deallocation (Nodes.Node, Nodes.Node_Ref);
-  procedure Delete_Unb_Node is new
-     Ada.Unchecked_Deallocation (Unb_Node, Unb_Node_Ref);
 
   procedure Update_Cache (Obj : in out Unb_Node; Index : Positive) is
   begin
@@ -76,25 +74,6 @@ package body BC.Support.Unbounded is
       Obj.Cache_Index := Index;
     end;
   end Update_Cache;
-
-  function Create (From : Unb_Node) return Unb_Node_Ref is
-    Obj : Unb_Node_Ref := new Unb_Node;
-    Tmp : Nodes.Node_Ref := From.Last;
-  begin
-    Obj.Size := From.Size;
-    if Tmp /= null then
-      Obj.Last := Nodes.Create (Tmp.Element, Previous => null, Next => null);
-      Obj.Rep := Obj.Last;
-      Tmp := Tmp.Previous;  -- move to previous node from orig list
-      while Tmp /= null loop
-        Obj.Rep := Nodes.Create (Tmp.Element,
-                                 Previous => null,
-                                 Next => Obj.Rep);
-        Tmp := Tmp.Previous;
-      end loop;
-    end if;
-    return Obj;
-  end Create;
 
   function "=" (Left, Right : in Unb_Node) return Boolean is
   begin
@@ -378,16 +357,33 @@ package body BC.Support.Unbounded is
     return 0;
   end Location;
 
-  procedure Free (Obj : in out Unb_Node_Ref) is
+  procedure Adjust (U : in out Unb_Node) is
+    Tmp : Nodes.Node_Ref := U.Last;
+  begin
+    if Tmp /= null then
+      U.Last := Nodes.Create (Tmp.Element, Previous => null, Next => null);
+      U.Rep := U.Last;
+      Tmp := Tmp.Previous;  -- move to previous node from orig list
+      while Tmp /= null loop
+        U.Rep := Nodes.Create (Tmp.Element,
+                               Previous => null,
+                               Next => U.Rep);
+        Tmp := Tmp.Previous;
+      end loop;
+    end if;
+    U.Cache := null;
+    U.Cache_Index := 0;
+  end Adjust;
+
+  procedure Finalize (U : in out Unb_Node) is
     Ptr : Nodes.Node_Ref;
   begin
     -- code to delete Rep copied from Clear()
-    while Obj.Rep /= null loop
-      Ptr := Obj.Rep;
-      Obj.Rep := Obj.Rep.Next;
+    while U.Rep /= null loop
+      Ptr := U.Rep;
+      U.Rep := U.Rep.Next;
       Delete_Node (Ptr);
     end loop;
-    Delete_Unb_Node (Obj);
-  end Free;
+  end Finalize;
 
 end BC.Support.Unbounded;
