@@ -204,7 +204,8 @@ TEST_SRC += stack_test.ad[bs] stack_test_support.ad[bs]
 stack_test: force
 
 TESTABLE += stream_test
-TEST_SRC += stream_test.ad[bs] stream_test_support.ad[bs]
+TEST_SRC += stream_test.ad[bs] stream_test_support.ad[bs] \
+stream_test_support-tc[bdu].ad[bs]
 stream_test: force
 
 ADA_SOURCE += \
