@@ -261,8 +261,6 @@ package body BC.Containers.Lists.Double is
     end if;
     if Curr.Count > 1 then
       Curr.Count := Curr.Count - 1;
-      L.Rep := Curr.Next;
-      Curr.Next := null;
     else
       Double_Nodes.Delete (Curr);
     end if;
@@ -652,11 +650,34 @@ package body BC.Containers.Lists.Double is
   end Current_Item;
 
   procedure Delete_Item_At (It : Double_List_Iterator) is
+    Prev : Double_Nodes.Double_Node_Ref;
+    Curr : Double_Nodes.Double_Node_Ref := It.L.Rep;
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    raise BC.Not_Yet_Implemented;
+    while Curr /= null and then Curr /= It.Index loop
+      Prev := Curr;
+      Curr := Curr.Next;
+    end loop;
+    Assert (Curr /= null,
+            BC.Range_Error'Identity,
+            "Delete_Item_At",
+            BSE.Invalid_Index);
+    It.Relay.Reference.Index := Curr.Next;
+    if Prev /= null then
+      Prev.Next := Curr.Next;
+    else
+      It.L.Rep := Curr.Next;
+    end if;
+    if Curr.Next /= null then
+      Curr.Next.Previous := Prev;
+    end if;
+    if Curr.Count > 1 then
+      Curr.Count := Curr.Count - 1;
+    else
+      Double_Nodes.Delete (Curr);
+    end if;
   end Delete_Item_At;
 
 end BC.Containers.Lists.Double;
