@@ -71,8 +71,6 @@ graphs, and binary, multiway, and AVL trees.
 
 <LI>Idioms for iteration
 
-<LI>Synchronization forms
-
 </UL>
 
 <p>These patterns have evolved in a way that each language feature is used
@@ -167,10 +165,6 @@ see later discussions).  The most recently accessed item is cached.
 
 </DL>
 
-<p>There is also variations for the presence of multiple threads of
-control.  A component can take on a form of Sequential, Guarded, or
-Synchronous. These forms will be discussed later.
-
 
 <!---------------------------------------------------------------------->
 
@@ -184,11 +178,6 @@ derivation:
 
 <p>(Each level is a derivation via inheritance. Each class is a
 generic using Item as the container parameter)
-
-<p>The Guarded forms are created by instantiating <tt>BC.Guarded</tt>
-with the concrete form, whereas the Synchronized forms have to be
-provided individually.
-
 
 <!---------------------------------------------------------------------->
 
@@ -305,100 +294,47 @@ efficiency.
 <!---------------------------------------------------------------------->
 
 
-<H2><A NAME="synchronization">Synchronization</A></H2>
+<h2><a name="synchronization">Synchronization</a></h2>
 
-<p>Those components that provide structural sharing
-("<i>polylithic</i>") exist only in unprotected forms. Concurrent
-access by multiple tasks requires the user to provide her own access
-control.
+<p>The Components don't provide forms that are directly suitable for
+use in concurrent programs. This is mainly because it's not possible
+to support all the ways that people might want to use them.
 
-<p>Other components provide access control, when required, in one of
-two forms:
+<p>You'll probably want to use the Components to implement your own
+abstractions, so it's best to provide your own wrappers using
+protected types and tasks as needed.
 
-<ul>
+<p>The package <tt>BC.Support.Synchronization</tt> provides Semaphores
+and Monitors which may be helpful.
 
-<li>guarded
-
-<li>synchronized
-
-</ul>
-
-<h3>Guarded forms</h3>
-
-<p>Clients of guarded objects must follow the simple protocol of first
-Seizing the object, operating on it, and then Releasing it (even if
-exceptions occur).
-
-<p>Seizing a guarded object and failing to release it blocks the
-object's use indefinitely; releasing an object never seized is
-improper; and ignoring the protocol altogether is likely to result in
-interleaved tasks corrupting the state of the object.
-
-<p>Guarded forms are created by instantiating the package
-<tt>BC.Containers.Guarded</tt> with
-
-<ul>
-
-<li> a Container derived from BC.Containers.Container (ie, any of the
-supported Containers)
-
-<li> a type derived from <tt>Semaphore_Base</tt> (in
-<tt>BC.Support.Synchronisation</tt>)
-
-</ul>
-
-A standard <tt>Semaphore</tt> is supplied, using which will cause each
-object to have its own guard; an alternative possibility would be to
-create a new <tt>Semaphore</tt> type such that each object of that
-type accesses a common actual Semaphore. Using such a strategy, a
-global lock could be obtained on a whole group of objects in one
-operation.
-
-<p><font color="red"><em>Note particularly</em></font> that the
-standard Guard <font color="red"><em>will not work as you
-expect</em></font> for "polylithic" structures (Graphs, Lists, Binary
-and Multiway Trees).
-
-<h3>Synchronized forms</h3>
-
-<p>For synchronized objects, each operation on the object becomes an
-atomic transaction; clients don't have to worry about maintaining the
-proper protocol.
-
-<p>This is very much easier for the developer; however, if it's
-necessary to invoke several operations on one object as a single
-atomic transaction, the Guarded protocol should be used.
 
 <!---------------------------------------------------------------------->
 
 
 <H2><A NAME="conclusion">Conclusion</A></H2>
 
-<p>Here's a table of the components and the forms to be supported
-(U=Unbounded, B=Bounded, D=Dynamic, G=Guarded, S=Synchronized).  The
-available components are shown in <font color="red">red</font>. Those
-for which it's appropriate to use the standard Guard are marked <font
-color="green">G</font>.
+<p>Here's a table of the components and the forms that are supported
+(U=Unbounded, B=Bounded, D=Dynamic).
 
 <PRE>
-Bags         : <font color="red">UBD</font><font color="green">G</font>S
-Collections  : <font color="red">UBD</font><font color="green">G</font>S
-  (ordered)  : <font color="red">UBD</font><font color="green">G</font>S
-Dequeues     : <font color="red">UBD</font><font color="green">G</font>S
+Bags         : <font color="red">UBD</font>
+Collections  : <font color="red">UBD</font>
+  (ordered)  : <font color="red">UBD</font>
+Dequeues     : <font color="red">UBD</font>
 Graphs
   Directed   : <font color="red">U</font>
   Undirected : <font color="red">U</font>
 Lists
   Single     : <font color="red">U</font>
   Double     : <font color="red">U</font>
-Maps         : <font color="red">UBD</font><font color="green">G</font><font color="red">S</font>
-Queues       : <font color="red">UBD</font><font color="green">G</font><font color="red">S</font>
-  (ordered)  : <font color="red">UBD</font><font color="green">G</font>S
-Rings        : <font color="red">UBD</font><font color="green">G</font>S
-Sets         : <font color="red">UBD</font><font color="green">G</font>S
-Stacks       : <font color="red">UBD</font><font color="green">G</font>S
+Maps         : <font color="red">UBD</font>
+Queues       : <font color="red">UBD</font>
+  (ordered)  : <font color="red">UBD</font>
+Rings        : <font color="red">UBD</font>
+Sets         : <font color="red">UBD</font>
+Stacks       : <font color="red">UBD</font>
 Trees
-  AVL        : <font color="red">U</font><font color="green">G</font>
+  AVL        : <font color="red">U</font>
   Binary     : <font color="red">U</font>
   Multiway   : <font color="red">U</font>
 </PRE>
