@@ -1,0 +1,277 @@
+<!-- $Id$ -->
+<html>
+<head>
+<title>The Ada95 Booch Components (Case Study)</title>
+</head>
+<body bgcolor="#ffffff">
+<h1><img src="ada95lgo.gif" alt="The Ada 95 Booch Components"></h1>
+<i>Case Study</i>
+
+<p>The Booch Components are a complex whole, and the purpose of this
+note is to provide an initial introduction to their use.
+
+<p><img src="greenline.gif" alt="--" width="600" height="4"> </p>
+
+<ul>
+<li><a href="#example">The example</a>
+<li><a href="#which-components">Which components to use?</a>
+<li><a href="#instantiation">How do I instantiate them?</a>
+<li><a href="#what-to-do">What can I do with them?</a>
+<li><a href="#other-components">What other Components might be useful?</a>
+<li><a href="#forms">What are these "Forms"?</a>
+</ul>
+
+<p><img src="greenline.gif" alt="--" width="600" height="4"> </p>
+
+<h2><a name="example">The example</a></h2>
+
+<img src="car-fleet.jpg" alt="Car belongs to Fleet"/>
+
+<p>In the example, a Car has two attributes, the Plate (the Index
+Mark; my first car's was <tt>8493KC</tt>) and the Model name (it was a
+Vauxhall Cresta).
+
+<pre>
+   package Cars is
+
+      package Plate_Strings
+        is new Ada.Strings.Bounded.Generic_Bounded_Length (10);
+      subtype Plate_String
+        is Plate_Strings.Bounded_String;
+
+      package Model_Strings
+        is new Ada.Strings.Bounded.Generic_Bounded_Length (30);
+      subtype Model_String
+        is Model_Strings.Bounded_String;
+
+      type Car is record
+	 Plate : Plate_String;
+	 Model : Model_String;
+      end record;
+
+   end Cars;
+</pre>
+
+<p>A company's Fleet holds a number of Cars.
+
+<h2><a name="which-components">Which components to use?</a></h2>
+
+<p>We're clearly going to need some sort of container to implement
+Fleet.
+
+<p>If you just want a standard container to support iteration,
+filtering and sorting, use Collections. The List components are much
+more complex than you'll need.
+
+<p>Later, we'll look at Maps.
+
+<h2><a name="instantiation">How do I instantiate them?</a></h2>
+
+<h3><a name="separate-instantiation">Separate instantiation</a></h3>
+
+<p>The first thing to do is to instantiate the top-level abstract
+Containers for Car:
+
+<pre>
+   with BC.Containers;
+   with Cars;
+   package Abstract_Car_Containers
+      is new BC.Containers (Cars);
+</pre>
+
+<p>Next, using the new Abstract_Car_Containers, instantiate the
+abstract Collections:
+
+<pre>
+   with Abstract_Car_Containers;
+   with BC.Containers.Collections;
+   package Abstract_Car_Collections
+     is new Abstract_Car_Containers.Collections;
+</pre>
+
+<p>You now have to choose the representation to be used for the
+concrete Collection. To start with, assume that you'll never have more
+than 30 Cars to deal with. This means that you can use the Bounded
+form.
+
+<pre>
+   with Abstract_Car_Collections;
+   with BC.Containers.Collections.Bounded;
+   package Fleets
+     is new Abstract_Car_Collections.Bounded (Maximum_Size => 30);
+</pre>
+
+You now need to create your Fleet:
+
+<pre>
+   with Fleets;
+   package My_Fleet is
+      The_Fleet : Fleets.Collection;
+   end My_Fleet;
+</pre>
+
+<h3>Grouped instantiation</h3>
+
+<p>You might find it more convenient to do the instantiations in one
+place:
+
+<pre>
+   with BC.Containers;
+   with BC.Containers.Collections;
+   with BC.Containers.Collections.Bounded;
+   with Cars;
+   package My_Fleet is
+
+      package Abstract_Car_Containers
+	 is new BC.Containers (Cars);
+
+      package Abstract_Car_Collections
+	is new Abstract_Car_Containers.Collections;
+
+      package Fleets
+	is new Abstract_Car_Collections.Bounded (Maximum_Size => 30);
+
+      The_Fleet : Fleets.Collection;
+
+   end My_Fleet;
+</pre>
+
+<p>or even to make the use of the Components private:
+
+<pre>
+   with BC.Containers;
+   with BC.Containers.Collections;
+   with BC.Containers.Collections.Bounded;
+   with Cars;
+   package My_Fleet is
+
+      -- subprograms to add, find, and delete Cars
+
+   private
+
+      package Abstract_Car_Containers
+	 is new BC.Containers (Cars);
+
+      package Abstract_Car_Collections
+	is new Abstract_Car_Containers.Collections;
+
+      package Fleets
+	is new Abstract_Car_Collections.Bounded (Maximum_Size => 30);
+
+      The_Fleet : Fleets.Collection;
+
+   end My_Fleet;
+</pre>
+
+<h2><a name="what-to-do">What can I do with them?</a></h2>
+
+<p>Aside from keeping things in Collections, there are other
+possibilities:
+
+<ul>
+<li><a href="#iteration">iteration</a>,
+<li><a href="#selection">selection</a>, and
+<li><a href="#sorting">sorting</a>.
+</ul>
+
+<h3><a name="iteration">Iteration</a></h3>
+
+<p>Two forms of iteration are supported: open and closed. Both require
+the creation of Iterators.
+
+<p>With open iterators, you explicitly advance
+the iterator to the next element in the collection it references,
+until it's done; with closed iterators, you supply a procedure which
+gets called for each element in the collection.
+
+<p>Considering the packages declared in the discussion on <a
+href="#separate-instantiation">separate instantiation</a> above, the
+operations on iterators are all defined in
+<tt>Abstract_Car_Containers</tt>, while actual iterators can only be
+created by the concrete package:
+
+<pre>
+   declare
+
+      It : Abstract_Car_Containers.Iterator'Class
+	:= Fleets.New_Iterator (The_Fleet);
+
+   begin
+
+      while not Abstract_Car_Containers.Done (It) loop
+
+	 declare
+	    C : Car := Abstract_Car_Containers.Current_Item (It);
+	 begin
+	    -- do something with C
+	 end;
+
+	 Abstract_Car_Containers.Next (It);
+
+      end loop;
+
+   end;
+</pre>
+
+A closed-iterator version of the same would look like
+
+<pre>
+   declare
+
+      procedure Process_Car (C : Car; OK : out Boolean);
+
+      procedure Process_Fleet
+        is new Abstract_Car_Containers.Visit (Process_Car);
+
+      procedure Process_Car (C : Car; OK : out Boolean) is
+      begin
+
+         OK := True; -- unless you want the iteration to stop early
+
+	 -- do something with C
+
+      end Process_Car;
+
+      It : Abstract_Car_Containers.Iterator'Class
+	:= Fleets.New_Iterator (The_Fleet);
+
+   begin
+
+      Process_Fleet (It);
+
+   end;
+</pre>
+
+<h3><a name="selection">Selection</a></h3>
+
+<p><i>This will be a discussion on the use of <tt>BC.Filter</tt>.</i>
+
+<h3><a name="sorting">Sorting</a></h3>
+
+<p><i>This will be a discussion on the use of
+<tt>BC.Containers.Quicksort</tt> and
+<tt>BC.Containers.Shellsort</tt>.</i>
+
+<h2><a name="other-components">What other Components might be
+useful?</a></h2>
+
+<p><i>This will be a discussion of Maps and Sets, I think, with a
+passing glance at Queues.</i>
+
+<h2><a name="forms">What are these "Forms"?</a></h2>
+
+<p><i>This will be a discussion of Bounded vs Dynamic vs Unbounded. I
+guess it should cover Storage Management as well.</i>
+
+<p><img src="greenline.gif" alt="--" width="600" height="4"> </p>
+
+<p><a href="index.html">[index]</a></p>
+
+<p><i>
+<script>
+document.write("Last update: ");
+document.write(document.lastModified);
+</script>
+</i></p>
+</body>
+</html>
