@@ -73,12 +73,7 @@ private
                                Storage => Storage);
 
   type Stack is new Abstract_Stack with record
-    Rep : Stack_Nodes.Unb_Node_Ref
-       := new Stack_Nodes.Unb_Node;
+    Rep : Stack_Nodes.Unb_Node;
   end record;
-
-  procedure Initialize (S : in out Stack);
-  procedure Adjust (S : in out Stack);
-  procedure Finalize (S : in out Stack);
 
 end BC.Containers.Stacks.Unbounded;

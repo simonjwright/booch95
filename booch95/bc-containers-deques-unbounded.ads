@@ -81,14 +81,9 @@ private
                                Storage => Storage);
 
   type Deque is new Abstract_Deque with record
-    Rep : Deque_Nodes.Unb_Node_Ref
-       := new Deque_Nodes.Unb_Node;
+    Rep : Deque_Nodes.Unb_Node;
   end record;
 
   function Item_At (D : Deque; Index : Positive) return Item_Ptr;
-
-  procedure Initialize (D : in out Deque);
-  procedure Adjust (D : in out Deque);
-  procedure Finalize (D : in out Deque);
 
 end BC.Containers.Deques.Unbounded;
