@@ -42,8 +42,8 @@ procedure Stack_Test is
     end if;
   end Assertion;
 
-  procedure Test_Active_Iterator (L : Container'Class) is
-    Iter : Iterator'Class := New_Iterator (L);
+  procedure Test_Active_Iterator (S : Container'Class) is
+    Iter : Iterator'Class := New_Iterator (S);
     Success : Boolean;
     Temp : Character;
   begin
