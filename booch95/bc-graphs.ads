@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -67,53 +67,57 @@ package BC.Graphs is
   -- Note that Containers contain just one sort of Item; Graphs aren't
   -- therefore Containers.
 
-  type Graph is abstract new Ada.Finalization.Limited_Controlled with private;
-  type Graph_Ptr is access all Graph'Class;
+  type Abstract_Graph
+    is abstract new Ada.Finalization.Limited_Controlled with private;
+  type Graph_Ptr is access all Abstract_Graph'Class;
 
-  type Vertex is abstract new Ada.Finalization.Controlled with private;
+  type Abstract_Vertex
+    is abstract new Ada.Finalization.Controlled with private;
 
-  type Arc is abstract new Ada.Finalization.Controlled with private;
+  type Abstract_Arc is abstract new Ada.Finalization.Controlled with private;
 
   ----------------------
   -- Graph operations --
   ----------------------
 
-  procedure Clear (G : in out Graph);
+  procedure Clear (G : in out Abstract_Graph);
   -- Destroy all the vertices in the graph, and by implication, all the
   -- arcs in the graph. The semantics of destroy are such that any aliased
   -- vertices and arcs are not eliminated from the graph, because to do so
   -- would introduce dangling references.
 
-  procedure Create_Vertex (G : in out Graph;
-                           V : in out Vertex'Class;
+  procedure Create_Vertex (G : in out Abstract_Graph;
+                           V : in out Abstract_Vertex'Class;
                            I : Vertex_Item);
   -- Create a new vertex and add it to the graph, setting the second
   -- argument of this function as an alias to this new vertex.
 
   -- Arc creation is provided in concrete derivations.
 
-  procedure Destroy_Vertex (G : in out Graph;
-                            V : in out Vertex'Class);
+  procedure Destroy_Vertex (G : in out Abstract_Graph;
+                            V : in out Abstract_Vertex'Class);
   -- Destroy the given vertex and any associated arcs. If the vertex has no
   -- other aliases, eliminate it from the graph.
 
-  procedure Destroy_Arc (G : in out Graph;
-                         A : in out Arc'Class);
+  procedure Destroy_Arc (G : in out Abstract_Graph;
+                         A : in out Abstract_Arc'Class);
   -- Destroy the given arc and any associated vertices. If the arc has no
   -- other aliases, eliminate it from the graph.
 
-  function Number_Of_Vertices (G : Graph) return Natural;
+  function Number_Of_Vertices (G : Abstract_Graph) return Natural;
   -- Return the number of vertices in the graph.
 
-  function Is_Empty (G : Graph) return Boolean;
+  function Is_Empty (G : Abstract_Graph) return Boolean;
   -- Return True if and only if the graph does not contain any vertices or
   -- arcs.
 
-  function Is_Member (G : Graph; V : Vertex'Class) return Boolean;
+  function Is_Member (G : Abstract_Graph;
+                      V : Abstract_Vertex'Class) return Boolean;
   -- Return True if and only if the given vertex is not null and denotes a
   -- vertex in the graph.
 
-  function Is_Member (G : Graph; A : Arc'Class) return Boolean;
+  function Is_Member (G : Abstract_Graph;
+                      A : Abstract_Arc'Class) return Boolean;
   -- Return True if and only if the given arc is not null and denotes an
   -- arc in the graph.
 
@@ -121,62 +125,62 @@ package BC.Graphs is
   -- Vertex operations --
   -----------------------
 
-  function "=" (L, R : Vertex) return Boolean;
+  function "=" (L, R : Abstract_Vertex) return Boolean;
   -- Return True if and only if both vertices are null or are an alias to
   -- the same vertex.
 
-  procedure Clear (V : in out Vertex);
+  procedure Clear (V : in out Abstract_Vertex);
   -- If the vertex is not null, remove this alias.
 
-  procedure Set_Item (V : in out Vertex; I : Vertex_Item);
+  procedure Set_Item (V : in out Abstract_Vertex; I : Vertex_Item);
   -- Set the item of the given vertex.
 
-  function Is_Null (V : Vertex) return Boolean;
+  function Is_Null (V : Abstract_Vertex) return Boolean;
   -- Return True if and only if the vertex is null.
 
-  function Is_Shared (V : Vertex) return Boolean;
+  function Is_Shared (V : Abstract_Vertex) return Boolean;
   -- Return True if and only if the vertex has other aliases.
 
-  function Item (V : Vertex) return Vertex_Item;
+  function Item (V : Abstract_Vertex) return Vertex_Item;
   -- Return the item associated with the vertex.
 
   generic
     with procedure Process (I : in out Vertex_Item);
-  procedure Access_Vertex_Item (V : Vertex'Class);
+  procedure Access_Vertex_Item (V : Abstract_Vertex'Class);
   -- Process has read-write access to the item associated with the vertex.
 
-  function Enclosing_Graph (V : Vertex) return Graph_Ptr;
+  function Enclosing_Graph (V : Abstract_Vertex) return Graph_Ptr;
   -- Return the graph enclosing the vertex.
 
   --------------------
   -- Arc operations --
   --------------------
 
-  function "=" (L, R : Arc) return Boolean;
+  function "=" (L, R : Abstract_Arc) return Boolean;
   -- Return True if and only if both arcs are null or are an alias to the
   -- same arc.
 
-  procedure Clear (A : in out Arc);
+  procedure Clear (A : in out Abstract_Arc);
   -- If the arc is not null, remove this alias.
 
-  procedure Set_Item (A : in out Arc; I : Arc_Item);
+  procedure Set_Item (A : in out Abstract_Arc; I : Arc_Item);
   -- Set the item of the given arc.
 
-  function Is_Null (A : Arc) return Boolean;
+  function Is_Null (A : Abstract_Arc) return Boolean;
   -- Return 1 if and only if the arc is null.
 
-  function Is_Shared (A : Arc) return Boolean;
+  function Is_Shared (A : Abstract_Arc) return Boolean;
   -- Return True if and only if the arc has other aliases.
 
-  function Item (A : Arc) return Arc_Item;
+  function Item (A : Abstract_Arc) return Arc_Item;
   -- Return the item associated with the arc.
 
   generic
     with procedure Process (I : in out Arc_Item);
-  procedure Access_Arc_Item (A : Arc'Class);
+  procedure Access_Arc_Item (A : Abstract_Arc'Class);
   -- Process has read-write access to the item associated with the arc.
 
-  function Enclosing_Graph (A : Arc) return Graph_Ptr;
+  function Enclosing_Graph (A : Abstract_Arc) return Graph_Ptr;
   -- Return the graph enclosing the arc.
 
   --------------------------------------------
@@ -187,7 +191,7 @@ package BC.Graphs is
 
   type Graph_Iterator (<>) is abstract tagged private;
 
-  function New_Graph_Iterator (For_The_Graph : Graph)
+  function New_Graph_Iterator (For_The_Graph : Abstract_Graph)
      return Graph_Iterator'Class is abstract;
   -- Return a reset Graph_Iterator bound to the specific Graph.
 
@@ -200,14 +204,14 @@ package BC.Graphs is
   function Is_Done (Obj : Graph_Iterator) return Boolean is abstract;
   -- Return True if there are no more Vertices in the Graph.
 
-  function Current_Vertex (Obj : Graph_Iterator) return Vertex'Class
+  function Current_Vertex (Obj : Graph_Iterator) return Abstract_Vertex'Class
     is abstract;
   -- Return the current Vertex.
 
   -- Passive iteration
 
   generic
-    with procedure Apply (Elem : in Vertex'Class; OK : out Boolean);
+    with procedure Apply (Elem : in Abstract_Vertex'Class; OK : out Boolean);
   procedure Visit_Vertices (Using : in out Graph_Iterator'Class);
   -- Call Apply with a handle on each Vertex in the Graph to which the
   -- iterator Using is bound. The iteration will terminate early if Apply
@@ -225,7 +229,7 @@ package BC.Graphs is
 
   type Vertex_Iterator (<>) is abstract tagged private;
 
-  function New_Vertex_Iterator (For_The_Vertex : Vertex)
+  function New_Vertex_Iterator (For_The_Vertex : Abstract_Vertex)
      return Vertex_Iterator'Class is abstract;
   -- Return a reset Vertex_Iterator bound to the specific Vertex.
 
@@ -238,13 +242,14 @@ package BC.Graphs is
   function Is_Done (Obj : Vertex_Iterator) return Boolean is abstract;
   -- Return True if there are no more Arcs in the Vertex.
 
-  function Current_Arc (Obj : Vertex_Iterator) return Arc'Class is abstract;
+  function Current_Arc
+     (Obj : Vertex_Iterator) return Abstract_Arc'Class is abstract;
   -- Return the current Arc.
 
   -- Passive iteration
 
   generic
-    with procedure Apply (Elem : in Arc'Class; OK : out Boolean);
+    with procedure Apply (Elem : in Abstract_Arc'Class; OK : out Boolean);
   procedure Visit_Arcs (Using : in out Vertex_Iterator'Class);
   -- Call Apply with a handle on each Arc in the Vertex to which the
   -- iterator Using is bound. The iteration will terminate early if Apply
@@ -271,7 +276,7 @@ private
     Next : Vertex_Node_Ptr;
     Count : Natural;
   end record;
-  procedure Clear_Vertex_Node (G : in out Graph'Class;
+  procedure Clear_Vertex_Node (G : in out Abstract_Graph'Class;
                                N : in out Vertex_Node_Ptr);
   procedure Finalize (V : in out Vertex_Node);
 
@@ -290,22 +295,23 @@ private
   end record;
   procedure Finalize (A : in out Arc_Node);
 
-  type Graph is abstract new Ada.Finalization.Limited_Controlled with record
+  type Abstract_Graph
+    is abstract new Ada.Finalization.Limited_Controlled with record
+      Rep : Vertex_Node_Ptr;
+    end record;
+  procedure Finalize (G : in out Abstract_Graph);
+
+  type Abstract_Vertex is abstract new Ada.Finalization.Controlled with record
     Rep : Vertex_Node_Ptr;
   end record;
-  procedure Finalize (G : in out Graph);
+  procedure Adjust (V : in out Abstract_Vertex);
+  procedure Finalize (V : in out Abstract_Vertex);
 
-  type Vertex is abstract new Ada.Finalization.Controlled with record
-    Rep : Vertex_Node_Ptr;
-  end record;
-  procedure Adjust (V : in out Vertex);
-  procedure Finalize (V : in out Vertex);
-
-  type Arc is abstract new Ada.Finalization.Controlled with record
+  type Abstract_Arc is abstract new Ada.Finalization.Controlled with record
     Rep : Arc_Node_Ptr;
   end record;
-  procedure Adjust (A : in out Arc);
-  procedure Finalize (A : in out Arc);
+  procedure Adjust (A : in out Abstract_Arc);
+  procedure Finalize (A : in out Abstract_Arc);
 
   -- Iteration
 
@@ -313,7 +319,7 @@ private
     For_The_Graph : Graph_Ptr;
   end record;
 
-  type Vertex_Ptr is access all Vertex'Class;
+  type Vertex_Ptr is access all Abstract_Vertex'Class;
 
   type Vertex_Iterator is abstract tagged record
     For_The_Vertex : Vertex_Ptr;
