@@ -137,7 +137,7 @@ procedure Map_Test is
     Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
   begin
     while not Is_Done (Map_Iter) loop
-      Put_Line ("      Item: "
+      Put_Line ("      Key: "
                 & Current_Key (Map_Iter));
       Next (Map_Iter);
     end loop;
@@ -147,25 +147,25 @@ procedure Map_Test is
     Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
   begin
     while not Is_Done (Map_Iter) loop
-      Put_Line ("      Item: "
+      Put_Line ("      Key: "
                 & Current_Key (Map_Iter)
-                & " Value: "
+                & " Item: "
                 & Image (Current_Item (Map_Iter).all));
       Next (Map_Iter);
     end loop;
   end Test_Active_Iterator;
 
-  procedure Process (Item : Character; Value : Chunk_Ptr; OK : out Boolean) is
+  procedure Process (Key : Character; Item : Chunk_Ptr; OK : out Boolean) is
   begin
-    Put_Line ("      Item: " & Item & " Value: " & Image (Value.all));
+    Put_Line ("      Key: " & Key & " Item: " & Image (Item.all));
     OK := True;
   end Process;
 
-  procedure Process_Modifiable (Item : Character;
-                                Value : in out Chunk_Ptr;
+  procedure Process_Modifiable (Key : Character;
+                                Item : in out Chunk_Ptr;
                                 OK : out Boolean) is
   begin
-    Put_Line ("      Item: " & Item & " Value (RW): " & Image (Value.all));
+    Put_Line ("      Key: " & Key & " Item (RW): " & Image (Item.all));
     OK := True;
   end Process_Modifiable;
 
