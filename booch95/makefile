@@ -37,6 +37,10 @@ test: testable
 	  ./$$t 2>$$t.log; \
 	done
 
+TESTABLE += bag_test
+bag_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
 TESTABLE += graph_test
 graph_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
@@ -117,7 +121,8 @@ dist: $(DISTRIBUTION_FILES)
 	mkdir distribution
 	(cd distribution; \
 	 ln -s ../../exported-booch-components download; \
-	 ln -s ../../wavefront-booch-components wavefront)
+	 ln -s ../../wavefront-booch-components wavefront; \
+	 ln -s ../contrib)
 	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
 	cp -p README distribution/download/
 	cp -p WAVEFRONT-README distribution/wavefront/README
@@ -126,6 +131,10 @@ dist: $(DISTRIBUTION_FILES)
 ADA_SOURCE = \
 ada_units.ad[bs] \
 ada_unit_support.ad[bs] \
+bag_test.ad[bs] \
+bag_test_support.ad[bs] \
+bc-containers-bags-unbounded.ad[bs] \
+bc-containers-bags.ad[bs] \
 bc-containers-lists-double.ad[bs] \
 bc-containers-lists-single.ad[bs] \
 bc-containers-lists.ad[bs] \
@@ -148,7 +157,12 @@ bc-containers-stacks.ad[bs] \
 bc-containers-trees-avl.ad[bs] \
 bc-containers-trees-avl-print.ad[bs] \
 bc-containers-trees-binary.ad[bs] \
+bc-containers-trees-binary-in_order.ad[bs] \
+bc-containers-trees-binary-post_order.ad[bs] \
+bc-containers-trees-binary-pre_order.ad[bs] \
 bc-containers-trees-multiway.ad[bs] \
+bc-containers-trees-multiway-post_order.ad[bs] \
+bc-containers-trees-multiway-pre_order.ad[bs] \
 bc-containers-trees.ad[bs] \
 bc-containers.ad[bs] \
 bc-graphs.ad[bs] \
@@ -198,12 +212,7 @@ unmanaged_storage.ad[bs] \
 user_set.ad[bs] \
 user_set_support.ad[bs]
 
-CONTRIB = \
-contrib/gaudry/README \
-contrib/gaudry/t.adb \
-contrib/gaudry/t_support.ads
-
-SOURCE = makefile ACL README $(ADA_SOURCE) $(CONTRIB)
+SOURCE = makefile ACL README $(ADA_SOURCE)
 
 bc-$(DATE): force
 	-rm -rf $@
