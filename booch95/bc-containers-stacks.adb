@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -31,7 +31,7 @@ package body BC.Containers.Stacks is
     if System."=" (Left'Address, Right'Address) then
       return True;
     end if;
-    if Cardinality (Left) /= Cardinality (Right) then
+    if Depth (Left) /= Depth (Right) then
       return False;
     end if;
     declare
@@ -84,7 +84,7 @@ package body BC.Containers.Stacks is
 
   procedure Reset (It : in out Stack_Iterator) is
   begin
-    if Cardinality (It.S.all) = 0 then
+    if Depth (It.S.all) = 0 then
       It.Index := 0;
     else
       It.Index := 1;
@@ -98,7 +98,7 @@ package body BC.Containers.Stacks is
 
   function Is_Done (It : Stack_Iterator) return Boolean is
   begin
-    return It.Index = 0 or else It.Index > Cardinality (It.S.all);
+    return It.Index = 0 or else It.Index > Depth (It.S.all);
   end Is_Done;
 
   function Current_Item (It : Stack_Iterator) return Item is
