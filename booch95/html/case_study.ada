@@ -174,3 +174,35 @@ procedure Filter_Demo is
 begin
    null;
 end Filter_Demo;
+
+with Abstract_Car_Containers;
+with Ada.Calendar;
+with BC.Containers.Quicksort;
+with Cars; use Cars;
+with Fleets;
+with My_Fleet; use My_Fleet;
+procedure Sort_Demo is
+
+   procedure Sort is
+
+      function Earlier (L, R : Car) return Boolean;
+
+      procedure Sort is new Abstract_Car_Containers.Quicksort
+        ("<" => Earlier,
+         Container => Fleets.Collection,
+         Length => Fleets.Length);
+
+      function Earlier (L, R : Car) return Boolean is
+         use type Ada.Calendar.Time;
+      begin
+         return L.Registered < R.Registered;
+      end Earlier;
+
+   begin
+      Sort (The_Fleet);
+   end Sort;
+
+begin
+   null;
+end Sort_Demo;
+
