@@ -31,15 +31,13 @@ package body BC.Support.Unbounded is
     Tmp : Nodes.Node_Ref := Obj.Last;
   begin
     if Tmp /= null then
-      Obj.Last := new Nodes.Node'(Element => Tmp.Element,
-                                  Next => null,
-                                  Previous => null);
+      Obj.Last := Nodes.Create (Tmp.Element, Previous => null, Next => null);
       Obj.Rep := Obj.Last;
       Tmp := Tmp.Previous;  -- move to previous node from orig list
       while Tmp /= null loop
-        Obj.Rep := new Nodes.Node'(Element => Tmp.Element,
-                                   Next => Obj.Rep,
-                                   Previous => null);
+        Obj.Rep := Nodes.Create (Tmp.Element,
+                                 Previous => null,
+                                 Next => Obj.Rep);
         Tmp := Tmp.Previous;
       end loop;
     end if;
@@ -81,10 +79,7 @@ package body BC.Support.Unbounded is
 
   procedure Insert (Obj : in out Unb_Node; Elem : Item) is
   begin
-    Obj.Rep := new Nodes.Node'(Elem, Obj.Rep, null);
-    if Obj.Last.Previous /= null then
-      Obj.Last.Previous.Next := Obj.Last;
-    end if;
+    Obj.Rep := Nodes.Create (Elem, Previous => null, Next => Obj.Rep);
     if Obj.Last = null then
       Obj.Last := Obj.Rep;
     end if;
@@ -96,18 +91,18 @@ package body BC.Support.Unbounded is
   procedure Insert (Obj : in out Unb_Node; Elem : Item; Before : Natural) is
   begin
     pragma Assert (Before <= Obj.Size);
-    if (Obj.Size = 0) or else (Before <= 1) then
-      Insert (Obj,Elem);
+    if Obj.Size = 0 or else Before <= 1 then
+      Insert (Obj, Elem);
     else
       declare
-        AObj      : aliased Unb_Node := Obj;
+        AObj : aliased Unb_Node := Obj;
         Temp_Item : Item := Item_At (AObj'access, Before);  -- loads cache
         Temp_Node : Nodes.Node_Ref;
       begin
-        Temp_Node := new Nodes.Node'(Elem, Obj.Cache, Obj.Cache.Previous);
-        if Temp_Node.Previous /= null then
-          Temp_Node.Previous.Next := Temp_Node;
-        else
+        Temp_Node := Nodes.Create (Elem,
+                                   Previous => Obj.Cache.Previous,
+                                   Next => Obj.Cache);
+        if Temp_Node.Previous = null then
           Obj.Rep := Temp_Node;
         end if;
         Obj.Size := Obj.Size + 1;
@@ -118,7 +113,7 @@ package body BC.Support.Unbounded is
 
   procedure Append (Obj : in out Unb_Node; Elem : Item) is
   begin
-    Obj.Last := new Nodes.Node'(Elem, null, Obj.Last);
+    Obj.Last := Nodes.Create (Elem, Previous => Obj.Last, Next => null);
     if Obj.Last.Previous /= null then
       Obj.Last.Previous.Next := Obj.Last;
     end if;
@@ -141,7 +136,9 @@ package body BC.Support.Unbounded is
         Temp_Item : Item := Item_At (AObj'access, After);  -- loads cache
         Temp_Node : Nodes.Node_Ref;
       begin
-        Temp_Node := new Nodes.Node'(Elem, Obj.Cache.Next, Obj.Cache);
+        Temp_Node := Nodes.Create (Elem,
+                                   Previous => Obj.Cache,
+                                   Next => Obj.Cache.Next);
         if Temp_Node.Previous /= null then
           Temp_Node.Previous.Next := Temp_Node;
         end if;
