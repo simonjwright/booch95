@@ -17,11 +17,8 @@
 
 -- $Id$
 
-package body Map_Test_Support is
+function Char_Hash (C : Character) return Positive is
+begin
+  return Character'Pos (C) + 1;
+end Char_Hash;
 
-  function Char_Hash (C : Character) return Positive is
-  begin
-    return C'Pos;
-  end Char_Hash;
-
-end Map_Test_Support;
