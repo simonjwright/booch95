@@ -110,7 +110,7 @@ package body BC.Containers.Sets.Dynamic is
    is new System.Address_To_Access_Conversions (Set);
 
    function New_Iterator (For_The_Set : Set) return Iterator'Class is
-      Result : Set_Iterator;
+      Result : Dynamic_Set_Iterator;
    begin
       Result.For_The_Container :=
         Address_Conversions.To_Pointer (For_The_Set'Address).all'Access;
@@ -146,6 +146,8 @@ package body BC.Containers.Sets.Dynamic is
       return IC.Item_At (S.Rep.Items (Bucket), Index);
    end Item_At;
 
+   --  Null containers
+
    Empty_Container : Set;
    pragma Warnings (Off, Empty_Container);
 
@@ -153,5 +155,53 @@ package body BC.Containers.Sets.Dynamic is
    begin
       return Empty_Container;
    end Null_Container;
+
+   --  Iterators
+
+   --  Bodge to make it easier to convert to the real
+   --  Unconstrained_Set later.
+   subtype Unconstrained_Set is Set;
+
+   procedure Reset (It : in out Dynamic_Set_Iterator) is
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      Tables.Reset (S.Rep, It.Bucket_Index, It.Index);
+   end Reset;
+
+   procedure Next (It : in out Dynamic_Set_Iterator) is
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      Tables.Next (S.Rep, It.Bucket_Index, It.Index);
+   end Next;
+
+   function Is_Done (It : Dynamic_Set_Iterator) return Boolean is
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      return Tables.Is_Done (S.Rep, It.Bucket_Index, It.Index);
+   end Is_Done;
+
+   function Current_Item (It : Dynamic_Set_Iterator) return Item is
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Item_Ptr (S.Rep, It.Bucket_Index, It.Index).all;
+   end Current_Item;
+
+   function Current_Item_Ptr (It : Dynamic_Set_Iterator) return Item_Ptr is
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Item_Ptr (S.Rep, It.Bucket_Index, It.Index);
+   end Current_Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Dynamic_Set_Iterator) is
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
+   begin
+      Tables.Delete_Item_At (S.Rep, It.Bucket_Index, It.Index);
+   end Delete_Item_At;
 
 end BC.Containers.Sets.Dynamic;
