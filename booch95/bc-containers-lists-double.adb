@@ -156,7 +156,6 @@ package body BC.Containers.Lists.Double is
   end Append;
 
   procedure Append (Obj : in out Double_List; From_List : in Double_List) is
-    Prev : Double_Nodes.Double_Node_Ref;
     Curr : Double_Nodes.Double_Node_Ref := Obj.Rep;
   begin
     Assert (From_List.Rep = null or else From_List.Rep.Previous = null,
