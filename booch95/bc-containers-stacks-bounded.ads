@@ -22,52 +22,54 @@ generic
   Maximum_Size : Positive;
 package BC.Containers.Stacks.Bounded is
 
-  type Bnd_Stack is new Stack with private;
+  type Bounded_Stack is new Stack with private;
 
-  procedure Clear (Obj : in out Bnd_Stack);
+  procedure Clear (Obj : in out Bounded_Stack);
   -- Empty the Stack of all items.
 
-  procedure Push (Obj : in out Bnd_Stack; Elem : Item);
+  procedure Push (Obj : in out Bounded_Stack; Elem : Item);
   -- Add a copy of the item to the top of the Stack.
 
-  procedure Pop (Obj : in out Bnd_Stack);
+  procedure Pop (Obj : in out Bounded_Stack);
   -- Remove the item from the top of the Stack.
 
-  function Available (Obj : in Bnd_Stack) return Natural;
+  function Available (Obj : in Bounded_Stack) return Natural;
   -- Returns a count of the number of empty "Item slots" left.
 
-  function Depth (Obj : in Bnd_Stack) return Natural;
+  function Depth (Obj : in Bounded_Stack) return Natural;
   -- Returns the number of items in the Stack
 
-  function Is_Empty (Obj : in Bnd_Stack) return Boolean;
+  function Is_Empty (Obj : in Bounded_Stack) return Boolean;
   -- Returns True if and only if no items are in the stack
 
-  function Top (Obj : in Bnd_Stack) return Item;
+  function Top (Obj : in Bounded_Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
 
-  function Top (Obj : in Bnd_Stack) return Item_Ptr;
-  -- Return a pointer to the item at the top of the Stack.
+  -- XXX need accessor generic
 
-  function "=" (Left, Right : in Bnd_Stack) return boolean;
+  function "=" (Left, Right : in Bounded_Stack) return boolean;
   -- Return True if and only if both stacks have the same depth and the
   -- same items in the same order; return False otherwise.
 
+  function New_Iterator (For_The_Stack : Bounded_Stack) return Iterator;
+  -- Return a reset Iterator bound to the specific Stack.
+
 private
 
-  function Cardinality (Obj : in Bnd_Stack) return Integer;
-  procedure Purge (Obj : in out Bnd_Stack);
-  procedure Add (Obj : in out Bnd_Stack; Elem : in out Item);
-  function Item_At (Obj : in Bnd_Stack; Index : Natural) return Item_Ptr;
+  function Cardinality (Obj : Bounded_Stack) return Natural;
+  procedure Purge (Obj : in out Bounded_Stack);
+  procedure Add (Obj : in out Bounded_Stack; Elem : Item);
+  function Item_At (Obj : Bounded_Stack; Index : Positive) return Item_Ptr;
 
-  package Bnd_Stack_Nodes
-  is new BC.Support.Bounded(Item,Item_Ptr,Maximum_Size);
-  use Bnd_Stack_Nodes;
+  package Bounded_Stack_Nodes
+  is new BC.Support.Bounded (Item, Item_Ptr, Maximum_Size);
+  use Bounded_Stack_Nodes;
 
-  type Bnd_Stack is new Stack with record
-    Rep : Bnd_Stack_Nodes.Bnd_Node_Ref := new Bnd_Node;
+  type Bounded_Stack is new Stack with record
+    Rep : Bounded_Stack_Nodes.Bnd_Node_Ref := new Bnd_Node;
   end record;
 
-  procedure Adjust (Obj : in out Bnd_Stack);
-  procedure Finalize (Obj : in out Bnd_Stack);
+  procedure Adjust (Obj : in out Bounded_Stack);
+  procedure Finalize (Obj : in out Bounded_Stack);
 
 end BC.Containers.Stacks.Bounded;

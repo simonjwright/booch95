@@ -17,84 +17,96 @@
 
 -- $Id$
 
+with System.Address_To_Access_Conversions;
+
 package body BC.Containers.Stacks.Unbounded is
 
-  function "=" (Left, Right : Unb_Stack) return Boolean is
-    use Unb_Stack_Nodes;
+  function "=" (Left, Right : Unbounded_Stack) return Boolean is
+    use Unbounded_Stack_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Clear (Obj : in out Unb_Stack) is
+  procedure Clear (Obj : in out Unbounded_Stack) is
   begin
-    Unb_Stack_Nodes.Clear (Obj.Rep.all);
+    Unbounded_Stack_Nodes.Clear (Obj.Rep.all);
   end Clear;
 
-  procedure Push (Obj : in out Unb_Stack; Elem : Item) is
+  procedure Push (Obj : in out Unbounded_Stack; Elem : Item) is
   begin
-    Unb_Stack_Nodes.Insert (Obj.Rep.all, Elem);
+    Unbounded_Stack_Nodes.Insert (Obj.Rep.all, Elem);
   end Push;
 
-  procedure Pop (Obj : in out Unb_Stack) is
+  procedure Pop (Obj : in out Unbounded_Stack) is
   begin
-    Unb_Stack_Nodes.Remove (Obj.Rep.all, 1);
+    Unbounded_Stack_Nodes.Remove (Obj.Rep.all, 1);
   end Pop;
 
-  function Depth(Obj : Unb_Stack) return Natural is
+  function Depth(Obj : Unbounded_Stack) return Natural is
   begin
-    return Unb_Stack_Nodes.Length (Obj.Rep.all);
+    return Unbounded_Stack_Nodes.Length (Obj.Rep.all);
   end Depth;
 
-  function Is_Empty (Obj : Unb_Stack) return Boolean is
+  function Is_Empty (Obj : Unbounded_Stack) return Boolean is
   begin
-    return Unb_Stack_Nodes.Length (Obj.Rep.all) = 0;
+    return Unbounded_Stack_Nodes.Length (Obj.Rep.all) = 0;
   end Is_Empty;
 
-  function Top (Obj : Unb_Stack) return Item is
+  function Top (Obj : Unbounded_Stack) return Item is
   begin
-    return Unb_Stack_Nodes.First (Obj.Rep.all);
+    return Unbounded_Stack_Nodes.First (Obj.Rep.all);
   end Top;
 
-  function Top (Obj : Unb_Stack) return Item_Ptr is
+  function Top (Obj : Unbounded_Stack) return Item_Ptr is
   begin
-    return Unb_Stack_Nodes.First (Obj.Rep.all);
+    return Unbounded_Stack_Nodes.First (Obj.Rep.all);
   end Top;
 
-  procedure Purge (Obj : in out Unb_Stack) is
+  package Address_Conversions
+  is new System.Address_To_Access_Conversions (Unbounded_Stack);
+
+  function New_Iterator (For_The_Stack : Unbounded_Stack) return Iterator is
+    P : Address_Conversions.Object_Pointer
+       := Address_Conversions.To_Pointer (For_The_Stack'Address);
   begin
-    Unb_Stack_Nodes.Clear (Obj.Rep.all);
+    return Iterator (SP.Create (new Stack_Iterator (P)));
+  end New_Iterator;
+
+  procedure Purge (Obj : in out Unbounded_Stack) is
+  begin
+    Unbounded_Stack_Nodes.Clear (Obj.Rep.all);
   end Purge;
 
-  procedure Add (Obj : in out Unb_Stack; Elem : in out Item) is
+  procedure Add (Obj : in out Unbounded_Stack; Elem : Item) is
   begin
-    Unb_Stack_Nodes.Append (Obj.Rep.all, Elem);
+    Unbounded_Stack_Nodes.Append (Obj.Rep.all, Elem);
   end Add;
 
-  function Cardinality (Obj : Unb_Stack) return Integer is
+  function Cardinality (Obj : Unbounded_Stack) return Natural is
   begin
-    return Unb_Stack_Nodes.Length (Obj.Rep.all);
+    return Unbounded_Stack_Nodes.Length (Obj.Rep.all);
   end Cardinality;
 
-  function Item_At (Obj : in Unb_Stack; Index : in Natural) return Item_Ptr is
+  function Item_At (Obj : Unbounded_Stack; Index : Positive) return Item_Ptr is
   begin
-    return Unb_Stack_Nodes.Item_At (Obj.Rep.all, Index);
+    return Unbounded_Stack_Nodes.Item_At (Obj.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (Obj : in out Unb_Stack) is
+  procedure Initialize (Obj : in out Unbounded_Stack) is
   begin
     null;
   end Initialize;
 
-  procedure Adjust (Obj : in out Unb_Stack) is
-    Tmp_Ptr : Unb_Stack_Nodes.Unb_Node_Ref := Obj.Rep;
+  procedure Adjust (Obj : in out Unbounded_Stack) is
+    Tmp_Ptr : Unbounded_Stack_Nodes.Unb_Node_Ref := Obj.Rep;
   begin
-    Obj.Rep := new Unb_Stack_Nodes.Unb_Node;
-    Obj.Rep.all := Unb_Stack_Nodes.Create (From=>Tmp_Ptr.all);
+    Obj.Rep := new Unbounded_Stack_Nodes.Unb_Node;
+    Obj.Rep.all := Unbounded_Stack_Nodes.Create (From=>Tmp_Ptr.all);
   end Adjust;
 
-  procedure Finalize (Obj : in out Unb_Stack) is
+  procedure Finalize (Obj : in out Unbounded_Stack) is
   begin
-    Unb_Stack_Nodes.Free (Obj.Rep);
+    Unbounded_Stack_Nodes.Free (Obj.Rep);
   end Finalize;
 
 end BC.Containers.Stacks.Unbounded;

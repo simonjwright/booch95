@@ -17,94 +17,101 @@
 
 -- $Id$
 
+with System.Address_To_Access_Conversions;
+
 package body BC.Containers.Queues.Unbounded is
 
-  procedure Clear (Obj : in out Unb_Queue) is
+  procedure Clear (Obj : in out Unbounded_Queue) is
   begin
-    Unb_Queue_Nodes.Clear (Obj.Rep.all);
+    Unbounded_Queue_Nodes.Clear (Obj.Rep.all);
   end Clear;
 
-  procedure Append (Obj : in out Unb_Queue; Elem : Item) is
+  procedure Append (Obj : in out Unbounded_Queue; Elem : Item) is
   begin
-    Unb_Queue_Nodes.Append (Obj.Rep.all, Elem);
+    Unbounded_Queue_Nodes.Append (Obj.Rep.all, Elem);
   end Append;
 
-  procedure Pop (Obj : in out Unb_Queue) is
+  procedure Pop (Obj : in out Unbounded_Queue) is
   begin
-    Unb_Queue_Nodes.Remove (Obj.Rep.all, 1);
+    Unbounded_Queue_Nodes.Remove (Obj.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Obj : in out Unb_Queue; From : Natural) is
+  procedure Remove (Obj : in out Unbounded_Queue; From : Natural) is
   begin
-    Unb_Queue_Nodes.Remove (Obj.Rep.all, From);
+    Unbounded_Queue_Nodes.Remove (Obj.Rep.all, From);
   end Remove;
 
-  function Length (Obj : Unb_Queue) return Natural is
+  function Length (Obj : Unbounded_Queue) return Natural is
   begin
-    return Unb_Queue_Nodes.Length (Obj.Rep.all);
+    return Unbounded_Queue_Nodes.Length (Obj.Rep.all);
   end Length;
 
-  function Is_Empty (Obj : Unb_Queue) return Boolean is
+  function Is_Empty (Obj : Unbounded_Queue) return Boolean is
   begin
-    return Unb_Queue_Nodes.Length (Obj.Rep.all) = 0;
+    return Unbounded_Queue_Nodes.Length (Obj.Rep.all) = 0;
   end Is_Empty;
 
-  function Front (Obj : Unb_Queue) return Item is
+  function Front (Obj : Unbounded_Queue) return Item is
   begin
-    return Unb_Queue_Nodes.First (Obj.Rep.all);
+    return Unbounded_Queue_Nodes.First (Obj.Rep.all);
   end Front;
 
-  function Front (Obj : Unb_Queue) return Item_Ptr is
+  function Location (Obj : Unbounded_Queue; Elem : Item) return Natural is
   begin
-    return Unb_Queue_Nodes.First (Obj.Rep.all);
-  end Front;
-
-  function Location (Obj : Unb_Queue; Elem : Item) return Natural is
-  begin
-    return Unb_Queue_Nodes.Location (Obj.Rep.all, Elem);
+    return Unbounded_Queue_Nodes.Location (Obj.Rep.all, Elem);
   end Location;
 
-  function "=" (Left, Right : Unb_Queue) return Boolean is
-    use Unb_Queue_Nodes;
+  function "=" (Left, Right : Unbounded_Queue) return Boolean is
+    use Unbounded_Queue_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Purge (Obj : in out Unb_Queue) is
+  package Address_Conversions
+  is new System.Address_To_Access_Conversions (Unbounded_Queue);
+
+  function New_Iterator (For_The_Queue : Unbounded_Queue) return Iterator is
+    P : Address_Conversions.Object_Pointer
+       := Address_Conversions.To_Pointer (For_The_Queue'Address);
   begin
-    Unb_Queue_Nodes.Clear (Obj.Rep.all);
+    return Iterator (SP.Create (new Queue_Iterator (P)));
+  end New_Iterator;
+
+  procedure Purge (Obj : in out Unbounded_Queue) is
+  begin
+    Unbounded_Queue_Nodes.Clear (Obj.Rep.all);
   end Purge;
 
-  procedure Add (Obj : in out Unb_Queue; Elem : in out Item) is
+  procedure Add (Obj : in out Unbounded_Queue; Elem : Item) is
   begin
-    Unb_Queue_Nodes.Append (Obj.Rep.all, Elem);
+    Unbounded_Queue_Nodes.Append (Obj.Rep.all, Elem);
   end Add;
 
-  function Cardinality (Obj : Unb_Queue) return Integer is
+  function Cardinality (Obj : Unbounded_Queue) return Natural is
   begin
-    return Unb_Queue_Nodes.Length (Obj.Rep.all);
+    return Unbounded_Queue_Nodes.Length (Obj.Rep.all);
   end Cardinality;
 
-  function Item_At (Obj : in Unb_Queue; Index : in Natural) return Item_Ptr is
+  function Item_At (Obj : Unbounded_Queue; Index : Positive) return Item_Ptr is
   begin
-    return Unb_Queue_Nodes.Item_At (Obj.Rep.all, Index);
+    return Unbounded_Queue_Nodes.Item_At (Obj.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (Obj : in out Unb_Queue) is
+  procedure Initialize (Obj : in out Unbounded_Queue) is
   begin
     null;
   end Initialize;
 
-  procedure Adjust (Obj : in out Unb_Queue) is
-    Tmp_Ptr : Unb_Queue_Nodes.Unb_Node_Ref := Obj.Rep;
+  procedure Adjust (Obj : in out Unbounded_Queue) is
+    Tmp_Ptr : Unbounded_Queue_Nodes.Unb_Node_Ref := Obj.Rep;
   begin
-    Obj.Rep := new Unb_Queue_Nodes.Unb_Node;
-    Obj.Rep.all := Unb_Queue_Nodes.Create(From=>Tmp_Ptr.all);
+    Obj.Rep := new Unbounded_Queue_Nodes.Unb_Node;
+    Obj.Rep.all := Unbounded_Queue_Nodes.Create(From=>Tmp_Ptr.all);
   end Adjust;
 
-  procedure Finalize (Obj : in out Unb_Queue) is
+  procedure Finalize (Obj : in out Unbounded_Queue) is
   begin
-    Unb_Queue_Nodes.Free (Obj.Rep); -- does a Clear()
+    Unbounded_Queue_Nodes.Free (Obj.Rep); -- does a Clear()
   end Finalize;
 
 end BC.Containers.Queues.Unbounded;

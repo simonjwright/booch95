@@ -17,116 +17,123 @@
 
 -- $Id$
 
+with System.Address_To_Access_Conversions;
+
 package body BC.Containers.Queues.Dynamic is
 
-  function Create (Size : Positive) return Dyn_Queue is
-    Temp : Dyn_Queue;
+  function Create (Size : Positive) return Dynamic_Queue is
+    Temp : Dynamic_Queue;
   begin
-    Temp.Rep := Dyn_Queue_Nodes.Create (Size);
+    Temp.Rep := Dynamic_Queue_Nodes.Create (Size);
     return Temp;
   end Create;
 
-  function "=" (Left, Right : Dyn_Queue) return Boolean is
-    use Dyn_Queue_Nodes;
+  function "=" (Left, Right : Dynamic_Queue) return Boolean is
+    use Dynamic_Queue_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Clear (Obj : in out Dyn_Queue) is
+  procedure Clear (Obj : in out Dynamic_Queue) is
   begin
-    Dyn_Queue_Nodes.Clear (Obj.Rep.all);
+    Dynamic_Queue_Nodes.Clear (Obj.Rep.all);
   end Clear;
 
-  procedure Append (Obj : in out Dyn_Queue; Elem : Item) is
+  procedure Append (Obj : in out Dynamic_Queue; Elem : Item) is
   begin
-    Dyn_Queue_Nodes.Append (Obj.Rep.all, Elem);
+    Dynamic_Queue_Nodes.Append (Obj.Rep.all, Elem);
   end Append;
 
-  procedure Pop (Obj : in out Dyn_Queue) is
+  procedure Pop (Obj : in out Dynamic_Queue) is
   begin
-    Dyn_Queue_Nodes.Remove (Obj.Rep.all, 1);
+    Dynamic_Queue_Nodes.Remove (Obj.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Obj : in out Dyn_Queue; From : Natural) is
+  procedure Remove (Obj : in out Dynamic_Queue; From : Natural) is
   begin
-    Dyn_Queue_Nodes.Remove (Obj.Rep.all, From);
+    Dynamic_Queue_Nodes.Remove (Obj.Rep.all, From);
   end Remove;
 
-  function Length (Obj : Dyn_Queue) return Natural is
+  function Length (Obj : Dynamic_Queue) return Natural is
   begin
-    return Dyn_Queue_Nodes.Length (Obj.Rep.all);
+    return Dynamic_Queue_Nodes.Length (Obj.Rep.all);
   end Length;
 
-  function Is_Empty (Obj : Dyn_Queue) return Boolean is
+  function Is_Empty (Obj : Dynamic_Queue) return Boolean is
   begin
-    return Dyn_Queue_Nodes.Length (Obj.Rep.all) = 0;
+    return Dynamic_Queue_Nodes.Length (Obj.Rep.all) = 0;
   end Is_Empty;
 
-  function Front (Obj : Dyn_Queue) return Item is
+  function Front (Obj : Dynamic_Queue) return Item is
   begin
-    return Dyn_Queue_Nodes.First (Obj.Rep.all);
+    return Dynamic_Queue_Nodes.First (Obj.Rep.all);
   end Front;
 
-  function Front (Obj : in Dyn_Queue) return Item_Ptr is
+  function Location (Obj : Dynamic_Queue; Elem : Item) return Natural is
   begin
-    return Dyn_Queue_Nodes.First (Obj.Rep.all);
-  end Front;
-
-  function Location (Obj : Dyn_Queue; Elem : Item) return Natural is
-  begin
-    return Dyn_Queue_Nodes.Location (Obj.Rep.all, Elem);
+    return Dynamic_Queue_Nodes.Location (Obj.Rep.all, Elem);
   end Location;
 
-  procedure Preallocate (Obj : in out Dyn_Queue; Size : Natural) is
+  procedure Preallocate (Obj : in out Dynamic_Queue; Size : Natural) is
   begin
-    Dyn_Queue_Nodes.Preallocate (Obj.Rep.all, Size);
+    Dynamic_Queue_Nodes.Preallocate (Obj.Rep.all, Size);
   end Preallocate;
 
-  procedure Set_Chunk_Size (Obj : in out Dyn_Queue; Size : Natural) is
+  procedure Set_Chunk_Size (Obj : in out Dynamic_Queue; Size : Natural) is
   begin
-    Dyn_Queue_Nodes.Set_Chunk_Size (Obj.Rep.all, Size);
+    Dynamic_Queue_Nodes.Set_Chunk_Size (Obj.Rep.all, Size);
   end Set_Chunk_Size;
 
-  function Chunk_Size (Obj : Dyn_Queue) return Natural is
+  function Chunk_Size (Obj : Dynamic_Queue) return Natural is
   begin
-    return Dyn_Queue_Nodes.Chunk_Size (Obj.Rep.all);
+    return Dynamic_Queue_Nodes.Chunk_Size (Obj.Rep.all);
   end Chunk_Size;
 
-  procedure Purge (Obj : in out Dyn_Queue) is
+  package Address_Conversions
+  is new System.Address_To_Access_Conversions (Dynamic_Queue);
+
+  function New_Iterator (For_The_Queue : Dynamic_Queue) return Iterator is
+    P : Address_Conversions.Object_Pointer
+       := Address_Conversions.To_Pointer (For_The_Queue'Address);
   begin
-    Dyn_Queue_Nodes.Clear (Obj.Rep.all);
+    return Iterator (SP.Create (new Queue_Iterator (P)));
+  end New_Iterator;
+
+  procedure Purge (Obj : in out Dynamic_Queue) is
+  begin
+    Dynamic_Queue_Nodes.Clear (Obj.Rep.all);
   end Purge;
 
-  procedure Add (Obj : in out Dyn_Queue; Elem : in out Item) is
+  procedure Add (Obj : in out Dynamic_Queue; Elem : Item) is
   begin
-    Dyn_Queue_Nodes.Append (Obj.Rep.all, Elem);
+    Dynamic_Queue_Nodes.Append (Obj.Rep.all, Elem);
   end Add;
 
-  function Cardinality (Obj : Dyn_Queue) return Integer is
+  function Cardinality (Obj : Dynamic_Queue) return Natural is
   begin
-    return Dyn_Queue_Nodes.Length (Obj.Rep.all);
+    return Dynamic_Queue_Nodes.Length (Obj.Rep.all);
   end Cardinality;
 
-  function Item_At (Obj : in Dyn_Queue; Index : in Natural) return Item_Ptr is
+  function Item_At (Obj : Dynamic_Queue; Index : Positive) return Item_Ptr is
   begin
-    return Dyn_Queue_Nodes.Item_At (Obj.Rep.all, Index);
+    return Dynamic_Queue_Nodes.Item_At (Obj.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (Obj : in out Dyn_Queue) is
+  procedure Initialize (Obj : in out Dynamic_Queue) is
   begin
-    Obj.Rep := Dyn_Queue_Nodes.Create;
+    Obj.Rep := Dynamic_Queue_Nodes.Create;
   end Initialize;
 
-  procedure Adjust (Obj : in out Dyn_Queue) is
+  procedure Adjust (Obj : in out Dynamic_Queue) is
   begin
-    Obj.Rep := Dyn_Queue_Nodes.Create (Obj.Rep.all);
+    Obj.Rep := Dynamic_Queue_Nodes.Create (Obj.Rep.all);
   end Adjust;
 
-  procedure Finalize (Obj : in out Dyn_Queue) is
-    use type Dyn_Queue_Nodes.Dyn_Node_Ref;
+  procedure Finalize (Obj : in out Dynamic_Queue) is
+    use type Dynamic_Queue_Nodes.Dyn_Node_Ref;
   begin
     if Obj.Rep /= null then
-      Dyn_Queue_Nodes.Free (Obj.Rep);
+      Dynamic_Queue_Nodes.Free (Obj.Rep);
     end if;
   end Finalize;
 

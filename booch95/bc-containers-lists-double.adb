@@ -18,6 +18,7 @@
 -- $Id$
 
 with BC.Support.Exceptions;
+with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Lists.Double is
 
@@ -455,7 +456,7 @@ package body BC.Containers.Lists.Double is
       Curr.Count := Curr.Count - 1;
     else
       if Obj.Rep /= null then
-	Obj.Rep.Count := Obj.Rep.Count - 1;
+        Obj.Rep.Count := Obj.Rep.Count - 1;
         Obj.Rep.Previous := null;
       end if;
       Double_Nodes.Delete (Curr);
@@ -542,15 +543,6 @@ package body BC.Containers.Lists.Double is
     return Obj.Rep.Element;
   end Head;
 
-  function Head (Obj : Double_List) return Item_Ptr is
-  begin
-    Assert (Obj.Rep /= null,
-            BC.Is_Null'Identity,
-            "Head",
-            BSE.Is_Null);
-    return Obj.Rep.Element'access;
-  end Head;
-
   function Foot (Obj : Double_List) return Item is
     Curr : Double_Nodes.Double_Node_Ref := Obj.Rep;
   begin
@@ -564,39 +556,38 @@ package body BC.Containers.Lists.Double is
     return Curr.Element;
   end Foot;
 
-  function Foot (Obj : Double_List) return Item_Ptr is
-    Curr : Double_Nodes.Double_Node_Ref := Obj.Rep;
-  begin
-    Assert (Obj.Rep /= null,
-            BC.Is_Null'Identity,
-            "Foot",
-            BSE.Is_Null);
-    while Curr.Next /= null loop
-      Curr := Curr.Next;
-    end loop;
-    return Curr.Element'access;
-  end Foot;
-
   function Item_At (Obj : Double_List; Index : Positive) return Item is
-    Curr : Double_Nodes.Double_Node_Ref := Obj.Rep;
-    Loc : Positive := 1;
+--      Curr : Double_Nodes.Double_Node_Ref := Obj.Rep;
+--      Loc : Positive := 1;
+--    begin
+--      Assert (Obj.Rep /= null,
+--              BC.Is_Null'Identity,
+--              "Item_At",
+--              BSE.Is_Null);
+--      while Curr /= null and then Loc < Index loop
+--        Curr := Curr.Next;
+--        Loc := Loc + 1;
+--      end loop;
+--      Assert (Curr /= null,
+--              BC.Range_Error'Identity,
+--              "Item_At",
+--              BSE.Invalid_Index);
+--      return Curr.Element;
   begin
-    Assert (Obj.Rep /= null,
-            BC.Is_Null'Identity,
-            "Item_At",
-            BSE.Is_Null);
-    while Curr /= null and then Loc < Index loop
-      Curr := Curr.Next;
-      Loc := Loc + 1;
-    end loop;
-    Assert (Curr /= null,
-            BC.Range_Error'Identity,
-            "Item_At",
-            BSE.Invalid_Index);
-    return Curr.Element;
+    return Item_At (Obj, Index).all;
   end Item_At;
 
-  function Item_At (Obj : Double_List; Index : Natural) return Item_Ptr is
+  package Address_Conversions
+  is new System.Address_To_Access_Conversions (Double_List);
+
+  function New_Iterator (For_The_List : Double_List) return Iterator is
+    P : Address_Conversions.Object_Pointer
+       := Address_Conversions.To_Pointer (For_The_List'Address);
+  begin
+    return Iterator (SP.Create (new Double_List_Iterator (P)));
+  end New_Iterator;
+
+  function Item_At (Obj : Double_List; Index : Positive) return Item_Ptr is
     Curr : Double_Nodes.Double_Node_Ref := Obj.Rep;
     Loc : Positive := 1;
   begin
@@ -615,7 +606,7 @@ package body BC.Containers.Lists.Double is
     return Curr.Element'access;
   end Item_At;
 
-  function Cardinality (Obj : Double_List) return Integer is
+  function Cardinality (Obj : Double_List) return Natural is
   begin
     return Length (Obj);
   end Cardinality;
@@ -637,4 +628,44 @@ package body BC.Containers.Lists.Double is
     Clear (Obj);
   end Finalize;
 
-end Bc.Containers.Lists.Double;
+  procedure Initialize (It : in out Double_List_Iterator) is
+  begin
+    Reset (It);
+  end Initialize;
+
+  procedure Reset (It : in out Double_List_Iterator) is
+  begin
+    if Cardinality (It.L.all) = 0 then
+      It.Index := 0;
+    else
+      It.Index := 1;
+    end if;
+  end Reset;
+
+  procedure Next (It : in out Double_List_Iterator) is
+  begin
+    It.Index := It.Index + 1;
+  end Next;
+
+  function Is_Done (It : Double_List_Iterator) return Boolean is
+  begin
+    return It.Index = 0 or else It.Index > Cardinality (It.L.all);
+  end Is_Done;
+
+  function Current_Item (It : Double_List_Iterator) return Item is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    return Item_At (It.L.all, It.Index).all;
+  end Current_Item;
+
+  function Current_Item (It : Double_List_Iterator) return Item_Ptr is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    return Item_At (It.L.all, It.Index);
+  end Current_Item;
+
+end BC.Containers.Lists.Double;
