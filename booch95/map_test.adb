@@ -159,15 +159,15 @@ procedure Map_Test is
   end Process_Modifiable;
 
   procedure Test_Passive_Iterator (M : in out Maps.Map'Class) is
-    procedure Visitor is new Maps.Visit (Process, M);
+    procedure Visitor is new Maps.Visit (Process);
   begin
-    Visitor;
+    Visitor (M);
   end Test_Passive_Iterator;
 
   procedure Test_Passive_Modifying_Iterator (M : in out Maps.Map'Class) is
-    procedure Modifier is new Maps.Modify (Process_Modifiable, M);
+    procedure Modifier is new Maps.Modify (Process_Modifiable);
   begin
-    Modifier;
+    Modifier (M);
   end Test_Passive_Modifying_Iterator;
 
   Map_B_Pu1, Map_B_Pu2 : MB.Bounded_Map;

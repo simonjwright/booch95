@@ -197,10 +197,9 @@ procedure Queue_Test is
   --    end Test_User_Defined;
 
   procedure Test_Passive_Iterator (L : Container'Class) is
-    procedure Iterate is new Visit
-       (Apply => Process, Over_The_Container => L);
+    procedure Iterate is new Visit (Apply => Process);
   begin
-    Iterate;
+    Iterate (Over_The_Container => L);
   end Test_Passive_Iterator;
 
   Queue_B_P1, Queue_B_P2 : QB.Bounded_Queue;

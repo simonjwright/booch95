@@ -56,10 +56,9 @@ procedure Stack_Test is
   end Test_Active_Iterator;
 
   procedure Test_Passive_Iterator (L : Container'Class) is
-    procedure Iterate is new Visit
-       (Apply => Process, Over_The_Container => L);
+    procedure Iterate is new Visit (Apply => Process);
   begin
-    Iterate;
+    Iterate (Over_The_Container => L);
   end Test_Passive_Iterator;
 
   procedure Test_Primitive (S1, S2 : in out Stack'Class) is
