@@ -40,6 +40,7 @@ procedure BC.Containers.Quicksort (C : in out Container) is
       begin
         -- park the pivot item at the left
         Swap (M, L);
+        -- this loop I do _not_ understand
         while B <= T and then Flag loop
           if Pivot < Item_At (C, B).all then
             Flag := False;
@@ -75,5 +76,7 @@ procedure BC.Containers.Quicksort (C : in out Container) is
   end Sort;
 begin
   Sort (C, 1, Length (C));
+exception
+  when Should_Have_Been_Overridden => raise Container_Error;
 end BC.Containers.Quicksort;
 
