@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Text_Io;
 with BC;
 with Chunks;
@@ -270,4 +271,9 @@ begin
              "** M11: Available space is not correct");
   Put_Line ("Completed map tests");
 
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end Map_Test;

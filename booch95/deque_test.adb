@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Text_IO;
 with BC;
 with Deque_Test_Support;
@@ -253,4 +254,9 @@ begin
 
   Put_Line ("Completed deque tests");
 
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end Deque_Test;

@@ -17,9 +17,11 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Text_IO;
 with BC;
 with Stack_Test_Support;
+
 procedure Stack_Test is
   use Ada.Text_IO;
   use Stack_Test_Support;
@@ -235,4 +237,9 @@ begin
 
   Put_Line ("Completed Stack tests");
 
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end Stack_Test;

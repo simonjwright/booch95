@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Numerics.Discrete_Random;
 with Ada.Text_Io;
 with AVL_Test_Support;
@@ -80,4 +81,9 @@ begin
 
   Put_Line ("Completed AVL tests");
 
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end AVL_Test;

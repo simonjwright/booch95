@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Text_IO;
 with BC;
 with Ordered_Queue_Test_Support;
@@ -227,4 +228,9 @@ begin
 
   Put_Line ("Completed ordered queue tests");
 
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end Ordered_Queue_Test;

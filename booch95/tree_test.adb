@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Text_Io;
 with BC.Containers.Trees.Binary.In_Order;
 with BC.Containers.Trees.Binary.Pre_Order;
@@ -493,4 +494,9 @@ begin
 
   Put_Line ("Completed Tree tests");
 
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end Tree_Test;

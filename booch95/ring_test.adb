@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Text_IO;
 with Ring_Test_Support;
 
@@ -172,4 +173,9 @@ begin
 
   Put_Line ("Completed Ring tests");
 
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end Ring_Test;

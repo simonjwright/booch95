@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Text_Io;
 with BC;
 with Set_Test_Support;
@@ -261,4 +262,10 @@ begin
   Assertion (SB.Available (Set_B_Pu2) = 297,
              "** M14: Available space is not correct");
   Put_Line ("Completed set tests");
+
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end Set_Test;
