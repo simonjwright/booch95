@@ -10,11 +10,21 @@ project BC is
   for Exec_Dir use ".";
 
   package Builder is
-     for Default_Switches ("Ada") use ("-m", "-g");
+     for Default_Switches ("Ada") use
+       (
+        "-m",
+        "-g"
+       );
   end Builder;
 
   package Compiler is
-     for Default_Switches ("Ada") use ("-gnatqQafy", "-gnatwaL", "-O2");
+     for Default_Switches ("Ada") use
+       (
+        "-gnatqQafoy",
+        "-gnatwaL",
+        "-fstack-check",
+        "-O2"
+       );
   end Compiler;
 
   package Binder is
