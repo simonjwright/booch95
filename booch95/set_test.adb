@@ -257,9 +257,9 @@ begin
   Assertion (SU.Is_Member (Set_U_Pu1, 'z'),
              "** M10: Set membership is not correct");
   Assertion (SU.Extent (Set_U_Pu2) = 3, "** M10: Set extent is not correct");
-  Assertion (SB.Available (Set_B_Pu1) = 298,
+  Assertion (SB.Available (Set_B_Pu1) = 98,
              "** M13: Available space is not correct");
-  Assertion (SB.Available (Set_B_Pu2) = 297,
+  Assertion (SB.Available (Set_B_Pu2) = 97,
              "** M14: Available space is not correct");
   Put_Line ("Completed set tests");
 
