@@ -40,13 +40,6 @@ package body BC.Support.Bounded is
   package Allow_Element_Access
   is new System.Address_To_Access_Conversions (Item);
 
-  function Create (From : in Bnd_Node) return Bnd_Node_Ref is
-  begin
-    return new Bnd_Node'(Elems => From.Elems,
-                         Start => From.Start,
-                         Size => From.Size);
-  end Create;
-
   function "=" (Left, Right : Bnd_Node) return Boolean is
   begin
     if Left.Size /= Right.Size then
@@ -80,10 +73,10 @@ package body BC.Support.Bounded is
 
   procedure Insert (Obj : in out Bnd_Node; Elem : Item; Before : Positive) is
   begin
---     Assert (Before < Obj.Size,
---             BC.Range_Error'Identity,
---             "Insert",
---             BSE.Invalid_Index);
+    Assert (Before < Obj.Size,
+            BC.Range_Error'Identity,
+            "Insert",
+            BSE.Invalid_Index);
     Assert (Obj.Size < Max_Size,
             BC.Overflow'Identity,
             "Insert",
@@ -305,12 +298,5 @@ package body BC.Support.Bounded is
     end loop;
     return 0;
   end Location;
-
-  procedure Free (Obj : in out Bnd_Node_Ref) is
-    procedure Delete_Node is
-       new Ada.Unchecked_Deallocation (Bnd_Node, Bnd_Node_Ref);
-  begin
-    Delete_Node (Obj);
-  end Free;
 
 end BC.Support.Bounded;
