@@ -198,8 +198,8 @@ dist: $(DISTRIBUTION_FILES)
 	-@rm -rf distribution
 	mkdir distribution
 	(cd distribution; \
-	 ln -s ../../exported-booch-components download; \
-	 ln -s ../../wavefront-booch-components wavefront; \
+	 ln -s $(HOME)/exported-booch-components download; \
+	 ln -s $(HOME)/wavefront-booch-components wavefront; \
 	 ln -s ../contrib)
 	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
 	cp -p README distribution/download/
@@ -209,6 +209,8 @@ dist: $(DISTRIBUTION_FILES)
 ADA_SOURCE = \
 ada_units.ad[bs] \
 ada_unit_support.ad[bs] \
+avl_test.ad[bs] \
+avl_test_support.ad[bs] \
 bag_test.ad[bs] \
 bag_test_aonix.ad[bs] \
 bag_test_support.ad[bs] \
@@ -247,6 +249,7 @@ bc-containers-stacks-unbounded.ad[bs] \
 bc-containers-stacks.ad[bs] \
 bc-containers-trees-avl.ad[bs] \
 bc-containers-trees-avl-print.ad[bs] \
+bc-containers-trees-avl-validate.ad[bs] \
 bc-containers-trees-binary.ad[bs] \
 bc-containers-trees-binary-in_order.ad[bs] \
 bc-containers-trees-binary-post_order.ad[bs] \
