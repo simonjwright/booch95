@@ -1,5 +1,5 @@
---  Copyright 1999-1999 Pat Rogers
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-1999 Pat Rogers
+--  Copyright 1999-2002 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
