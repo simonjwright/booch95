@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -20,6 +20,7 @@ with BC.Containers.Stacks;
 with BC.Containers.Stacks.Bounded;
 with BC.Containers.Stacks.Dynamic;
 with BC.Containers.Stacks.Unbounded;
+with BC.Containers.Stacks.Unmanaged;
 with BC.Support.Standard_Storage;
 with Global_Heap;
 
@@ -37,5 +38,7 @@ package Stack_Test_Support is
 
    package SU is new Stacks.Unbounded
      (Storage => BC.Support.Standard_Storage.Pool);
+
+   package SUM is new Stacks.Unmanaged;
 
 end Stack_Test_Support;
