@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -78,11 +78,11 @@ package BC.Graphs.Undirected is
   -----------------------
 
   function New_Graph_Iterator (For_The_Graph : Undirected_Graph)
-                               return Graph_Iterator;
+                               return Graph_Iterator'Class;
   -- Return a reset Iterator bound to the specific Graph.
 
   function New_Vertex_Iterator (For_The_Vertex : Undirected_Vertex)
-                                return Vertex_Iterator;
+                                return Vertex_Iterator'Class;
   -- Return a reset Iterator bound to the specific Vertex.
 
 private
@@ -91,12 +91,9 @@ private
   type Undirected_Vertex is new Vertex with null record;
   type Undirected_Arc is new Arc with null record;
 
-  type Undirected_Graph_Iterator (U : access Undirected_Graph'Class)
-     is new Actual_Graph_Iterator (U) with record
-    Index : Vertex_Node_Ptr := U.Rep;
+  type Undirected_Graph_Iterator is new Graph_Iterator with record
+    Index : Vertex_Node_Ptr;
   end record;
-
-  procedure Initialize (It : in out Undirected_Graph_Iterator);
 
   procedure Reset (It : in out Undirected_Graph_Iterator);
 
@@ -106,13 +103,10 @@ private
 
   function Current_Vertex (It : Undirected_Graph_Iterator) return Vertex'Class;
 
-  type Undirected_Vertex_Iterator (U : access Undirected_Vertex'Class)
-     is new Actual_Vertex_Iterator (U) with record
+  type Undirected_Vertex_Iterator is new Vertex_Iterator with record
     Index : Arc_Node_Ptr;
-    First : Boolean;
+    Do_Outgoing : Boolean;
   end record;
-
-  procedure Initialize (It : in out Undirected_Vertex_Iterator);
 
   procedure Reset (It : in out Undirected_Vertex_Iterator);
 

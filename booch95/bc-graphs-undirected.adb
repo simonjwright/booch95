@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -198,11 +198,13 @@ package body BC.Graphs.Undirected is
   is new System.Address_To_Access_Conversions (Undirected_Graph);
 
   function New_Graph_Iterator
-     (For_The_Graph : Undirected_Graph) return Graph_Iterator is
-    P : Graph_Address_Conversions.Object_Pointer
-       := Graph_Address_Conversions.To_Pointer (For_The_Graph'Address);
+     (For_The_Graph : Undirected_Graph) return Graph_Iterator'Class is
+    Result : Undirected_Graph_Iterator
+       := (For_The_Graph => Graph_Address_Conversions.To_Pointer
+           (For_The_Graph'Address).all'Access,
+           Index => For_The_Graph.Rep);
   begin
-    return Graph_Iterator (GSP.Create (new Undirected_Graph_Iterator (P)));
+    return Result;
   end New_Graph_Iterator;
 
 
@@ -210,11 +212,14 @@ package body BC.Graphs.Undirected is
   is new System.Address_To_Access_Conversions (Undirected_Vertex);
 
   function New_Vertex_Iterator
-     (For_The_Vertex : Undirected_Vertex) return Vertex_Iterator is
-    P : Vertex_Address_Conversions.Object_Pointer
-       := Vertex_Address_Conversions.To_Pointer (For_The_Vertex'Address);
+     (For_The_Vertex : Undirected_Vertex) return Vertex_Iterator'Class is
+    Result : Undirected_Vertex_Iterator;
   begin
-    return Vertex_Iterator (VSP.Create (new Undirected_Vertex_Iterator (P)));
+    Result.For_The_Vertex :=
+       Vertex_Address_Conversions.To_Pointer
+          (For_The_Vertex'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Vertex_Iterator;
 
 
@@ -222,15 +227,9 @@ package body BC.Graphs.Undirected is
   -- Private iteration support --
   -------------------------------
 
-  procedure Initialize (It : in out Undirected_Graph_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
-
   procedure Reset (It : in out Undirected_Graph_Iterator) is
   begin
-    It.Index := It.U.Rep;
+    It.Index := It.For_The_Graph.Rep;
   end Reset;
 
 
@@ -248,14 +247,16 @@ package body BC.Graphs.Undirected is
   end Is_Done;
 
 
-  function Current_Vertex (It : Undirected_Graph_Iterator) return Vertex'Class is
+  function Current_Vertex
+     (It : Undirected_Graph_Iterator) return Vertex'Class is
   begin
     Assert (It.Index /= null,
             BC.Is_Null'Identity,
             "Current_Item(Undirected_Graph_Iterator)",
             BSE.Is_Null);
     It.Index.Count := It.Index.Count + 1;
-    return Undirected_Vertex'(Ada.Finalization.Controlled with Rep => It.Index);
+    return Undirected_Vertex'
+       (Ada.Finalization.Controlled with Rep => It.Index);
   end Current_Vertex;
 
 
@@ -263,21 +264,18 @@ package body BC.Graphs.Undirected is
   -- Undirected_Vertex iterators --
   ---------------------------------
 
-  procedure Initialize (It : in out Undirected_Vertex_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
-
   procedure Reset (It : in out Undirected_Vertex_Iterator) is
   begin
-    It.First := True;
-    if It.U.Rep /= null then
-      It.Index := It.U.Rep.Outgoing;
+    It.Do_Outgoing := True;
+    if It.For_The_Vertex.Rep /= null then
+      It.Index := It.For_The_Vertex.Rep.Outgoing;
       if It.Index = null then
-        It.First := False;
-        It.Index := It.U.Rep.Incoming;
-        while It.Index /= null and then (It.Index.From = It.Index.To) loop
+        It.Do_Outgoing := False;
+        It.Index := It.For_The_Vertex.Rep.Incoming;
+        -- skip self-directed arcs, already seen in outgoing side
+        -- XXX hmm, wouldn't .Outgoing have been non-null?
+        while It.Index /= null and then It.Index.From = It.Index.To loop
+          pragma Assert (False);
           It.Index := It.Index.Next_Incoming;
         end loop;
       end if;
@@ -290,18 +288,20 @@ package body BC.Graphs.Undirected is
   procedure Next (It : in out Undirected_Vertex_Iterator) is
   begin
     -- XXX I think we ought to check here that there is an Index!
-    if It.First then
+    if It.Do_Outgoing then
       It.Index := It.Index.Next_Outgoing;
       if It.Index = null then
-        It.First := False;
-        It.Index := It.U.Rep.Incoming;
-        while It.Index /= null and then (It.Index.From = It.Index.To) loop
+        It.Do_Outgoing := False;
+        It.Index := It.For_The_Vertex.Rep.Incoming;
+        -- skip self-directed arcs, already seen in outgoing side
+        while It.Index /= null and then It.Index.From = It.Index.To loop
           It.Index := It.Index.Next_Incoming;
         end loop;
       end if;
     elsif It.Index /= null then
       It.Index := It.Index.Next_Incoming;
-      while It.Index /= null and then (It.Index.From = It.Index.To) loop
+      -- skip self-directed arcs, already seen in outgoing side
+      while It.Index /= null and then It.Index.From = It.Index.To loop
         It.Index := It.Index.Next_Incoming;
       end loop;
     end if;
