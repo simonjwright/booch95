@@ -22,7 +22,6 @@
 --  $Author$
 
 with Ada.Finalization;
-with BC.Support.Nodes;
 with System.Storage_Pools;
 
 generic
@@ -83,13 +82,20 @@ package BC.Support.Unbounded is
 
 private
 
-   package Nodes is new BC.Support.Nodes (Item, Storage);
+   type Node;
+   type Node_Ref is access Node;
+   for Node_Ref'Storage_Pool use Storage;
+   type Node is record
+      Element : Item;
+      Next : Node_Ref;
+      Previous : Node_Ref;
+   end record;
 
    type Unb_Node is new Ada.Finalization.Controlled with record
-      Rep : Nodes.Node_Ref;
-      Last : Nodes.Node_Ref;
+      Rep : Node_Ref;
+      Last : Node_Ref;
       Size : Natural := 0;
-      Cache : Nodes.Node_Ref;
+      Cache : Node_Ref;
       Cache_Index : Natural := 0; -- 0 means invalid
    end record;
 
