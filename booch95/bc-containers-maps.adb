@@ -141,6 +141,14 @@ package body BC.Containers.Maps is
     return Item_At (It.M.all, It.Bucket_Index, It.Index);
   end Current_Item;
 
+  procedure Delete_Item_At (It : Map_Iterator) is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    raise BC.Not_Yet_Implemented;
+  end Delete_Item_At;
+
   function Current_Value (It : Iterator) return Value is
     Map_Iter : Map_Iterator
        renames Map_Iterator (SP.Value (SP.Pointer (It)).all);
