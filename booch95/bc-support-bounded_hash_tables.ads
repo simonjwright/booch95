@@ -138,6 +138,32 @@ package BC.Support.Bounded_Hash_Tables is
                                return Values.Value_Ptr;
       --  Support for iteration.
 
+      --  Iterator support
+
+      procedure Reset (T : Table;
+                       Bucket : out Positive;
+                       Index : out Positive);
+
+      function Is_Done (T : Table;
+                        Bucket : Positive;
+                        Index : Positive) return Boolean;
+
+      function Current_Item_Ptr (T : Table;
+                                 Bucket : Positive;
+                                 Index : Positive) return Items.Item_Ptr;
+
+      function Current_Value_Ptr (T : Table;
+                                  Bucket : Positive;
+                                  Index : Positive) return Values.Value_Ptr;
+
+      procedure Delete_Item_At (T : in out Table;
+                                Bucket : in out Positive;
+                                Index : in out  Positive);
+
+      procedure Next (T : Table;
+                      Bucket : in out Positive;
+                      Index : in out  Positive);
+
    end Tables;
 
 end BC.Support.Bounded_Hash_Tables;

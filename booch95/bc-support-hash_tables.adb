@@ -144,6 +144,105 @@ package body BC.Support.Hash_Tables is
       end Value_Of;
 
 
+      procedure Reset (T : Table;
+                       Bucket : out Positive;
+                       Index : out Positive) is
+      begin
+         if T.Size = 0 then
+            Bucket := T.Number_Of_Buckets + 1;
+         else
+            Bucket := 1;
+            loop
+               exit when Bucket > T.Number_Of_Buckets;
+               if Items.Length (T.Items (Bucket)) > 0 then
+                  Index := 1;
+                  exit;
+               end if;
+               Bucket := Bucket + 1;
+            end loop;
+         end if;
+      end Reset;
+
+
+      function Is_Done (T : Table;
+                        Bucket : Positive;
+                        Index : Positive) return Boolean is
+         pragma Warnings (Off, Index);
+      begin
+         return Bucket > T.Number_Of_Buckets;
+      end Is_Done;
+
+
+      function Current_Item_Ptr (T : Table;
+                                 Bucket : Positive;
+                                 Index : Positive) return Items.Item_Ptr is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Current_Item_Ptr",
+                 BSE.Missing);
+         return Items.Item_At (T.Items (Bucket), Index);
+      end Current_Item_Ptr;
+
+
+      function Current_Value_Ptr (T : Table;
+                                  Bucket : Positive;
+                                  Index : Positive) return Values.Value_Ptr is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Current_Value_Ptr",
+                 BSE.Missing);
+         return Values.Item_At (T.Values (Bucket), Index);
+      end Current_Value_Ptr;
+
+
+      procedure Delete_Item_At (T : in out Table;
+                                Bucket : in out Positive;
+                                Index : in out  Positive) is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Delete_Item_At",
+                 BSE.Missing);
+         Items.Remove (T.Items (Bucket), Index);
+         Values.Remove (T.Values (Bucket), Index);
+         if Index > Items.Length (T.Items (Bucket)) then
+            loop
+               Bucket := Bucket + 1;
+               exit when Bucket > T.Number_Of_Buckets;
+               if Items.Length (T.Items (Bucket)) > 0 then
+                  Index := 1;
+                  exit;
+               end if;
+            end loop;
+         end if;
+      end Delete_Item_At;
+
+
+      procedure Next (T : Table;
+                      Bucket : in out Positive;
+                      Index : in out  Positive) is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Next",
+                 BSE.Missing);
+         if Items.Length (T.Items (Bucket)) > Index then
+            Index := Index + 1;
+         else
+            loop
+               Bucket := Bucket + 1;
+               exit when Bucket > T.Number_Of_Buckets;
+               if Items.Length (T.Items (Bucket)) > 0 then
+                  Index := 1;
+                  exit;
+               end if;
+            end loop;
+         end if;
+      end Next;
+
+
    end Tables;
 
 
