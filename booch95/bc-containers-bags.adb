@@ -201,6 +201,72 @@ package body BC.Containers.Bags is
     return Is_Proper or else Cardinality (B) < Cardinality (O);
   end Is_Proper_Subset;
 
+  -- Subprograms to be overridden
+
+  procedure Attach (B : in out Bag; I : Item; C : Positive) is
+  begin
+    raise Should_Have_Been_Overridden;
+  end Attach;
+
+  procedure Detach (B : in out Bag; I : Item) is
+  begin
+    raise Should_Have_Been_Overridden;
+  end Detach;
+
+  procedure Set_Value (B : in out Bag; I : Item; C : Positive) is
+  begin
+    raise Should_Have_Been_Overridden;
+  end Set_Value;
+
+  function Multiplicity (B : Bag'Class) return Natural is
+    It : Iterator := New_Iterator (B);
+    Result : Natural := 0;
+  begin
+    while not Is_Done (It) loop
+      Result := Result + Count (B, Current_Item (It));
+      Next (It);
+    end loop;
+    return Result;
+  end Multiplicity;
+
+  function Number_Of_Buckets (B : Bag) return Natural is
+  begin
+    raise Should_Have_Been_Overridden;
+    return 0;
+  end Number_Of_Buckets;
+
+  function Length (B : Bag; Bucket : Positive) return Natural is
+  begin
+    raise Should_Have_Been_Overridden;
+    return 0;
+  end Length;
+
+  function Exists (B : Bag; I : Item) return Boolean is
+  begin
+    raise Should_Have_Been_Overridden;
+    return False;
+  end Exists;
+
+  function Value_Of (B : Bag; I : Item) return Positive is
+  begin
+    raise Should_Have_Been_Overridden;
+    return 1;
+  end Value_Of;
+
+  function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
+  begin
+    raise Should_Have_Been_Overridden;
+    return null;
+  end Item_At;
+
+  function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
+  begin
+    raise Should_Have_Been_Overridden;
+    return 1;
+  end Value_At;
+
+  -- Iterators
+
   procedure Initialize (It : in out Bag_Iterator) is
   begin
     It.Index := 0;
@@ -298,68 +364,12 @@ package body BC.Containers.Bags is
     return Item_At (It.B.all, It.Bucket_Index, It.Index);
   end Current_Item;
 
-  -- Subprograms to be overridden
-
-  procedure Attach (B : in out Bag; I : Item; C : Positive) is
+  procedure Delete_Item_At (It : Bag_Iterator) is
   begin
-    raise Should_Have_Been_Overridden;
-  end Attach;
-
-  procedure Detach (B : in out Bag; I : Item) is
-  begin
-    raise Should_Have_Been_Overridden;
-  end Detach;
-
-  procedure Set_Value (B : in out Bag; I : Item; C : Positive) is
-  begin
-    raise Should_Have_Been_Overridden;
-  end Set_Value;
-
-  function Multiplicity (B : Bag'Class) return Natural is
-    It : Iterator := New_Iterator (B);
-    Result : Natural := 0;
-  begin
-    while not Is_Done (It) loop
-      Result := Result + Count (B, Current_Item (It));
-      Next (It);
-    end loop;
-    return Result;
-  end Multiplicity;
-
-  function Number_Of_Buckets (B : Bag) return Natural is
-  begin
-    raise Should_Have_Been_Overridden;
-    return 0;
-  end Number_Of_Buckets;
-
-  function Length (B : Bag; Bucket : Positive) return Natural is
-  begin
-    raise Should_Have_Been_Overridden;
-    return 0;
-  end Length;
-
-  function Exists (B : Bag; I : Item) return Boolean is
-  begin
-    raise Should_Have_Been_Overridden;
-    return False;
-  end Exists;
-
-  function Value_Of (B : Bag; I : Item) return Positive is
-  begin
-    raise Should_Have_Been_Overridden;
-    return 1;
-  end Value_Of;
-
-  function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
-  begin
-    raise Should_Have_Been_Overridden;
-    return null;
-  end Item_At;
-
-  function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
-  begin
-    raise Should_Have_Been_Overridden;
-    return 1;
-  end Value_At;
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    raise BC.Not_Yet_Implemented;
+  end Delete_Item_At;
 
 end BC.Containers.Bags;
