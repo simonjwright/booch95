@@ -30,29 +30,56 @@ generic
 package BC.Support.Unbounded is
 
   type Unb_Node is private;
+  -- An unpacked container whose items are stored on the heap.
 
   type Unb_Node_Ref is access all Unb_Node;
 
   function Create (From : Unb_Node) return Unb_Node_Ref;
+  -- Construct a new unbounded container that is identical to the given
+  -- container
 
   function "=" (Left, Right : Unb_Node) return Boolean;
 
   procedure Clear (Obj : in out Unb_Node);
+  -- Empty the container of all Items
+
   procedure Insert (Obj : in out Unb_Node; Elem : Item);
+  -- Add an item to the front of the container
+
   procedure Insert (Obj : in out Unb_Node; Elem : Item; Before : Natural);
+  -- Add an item to the container, before the given index
+
   procedure Append (Obj : in out Unb_Node; Elem : Item);
+  -- Add an item to the end of the container
+
   procedure Append (Obj : in out Unb_Node; Elem : Item; After : Natural);
+  -- Add an item to the end of the container, after the given index
+
   procedure Remove (Obj : in out Unb_Node; From : Natural);
+  -- Remove the item at a given index
+
   procedure Replace (Obj : in out Unb_Node; Index : Positive; Elem : Item);
+  -- Replace the Item at Index with the new Elem
+
   function Length (Obj : Unb_Node) return Natural;
+  -- Returns the number of items in the container
+
   function First (Obj : Unb_Node) return Item;
   function First (Obj : Unb_Node) return Item_Ptr;
+  -- Returns the Item at the front of the container
+
   function Last (Obj : Unb_Node) return Item;
   function Last (Obj : Unb_Node) return Item_Ptr;
+  -- Returns the item at the end of the container
+
   function Item_At (Obj : Unb_Node; Index : Positive) return Item;
   function Item_At (Obj : Unb_Node; Index : Positive) return Item_Ptr;
+  -- Returns the item at the given index
+
   function Location (Obj : Unb_Node; Elem : Item; Start : Positive := 1)
                      return Natural;
+  -- Returns the first index in which the given item is found. Returns 0
+  -- if unsuccessful.
 
   procedure Free (Obj : in out Unb_Node_Ref);
   -- Dispose of the Node referred to, having first Cleared it
