@@ -1,4 +1,4 @@
-This is the Release directory of the Ada 95 Booch Components.
+This is the Download directory of the Ada 95 Booch Components.
 
 The Components are available in three forms:
 
@@ -17,7 +17,9 @@ bc-{date}.src,    uncompressed concatenated source, for DOS/Windows 3
   use the GNAT utility gnatchop to extract the sources and crunch
   the file names to 8.3 form.
 
-  GNAT can be obtained from ftp://cs.nyu.edu/pub/gnat and mirrors.
+The HTML documentation is available as bc-html-{date}.zip.
+
+GNAT can be obtained from ftp://cs.nyu.edu/pub/gnat and mirrors.
 
 Simon Wright <simon@pogner.demon.co.uk>
 
