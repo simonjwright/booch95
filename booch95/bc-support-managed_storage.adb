@@ -76,20 +76,9 @@ package body BC.Support.Managed_Storage is
 
 
   function New_Allocation( Size : SSE.Storage_Count ) return Chunk_Pointer is
-
-    type Block is new SSE.Storage_Array( 1 .. Size );
-
-    type Block_Pointer is access all Block;
-    for Block_Pointer'Storage_Pool use Chunk_Pointer'Storage_Pool;
-      -- so that deallocation via chunk_pointer isn't potentially erroneous!
-
-    function As_Chunk_Pointer is
-      new Ada.Unchecked_Conversion( Source => Block_Pointer, Target => Chunk_Pointer );
-
   begin
-    return As_Chunk_Pointer( new Block );
+    return new Chunk (Size - Pool_Overhead (Alignment => 1));
   end New_Allocation;
-
 
 
   function Pool_Overhead( Type_Overhead  : SSE.Storage_Count := 0;

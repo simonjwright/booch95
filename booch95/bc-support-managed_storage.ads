@@ -66,11 +66,11 @@ package BC.Support.Managed_Storage is
 
 private
 
-  type Chunk;
+  type Chunk( Payload_Size : SSE.Storage_Count );
 
   type Chunk_Pointer is access all Chunk;
 
-  type Chunk is
+  type Chunk( Payload_Size : SSE.Storage_Count ) is
     record
       Previous_Sized_Chunk : Chunk_Pointer;
       Next_Sized_Chunk     : Chunk_Pointer;
@@ -79,6 +79,7 @@ private
       Alignment            : SSE.Storage_Count;
       Number_Elements      : SSE.Storage_Count;
       Next_Element         : System.Address;
+      Payload              : SSE.Storage_Array( 1 .. Payload_Size );
     end record;
 
   type Pool( Chunk_Size : SSE.Storage_Count ) is
@@ -110,6 +111,8 @@ private
 
   use type SSE.Storage_Offset;
 
-  Chunk_Overhead : constant SSE.Storage_Count := (Chunk'Size+System.Storage_Unit-1) / System.Storage_Unit;
+  type Empty_Chunk is new Chunk( Payload_Size => 0 );
+  Chunk_Overhead : constant SSE.Storage_Count
+     := (Empty_Chunk'Size+System.Storage_Unit-1) / System.Storage_Unit;
 
 end BC.Support.Managed_Storage;
