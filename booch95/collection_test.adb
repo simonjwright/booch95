@@ -27,8 +27,8 @@ procedure Collection_Test is
   use Collection_Test_Support;
   use Containers;
   use Collections;
---   use CB;
---   use CD;
+  use CB;
+  use CD;
   use CU;
 
   procedure Process (C : Character; OK : out Boolean) is
@@ -176,43 +176,45 @@ procedure Collection_Test is
     Insert (C1, '7');
   end Test_Primitive;
 
---   Collection_B_P1, Collection_B_P2 : CB.Bounded_Collection;
---   Collection_D_P1, Collection_D_P2 : CD.Dynamic_Collection;
---   Collection_U_P1, Collection_U_P2 : CU.Unbounded_Collection;
+  Collection_B_P1, Collection_B_P2 : CB.Bounded_Collection;
+  Collection_D_P1, Collection_D_P2 : CD.Dynamic_Collection;
   Collection_U_P1, Collection_U_P2 : CU.Unbounded_Collection;
---   Collection_U_P1, Collection_U_P2 : CU.Unbounded_Collection;
 
 begin
 
   Put_Line ("Starting Collection tests");
 
---   Put_Line ("...Bounded Collection");
---   Test_Primitive (Collection_B_P1, Collection_B_P2);
+  Put_Line ("...Bounded Collection");
+  Test_Primitive (Collection_B_P1, Collection_B_P2);
 
---   Put_Line ("...Dynamic Collection");
---   Preallocate (Collection_D_P1, 50);
---   Test_Primitive (Collection_D_P1, Collection_D_P2);
+  Put_Line ("...Dynamic Collection");
+  Preallocate (Collection_D_P1, 50);
+  Test_Primitive (Collection_D_P1, Collection_D_P2);
 
   Put_Line ("...Unbounded Collection");
   Test_Primitive (Collection_U_P1, Collection_U_P2);
 
   Put_Line ("...Collection Active Iterator");
---   Put_Line ("   Bounded:");
---   Test_Active_Iterator (Collection_B_P1);
---   Put_Line ("   Dynamic:");
---   Test_Active_Iterator (Collection_D_P1);
+  Put_Line ("   Bounded:");
+  Test_Active_Iterator (Collection_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Active_Iterator (Collection_D_P1);
   Put_Line ("   Unbounded:");
   Test_Active_Iterator (Collection_U_P1);
 
   Put_Line ("...Collection Passive Iterator");
---   Put_Line ("   Bounded:");
---   Test_Passive_Iterator (Collection_B_P1);
---   Put_Line ("   Dynamic:");
---   Test_Passive_Iterator (Collection_D_P1);
+  Put_Line ("   Bounded:");
+  Test_Passive_Iterator (Collection_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Passive_Iterator (Collection_D_P1);
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Collection_U_P1);
 
   Put_Line ("...Collection Iterator Deletion");
+  Put_Line ("   Bounded:");
+  Test_Iterator_Deletion (Collection_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Iterator_Deletion (Collection_D_P1);
   Put_Line ("   Unbounded:");
   Test_Iterator_Deletion (Collection_U_P1);
 
