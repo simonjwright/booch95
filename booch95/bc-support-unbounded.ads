@@ -64,11 +64,9 @@ package BC.Support.Unbounded is
    --  Returns the number of items in the container
 
    function First (Obj : Unb_Node) return Item;
-   function First (Obj : Unb_Node) return Item_Ptr;
    --  Returns the item at the front of the container
 
    function Last (Obj : Unb_Node) return Item;
-   function Last (Obj : Unb_Node) return Item_Ptr;
    --  Returns the item at the end of the container
 
    function Item_At (Obj : Unb_Node; Index : Positive) return Item;

@@ -164,16 +164,6 @@ package body BC.Support.Dynamic is
       return Obj.Ref (1);
    end First;
 
-   function First (Obj : Dyn_Node) return Item_Ptr is
-   begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "First",
-              BSE.Empty);
-      return Item_Ptr
-        (Allow_Element_Access.To_Pointer (Obj.Ref (1)'Address));
-   end First;
-
    function Last (Obj : Dyn_Node) return Item is
    begin
       Assert (Obj.Size > 0,
@@ -181,16 +171,6 @@ package body BC.Support.Dynamic is
               "Last",
               BSE.Empty);
       return Obj.Ref (Obj.Size);
-   end Last;
-
-   function Last (Obj : Dyn_Node) return Item_Ptr is
-   begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "Last",
-              BSE.Empty);
-      return Item_Ptr
-        (Allow_Element_Access.To_Pointer (Obj.Ref (Obj.Size)'Address));
    end Last;
 
    function Item_At (Obj : Dyn_Node; Index : Positive) return Item is

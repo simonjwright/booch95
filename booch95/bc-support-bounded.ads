@@ -24,7 +24,7 @@ generic
    type Item is private;
    with function "=" (L, R : Item) return Boolean is <>;
    type Item_Ptr is access all Item;
-Maximum_Size : Positive;
+   Maximum_Size : Positive;
 package BC.Support.Bounded is
 
    pragma Elaborate_Body;
@@ -67,11 +67,9 @@ package BC.Support.Bounded is
    --  Returns the number of items in the container
 
    function First (Obj : Bnd_Node) return Item;
-   function First (Obj : Bnd_Node) return Item_Ptr;
    --  Returns the Item at the front of the container
 
    function Last (Obj : Bnd_Node) return Item;
-   function Last (Obj : Bnd_Node) return Item_Ptr;
    --  Returns the item at the end of the container
 
    function Item_At (Obj : Bnd_Node; Index : Positive) return Item;
