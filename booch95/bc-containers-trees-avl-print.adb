@@ -1,4 +1,4 @@
---  Copyright (C) 1999 Simon Wright.
+--  Copyright (C) 1999-2001 Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with Ada.Text_IO;
 procedure BC.Containers.Trees.AVL.Print (T : AVL_Tree) is

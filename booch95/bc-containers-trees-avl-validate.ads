@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 generic
 procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree);
