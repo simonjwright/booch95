@@ -111,10 +111,22 @@ private
 
   function Number_Of_Buckets (B : Bag) return Natural;
 
-  function Length (B : Bag; Bucket : Positive) return Natural;
-
   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr;
 
   function Value_At (B : Bag; Bucket, Index : Positive) return Positive;
+
+  type Bounded_Bag_Iterator is new Bag_Iterator with null record;
+
+  procedure Reset (It : in out Bounded_Bag_Iterator);
+
+  procedure Next (It : in out Bounded_Bag_Iterator);
+
+  function Is_Done (It : Bounded_Bag_Iterator) return Boolean;
+
+  function Current_Item (It : Bounded_Bag_Iterator) return Item;
+
+  function Current_Item_Ptr (It : Bounded_Bag_Iterator) return Item_Ptr;
+
+  procedure Delete_Item_At (It : in out Bounded_Bag_Iterator);
 
 end BC.Containers.Bags.Bounded;

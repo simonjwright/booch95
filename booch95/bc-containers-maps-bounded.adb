@@ -72,7 +72,7 @@ package body BC.Containers.Maps.Bounded is
   is new System.Address_To_Access_Conversions (Map);
 
   function New_Iterator (For_The_Map : Map) return Iterator'Class is
-    Result : Map_Iterator;
+    Result : Bounded_Map_Iterator;
   begin
     Result.For_The_Container :=
        Address_Conversions.To_Pointer (For_The_Map'Address).all'Access;
@@ -92,22 +92,110 @@ package body BC.Containers.Maps.Bounded is
     return Buckets;
   end Number_Of_Buckets;
 
-  function Length (M : Map; Bucket : Positive) return Natural is
-  begin
-    return Tables.Length (M.Rep, Bucket);
-  end Length;
-
   function Item_At
      (M : Map; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return Tables.Value_At (M.Rep, Bucket, Index);
+    return Tables.Access_Value_At (M.Rep, Index);
   end Item_At;
 
   function Key_At
      (M : Map; Bucket, Index : Positive) return Key_Ptr is
   begin
-    return Tables.Item_At (M.Rep, Bucket, Index);
+    return Tables.Access_Item_At (M.Rep, Index);
   end Key_At;
+
+  procedure Reset (It : in out Bounded_Map_Iterator) is
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
+  begin
+    It.Index := 0;
+    if Extent (M) = 0 then
+      It.Bucket_Index := 0;
+    else
+      It.Bucket_Index := 1;
+      while It.Bucket_Index <= Number_Of_Buckets (M) loop
+        if M.Rep.Buckets (It.Bucket_Index) > 0 then
+          It.Index := M.Rep.Buckets (It.Bucket_Index);
+          exit;
+        end if;
+        It.Bucket_Index := It.Bucket_Index + 1;
+      end loop;
+    end if;
+  end Reset;
+
+  procedure Next (It : in out Bounded_Map_Iterator) is
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
+  begin
+    if It.Bucket_Index <= Number_Of_Buckets (M) then
+      if M.Rep.Contents (It.Index).Next > 0 then
+        It.Index := M.Rep.Contents (It.Index).Next;
+      else
+        It.Bucket_Index := It.Bucket_Index + 1;
+        It.Index := 0;
+        while It.Bucket_Index <= Number_Of_Buckets (M) loop
+          if M.Rep.Buckets (It.Bucket_Index) > 0 then
+            It.Index := M.Rep.Buckets (It.Bucket_Index);
+            exit;
+          end if;
+          It.Bucket_Index := It.Bucket_Index + 1;
+        end loop;
+      end if;
+    end if;
+  end Next;
+
+  function Is_Done (It : Bounded_Map_Iterator) return Boolean is
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
+  begin
+    if It.Bucket_Index = 0
+       or else It.Bucket_Index > Number_Of_Buckets (M) then
+      return True;
+    end if;
+    if It.Index > 0 then
+      return False;
+    end if;
+    declare
+      package Conversions is new System.Address_To_Access_Conversions
+         (Bounded_Map_Iterator'Class);
+      P : Conversions.Object_Pointer := Conversions.To_Pointer (It'Address);
+    begin
+      P.Bucket_Index := P.Bucket_Index + 1;
+      P.Index := 0;
+      while P.Bucket_Index <= Number_Of_Buckets (M) loop
+        if M.Rep.Buckets (P.Bucket_Index) > 0 then
+          P.Index := M.Rep.Buckets (P.Bucket_Index);
+          return False;
+        end if;
+        P.Bucket_Index := P.Bucket_Index + 1;
+      end loop;
+    end;
+    return True;
+  end Is_Done;
+
+  function Current_Item (It : Bounded_Map_Iterator) return Item is
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    return M.Rep.Contents (It.Index).Value;
+  end Current_Item;
+
+  function Current_Item (It : Bounded_Map_Iterator) return Item_Ptr is
+    -- XXX this should probably not be permitted!
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    return Tables.Access_Value_At (M.Rep, It.Index);
+  end Current_Item;
+
+  procedure Delete_Item_At (It : in out Bounded_Map_Iterator) is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    raise BC.Not_Yet_Implemented;
+  end Delete_Item_At;
 
   Empty_Container : Map;
   pragma Warnings (Off, Empty_Container);

@@ -107,12 +107,24 @@ private
 
   function Number_Of_Buckets (M : Map) return Natural;
 
-  function Length (M : Map; Bucket : Positive) return Natural;
-
   function Item_At
      (M : Map; Bucket, Index : Positive) return Item_Ptr;
 
   function Key_At
      (M : Map; Bucket, Index : Positive) return Key_Ptr;
+
+  type Bounded_Map_Iterator is new Map_Iterator with null record;
+
+  procedure Reset (It : in out Bounded_Map_Iterator);
+
+  procedure Next (It : in out Bounded_Map_Iterator);
+
+  function Is_Done (It : Bounded_Map_Iterator) return Boolean;
+
+  function Current_Item (It : Bounded_Map_Iterator) return Item;
+
+  function Current_Item (It : Bounded_Map_Iterator) return Item_Ptr;
+
+  procedure Delete_Item_At (It : in out Bounded_Map_Iterator);
 
 end BC.Containers.Maps.Bounded;

@@ -102,8 +102,20 @@ private
 
   function Number_Of_Buckets (S : Set) return Natural;
 
-  function Length (S : Set; Bucket : Positive) return Natural;
-
   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr;
+
+  type Bounded_Set_Iterator is new Set_Iterator with null record;
+
+  procedure Reset (It : in out Bounded_Set_Iterator);
+
+  procedure Next (It : in out Bounded_Set_Iterator);
+
+  function Is_Done (It : Bounded_Set_Iterator) return Boolean;
+
+  function Current_Item (It : Bounded_Set_Iterator) return Item;
+
+  function Current_Item_Ptr (It : Bounded_Set_Iterator) return Item_Ptr;
+
+  procedure Delete_Item_At (It : in out Bounded_Set_Iterator);
 
 end BC.Containers.Sets.Bounded;
