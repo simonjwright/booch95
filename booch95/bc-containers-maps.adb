@@ -148,10 +148,12 @@ package body BC.Containers.Maps is
     if Is_Done (Map_Iter) then
       raise BC.Not_Found;
     end if;
-    return Value_At (Map_Iter.M.all, Map_Iter.Bucket_Index, Map_Iter.Index).all;
+    return Value_At (Map_Iter.M.all,
+                     Map_Iter.Bucket_Index,
+                     Map_Iter.Index).all;
   end Current_Value;
 
-  procedure Visit is
+  procedure Visit (Over_The_Container : Map'Class) is
     Iter : Iterator := New_Iterator (Over_The_Container);
     Map_Iter : Map_Iterator
        renames Map_Iterator (SP.Value (SP.Pointer (Iter)).all);
@@ -170,7 +172,7 @@ package body BC.Containers.Maps is
     end loop;
   end Visit;
 
-  procedure Modify is
+  procedure Modify (Over_The_Container : Map'Class) is
     Iter : Iterator := New_Iterator (Over_The_Container);
     Map_Iter : Map_Iterator
        renames Map_Iterator (SP.Value (SP.Pointer (Iter)).all);
