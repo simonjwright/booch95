@@ -27,6 +27,7 @@ generic
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
+  Initial_Size : Positive := 10;
 package BC.Containers.Sets.Dynamic is
 
   pragma Elaborate_Body;
@@ -93,25 +94,25 @@ private
   package IC is new BC.Support.Dynamic (Item => Item,
                                         Item_Ptr => Item_Ptr,
                                         Storage_Manager => Storage_Manager,
-                                        Storage => Storage);
+                                        Storage => Storage,
+                                        Initial_Size => Initial_Size);
   use IC;
   package Items is new BC.Support.Hash_Tables.Item_Signature
      (Item => Item,
-      Item_Container => IC.Dyn_Node,
-      Item_Container_Ptr => IC.Dyn_Node_Ref);
+      Item_Container => IC.Dyn_Node);
 
   -- We need a dummy type for the Value component of the hash table.
   type Boolean_Ptr is access all Boolean;
   package VC is new BC.Support.Dynamic (Item => Boolean,
                                         Item_Ptr => Boolean_Ptr,
                                         Storage_Manager => Storage_Manager,
-                                        Storage => Storage);
+                                        Storage => Storage,
+                                        Initial_Size => Initial_Size);
   use VC;
   package Values is new BC.Support.Hash_Tables.Value_Signature
      (Value => Boolean,
       Value_Ptr => Boolean_Ptr,
-      Value_Container => VC.Dyn_Node,
-      Value_Container_Ptr => VC.Dyn_Node_Ref);
+      Value_Container => VC.Dyn_Node);
 
   package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Items,

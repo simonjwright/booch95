@@ -27,6 +27,7 @@ generic
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
+  Initial_Size : Positive := 10;
 package BC.Containers.Bags.Dynamic is
 
   pragma Elaborate_Body;
@@ -50,10 +51,6 @@ package BC.Containers.Bags.Dynamic is
   type Bag is new Abstract_Bag with private;
 
   function Null_Container return Bag;
-
-  function Create (Size : Positive) return Bag;
-  -- Creates a new Dynamic Bag each of whose buckets is preallocated for
-  -- 'Size' elements
 
   procedure Clear (B : in out Bag);
   -- Empty the bag of all items.
@@ -101,24 +98,24 @@ private
   package IC is new BC.Support.Dynamic (Item => Item,
                                         Item_Ptr => Item_Ptr,
                                         Storage_Manager => Storage_Manager,
-                                        Storage => Storage);
+                                        Storage => Storage,
+                                        Initial_Size => Initial_Size);
   use IC;
   package Items is new BC.Support.Hash_Tables.Item_Signature
      (Item => Item,
-      Item_Container => IC.Dyn_Node,
-      Item_Container_Ptr => IC.Dyn_Node_Ref);
+      Item_Container => IC.Dyn_Node);
 
   type Positive_Ptr is access all Positive;
   package VC is new BC.Support.Dynamic (Item => Positive,
                                         Item_Ptr => Positive_Ptr,
                                         Storage_Manager => Storage_Manager,
-                                        Storage => Storage);
+                                        Storage => Storage,
+                                        Initial_Size => Initial_Size);
   use VC;
   package Values is new BC.Support.Hash_Tables.Value_Signature
      (Value => Positive,
       Value_Ptr => Positive_Ptr,
-      Value_Container => VC.Dyn_Node,
-      Value_Container_Ptr => VC.Dyn_Node_Ref);
+      Value_Container => VC.Dyn_Node);
 
   package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Items,
