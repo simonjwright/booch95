@@ -20,14 +20,9 @@
 --  $Date$
 --  $Author$
 
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Maps is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Containers.Maps");
 
    function Are_Equal (L, R : Abstract_Map'Class) return Boolean is
       It : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (L));
@@ -48,6 +43,7 @@ package body BC.Containers.Maps is
    end Are_Equal;
 
    function Available (M : Abstract_Map) return Natural is
+      pragma Warnings (Off, M);
    begin
       return Natural'Last;
    end Available;
