@@ -42,6 +42,9 @@ package BC.Containers.Queues is
   procedure Remove (Q : in out Abstract_Queue; From : Positive) is abstract;
   -- Remove the item at the given index (may be a balking operation).
 
+  function Available (Q : in Abstract_Queue) return Natural;
+  -- Indicates number of empty "Item slots" left in Queue
+
   function Length (Q : in Abstract_Queue) return Natural is abstract;
   -- Return the number of items in the queue.
 

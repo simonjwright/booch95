@@ -69,6 +69,11 @@ package body BC.Containers.Deques is
     end;
   end Are_Equal;
 
+  function Available (D : in Abstract_Deque) return Natural is
+  begin
+    return Natural'Last;
+  end Available;
+
   procedure Reset (It : in out Deque_Iterator) is
     D : Abstract_Deque'Class
        renames Abstract_Deque'Class (It.For_The_Container.all);

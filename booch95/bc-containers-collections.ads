@@ -65,6 +65,9 @@ package BC.Containers.Collections is
                      At_Index : Positive; Elem : Item) is abstract;
   -- Replace the item at the given index with the given item.
 
+  function Available (C : Abstract_Collection) return Natural;
+  -- Indicated number of empty "Item slots" left in the collection
+
   function Length (C : Abstract_Collection) return Natural is abstract;
   -- Return the number of items in the collection.
 

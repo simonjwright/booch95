@@ -58,6 +58,9 @@ package BC.Containers.Maps is
   -- If the key does not exist in the map, raise BC.Not_Found. Otherwise,
   -- remove the key/item binding.
 
+  function Available (M : Abstract_Map) return Natural;
+  -- Return the number of unused slots in the map.
+
   function Extent (M : Abstract_Map) return Natural
     is abstract;
   -- Return the number of key/item bindings in the map.

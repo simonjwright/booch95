@@ -40,6 +40,9 @@ package BC.Containers.Stacks is
   procedure Pop (S : in out Abstract_Stack) is abstract;
   -- Remove the item from the top of the Stack.
 
+  function Available (S : in Abstract_Stack) return Natural;
+  -- Returns a count of the number of empty "Item slots" left.
+
   function Depth (S : in Abstract_Stack) return Natural is abstract;
   -- Returns the number of items in the Stack
 

@@ -89,6 +89,11 @@ package body BC.Containers.Queues is
     end if;
   end Reset;
 
+  function Available (Q : in Abstract_Queue) return Natural is
+  begin
+    return Natural'Last;
+  end Available;
+
   procedure Next (It : in out Queue_Iterator) is
   begin
     It.Index := It.Index + 1;

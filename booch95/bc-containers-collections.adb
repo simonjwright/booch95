@@ -61,6 +61,11 @@ package body BC.Containers.Collections is
    end if;
   end Copy;
 
+  function Available (C : Abstract_Collection) return Natural is
+  begin
+    return Natural'Last;
+  end Available;
+
   procedure Lock (C : in out Abstract_Collection) is
   begin
     null;

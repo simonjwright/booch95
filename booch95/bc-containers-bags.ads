@@ -86,6 +86,9 @@ package BC.Containers.Bags is
   -- count more than that in the bag O, decrement the count in the bag S by
   -- the count in the bag O.
 
+  function Available (B : Abstract_Bag) return Natural;
+  -- Return the number of unused slots in the bag.
+
   function Extent (B : Abstract_Bag) return Natural is abstract;
   -- Return the number of distinct items in the bag.
 
