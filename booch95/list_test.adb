@@ -37,7 +37,6 @@ procedure List_Test is
       Put_Line (Message);
     end if;
   end Assertion;
-  pragma Inline (Assertion);
 
   procedure Test_Single (L1, L2, T1, T2, T3 : in out Single_List) is
   begin
