@@ -267,7 +267,7 @@ package body BC.Containers.Lists.Single is
     Prev, Ptr : Single_Nodes.Single_Node_Ref;
     Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Index : Positive := 1;
-    Cut : Boolean := True;
+    Shared_Node_Found : Boolean := False;
   begin
     while Curr /= null and then Index < From loop
       Prev := Curr;
@@ -287,17 +287,19 @@ package body BC.Containers.Lists.Single is
     while Curr /= null and then Index <= Count loop
       Ptr := Curr;
       Curr := Curr.Next;
-      if Cut then
+      if not Shared_Node_Found then
         if Ptr.Count > 1 then
           Ptr.Count := Ptr.Count - 1;
-          Cut := False;
+          Shared_Node_Found := True;
         else
           Single_Nodes.Delete (Ptr);
         end if;
       end if;
       Index := Index + 1;
     end loop;
-    Ptr.Next := null;
+    if Shared_Node_Found then
+      Ptr.Next := null;
+    end if;
     if Curr /= null then
       if Prev /= null then
         Prev.Next := Curr;
