@@ -88,6 +88,8 @@ dist: $(DISTRIBUTION_FILES)
 	cp -p ACL html/*.html html/*.gif distribution/
 
 ADA_SOURCE = \
+ada_units.ad[bs] \
+ada_unit_support.ad[bs] \
 bc-containers-lists-double.ad[bs] \
 bc-containers-lists-single.ad[bs] \
 bc-containers-lists.ad[bs] \
