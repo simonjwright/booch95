@@ -28,7 +28,7 @@ with Root_Unbounded_Stacks;
 -- with User_Bounded_Stacks;
 -- with User_Dynamic_Stacks;
 -- with User_Unbounded_Stacks;
-with User_Defined;
+-- with User_Defined;
 with Character_References;
 procedure Stack_Test is
    use Text_IO;
@@ -43,9 +43,9 @@ procedure Stack_Test is
 --    use User_Bounded_Stacks;
 --    use User_Dynamic_Stacks;
 --    use User_Unbounded_Stacks;
-   use User_Defined;
+--    use User_Defined;
 
-   Global_Items : array(1..10) of aliased Chunk;
+--    Global_Items : array(1..10) of aliased Chunk;
 
    procedure Process (C : in Char_Ptr; OK : out Boolean) is
       use Text_IO;
