@@ -1,4 +1,4 @@
---  Copyright (C) 2001 Simon Wright.
+--  Copyright (C) 2001-2002 Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -33,12 +33,15 @@ package BC.Support.Bounded_Hash_Tables is
    --  Values may be either primitive types or user-defined
    --  non-limited types.
 
+   --  The two signature packages use the function Eq for equality
+   --  instead of the more normal "=" because ObjectAda 7.2 and 7.2.1
+   --  get confused otherwise.
 
    generic
 
       type Item is private;
       type Item_Ptr is access all Item;
-      with function "=" (L, R : Item) return Boolean is <>;
+      with function Eq (L, R : Item) return Boolean;
       with function Hash (V : Item) return Natural is <>;
 
    package Item_Signature is end Item_Signature;
@@ -48,7 +51,7 @@ package BC.Support.Bounded_Hash_Tables is
 
       type Value is private;
       type Value_Ptr is access all Value;
-      with function "=" (L, R : Value) return Boolean is <>;
+      with function Eq (L, R : Value) return Boolean;
 
    package Value_Signature is end Value_Signature;
 

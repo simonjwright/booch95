@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -90,12 +90,14 @@ private
 
    package Items is new BC.Support.Bounded_Hash_Tables.Item_Signature
      (Item => Item,
-      Item_Ptr => Item_Ptr);
+      Item_Ptr => Item_Ptr,
+      Eq => "=");
 
    type Positive_Ptr is access all Positive;
    package Values is new BC.Support.Bounded_Hash_Tables.Value_Signature
      (Value => Positive,
-      Value_Ptr => Positive_Ptr);
+      Value_Ptr => Positive_Ptr,
+      Eq => "=");
 
    package Tables is new BC.Support.Bounded_Hash_Tables.Tables
      (Items => Items,
