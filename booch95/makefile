@@ -91,6 +91,8 @@ ADA_SOURCE = \
 bc-containers-lists-double.ad[bs] \
 bc-containers-lists-single.ad[bs] \
 bc-containers-lists.ad[bs] \
+bc-containers-maps-bounded.ad[bs] \
+bc-containers-maps.ad[bs] \
 bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
 bc-containers-queues-unbounded.ad[bs] \
@@ -110,6 +112,7 @@ bc-smart.ad[bs] \
 bc-support-bounded.ad[bs] \
 bc-support-dynamic.ad[bs] \
 bc-support-exceptions.ad[bs] \
+bc-support-hash_tables.ad[bs] \
 bc-support-managed_storage.ad[bs] \
 bc-support-nodes.ad[bs] \
 bc-support-unbounded.ad[bs] \
@@ -117,36 +120,27 @@ bc-support-unmanaged_storage.ad[bs] \
 bc-support.ad[bs] \
 bc.ad[bs] \
 character_references.ad[bs] \
-global_heap.ads \
-graph_test.adb \
-graph_test_support.ads \
-lists_for_timing.ads \
+chunks.ad[bs] \
+global_heap.ad[bs] \
+graph_test.ad[bs] \
+graph_test_support.ad[bs] \
+lists_for_timing.ad[bs] \
 list_test.ad[bs] \
-queues_for_timing.ads \
+list_test_support.ad[bs] \
+map_test.ad[bs] \
+map_test_support.ad[bs] \
+queues_for_timing.ad[bs] \
 queue_test.ad[bs] \
-root_bin_trees.ad[bs] \
-root_bounded_queues.ad[bs] \
-root_bounded_stacks.ad[bs] \
-root_container.ad[bs] \
-root_dlist.ad[bs] \
-root_dynamic_queues.ad[bs] \
-root_dynamic_stacks.ad[bs] \
-root_lists.ad[bs] \
-root_mway_trees.ad[bs] \
-root_queues.ad[bs] \
-root_slist.ad[bs] \
-root_smart.ad[bs] \
-root_smart_pointer.ad[bs] \
-root_stacks.ad[bs] \
-root_trees.ad[bs] \
-root_unbounded_queues.ad[bs] \
-root_unbounded_stacks.ad[bs] \
+queue_test_support.ad[bs] \
 smart_test.ad[bs] \
+smart_test_support.ad[bs] \
 stack_test.ad[bs] \
-storage.adb \
-time_lists.adb \
-time_queues.adb \
-tree_test.ad[bs]
+stack_test_support.ad[bs] \
+storage.ad[bs] \
+time_lists.ad[bs] \
+time_queues.ad[bs] \
+tree_test.ad[bs] \
+tree_test_support.ad[bs]
 
 SOURCE = makefile ACL README $(ADA_SOURCE)
 
