@@ -18,6 +18,12 @@
 
 <dd>
 
+<h3>Licence changes</h3>
+
+<p>The library is now released under the GNAT-modified GPL. My test
+and demonstration code is released under the GPL. Contributed code's
+licences remain unchanged.
+
 <h3>Interface changes</h3>
 
 <h4>Constraints revisited</h4>
@@ -80,11 +86,11 @@ Sets.
 <p>The slender support for concurrency (Guarded and Synchronized
 forms) has been removed.
 
-<p>You'll probably find you need concurrency support when using the
-Components to help implement your own abstractions. You'll probably
-find that the best approach is to implement the required concurrency
-behaviour with tasks and protected types, using the Components within
-this environment as sequential support.
+<p>You may find you need concurrency support when using the Components
+to help implement your own abstractions. You'll probably find that the
+best approach is to implement the required concurrency behaviour with
+tasks and protected types, using the Components within this
+environment as sequential support.
 
 <h4>Memory streams</h4>
 
@@ -92,7 +98,8 @@ this environment as sequential support.
 
 <h4>Other</h4>
 
-<p><tt>BC.Containers.Maps.Hash_Statistics</tt> is withdrawn.
+<p><tt>BC.Containers.Maps.Hash_Statistics</tt> and
+<tt>BC.Containers.Sets.Hash_Statistics</tt> are withdrawn.
 
 <p><tt>BC.Container_Error</tt> (raised when sorting unsortable
 container types) becomes <tt>Sort_Error</tt>.
