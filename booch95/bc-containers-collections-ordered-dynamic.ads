@@ -24,6 +24,7 @@ generic
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
+  Initial_Size : Positive := 10;
 package BC.Containers.Collections.Ordered.Dynamic is
 
   pragma Elaborate_Body;
@@ -79,9 +80,6 @@ package BC.Containers.Collections.Ordered.Dynamic is
   function Location (C : Collection; Elem : Item) return Natural;
   -- Return the first index at which the item is found (0 if the
   -- item desn't exist in the collecton).
-
-  function Create (Size : Positive) return Collection;
-  -- Creates a new Dynamic Collection that is preallocated for 'Size' elements
 
   procedure Preallocate (C : in out Collection; Size : Natural);
   -- Allocates 'Size' additional storage elements for the Collection
