@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -27,15 +27,15 @@ package body BC.Graphs.Directed is
   is new BSE.Assert ("BC.Graphs.Directed");
 
 
-  -------------------------------
-  -- Directed_Graph operations --
-  -------------------------------
+  ----------------------
+  -- Graph operations --
+  ----------------------
 
-  procedure Create_Arc (G : in out Directed_Graph;
-                        A : in out Directed_Arc'Class;
+  procedure Create_Arc (G : in out Graph;
+                        A : in out Arc'Class;
                         I : Arc_Item;
-                        From : in out Directed_Vertex'Class;
-                        To : in out Directed_Vertex'Class) is
+                        From : in out Vertex'Class;
+                        To : in out Vertex'Class) is
   begin
     Clear (A);
     A.Rep := new Arc_Node'(Ada.Finalization.Controlled with
@@ -61,11 +61,11 @@ package body BC.Graphs.Directed is
   end Create_Arc;
 
 
-  --------------------------------
-  -- Directed_Vertex operations --
-  --------------------------------
+  -----------------------
+  -- Vertex operations --
+  -----------------------
 
-  function Number_Of_Incoming_Arcs (V : Directed_Vertex) return Natural is
+  function Number_Of_Incoming_Arcs (V : Vertex) return Natural is
     Count : Natural := 0;
     Curr : Arc_Node_Ptr;
   begin
@@ -82,7 +82,7 @@ package body BC.Graphs.Directed is
   end Number_Of_Incoming_Arcs;
 
 
-  function Number_Of_Outgoing_Arcs (V : Directed_Vertex) return Natural is
+  function Number_Of_Outgoing_Arcs (V : Vertex) return Natural is
     Count : Natural := 0;
     Curr : Arc_Node_Ptr;
   begin
@@ -99,12 +99,12 @@ package body BC.Graphs.Directed is
   end Number_Of_Outgoing_Arcs;
 
 
-  -----------------------------
-  -- Directed_Arc operations --
-  -----------------------------
+  --------------------
+  -- Arc operations --
+  --------------------
 
-  procedure Set_From_Vertex (A : in out Directed_Arc;
-                             V : access Directed_Vertex'Class) is
+  procedure Set_From_Vertex (A : in out Arc;
+                             V : access Vertex'Class) is
     Prev, Curr : Arc_Node_Ptr;
   begin
     Assert (A.Rep /= null,
@@ -136,8 +136,8 @@ package body BC.Graphs.Directed is
   end Set_From_Vertex;
 
 
-  procedure Set_To_Vertex (A : in out Directed_Arc;
-                           V : access Directed_Vertex'Class) is
+  procedure Set_To_Vertex (A : in out Arc;
+                           V : access Vertex'Class) is
     Prev, Curr : Arc_Node_Ptr;
   begin
     Assert (A.Rep /= null,
@@ -169,7 +169,7 @@ package body BC.Graphs.Directed is
   end Set_To_Vertex;
 
 
-  procedure From_Vertex (A : Directed_Arc; V : in out Directed_Vertex'Class) is
+  procedure From_Vertex (A : Arc; V : in out Vertex'Class) is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
@@ -183,7 +183,7 @@ package body BC.Graphs.Directed is
   end From_Vertex;
 
 
-  procedure To_Vertex (A : Directed_Arc; V : in out Directed_Vertex'Class) is
+  procedure To_Vertex (A : Arc; V : in out Vertex'Class) is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
@@ -197,15 +197,15 @@ package body BC.Graphs.Directed is
   end To_Vertex;
 
 
-  ------------------------------
-  -- Directed_Graph iterators --
-  ------------------------------
+  ---------------------
+  -- Graph iterators --
+  ---------------------
 
   package Graph_Address_Conversions
-  is new System.Address_To_Access_Conversions (Directed_Graph);
+  is new System.Address_To_Access_Conversions (Graph);
 
   function New_Graph_Iterator
-     (For_The_Graph : Directed_Graph) return Graph_Iterator'Class is
+     (For_The_Graph : Graph) return Graph_Iterator'Class is
   begin
     return Directed_Graph_Iterator'
        (For_The_Graph => Graph_Address_Conversions.To_Pointer
@@ -215,12 +215,12 @@ package body BC.Graphs.Directed is
 
 
   package Vertex_Address_Conversions
-  is new System.Address_To_Access_Conversions (Directed_Vertex);
+  is new System.Address_To_Access_Conversions (Vertex);
 
 
   function New_Vertex_Iterator
-     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator'Class is
-    Result : Directed_Vertex_Bothways_Iterator;
+     (For_The_Vertex : Vertex) return Vertex_Iterator'Class is
+    Result : Vertex_Bothways_Iterator;
   begin
     Result.For_The_Vertex :=
        Vertex_Address_Conversions.To_Pointer
@@ -231,8 +231,8 @@ package body BC.Graphs.Directed is
 
 
   function New_Vertex_Incoming_Iterator
-     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator'Class is
-    Result : Directed_Vertex_Incoming_Iterator;
+     (For_The_Vertex : Vertex) return Vertex_Iterator'Class is
+    Result : Vertex_Incoming_Iterator;
   begin
     Result.For_The_Vertex :=
        Vertex_Address_Conversions.To_Pointer
@@ -243,8 +243,8 @@ package body BC.Graphs.Directed is
 
 
   function New_Vertex_Outgoing_Iterator
-     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator'Class is
-    Result : Directed_Vertex_Outgoing_Iterator;
+     (For_The_Vertex : Vertex) return Vertex_Iterator'Class is
+    Result : Vertex_Outgoing_Iterator;
   begin
     Result.For_The_Vertex :=
        Vertex_Address_Conversions.To_Pointer
@@ -278,40 +278,41 @@ package body BC.Graphs.Directed is
   end Is_Done;
 
 
-  function Current_Vertex (It : Directed_Graph_Iterator) return Vertex'Class is
+  function Current_Vertex (It : Directed_Graph_Iterator)
+                          return Abstract_Vertex'Class is
   begin
     Assert (It.Index /= null,
             BC.Is_Null'Identity,
-            "Current_Item(Directed_Graph_Iterator)",
+            "Current_Vertex(Graph_Iterator)",
             BSE.Is_Null);
     It.Index.Count := It.Index.Count + 1;
-    return Directed_Vertex'(Ada.Finalization.Controlled with Rep => It.Index);
+    return Vertex'(Ada.Finalization.Controlled with Rep => It.Index);
   end Current_Vertex;
 
 
-  -------------------------------
-  -- Directed_Vertex iterators --
-  -------------------------------
+  ----------------------
+  -- Vertex iterators --
+  ----------------------
 
   --------------
   -- Abstract --
   --------------
 
-  function Is_Done (It : Directed_Vertex_Abstract_Iterator) return Boolean is
+  function Is_Done (It : Vertex_Abstract_Iterator) return Boolean is
   begin
     return It.Index = null;
   end Is_Done;
 
 
-  function Current_Arc (It : Directed_Vertex_Abstract_Iterator)
-                        return Arc'Class is
+  function Current_Arc (It : Vertex_Abstract_Iterator)
+                        return Abstract_Arc'Class is
   begin
     Assert (It.Index /= null,
             BC.Is_Null'Identity,
-            "Current_Item(Directed_Vertex_Outgoing_Iterator)",
+            "Current_Arc(Vertex_Outgoing_Iterator)",
             BSE.Is_Null);
     It.Index.Count := It.Index.Count + 1;
-    return Directed_Arc'(Ada.Finalization.Controlled with Rep => It.Index);
+    return Arc'(Ada.Finalization.Controlled with Rep => It.Index);
   end Current_Arc;
 
 
@@ -319,7 +320,7 @@ package body BC.Graphs.Directed is
   -- Bothways --
   --------------
 
-  procedure Reset (It : in out Directed_Vertex_Bothways_Iterator) is
+  procedure Reset (It : in out Vertex_Bothways_Iterator) is
   begin
     It.Do_Outgoing := True;
     if It.For_The_Vertex.Rep /= null then
@@ -340,7 +341,7 @@ package body BC.Graphs.Directed is
   end Reset;
 
 
-  procedure Next (It : in out Directed_Vertex_Bothways_Iterator) is
+  procedure Next (It : in out Vertex_Bothways_Iterator) is
   begin
     if It.Do_Outgoing then
       It.Index := It.Index.Next_Outgoing;
@@ -366,7 +367,7 @@ package body BC.Graphs.Directed is
   -- Outgoing --
   --------------
 
-  procedure Reset (It : in out Directed_Vertex_Outgoing_Iterator) is
+  procedure Reset (It : in out Vertex_Outgoing_Iterator) is
   begin
     if It.For_The_Vertex.Rep /= null then
       It.Index := It.For_The_Vertex.Rep.Outgoing;
@@ -376,7 +377,7 @@ package body BC.Graphs.Directed is
   end Reset;
 
 
-  procedure Next (It : in out Directed_Vertex_Outgoing_Iterator) is
+  procedure Next (It : in out Vertex_Outgoing_Iterator) is
   begin
     if It.Index /= null then
       It.Index := It.Index.Next_Outgoing;
@@ -388,7 +389,7 @@ package body BC.Graphs.Directed is
   -- Incoming --
   --------------
 
-  procedure Reset (It : in out Directed_Vertex_Incoming_Iterator) is
+  procedure Reset (It : in out Vertex_Incoming_Iterator) is
   begin
     if It.For_The_Vertex.Rep /= null then
       It.Index := It.For_The_Vertex.Rep.Incoming;
@@ -398,7 +399,7 @@ package body BC.Graphs.Directed is
   end Reset;
 
 
-  procedure Next (It : in out Directed_Vertex_Incoming_Iterator) is
+  procedure Next (It : in out Vertex_Incoming_Iterator) is
   begin
     if It.Index /= null then
       It.Index := It.Index.Next_Incoming;
