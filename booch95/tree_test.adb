@@ -216,7 +216,7 @@ procedure Tree_Test is
       Assertion (Item_At (T1) = '6', "** M14: Tree item is not correct");
       Assertion (Arity (T1) = 3, "** M15: Tree arity is not correct");
       Child (T1, 1);
-      Assertion (Item_At (T1) = '5', "** M16: Tree item is not correct");
+      Assertion (Item_At (T1) = '2', "** M16: Tree item is not correct");
       Parent (T1);
       Assertion (Item_At (T1) = '6', "** M17: Tree item is not correct");
       Child (T1, 2);
@@ -224,7 +224,7 @@ procedure Tree_Test is
       Parent (T1);
       Assertion (Item_At (T1) = '6', "** M19: Tree item is not correct");
       Child (T1, 3);
-      Assertion (Item_At (T1) = '2', "** M20: Tree item is not correct");
+      Assertion (Item_At (T1) = '5', "** M20: Tree item is not correct");
       T2 := Tt1;
       Append (T2, '4', 1);
       Append (T2, '1', 4);
@@ -248,7 +248,7 @@ procedure Tree_Test is
       Share (T2, T1, 3);
       Assertion (Item_At (T2) = '3',  "** M30: Tree item is not correct");
       Share (Tt1, T1, 1);
-      Assertion (Item_At (Tt1) = '5',  "** M31: Tree item is not correct");
+      Assertion (Item_At (Tt1) = '2',  "** M31: Tree item is not correct");
       Share (Tt2, T1, 5);
       Assertion (Item_At (Tt2) = '1',  "** M32: Tree item is not correct");
       Append (T2, '8');
@@ -263,7 +263,7 @@ procedure Tree_Test is
       Assertion (Item_At (Tt1) = '3',  "** M34: Tree item is not correct");
       Assertion (Has_Children (Tt1), "** M35: Tree has no children");
       Assertion (not Has_Children (Tt3), "** M36: Tree has children");
-      Assertion (Item_At (Tt3) = '5',  "** M37: Tree item is not correct");
+      Assertion (Item_At (Tt3) = '2',  "** M37: Tree item is not correct");
       Clear (Tt3);
       Remove (T1, 2);
       Tt3 := T1;
