@@ -1,4 +1,5 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller, Steve Doiel
+-- and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -66,8 +67,52 @@ package BC.Containers is
   -- sets OK to False.
 
   generic
+    type Param_Type is private;
+    with procedure Apply (Elem : in Item;
+                          Param : in Param_Type;
+                          OK : out Boolean);
+  procedure Visit_With_In_Param (Using : in out Iterator;
+                                 Param : in Param_Type);
+  -- Call Apply with a Parameter for each Item in the Container to which the
+  -- iterator Using is bound. The iteration will terminate early if Apply
+  -- sets OK to False.
+
+  generic
+    type Param_Type is private;
+    with procedure Apply (Elem : in Item;
+                          Param : in out Param_Type;
+                          OK : out Boolean);
+  procedure Visit_With_In_Out_Param (Using : in out Iterator;
+                                     Param : in out Param_Type);
+  -- Call Apply with a Parameter for each Item in the Container to which the
+  -- iterator Using is bound. The iteration will terminate early if Apply
+  -- sets OK to False.
+
+  generic
     with procedure Apply (Elem : in out Item; OK : out Boolean);
   procedure Modify (Using : in out Iterator);
+  -- Call Apply with a copy of each Item in the Container to which the
+  -- iterator Using is bound. The iteration will terminate early if Apply
+  -- sets OK to False.
+
+  generic
+    type Param_Type is private;
+    with procedure Apply (Elem : in out Item;
+                          Param : in Param_Type;
+                          OK : out Boolean);
+  procedure Modify_With_In_Param (Using : in out Iterator;
+                                  Param : in Param_Type);
+  -- Call Apply with a Parameter each Item in the Container to which the
+  -- iterator Using is bound. The iteration will terminate early if Apply
+  -- sets OK to False.
+
+  generic
+    type Param_Type is private;
+    with procedure Apply (Elem : in out Item;
+                          Param : in out Param_Type;
+                          OK : out Boolean);
+  procedure Modify_With_In_Out_Param (Using : in out Iterator;
+                                      Param : in out Param_Type);
   -- Call Apply with a copy of each Item in the Container to which the
   -- iterator Using is bound. The iteration will terminate early if Apply
   -- sets OK to False.
@@ -119,4 +164,3 @@ private
   type Iterator is new SP.Pointer;
 
 end BC.Containers;
-
