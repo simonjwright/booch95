@@ -65,11 +65,9 @@ package BC.Support.Dynamic is
    --  Returns the number of items in the container
 
    function First (Obj : Dyn_Node) return Item;
-   function First (Obj : Dyn_Node) return Item_Ptr;
    --  Returns the Item at the front of the container
 
    function Last (Obj : Dyn_Node) return Item;
-   function Last (Obj : Dyn_Node) return Item_Ptr;
    --  Returns the item at the end of the container
 
    function Item_At (Obj : Dyn_Node; Index : Positive) return Item;

@@ -289,16 +289,6 @@ package body BC.Support.Unbounded is
       return Obj.Rep.Element;
    end First;
 
-   function First (Obj : Unb_Node) return Item_Ptr is
-   begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "First",
-              BSE.Empty);
-      return Item_Ptr
-        (Allow_Element_Access.To_Pointer (Obj.Rep.Element'Address));
-   end First;
-
    function Last (Obj : Unb_Node) return Item is
    begin
       Assert (Obj.Size > 0,
@@ -306,16 +296,6 @@ package body BC.Support.Unbounded is
               "Last",
               BSE.Empty);
       return Obj.Last.Element;
-   end Last;
-
-   function Last (Obj : Unb_Node) return Item_Ptr is
-   begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "Last",
-              BSE.Empty);
-      return Item_Ptr
-        (Allow_Element_Access.To_Pointer (Obj.Last.Element'Address));
    end Last;
 
    function Item_At (Obj : Unb_Node; Index : Positive) return Item is
