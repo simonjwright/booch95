@@ -29,7 +29,10 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Trees.AVL is
 
-  type AVL_Tree is limited private;
+  type AVL_Tree is private;
+
+  function "=" (L, R : AVL_Tree) return Boolean;
+  -- return True if both trees contain the same Elements.
 
   procedure Clear (Obj : in out AVL_Tree);
   -- Make the tree null and reclaim the storage associated with its items.
@@ -82,12 +85,14 @@ private
 
   package Nodes is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
-  type AVL_Tree is new Ada.Finalization.Limited_Controlled with record
+  type AVL_Tree is new Ada.Finalization.Controlled with record
     Rep : Nodes.AVL_Node_Ref;
     Size : Natural := 0;
   end record;
 
   procedure Initialize (Obj : in out AVL_Tree);
+
+  procedure Adjust (Obj : in out AVL_Tree);
 
   procedure Finalize (Obj : in out AVL_Tree);
 
