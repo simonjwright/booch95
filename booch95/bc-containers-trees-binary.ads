@@ -1,15 +1,33 @@
+-- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- All Rights Reserved.
+--
+--      This program is free software; you can redistribute it
+--      and/or modify it under the terms of the Ada Community
+--      License which comes with this Library.
+--
+--      This program is distributed in the hope that it will be
+--      useful, but WITHOUT ANY WARRANTY; without even the implied
+--      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+--      PURPOSE. See the Ada Community License for more details.
+--      You should have received a copy of the Ada Community
+--      License with this library, in the file named "Ada Community
+--      License" or "ACL". If not, contact the author of this library
+--      for a copy.
+--
+
 -- $Id$
 
+with Ada.Finalization;
 with Bc.Support.Nodes;
 
 generic
 package BC.Containers.Trees.Binary is
 
-  type Binary_Tree is limited private;
+  type Binary_Tree is new Ada.Finalization.Controlled with private;
 
   type Child_Branch is (Left, Right);
 
---   function Create (From : Binary_Tree) return Binary_Tree;
+  function Create (From : Binary_Tree) return Binary_Tree;
 
   function "=" (Left, Right : Binary_Tree) return Boolean;
 
@@ -24,7 +42,7 @@ package BC.Containers.Trees.Binary is
   procedure Remove (Obj : in out Binary_Tree; Child : in Child_Branch);
   procedure Share (Obj : in out Binary_Tree;
                    Share_With : in Binary_Tree;
-                   Child : in Child_Branch := Right);
+                   Child : in Child_Branch);
   procedure Swap_Child (Obj : in out Binary_Tree;
                         Swap_WIth : in out Binary_Tree;
                         Child : in Child_Branch);
@@ -42,16 +60,17 @@ package BC.Containers.Trees.Binary is
 
 private
 
-  package Nodes is new Bc.Support.Nodes(Item);
+  package Nodes is new Bc.Support.Nodes (Item);
   use Nodes;
 
   procedure Purge (Node : in out Binary_Node_Ref);
 
-  type Binary_Tree is new Limited_Controlled with record
+  type Binary_Tree is new Ada.Finalization.Controlled with record
     Rep : Binary_Node_Ref;
   end record;
 
   procedure Initialize (Obj : in out Binary_Tree);
+  procedure Adjust (Obj : in out Binary_Tree);
   procedure Finalize (Obj : in out Binary_Tree);
 
 end BC.Containers.Trees.Binary;
