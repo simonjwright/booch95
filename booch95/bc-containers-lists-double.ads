@@ -20,7 +20,6 @@
 --  $Date$
 --  $Author$
 
-with BC.Support.Nodes;
 with System.Storage_Pools;
 
 generic
@@ -167,11 +166,21 @@ private
 
    function Item_At (L : List; Index : Positive) return Item_Ptr;
 
-   package Nodes
-   is new BC.Support.Nodes (Item, Storage);
+   --  Type denoting a simple node consisting of an item, pointers to
+   --  the previous and next items, and a reference count
+
+   type Double_Node;
+   type Double_Node_Ref is access Double_Node;
+   for Double_Node_Ref'Storage_Pool use Storage;
+   type Double_Node is record
+      Element : Item;
+      Previous : Double_Node_Ref;
+      Next : Double_Node_Ref;
+      Count : Natural := 1;
+   end record;
 
    type List is new Container with record
-      Rep : Nodes.Double_Node_Ref;
+      Rep : Double_Node_Ref;
    end record;
 
    procedure Initialize (L : in out List);
@@ -179,7 +188,7 @@ private
    procedure Finalize (L : in out List);
 
    type List_Iterator is new Iterator with record
-      Index : Nodes.Double_Node_Ref;
+      Index : Double_Node_Ref;
    end record;
 
    --  Overriding primitive supbrograms of the concrete actual

@@ -20,6 +20,7 @@
 --  $Date$
 --  $Author$
 
+with Ada.Unchecked_Deallocation;
 with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
@@ -35,7 +36,29 @@ package body BC.Containers.Lists.Double is
    package Allow_Element_Access
    is new System.Address_To_Access_Conversions (Item);
 
-   use type Nodes.Double_Node_Ref;
+   function Create
+     (I : Item; Previous, Next : Double_Node_Ref) return Double_Node_Ref;
+   pragma Inline (Create);
+
+   function Create
+     (I : Item; Previous, Next : Double_Node_Ref) return Double_Node_Ref is
+      Result : Double_Node_Ref;
+   begin
+      Result := new Double_Node'(Element => I,
+                                 Previous => Previous,
+                                 Next => Next,
+                                 Count => 1);
+      if Previous /= null then
+         Previous.Next := Result;
+      end if;
+      if Next /= null then
+         Next.Previous := Result;
+      end if;
+      return Result;
+   end Create;
+
+   procedure Delete is
+      new Ada.Unchecked_Deallocation (Double_Node, Double_Node_Ref);
 
    function "=" (L, R : List) return Boolean is
    begin
@@ -43,8 +66,8 @@ package body BC.Containers.Lists.Double is
    end "=";
 
    procedure Clear (L : in out List) is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
-      Ptr  : Nodes.Double_Node_Ref;
+      Curr : Double_Node_Ref := L.Rep;
+      Ptr  : Double_Node_Ref;
    begin
       while Curr /= null loop
          Ptr := Curr;
@@ -56,7 +79,7 @@ package body BC.Containers.Lists.Double is
             if Curr /= null then
                Curr.Previous := null;
             end if;
-            Nodes.Delete (Ptr);
+            Delete (Ptr);
          end if;
       end loop;
       L.Rep := null;
@@ -69,11 +92,11 @@ package body BC.Containers.Lists.Double is
               BC.Not_Root'Identity,
               "Insert",
               BSE.Not_Root);
-      L.Rep := Nodes.Create (Elem, Previous => null, Next => L.Rep);
+      L.Rep := Create (Elem, Previous => null, Next => L.Rep);
    end Insert;
 
    procedure Insert (L : in out List; From_List : in out List) is
-      Ptr : Nodes.Double_Node_Ref := From_List.Rep;
+      Ptr : Double_Node_Ref := From_List.Rep;
    begin
       --  Ensure we only insert at a list's head.
       Assert (L.Rep = null or else L.Rep.Previous = null,
@@ -94,8 +117,8 @@ package body BC.Containers.Lists.Double is
    end Insert;
 
    procedure Insert (L : in out List; Elem : Item; Before : Positive) is
-      Prev : Nodes.Double_Node_Ref;
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Prev : Double_Node_Ref;
+      Curr : Double_Node_Ref := L.Rep;
       Index : Positive := 1;
    begin
       if Curr = null or else Before = 1 then
@@ -110,16 +133,16 @@ package body BC.Containers.Lists.Double is
                  BC.Range_Error'Identity,
                  "Insert",
                  BSE.Invalid_Index);
-         Prev.Next := Nodes.Create (Elem, Previous => Prev, Next => Curr);
+         Prev.Next := Create (Elem, Previous => Prev, Next => Curr);
       end if;
    end Insert;
 
    procedure Insert (L : in out List;
                      From_List : in out List;
                      Before : Positive) is
-      Prev : Nodes.Double_Node_Ref;
-      Curr : Nodes.Double_Node_Ref := L.Rep;
-      Ptr : Nodes.Double_Node_Ref := From_List.Rep;
+      Prev : Double_Node_Ref;
+      Curr : Double_Node_Ref := L.Rep;
+      Ptr : Double_Node_Ref := From_List.Rep;
       Index : Positive := 1;
    begin
       if Ptr /= null then
@@ -153,20 +176,20 @@ package body BC.Containers.Lists.Double is
    end Insert;
 
    procedure Append (L : in out List; Elem : Item) is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Curr : Double_Node_Ref := L.Rep;
    begin
       if Curr /= null then
          while Curr.Next /= null loop
             Curr := Curr.Next;
          end loop;
-         Curr.Next := Nodes.Create (Elem, Previous => Curr, Next => null);
+         Curr.Next := Create (Elem, Previous => Curr, Next => null);
       else
-         L.Rep := Nodes.Create (Elem, Previous => null, Next => null);
+         L.Rep := Create (Elem, Previous => null, Next => null);
       end if;
    end Append;
 
    procedure Append (L : in out List; From_List : in out List) is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Curr : Double_Node_Ref := L.Rep;
    begin
       --  Ensure From_List is the head of a list.
       Assert (From_List.Rep = null or else From_List.Rep.Previous = null,
@@ -190,7 +213,7 @@ package body BC.Containers.Lists.Double is
    end Append;
 
    procedure Append (L : in out List; Elem : Item; After : Positive) is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Curr : Double_Node_Ref := L.Rep;
       Index : Positive := 1;
    begin
       if Curr = null then
@@ -204,7 +227,7 @@ package body BC.Containers.Lists.Double is
                  BC.Range_Error'Identity,
                  "Append",
                  BSE.Invalid_Index);
-         Curr.Next := Nodes.Create (Elem,
+         Curr.Next := Create (Elem,
                                     Previous => Curr,
                                     Next => Curr.Next);
       end if;
@@ -213,8 +236,8 @@ package body BC.Containers.Lists.Double is
    procedure Append (L : in out List;
                      From_List : in out List;
                      After : Positive) is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
-      Ptr : Nodes.Double_Node_Ref := From_List.Rep;
+      Curr : Double_Node_Ref := L.Rep;
+      Ptr : Double_Node_Ref := From_List.Rep;
       Index : Positive := 1;
    begin
       if Ptr /= null then
@@ -250,8 +273,8 @@ package body BC.Containers.Lists.Double is
    end Append;
 
    procedure Remove (L : in out List; From : Positive) is
-      Prev : Nodes.Double_Node_Ref;
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Prev : Double_Node_Ref;
+      Curr : Double_Node_Ref := L.Rep;
       Index : Positive := 1;
    begin
       while Curr /= null and then Index < From loop
@@ -279,14 +302,14 @@ package body BC.Containers.Lists.Double is
       if Curr.Count > 1 then
          Curr.Count := Curr.Count - 1;
       else
-         Nodes.Delete (Curr);
+         Delete (Curr);
       end if;
    end Remove;
 
    procedure Purge (L : in out List; From : Positive) is
-      Prev : Nodes.Double_Node_Ref;
-      Curr : Nodes.Double_Node_Ref := L.Rep;
-      Ptr : Nodes.Double_Node_Ref;
+      Prev : Double_Node_Ref;
+      Curr : Double_Node_Ref := L.Rep;
+      Ptr : Double_Node_Ref;
       Index : Positive := 1;
    begin
       while Curr /= null and then Index < From loop
@@ -311,14 +334,14 @@ package body BC.Containers.Lists.Double is
             Ptr.Count := Ptr.Count - 1;
             exit;
          else
-            Nodes.Delete (Ptr);
+            Delete (Ptr);
          end if;
       end loop;
    end Purge;
 
    procedure Purge (L : in out List; From : Positive; Count : Positive) is
-      Prev, Ptr : Nodes.Double_Node_Ref;
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Prev, Ptr : Double_Node_Ref;
+      Curr : Double_Node_Ref := L.Rep;
       Index : Positive := 1;
       Shared_Node_Found : Boolean := False;
    begin
@@ -347,7 +370,7 @@ package body BC.Containers.Lists.Double is
             else
                if Curr /= null then
                   Curr.Previous := null;
-                  Nodes.Delete (Ptr);
+                  Delete (Ptr);
                end if;
             end if;
          end if;
@@ -386,7 +409,7 @@ package body BC.Containers.Lists.Double is
    procedure Share (L : in out List;
                     With_List : List;
                     Starting_At : Positive) is
-      Ptr : Nodes.Double_Node_Ref := With_List.Rep;
+      Ptr : Double_Node_Ref := With_List.Rep;
       Index : Positive := 1;
    begin
       Assert (Ptr /= null,
@@ -418,7 +441,7 @@ package body BC.Containers.Lists.Double is
    end Share_Head;
 
    procedure Share_Foot (L : in out List; With_List : in List) is
-      Ptr : Nodes.Double_Node_Ref := With_List.Rep;
+      Ptr : Double_Node_Ref := With_List.Rep;
    begin
       Assert (Ptr /= null,
               BC.Is_Null'Identity,
@@ -433,7 +456,7 @@ package body BC.Containers.Lists.Double is
    end Share_Foot;
 
    procedure Swap_Tail (L : in out List; With_List : in out List) is
-      Curr : Nodes.Double_Node_Ref;
+      Curr : Double_Node_Ref;
    begin
       Assert (L.Rep /= null,
               BC.Is_Null'Identity,
@@ -453,7 +476,7 @@ package body BC.Containers.Lists.Double is
    end Swap_Tail;
 
    procedure Tail (L : in out List) is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Curr : Double_Node_Ref := L.Rep;
    begin
       Assert (L.Rep /= null,
               BC.Is_Null'Identity,
@@ -470,7 +493,7 @@ package body BC.Containers.Lists.Double is
             L.Rep.Count := L.Rep.Count - 1;
             L.Rep.Previous := null;
          end if;
-         Nodes.Delete (Curr);
+         Delete (Curr);
       end if;
    end Tail;
 
@@ -499,7 +522,7 @@ package body BC.Containers.Lists.Double is
    end Set_Head;
 
    procedure Set_Item (L : in out List; Elem : Item; At_Loc : Positive) is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Curr : Double_Node_Ref := L.Rep;
       Index : Positive := 1;
    begin
       while Curr /= null and then Index < At_Loc loop
@@ -514,7 +537,7 @@ package body BC.Containers.Lists.Double is
    end Set_Item;
 
    function Length (L : List) return Natural is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Curr : Double_Node_Ref := L.Rep;
       Count : Natural := 0;
    begin
       while Curr /= null loop
@@ -562,7 +585,7 @@ package body BC.Containers.Lists.Double is
    end Process_Head;
 
    function Foot (L : List) return Item is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Curr : Double_Node_Ref := L.Rep;
    begin
       Assert (L.Rep /= null,
               BC.Is_Null'Identity,
@@ -575,7 +598,7 @@ package body BC.Containers.Lists.Double is
    end Foot;
 
    procedure Process_Foot (L : in out List) is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Curr : Double_Node_Ref := L.Rep;
    begin
       Assert (L.Rep /= null,
               BC.Is_Null'Identity,
@@ -605,7 +628,7 @@ package body BC.Containers.Lists.Double is
    end New_Iterator;
 
    function Item_At (L : List; Index : Positive) return Item_Ptr is
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Curr : Double_Node_Ref := L.Rep;
       Loc : Positive := 1;
    begin
       Assert (L.Rep /= null,
@@ -678,8 +701,8 @@ package body BC.Containers.Lists.Double is
 
    procedure Delete_Item_At (It : in out List_Iterator) is
       L : List'Class renames List'Class (It.For_The_Container.all);
-      Prev : Nodes.Double_Node_Ref;
-      Curr : Nodes.Double_Node_Ref := L.Rep;
+      Prev : Double_Node_Ref;
+      Curr : Double_Node_Ref := L.Rep;
    begin
       if Is_Done (It) then
          raise BC.Not_Found;
@@ -711,7 +734,7 @@ package body BC.Containers.Lists.Double is
       if Curr.Count > 1 then
          Curr.Count := Curr.Count - 1;
       else
-         Nodes.Delete (Curr);
+         Delete (Curr);
       end if;
    end Delete_Item_At;
 
