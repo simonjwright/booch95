@@ -169,7 +169,7 @@ private
 
   type Single_List_Iterator (L : access Single_List'Class)
   is new Actual_Iterator (L) with record
-    Index : Natural;
+    Index : Single_Nodes.Single_Node_Ref;
   end record;
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.

@@ -177,7 +177,7 @@ private
 
   type Double_List_Iterator (L : access Double_List'Class)
   is new Actual_Iterator (L) with record
-    Index : Natural;
+    Index : Double_Nodes.Double_Node_Ref;
   end record;
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
