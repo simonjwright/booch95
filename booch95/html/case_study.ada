@@ -146,7 +146,8 @@ with Fleets;
 with My_Fleet; use My_Fleet;
 procedure Filter_Demo is
 
-   function Before (Date : Ada.Calendar.Time) return Fleets.Collection is
+   function Registered_Before
+     (Date : Ada.Calendar.Time) return Fleets.Collection is
 
       function Wanted (C : Car) return Boolean;
 
@@ -171,7 +172,7 @@ procedure Filter_Demo is
    begin
       Choose (The_Fleet, Result);
       return Result;
-   end Before;
+   end Registered_Before;
 
 begin
    null;
