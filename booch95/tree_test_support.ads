@@ -19,6 +19,7 @@
 
 with BC.Containers;
 with BC.Containers.Trees;
+with BC.Containers.Trees.AVL;
 with BC.Containers.Trees.Binary;
 with BC.Containers.Trees.Multiway;
 with Global_Heap;
@@ -28,6 +29,9 @@ package Tree_Test_Support is
   package Containers is new BC.Containers (Item => Character);
 
   package Trees is new Containers.Trees;
+
+  package TA is new Trees.AVL (Storage_Manager => Global_Heap.Pool,
+                                  Storage => Global_Heap.Storage);
 
   package TB is new Trees.Binary (Storage_Manager => Global_Heap.Pool,
                                   Storage => Global_Heap.Storage);
