@@ -1,4 +1,4 @@
--- Copyright (C) 1998-2000 Simon Wright.
+-- Copyright (C) 1998-2001 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -25,7 +25,7 @@ package body Ada_Unit_Support is
   package ASU renames Ada.Strings.Unbounded;
 
 
-  Info : Dependencies.Directed_Graph;
+  Info : Dependencies.Graph;
 
 
   function Name (Of_The_Unit : Unit) return String is
@@ -69,7 +69,7 @@ package body Ada_Unit_Support is
 
 
   procedure Add_Dependency (Unit_Is_Withed : Unit_P; By : Unit_P) is
-    Arc : Dependencies.Directed_Arc;
+    Arc : Dependencies.Arc;
   begin
     Dependencies.Create_Arc (G => Info,
                              A => Arc,
@@ -81,19 +81,18 @@ package body Ada_Unit_Support is
 
   procedure Report_Dependencies is
     procedure Process_Dependency
-       (A : Dependencies_Base.Arc'Class; OK : out Boolean) is
-      Withee : Dependencies.Directed_Vertex;
+       (A : Dependencies_Base.Abstract_Arc'Class; OK : out Boolean) is
+      Withee : Dependencies.Vertex;
     begin
-      Dependencies.To_Vertex (Dependencies.Directed_Arc (A), Withee);
+      Dependencies.To_Vertex (Dependencies.Arc (A), Withee);
       Ada.Text_Io.Put_Line ("  withs " & Name (Dependencies.Item (Withee).all));
       OK := True;
     end Process_Dependency;
     procedure Process_Unit
-       (V : Dependencies_Base.Vertex'Class; OK : out Boolean) is
+       (V : Dependencies_Base.Abstract_Vertex'Class; OK : out Boolean) is
       procedure Visit
       is new Dependencies_Base.Visit_Arcs (Apply => Process_Dependency);
-      Directed_V : Dependencies.Directed_Vertex
-         renames Dependencies.Directed_Vertex (V);
+      Directed_V : Dependencies.Vertex renames Dependencies.Vertex (V);
       Vertex_It : Dependencies_Base.Vertex_Iterator'Class
          := Dependencies.New_Vertex_Outgoing_Iterator (Directed_V);
     begin
@@ -115,20 +114,19 @@ package body Ada_Unit_Support is
   procedure Report_Dependencies (For_Unit : Unit_P) is
     Indent : ASU.Unbounded_String;
     procedure Process_Unit
-       (V : Dependencies_Base.Vertex'Class; OK : out Boolean);
+       (V : Dependencies_Base.Abstract_Vertex'Class; OK : out Boolean);
     procedure Process_Dependency
-       (A : Dependencies_Base.Arc'Class; OK : out Boolean) is
-      Withee : Dependencies.Directed_Vertex;
+       (A : Dependencies_Base.Abstract_Arc'Class; OK : out Boolean) is
+      Withee : Dependencies.Vertex;
     begin
-      Dependencies.To_Vertex (Dependencies.Directed_Arc (A), Withee);
+      Dependencies.To_Vertex (Dependencies.Arc (A), Withee);
       Process_Unit (Withee, OK);
     end Process_Dependency;
     procedure Process_Unit
-       (V : Dependencies_Base.Vertex'Class; OK : out Boolean) is
+       (V : Dependencies_Base.Abstract_Vertex'Class; OK : out Boolean) is
       procedure Visit
       is new Dependencies_Base.Visit_Arcs (Apply => Process_Dependency);
-      Directed_V : Dependencies.Directed_Vertex
-         renames Dependencies.Directed_Vertex (V);
+      Directed_V : Dependencies.Vertex renames Dependencies.Vertex (V);
       Vertex_It : Dependencies_Base.Vertex_Iterator'Class
          := Dependencies.New_Vertex_Outgoing_Iterator (Directed_V);
       Old_Indent : ASU.Unbounded_String := Indent;
