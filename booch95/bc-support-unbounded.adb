@@ -31,13 +31,13 @@ package body BC.Support.Unbounded is
     Tmp : Nodes.Node_Ref := Obj.Last;
   begin
     if Tmp /= null then
-      Obj.Last := new Nodes.Node'(Elem => Tmp.Elem,
+      Obj.Last := new Nodes.Node'(Element => Tmp.Element,
                                   Next => null,
                                   Previous => null);
       Obj.Rep := Obj.Last;
       Tmp := Tmp.Previous;  -- move to previous node from orig list
       while Tmp /= null loop
-        Obj.Rep := new Nodes.Node'(Elem => Tmp.Elem,
+        Obj.Rep := new Nodes.Node'(Element => Tmp.Element,
                                    Next => Obj.Rep,
                                    Previous => null);
         Tmp := Tmp.Previous;
@@ -54,7 +54,7 @@ package body BC.Support.Unbounded is
         Temp_R : Nodes.Node_Ref := Right.Rep;
       begin
         while Temp_L /= null loop
-          if Temp_L.Elem /= Temp_R.Elem then
+          if Temp_L.Element /= Temp_R.Element then
             return False;
           end if;
           Temp_L := Temp_L.Next;
@@ -134,7 +134,7 @@ package body BC.Support.Unbounded is
   begin
     pragma Assert (After <= Obj.Size);
     if (Obj.Size = 0) or else (After <= 1) then
-      Append(Obj,Elem);
+      Append(Obj, Elem);
     else
       declare
         AObj      : aliased Unb_Node := Obj;
@@ -211,7 +211,7 @@ package body BC.Support.Unbounded is
         end loop;
       end;
     end if;
-    Obj.Cache.Elem := Elem;
+    Obj.Cache.Element := Elem;
   end Replace;
 
   function Length (Obj : Unb_Node) return Natural is
@@ -222,25 +222,25 @@ package body BC.Support.Unbounded is
   function First (Obj : Unb_Node) return Item is
   begin
     pragma Assert (Obj.Size > 0 );
-    return Obj.Rep.Elem;
+    return Obj.Rep.Element;
   end First;
 
   function First (Obj : access Unb_Node) return Item_Ptr is
   begin
     pragma Assert (Obj.Size > 0 );
-    return Obj.Rep.Elem'access;
+    return Obj.Rep.Element'access;
   end First;
 
   function Last (Obj : Unb_Node) return Item is
   begin
     pragma Assert (Obj.Size > 0 );
-    return Obj.Last.Elem;
+    return Obj.Last.Element;
   end ;
 
   function Last (Obj : access Unb_Node) return Item_Ptr is
   begin
     pragma Assert (Obj.Size > 0 );
-    return  Obj.Last.Elem'access;
+    return  Obj.Last.Element'access;
   end ;
 
   function Item_At (Obj : access Unb_Node; Index : Positive) return Item is
@@ -254,15 +254,15 @@ package body BC.Support.Unbounded is
   begin
     if Obj.Cache /= null then
       if Index = Obj.Cache_Index then
-        return Obj.Cache.Elem'access;
+        return Obj.Cache.Element'access;
       elsif Index = Obj.Cache_Index + 1 then
         Obj.Cache := Obj.Cache.Next;
         Obj.Cache_Index := Obj.Cache_Index + 1;
-        return Obj.Cache.Elem'access;
+        return Obj.Cache.Element'access;
       elsif Index = Obj.Cache_Index - 1 then
         Obj.Cache := Obj.Cache.Previous;
         Obj.Cache_Index := Obj.Cache_Index - 1;
-        return Obj.Cache.Elem'access;
+        return Obj.Cache.Element'access;
       end if;
     end if;
     declare
@@ -272,12 +272,12 @@ package body BC.Support.Unbounded is
         if I = Index then
           Obj.Cache := Ptr;
           Obj.Cache_Index := I;
-          return Ptr.Elem'access;
+          return Ptr.Element'access;
         else
           Ptr := Ptr.Next;
         end if;
       end loop;
-      return Ptr.Elem'access;
+      return Ptr.Element'access;
     end;
   end Item_At;
 
@@ -286,14 +286,14 @@ package body BC.Support.Unbounded is
     Ptr : Nodes.Node_Ref := Obj.Rep;
   begin
     pragma Assert (Start < Obj.Size );
-    if (Start = Obj.Cache_Index) and then (Elem = Obj.Cache.Elem) then
+    if (Start = Obj.Cache_Index) and then (Elem = Obj.Cache.Element) then
       return Obj.Cache_Index;
     end if;
     for I in 1..Start-1 loop
       Ptr := Ptr.Next; -- advance to Start point
     end loop;
     for I in Start..Obj.Size loop
-      if Ptr.Elem = Elem then
+      if Ptr.Element = Elem then
         Obj.Cache := Ptr;
         Obj.Cache_Index := I;
         return I;

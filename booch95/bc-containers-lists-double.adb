@@ -419,7 +419,7 @@ package body Bc.Containers.Lists.Double is
   procedure Set_Head (Obj : in out Double_List; Elem : Item) is
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to Set_Head with NULL tree");
-    Obj.Rep.Elem := ELem;
+    Obj.Rep.Element := ELem;
   end Set_Head;
 
   procedure Set_Item (Obj : in out Double_List;
@@ -433,7 +433,7 @@ package body Bc.Containers.Lists.Double is
       Index := Index + 1;
     end loop;
     pragma Assert (Curr /= null, "Attempt to Set_Item with invalid index");
-    Curr.Elem := ELem;
+    Curr.Element := ELem;
   end Set_Item;
 
   function Length (Obj : Double_List) return Natural is
@@ -469,13 +469,13 @@ package body Bc.Containers.Lists.Double is
   function Head (Obj : Double_List) return Item is
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to get Head with NULL tree");
-    return Obj.Rep.Elem;
+    return Obj.Rep.Element;
   end Head;
 
   function Head (Obj : Double_List) return Item_Ptr is
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to get Head with NULL tree");
-    return Obj.Rep.Elem'access;
+    return Obj.Rep.Element'access;
   end Head;
 
   function Foot (Obj : Double_List) return Item is
@@ -485,7 +485,7 @@ package body Bc.Containers.Lists.Double is
     while Curr.Next /= null loop
       Curr := Curr.Next;
     end loop;
-    return Curr.Elem;
+    return Curr.Element;
   end Foot;
 
   function Foot (Obj : Double_List) return Item_Ptr is
@@ -495,7 +495,7 @@ package body Bc.Containers.Lists.Double is
     while Curr.Next /= null loop
       Curr := Curr.Next;
     end loop;
-    return Curr.Elem'access;
+    return Curr.Element'access;
   end Foot;
 
   function Item_At (Obj : Double_List; Index : Natural) return Item is
@@ -508,7 +508,7 @@ package body Bc.Containers.Lists.Double is
       Loc := Loc + 1;
     end loop;
     pragma Assert (Curr /= null, "Attempt to get Item with Invalid Index");
-    return Curr.Elem;
+    return Curr.Element;
   end Item_At;
 
   function Item_At (Obj : Double_List; Index : Natural) return Item_Ptr is
@@ -521,7 +521,7 @@ package body Bc.Containers.Lists.Double is
       Loc := Loc + 1;
     end loop;
     pragma Assert (Curr /= null, "Attempt to get Item with Invalid Index");
-    return Curr.Elem'access;
+    return Curr.Element'access;
   end Item_At;
 
   function Cardinality (Obj : Double_List) return Integer is

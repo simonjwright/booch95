@@ -220,7 +220,7 @@ package body BC.Containers.Trees.Binary is
   procedure Set_Item (Obj : in out Binary_Tree; Elem : in Item) is
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to Set_Item on null tree");
-    Obj.Rep.Elem := Elem;
+    Obj.Rep.Element := Elem;
   end Set_Item;
 
   function Has_Children (Obj : in Binary_Tree) return Boolean is
@@ -248,7 +248,7 @@ package body BC.Containers.Trees.Binary is
   function Item_At (Obj : in Binary_Tree) return Item is
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to take Item_At with null tree");
-    return Obj.Rep.Elem;
+    return Obj.Rep.Element;
   end Item_At;
 
   procedure Purge (Node : in out Binary_Node_Ref) is

@@ -366,7 +366,7 @@ package body Bc.Containers.Lists.Single is
   procedure Set_Head (Obj : in out Single_List; Elem : Item) is
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to Set_Head with NULL tree");
-    Obj.Rep.Elem := Elem;
+    Obj.Rep.Element := Elem;
   end Set_Head;
 
   procedure Set_Item (Obj : in out Single_List;
@@ -380,7 +380,7 @@ package body Bc.Containers.Lists.Single is
       Index := Index + 1;
     end loop;
     pragma Assert (Curr /= null, "Attempt to Set_Item with invalid index");
-    Curr.Elem := Elem;
+    Curr.Element := Elem;
   end Set_Item;
 
   function Length (Obj : Single_List) return Natural is
@@ -407,13 +407,13 @@ package body Bc.Containers.Lists.Single is
   function Head (Obj : Single_List) return Item is
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to get Head with NULL tree");
-    return Obj.Rep.Elem;
+    return Obj.Rep.Element;
   end Head;
 
   function Head (Obj : Single_List) return Item_Ptr is
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to get Head with NULL tree");
-    return Obj.Rep.Elem'access;
+    return Obj.Rep.Element'access;
   end Head;
 
   function Foot (Obj : Single_List) return Item is
@@ -423,7 +423,7 @@ package body Bc.Containers.Lists.Single is
     while Curr.Next /= null loop
       Curr := Curr.Next;
     end loop;
-    return Curr.Elem;
+    return Curr.Element;
   end Foot;
 
   function Foot (Obj : Single_List) return Item_Ptr is
@@ -433,7 +433,7 @@ package body Bc.Containers.Lists.Single is
     while Curr.Next /= null loop
       Curr := Curr.Next;
     end loop;
-    return Curr.Elem'access;
+    return Curr.Element'access;
   end Foot;
 
   function Item_At (Obj : Single_List; Index : Natural) return Item is
@@ -447,7 +447,7 @@ package body Bc.Containers.Lists.Single is
       Loc := Loc + 1;
     end loop;
     pragma Assert (Curr /= null, "Attempt to get Item with Invalid Index");
-    return Curr.Elem;
+    return Curr.Element;
   end Item_At;
 
   function Item_At (Obj : Single_List; Index : Natural) return Item_Ptr is
@@ -461,7 +461,7 @@ package body Bc.Containers.Lists.Single is
       Loc := Loc + 1;
     end loop;
     pragma Assert (Curr /= null, "Attempt to get Item with Invalid Index");
-    return Curr.Elem'access;
+    return Curr.Element'access;
   end Item_At;
 
   function Cardinality (Obj : Single_List) return Integer is
