@@ -29,12 +29,14 @@ package body BC.Containers.Sets.Bounded is
    procedure Assert
    is new BSE.Assert ("BC.Containers.Sets.Bounded");
 
-   procedure Clear (S : in out Set) is
+   procedure Clear (S : in out Unconstrained_Set) is
    begin
       Tables.Clear (S.Rep);
    end Clear;
 
-   procedure Add (S : in out Set; I : Item; Added : out Boolean) is
+   procedure Add (S : in out Unconstrained_Set;
+                  I : Item;
+                  Added : out Boolean) is
    begin
       if Tables.Is_Bound (S.Rep, I) then
          Added := False;
@@ -44,14 +46,14 @@ package body BC.Containers.Sets.Bounded is
       end if;
    end Add;
 
-   procedure Add (S : in out Set; I : Item) is
+   procedure Add (S : in out Unconstrained_Set; I : Item) is
    begin
       if not Tables.Is_Bound (S.Rep, I) then
          Tables.Bind (S.Rep, I, True);
       end if;
    end Add;
 
-   procedure Remove (S : in out Set; I : Item) is
+   procedure Remove (S : in out Unconstrained_Set; I : Item) is
    begin
       Assert (Tables.Is_Bound (S.Rep, I),
               BC.Not_Found'Identity,
@@ -60,30 +62,31 @@ package body BC.Containers.Sets.Bounded is
       Tables.Unbind (S.Rep, I);
    end Remove;
 
-   function Available (S : Set) return Natural is
+   function Available (S : Unconstrained_Set) return Natural is
    begin
       return Maximum_Size - S.Rep.Size;
    end Available;
 
-   function Extent (S : Set) return Natural is
+   function Extent (S : Unconstrained_Set) return Natural is
    begin
       return Tables.Extent (S.Rep);
    end Extent;
 
-   function Is_Empty (S : Set) return Boolean is
+   function Is_Empty (S : Unconstrained_Set) return Boolean is
    begin
       return Tables.Extent (S.Rep) = 0;
    end Is_Empty;
 
-   function Is_Member (S : Set; I : Item) return Boolean is
+   function Is_Member (S : Unconstrained_Set; I : Item) return Boolean is
    begin
       return Tables.Is_Bound (S.Rep, I);
    end Is_Member;
 
    package Address_Conversions
-   is new System.Address_To_Access_Conversions (Set);
+   is new System.Address_To_Access_Conversions (Unconstrained_Set);
 
-   function New_Iterator (For_The_Set : Set) return Iterator'Class is
+   function New_Iterator
+     (For_The_Set : Unconstrained_Set) return Iterator'Class is
       Result : Bounded_Set_Iterator;
    begin
       Result.For_The_Container :=
@@ -96,30 +99,32 @@ package body BC.Containers.Sets.Bounded is
 
    --  XXX there is another Attach() which I don't understand
 
-   procedure Attach (S : in out Set; I : Item) is
+   procedure Attach (S : in out Unconstrained_Set; I : Item) is
    begin
       Tables.Bind (S.Rep, I, True);
    end Attach;
 
-   procedure Detach (S : in out Set; I : Item) is
+   procedure Detach (S : in out Unconstrained_Set; I : Item) is
    begin
       Tables.Unbind (S.Rep, I);
    end Detach;
 
-   function Number_Of_Buckets (S : Set) return Natural is
+   function Number_Of_Buckets (S : Unconstrained_Set) return Natural is
       pragma Warnings (Off, S);
    begin
       return Buckets;
    end Number_Of_Buckets;
 
-   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr is
+   function Item_At (S : Unconstrained_Set;
+                     Bucket, Index : Positive) return Item_Ptr is
       pragma Warnings (Off, Bucket);
    begin
       return Tables.Access_Item_At (S.Rep, Index);
    end Item_At;
 
    procedure Reset (It : in out Bounded_Set_Iterator) is
-      S : Set'Class renames Set'Class (It.For_The_Container.all);
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
    begin
       It.Index := 0;
       if Extent (S) = 0 then
@@ -137,7 +142,8 @@ package body BC.Containers.Sets.Bounded is
    end Reset;
 
    procedure Next (It : in out Bounded_Set_Iterator) is
-      S : Set'Class renames Set'Class (It.For_The_Container.all);
+      S : Unconstrained_Set'Class
+        renames Unconstrained_Set'Class (It.For_The_Container.all);
    begin
       if It.Bucket_Index <= Number_Of_Buckets (S) then
          if S.Rep.Contents (It.Index).Next > 0 then
@@ -157,7 +163,8 @@ package body BC.Containers.Sets.Bounded is
    end Next;
 
    function Is_Done (It : Bounded_Set_Iterator) return Boolean is
-      S : Set'Class renames Set'Class (It.For_The_Container.all);
+      S : Unconstrained_Set'Class
+     renames Unconstrained_Set'Class (It.For_The_Container.all);
    begin
       if It.Bucket_Index = 0
         or else It.Bucket_Index > Number_Of_Buckets (S) then
@@ -185,7 +192,8 @@ package body BC.Containers.Sets.Bounded is
    end Is_Done;
 
    function Current_Item (It : Bounded_Set_Iterator) return Item is
-      S : Set'Class renames Set'Class (It.For_The_Container.all);
+      S : Unconstrained_Set'Class
+     renames Unconstrained_Set'Class (It.For_The_Container.all);
    begin
       if Is_Done (It) then
          raise BC.Not_Found;
@@ -195,7 +203,8 @@ package body BC.Containers.Sets.Bounded is
 
    function Current_Item_Ptr (It : Bounded_Set_Iterator) return Item_Ptr is
       --  XXX this should probably not be permitted!
-      S : Set'Class renames Set'Class (It.For_The_Container.all);
+      S : Unconstrained_Set'Class
+     renames Unconstrained_Set'Class (It.For_The_Container.all);
    begin
       if Is_Done (It) then
          raise BC.Not_Found;
@@ -214,7 +223,7 @@ package body BC.Containers.Sets.Bounded is
    Empty_Container : Set;
    pragma Warnings (Off, Empty_Container);
 
-   function Null_Container return Set is
+   function Null_Container return Unconstrained_Set is
    begin
       return Empty_Container;
    end Null_Container;
