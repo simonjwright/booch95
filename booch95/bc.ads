@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -28,17 +28,37 @@ package BC is
    --  Components.
 
    Container_Error : exception;
+   --  Attempt to sort an inappropriate Container (Bag, Map, Set).
+
    Duplicate : exception;
+   --  Attempt to insert an item in a Map under a  duplicate key.
+
    Is_Null : exception;
+   --  A Graph, List, or Tree isn't designating any actual Container.
+
    Not_Found : exception;
-   Not_Null : exception;
+   --  Raised when a "done" Iterator is used.
+
    Not_Root : exception;
+   --  Attempt to insert, append or join Lists or Trees other than at
+   --  an "end".
+
    Overflow : exception;
+   --  Attempt to fill a bounded Container beyond its capacity.
+
    Range_Error : exception;
+   --  Attempt to Insert or Append at an invalid position.
+
    Referenced : exception;
+   --  Attempt to Remove a List element that's aliased by another
+   --  List.
+
    Storage_Error : exception;
-   Synchronization_Error : exception;
+   --  Raised by BC.Support.Managed_Storage when the requested size is
+   --  too large or zero.
+
    Underflow : exception;
+   --  Raised on attempts to access elements in an empty Container.
 
    Should_Have_Been_Overridden : exception;
    --  Raised if the Components have failed to override a primitive
