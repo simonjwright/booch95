@@ -22,7 +22,7 @@ package body BC.Containers is
   procedure Reset (Obj : in out Iterator) is
   begin
     if Cardinality (Obj.C.all) > 0 then
-      Obj.Index := 0;
+      Obj.Index := 1;
     else
       Obj.Index := -1;
     end if;

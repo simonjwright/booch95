@@ -26,33 +26,33 @@ package Bc.Containers.Lists.Double is
 
   type Double_List is new Container with private;
 
-  function "="(L, R : Double_List) return Boolean;
+  function "=" (L, R : Double_List) return Boolean;
 
   procedure Clear (Obj : in out Double_List);
   procedure Insert (Obj : in out Double_List; Elem : Item);
   procedure Insert (Obj : in out Double_List; From_List : in Double_List);
-  procedure Insert (Obj : in out Double_List; Elem : Item; Before : Natural);
+  procedure Insert (Obj : in out Double_List; Elem : Item; Before : Positive);
   procedure Insert (Obj : in out Double_List;
                     From_List: in out Double_List;
-                    Before : Natural);
+                    Before : Positive);
   procedure Append (Obj : in out Double_List; Elem : Item);
   procedure Append (Obj : in out Double_List; From_List : in Double_List);
-  procedure Append (Obj : in out Double_List; Elem : Item; After : Natural);
+  procedure Append (Obj : in out Double_List; Elem : Item; After : Positive);
   procedure Append (Obj : in out Double_List;
                     From_List : in Double_List;
-                    After : Natural);
-  procedure Remove (Obj : in out Double_List; From : Natural);
-  procedure Purge (Obj : in out Double_LIst; From : Natural);
+                    After : Positive);
+  procedure Remove (Obj : in out Double_List; From : Positive);
+  procedure Purge (Obj : in out Double_LIst; From : Positive);
   procedure Purge (Obj : in out Double_List;
-                   From : Natural;
+                   From : Positive;
                    Count : Positive);
-  procedure Preserve (Obj : in out Double_List; From : Natural);
+  procedure Preserve (Obj : in out Double_List; From : Positive);
   procedure Preserve (Obj : in out Double_List;
-                      From : Natural;
+                      From : Positive;
                       Count : Positive);
   procedure Share (Obj : in out Double_List;
                    With_List : Double_List;
-                   Starting_At : Natural);
+                   Starting_At : Positive);
   procedure Share_Head (Obj : in out Double_List; With_List : in Double_List);
   procedure Share_Foot (Obj : in out Double_List; With_List : in Double_List);
   procedure Swap_Tail (Obj : in out Double_List;
@@ -62,7 +62,7 @@ package Bc.Containers.Lists.Double is
   procedure Set_Head (Obj : in out Double_List; Elem : Item);
   procedure Set_Item (Obj : in out Double_List;
                       Elem : Item;
-                      At_Loc: Natural);
+                      At_Loc: Positive);
 
   function Length (Obj : Double_List) return Natural;
   function Is_Null (Obj : Double_List) return Boolean;
@@ -72,7 +72,7 @@ package Bc.Containers.Lists.Double is
   function Head (Obj : Double_List) return Item_Ptr;
   function Foot (Obj : Double_List) return Item;
   function Foot (Obj : Double_List) return Item_Ptr;
-  function Item_At (Obj : Double_List; Index : Natural) return Item;
+  function Item_At (Obj : Double_List; Index : Positive) return Item;
 
 private
 

@@ -53,7 +53,7 @@ private
   function Cardinality (Obj : Container) return Integer is abstract;
 
   type Iterator (C : access Container'Class) is limited record
-    Index : Integer := -1;
+    Index : Integer := 1;
   end record;
 
   type Passive_Iterator (C : access Container'Class) is limited record

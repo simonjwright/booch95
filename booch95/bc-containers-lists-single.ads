@@ -26,31 +26,31 @@ package Bc.Containers.Lists.Single is
 
   type Single_List is new Container with private;
 
-  function "="(L, R : Single_List) return Boolean;
+  function "=" (L, R : Single_List) return Boolean;
 
   procedure Clear (Obj : in out Single_List);
   procedure Insert (Obj : in out Single_List; Elem : Item);
   procedure Insert (Obj : in out Single_List; From_List : in Single_List);
-  procedure Insert (Obj : in out Single_List; Elem : Item; Before : Natural);
+  procedure Insert (Obj : in out Single_List; Elem : Item; Before : Positive);
   procedure Insert (Obj : in out Single_List;
                     From_List: in out Single_List;
-                    Before : Natural);
+                    Before : Positive);
   procedure Append (Obj : in out Single_List; Elem : Item);
   procedure Append (Obj : in out Single_List; From_List : in Single_List);
-  procedure Append (Obj : in out Single_List; Elem : Item; After : Natural);
+  procedure Append (Obj : in out Single_List; Elem : Item; After : Positive);
   procedure Append (Obj : in out Single_List;
                     From_List : in Single_List;
-                    After : Natural);
-  procedure Remove (Obj : in out Single_List; From : Natural);
-  procedure Purge (Obj : in out Single_List; From : Natural);
-  procedure Purge (Obj : in out Single_List; From : Natural; Count : Positive);
-  procedure Preserve (Obj : in out Single_List; From : Natural);
+                    After : Positive);
+  procedure Remove (Obj : in out Single_List; From : Positive);
+  procedure Purge (Obj : in out Single_List; From : Positive);
+  procedure Purge (Obj : in out Single_List; From : Positive; Count : Positive);
+  procedure Preserve (Obj : in out Single_List; From : Positive);
   procedure Preserve (Obj : in out Single_List;
-                      From : Natural;
+                      From : Positive;
                       Count : Positive);
   procedure Share (Obj : in out Single_List;
                    With_List: Single_List;
-                   Starting_At : Natural);
+                   Starting_At : Positive);
   procedure Share_Head (Obj : in out Single_List; With_List : in Single_List);
   procedure Share_Foot (Obj : in out Single_List; With_List : in Single_List);
   procedure Swap_Tail (Obj : in out Single_List;
@@ -59,7 +59,7 @@ package Bc.Containers.Lists.Single is
   procedure Set_Head (Obj : in out Single_List; Elem : Item);
   procedure Set_Item (Obj : in out Single_List;
                       Elem : Item;
-                      At_Loc : Natural);
+                      At_Loc : Positive);
 
   function Length (Obj : Single_List) return Natural;
   function Is_Null (Obj : Single_List) return Boolean;
@@ -68,7 +68,7 @@ package Bc.Containers.Lists.Single is
   function Head (Obj : Single_List) return Item_Ptr;
   function Foot (Obj : Single_List) return Item;
   function Foot (Obj : Single_List) return Item_Ptr;
-  function Item_At (Obj : Single_List; Index : Natural) return Item;
+  function Item_At (Obj : Single_List; Index : Positive) return Item;
 
 private
 
