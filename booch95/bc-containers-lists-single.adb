@@ -61,7 +61,7 @@ package body BC.Containers.Lists.Single is
     L.Rep := Nodes.Create (Elem, Next => L.Rep);
   end Insert;
 
-  procedure Insert (L : in out List; From_List : in List) is
+  procedure Insert (L : in out List; From_List : in out List) is
     Ptr : Nodes.Single_Node_Ref := From_List.Rep;
   begin
     if Ptr /= null then
@@ -139,7 +139,7 @@ package body BC.Containers.Lists.Single is
     end if;
   end Append;
 
-  procedure Append (L : in out List; From_List : in List) is
+  procedure Append (L : in out List; From_List : in out List) is
     Curr : Nodes.Single_Node_Ref := L.Rep;
   begin
     if From_List.Rep /= null then
@@ -176,7 +176,9 @@ package body BC.Containers.Lists.Single is
     end if;
   end Append;
 
-  procedure Append (L : in out List; From_List : in List; After : Positive) is
+  procedure Append (L : in out List;
+                    From_List : in out List;
+                    After : Positive) is
     Curr : Nodes.Single_Node_Ref := L.Rep;
     Ptr  : Nodes.Single_Node_Ref := From_List.Rep;
     Index: Positive := 1;
@@ -217,6 +219,11 @@ package body BC.Containers.Lists.Single is
             BC.Range_Error'Identity,
             "Remove",
             BSE.Invalid_Index);
+    -- Ensure we're not removing an aliased element.
+    Assert (Curr.Count = 1,
+            BC.Referenced'Identity,
+            "Remove",
+            BSE.Referenced);
     if Prev /= null then
       Prev.Next := Curr.Next;
     else
