@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,44 +21,44 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Queues.Unbounded is
 
-  procedure Clear (Obj : in out Unbounded_Queue) is
+  procedure Clear (Q : in out Unbounded_Queue) is
   begin
-    Unbounded_Queue_Nodes.Clear (Obj.Rep.all);
+    Unbounded_Queue_Nodes.Clear (Q.Rep.all);
   end Clear;
 
-  procedure Append (Obj : in out Unbounded_Queue; Elem : Item) is
+  procedure Append (Q : in out Unbounded_Queue; Elem : Item) is
   begin
-    Unbounded_Queue_Nodes.Append (Obj.Rep.all, Elem);
+    Unbounded_Queue_Nodes.Append (Q.Rep.all, Elem);
   end Append;
 
-  procedure Pop (Obj : in out Unbounded_Queue) is
+  procedure Pop (Q : in out Unbounded_Queue) is
   begin
-    Unbounded_Queue_Nodes.Remove (Obj.Rep.all, 1);
+    Unbounded_Queue_Nodes.Remove (Q.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Obj : in out Unbounded_Queue; From : Positive) is
+  procedure Remove (Q : in out Unbounded_Queue; From : Positive) is
   begin
-    Unbounded_Queue_Nodes.Remove (Obj.Rep.all, From);
+    Unbounded_Queue_Nodes.Remove (Q.Rep.all, From);
   end Remove;
 
-  function Length (Obj : Unbounded_Queue) return Natural is
+  function Length (Q : Unbounded_Queue) return Natural is
   begin
-    return Unbounded_Queue_Nodes.Length (Obj.Rep.all);
+    return Unbounded_Queue_Nodes.Length (Q.Rep.all);
   end Length;
 
-  function Is_Empty (Obj : Unbounded_Queue) return Boolean is
+  function Is_Empty (Q : Unbounded_Queue) return Boolean is
   begin
-    return Unbounded_Queue_Nodes.Length (Obj.Rep.all) = 0;
+    return Unbounded_Queue_Nodes.Length (Q.Rep.all) = 0;
   end Is_Empty;
 
-  function Front (Obj : Unbounded_Queue) return Item is
+  function Front (Q : Unbounded_Queue) return Item is
   begin
-    return Unbounded_Queue_Nodes.First (Obj.Rep.all);
+    return Unbounded_Queue_Nodes.First (Q.Rep.all);
   end Front;
 
-  function Location (Obj : Unbounded_Queue; Elem : Item) return Natural is
+  function Location (Q : Unbounded_Queue; Elem : Item) return Natural is
   begin
-    return Unbounded_Queue_Nodes.Location (Obj.Rep.all, Elem);
+    return Unbounded_Queue_Nodes.Location (Q.Rep.all, Elem);
   end Location;
 
   function "=" (Left, Right : Unbounded_Queue) return Boolean is
@@ -77,34 +77,34 @@ package body BC.Containers.Queues.Unbounded is
     return Iterator (SP.Create (new Queue_Iterator (P)));
   end New_Iterator;
 
-  procedure Purge (Obj : in out Unbounded_Queue) is
+  function Cardinality (Q : Unbounded_Queue) return Natural is
   begin
-    Unbounded_Queue_Nodes.Clear (Obj.Rep.all);
-  end Purge;
-
-  function Cardinality (Obj : Unbounded_Queue) return Natural is
-  begin
-    return Unbounded_Queue_Nodes.Length (Obj.Rep.all);
+    return Unbounded_Queue_Nodes.Length (Q.Rep.all);
   end Cardinality;
 
-  function Item_At (Obj : Unbounded_Queue; Index : Positive) return Item_Ptr is
+  function Item_At (Q : Unbounded_Queue; Index : Positive) return Item_Ptr is
   begin
-    return Unbounded_Queue_Nodes.Item_At (Obj.Rep.all, Index);
+    return Unbounded_Queue_Nodes.Item_At (Q.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (Obj : in out Unbounded_Queue) is
+  procedure Purge (Q : in out Unbounded_Queue) is
+  begin
+    Unbounded_Queue_Nodes.Clear (Q.Rep.all);
+  end Purge;
+
+  procedure Initialize (Q : in out Unbounded_Queue) is
   begin
     null;
   end Initialize;
 
-  procedure Adjust (Obj : in out Unbounded_Queue) is
+  procedure Adjust (Q : in out Unbounded_Queue) is
   begin
-    Obj.Rep := Unbounded_Queue_Nodes.Create (From => Obj.Rep.all);
+    Q.Rep := Unbounded_Queue_Nodes.Create (From => Q.Rep.all);
   end Adjust;
 
-  procedure Finalize (Obj : in out Unbounded_Queue) is
+  procedure Finalize (Q : in out Unbounded_Queue) is
   begin
-    Unbounded_Queue_Nodes.Free (Obj.Rep); -- does a Clear()
+    Unbounded_Queue_Nodes.Free (Q.Rep); -- does a Clear()
   end Finalize;
 
 end BC.Containers.Queues.Unbounded;
