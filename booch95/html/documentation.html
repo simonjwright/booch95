@@ -1,14 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML VERSION="2.0">
 <HEAD>
-<!-- WEBMAGIC VERSION NUMBER="2.0.1" -->
-<!-- WEBMAGIC TRANSLATION NAME="ServerRoot" SRC="/var/www/htdocs/" DST="/" -->
-<!-- WEBMAGIC TRANSLATION NAME="ProjectRoot" SRC="./" DST="" -->
 <TITLE>Component Documentation</TITLE>
 </HEAD>
 <BODY BGCOLOR="#ffffff">
-<P><!-- Changed by: Scott Evans,  8-Dec-1995 --></P>
-<H1><IMG SRC="title-documentation.gif" ALT="Component Documentation"></H1>
+
+<H1><IMG SRC="ada95lgo.gif" ALT="Component Documentation"></H1>
 <P><I>An Overview of the Booch Components for Ada95</I> </P>
 <P><A HREF="#abstractions">Key Abstractions</A><BR>
  <A HREF="#patterns">The Patterns of the BCs</A><BR>
@@ -22,8 +19,14 @@
  <A HREF="#iteration">Iteration</A><BR>
  <A HREF="#conclusion">Conclusion</A><BR>
  </P>
-<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4" SGI_SETWIDTH SGI_SETHEIGHT SGI_FULLPATH="/d4/people/dweller/booch/html/greenline.gif"> </P>
-<P><!----------------------------------------------------------------------><A NAME="abstractions"> </A></P>
+<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
+<P>
+
+
+<!---------------------------------------------------------------------->
+
+
+<A NAME="abstractions"> </A></P>
 <H2>Key Abstractions</H2>
 <P>The Ada 95 verison of the components will contain the same key abstractions
 as the C++ form (Tools, Support, and Structs). However, the organization
@@ -38,7 +41,13 @@ components. </P>
 <P>Some of the structures permit structural sharing (graphs, lists, and trees).
 Some structures may also be ordered (collections, dequeues, and queues).
 There are also multiple forms for some structures: single and double llinked
-lists, directed and undirected graphs, and binary, multiway, and AVL trees. <!----------------------------------------------------------------------><A NAME="patterns"> </A></P>
+lists, directed and undirected graphs, and binary, multiway, and AVL trees.
+
+
+<!---------------------------------------------------------------------->
+
+
+<A NAME="patterns"> </A></P>
 <H2>The Patterns of the BCs</H2>
 <P>The BCs cover several issues: </P>
 <UL>
@@ -50,7 +59,13 @@ lists, directed and undirected graphs, and binary, multiway, and AVL trees. <!--
 </UL>
 <P>These patterns have evolved in a way that each language feature is used
 in an efficient and appropriate manner, with the overall goal of balancing
-usability and extensibility. <!----------------------------------------------------------------------><A NAME="tactical"> </A></P>
+usability and extensibility. 
+
+
+<!---------------------------------------------------------------------->
+
+
+<A NAME="tactical"> </A></P>
 <H2>Tactical Issues</H2>
 <P></P>
 <BLOCKQUOTE>The particular semantics of a given programming language influence our architectural
@@ -63,7 +78,13 @@ general access types and access discriminants, and concurrency support.
 All this as well as the C++ features of aggregation, inheritance, and parameterization. </P>
 <P>The BCs take advantage of several critical forms of structuring: inheritance,
 parameterization, modularity, concurrency, and aggregation. Of these forms,
-parameterization is the form most often used. <!----------------------------------------------------------------------><A NAME="macro"> </A></P>
+parameterization is the form most often used. 
+
+
+<!---------------------------------------------------------------------->
+
+
+<A NAME="macro"> </A></P>
 <H2>Macro Organization</H2>
 <P>The BCs emphasize separation of policy from implementation. For this reason,
 abstract classes are declared for every major component type. Also, the
@@ -73,7 +94,13 @@ or extend existing ones. </P>
 <P>An example:<BR>
  A Mail_Queue is an instance of a Priority_Event_Queue, which itself is
 a generic instantiated with Network_Event as the item it contains. The Priority_Event_Queue
-is derived from Queue. <!----------------------------------------------------------------------> </P>
+is derived from Queue. 
+
+
+<!---------------------------------------------------------------------->
+
+
+ </P>
 <H2>Class Families</H2>
 <P>Each abstract base class has several derived concrete forms, each designed
 to support specific needs for time and space semantics. The user selects
@@ -100,20 +127,32 @@ The most recently accessed item is cached.
 </DL>
 <P>There is also variations for the presence of multiple threads of control.
 A component can take on a form of Sequential, Guarded, or Synchronous. These
-forms will be discussed later. <!----------------------------------------------------------------------><A NAME="micro"> </A></P>
+forms will be discussed later.
+
+
+<!---------------------------------------------------------------------->
+
+
+<A NAME="micro"> </A></P>
 <H2>Micro Organization</H2>
 <P>Each Abstract Base Class generally follows the same form of derivation: </P>
 <PRE>
-                      Abstract Base Class
-                              |
-             +----------------+------------------+
-     Bounded Form        Dynamic Form        Unboun. Form
-     /       \             /      \            /       \
-Guarded   Synchronized  Guarded   Synch     Guarded   Synch
+                         Abstract Base Class
+                                 |
+             +-------------------+----------------------+
+     Bounded Form           Dynamic Form          Unbounded Form
+     /       \                /      \              /        \
+Guarded  Synchronized   Guarded  Synchronized   Guarded  Synchronized
 
 </PRE>
 <P>(Each level is a derivation via inheritance. Each class is a generic using
-Item as the container parameter) <!----------------------------------------------------------------------><A NAME="timeandspace"> </A></P>
+Item as the container parameter) 
+
+
+<!---------------------------------------------------------------------->
+
+
+<A NAME="timeandspace"> </A></P>
 <H2>Time and Space Semantics</H2>
 <P>The fundamental difference between the Unbounded and Bounded forms is that
 the unbounded form is essentially an time efficient linked-list, but is
@@ -122,7 +161,13 @@ which is space efficient, but can become time inefficient if adding items
 into the middle of the array. </P>
 <P>Bounded forms have two parameters for their generics: Item and Size. Dynamic
 and Unbounded forms have Item and Storage_Manager for parameters. </P>
-<P><!----------------------------------------------------------------------><A NAME="storage"> </A></P>
+<P>
+
+
+<!---------------------------------------------------------------------->
+
+
+<A NAME="storage"> </A></P>
 <H2>Storage Management</H2>
 <P>Storage management on certain architectures can be complex, and so requires
 that all of our classes use a policy tailored to the platform, rather than
@@ -136,11 +181,33 @@ own storage management policy without changing the library. This is a classic
 example of extensibility through instantiation instead of inheritance. </P>
 <P>The only requirement we place upon our storage manager is that they provide
 the same well-defined protocol. This is accomplished through a specific
-derivation of Ada.Storage_Pools, from which a user may extend themselves. <!----------------------------------------------------------------------><A NAME="exceptions"> </A></P>
+derivation of Ada.Storage_Pools, from which a user may extend themselves. 
+
+<font color=red>
+<p>At present storage management is not externally controllable.</p>
+</font>
+
+<!---------------------------------------------------------------------->
+
+
+<A NAME="exceptions"> </A></P>
 <H2>Exceptions</H2>
 <P>All exceptions for the BCs are placed in the topmost package, BC. This precludes
 the user from having to include a separate &quot;Exceptions&quot; package. Exception
-behaviour of the BCs is standard and portable, unlike other languages. <!----------------------------------------------------------------------> </P>
+behaviour of the BCs is standard and portable, unlike other languages. </p>
+
+<font color=red>
+<p>At present there are actually no declared exceptions. Internally, the BCs use
+<tt>pragma Assert</tt> which is reasonably portable and follows the original
+C++ scheme; it does mean that you'll need to compile with vendor-specific
+switches in order to get error messages (other than just 'Constraint Error').
+This decision may be revisited.</p>
+</font>
+
+<!----------------------------------------------------------------------> 
+
+
+</P>
 <H2>Iteration</H2>
 <P>Separate types act as agents responsible for iterating across a structure.
 This was done for two reasons: </P>
@@ -156,18 +223,24 @@ provide a much clearner separation of the two.
 explicitly advance the iterator. For passive, the client supplies a single
 function &quot;Apply&quot; to work across the structure. </P>
 <P>There are many different approaches to iteration in Ada 95. The current
-mechanism was selected for its direct simplicity and efficiency. <!----------------------------------------------------------------------><A NAME="conclusion"> </A></P>
+mechanism was selected for its direct simplicity and efficiency. 
+
+
+<!---------------------------------------------------------------------->
+
+
+<A NAME="conclusion"> </A></P>
 <H2>Conclusion</H2>
-<P>Here's a table of the components and the forms supported.<BR>
+<P>Here's a table of the components and the forms to be supported.<BR>
  (U=Unbounded, B=Bounded, D=dynamic, G=Guarded, S=Synchronized) </P>
 <PRE>
 Bags       : UBDGS
 Collects   : UBDGS
 Dequeues   : UBDGS
-Graph
+Graphs
   Directed : U
   Undir    : U
-List
+Lists
   Single   : U
   Double   : U
 Maps       : UBDGS
@@ -181,8 +254,34 @@ Trees
   Binary   : U
   Multiway : U
 </PRE>
-<P><!--footer-----------------------------------------------------------></P>
-<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4" SGI_SETWIDTH SGI_SETHEIGHT SGI_FULLPATH="/d4/people/dweller/booch/html/greenline.gif"> </P>
-<P><A HREF="index.html"><IMG SRC="home.gif" ALT="[home]"></A> <!-------------------------------------------------------------------></P>
+<P>
+
+<font color=red>
+<p>Here are the components presently available.</p>
+<pre>
+Lists
+  Single   : U
+  Double   : U
+Queues     : UBD
+Stacks     : UBD
+Trees
+  Binary   : U
+  Multiway : U
+</pre>
+</font>
+
+
+<!--footer----------------------------------------------------------->
+
+
+</P>
+<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
+<P><A HREF="index.html">Back to index</A> 
+
+
+<!------------------------------------------------------------------->
+
+
+</P>
 </BODY>
 </HTML>
