@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -25,15 +25,13 @@ package BC is
 
   Container_Error : exception;
   Duplicate : exception;
-  Illegal_Pattern : exception;
   Is_Null : exception;
-  Lexical_Error : exception;
-  Math_Error : exception;
   Not_Found : exception;
   Not_Null : exception;
   Not_Root : exception;
   Overflow : exception;
   Range_Error : exception;
+  Referenced : exception;
   Storage_Error : exception;
   Synchronization_Error : exception;
   Underflow : exception;
