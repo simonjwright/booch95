@@ -151,9 +151,12 @@ package body BC.Support.Managed_Storage is
 
       use type System.Address;
    begin
-      Aligned_Size := Aligned (Size_In_Storage_Elements, Alignment);
-      if Aligned_Size = 0 then
-         raise Storage_Error;
+      --  Thanks to Adam Beneschan <adam@irvine.com> for this (which
+      --  allows allocation of, for example, zero-length arrays).
+      if Size_In_Storage_Elements = 0 then
+         Aligned_Size := Aligned (1, Alignment);
+      else
+         Aligned_Size := Aligned (Size_In_Storage_Elements, Alignment);
       end if;
       --  look for a chunk with the right element size and alignment,
       --  stopping when no point in continuing

@@ -1,9 +1,9 @@
-comp_opt=-O2 -gnatqQafoy -gnatwaL
+comp_opt=-O2 -gnatqQafy -gnatwaL
 bind_opt=-E
 gnatmake_opt=-g -m -j2
 main=${current}
 main_unit=${current}
-build_dir=/home/simon/bc-categorization/.build
+build_dir=/home/simon/bc/
 check_cmd=cd /home/simon/bc/ && ${cross_prefix}gnatgcc -c ${comp_opt} -I${src_dir} -gnats ${full_current}
 make_cmd=cd ${build_dir}
 make_cmd=${cross_prefix}gnatmake -o ${main} ${main_unit} ${gnatmake_opt} -cargs ${comp_opt} -bargs ${bind_opt} -largs ${link_opt}
