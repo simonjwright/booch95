@@ -40,6 +40,36 @@ package body BC.Support.Unbounded is
   procedure Delete_Unb_Node is new
      Ada.Unchecked_Deallocation (Unb_Node, Unb_Node_Ref);
 
+  procedure Update_Cache (Obj : in out Unb_Node; Index : Positive) is
+  begin
+    Assert (Index <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Update_Cache",
+            BSE.Invalid_Index);
+    if Obj.Cache /= null then
+      if Index = Obj.Cache_Index then
+        return;
+      elsif Index = Obj.Cache_Index + 1 then
+        Obj.Cache := Obj.Cache.Next;
+        Obj.Cache_Index := Index;
+        return;
+      elsif Index = Obj.Cache_Index - 1 then
+        Obj.Cache := Obj.Cache.Previous;
+        Obj.Cache_Index := Index;
+        return;
+      end if;
+    end if;
+    declare
+      Ptr : Nodes.Node_Ref := Obj.Rep;
+    begin
+      for I in 1 .. Index - 1 loop
+        Ptr := Ptr.Next;
+      end loop;
+      Obj.Cache := Ptr;
+      Obj.Cache_Index := Index;
+    end;
+  end Update_Cache;
+
   function Create (From : Unb_Node) return Unb_Node_Ref is
     Obj : Unb_Node_Ref := new Unb_Node;
     Tmp : Nodes.Node_Ref := From.Last;
@@ -113,10 +143,9 @@ package body BC.Support.Unbounded is
       Insert (Obj, Elem);
     else
       declare
-        AObj : Unb_Node := Obj;
-        Temp_Item : Item := Item_At (AObj, Before);  -- loads cache
         Temp_Node : Nodes.Node_Ref;
       begin
+        Update_Cache (Obj, Before);
         Temp_Node := Nodes.Create (Elem,
                                    Previous => Obj.Cache.Previous,
                                    Next => Obj.Cache);
@@ -153,10 +182,9 @@ package body BC.Support.Unbounded is
       Append(Obj, Elem);
     else
       declare
-        AObj      : Unb_Node := Obj;
-        Temp_Item : Item := Item_At (AObj, After);  -- loads cache
         Temp_Node : Nodes.Node_Ref;
       begin
+        Update_Cache (Obj, After);
         Temp_Node := Nodes.Create (Elem,
                                    Previous => Obj.Cache,
                                    Next => Obj.Cache.Next);
@@ -187,32 +215,33 @@ package body BC.Support.Unbounded is
       Clear (Obj);
     else
       declare
-        AObj      : Unb_Node := Obj;
-        Temp_Item : Item := Item_At (AObj, From);  -- loads cache
-        Ptr : Nodes.Node_Ref := AObj.Cache;
+        -- AObj : Unb_Node := Obj;  -- XXX why do we do this?
+        Ptr : Nodes.Node_Ref;
       begin
+        Update_Cache (Obj, From);
+        Ptr := Obj.Cache;
         if Ptr.Previous = null then
-          AObj.Rep := Ptr.Next;
+          Obj.Rep := Ptr.Next;
         else
           Ptr.Previous.Next := Ptr.Next;
         end if;
         if Ptr.Next = null then
-          AObj.Last := Ptr.Previous;
+          Obj.Last := Ptr.Previous;
         else
           Ptr.Next.Previous := Ptr.Previous;
         end if;
-        AObj.Size := AObj.Size - 1;
+        Obj.Size := Obj.Size - 1;
         if Ptr.Next /= null then
-          AObj.Cache := Ptr.Next;
+          Obj.Cache := Ptr.Next;
         elsif Ptr.Previous /= null then
-          AObj.Cache := Ptr.Previous;
-          AObj.Cache_Index := AObj.Cache_Index - 1;
+          Obj.Cache := Ptr.Previous;
+          Obj.Cache_Index := Obj.Cache_Index - 1;
         else
-          AObj.Cache := null;
-          AObj.Cache_Index := 0;
+          Obj.Cache := null;
+          Obj.Cache_Index := 0;
         end if;
         Delete_Node (Ptr);
-        Obj := AObj;
+        -- Obj := AObj;
       end;
     end if;
   end Remove;
@@ -227,7 +256,7 @@ package body BC.Support.Unbounded is
       declare
         Ptr : Nodes.Node_Ref := Obj.Rep;
       begin
-        for I in 1..Obj.Size loop
+        for I in 1 .. Obj.Size loop
           if I = Index then
             Obj.Cache := Ptr;
             Obj.Cache_Index := I;
@@ -304,33 +333,8 @@ package body BC.Support.Unbounded is
             BC.Range_Error'Identity,
             "Item_At",
             BSE.Invalid_Index);
-    if Obj.Cache /= null then
-      if Index = Obj.Cache_Index then
-        return Obj.Cache.Element'access;
-      elsif Index = Obj.Cache_Index + 1 then
-        U.Cache := Obj.Cache.Next;
-        U.Cache_Index := Obj.Cache_Index + 1;
-        return U.Cache.Element'access;
-      elsif Index = Obj.Cache_Index - 1 then
-        U.Cache := Obj.Cache.Previous;
-        U.Cache_Index := Obj.Cache_Index - 1;
-        return U.Cache.Element'access;
-      end if;
-    end if;
-    declare
-      Ptr : Nodes.Node_Ref := Obj.Rep;
-    begin
-      for I in 1..Obj.Size loop
-        if I = Index then
-          U.Cache := Ptr;
-          U.Cache_Index := I;
-          return Ptr.Element'access;
-        else
-          Ptr := Ptr.Next;
-        end if;
-      end loop;
-      return Ptr.Element'access;
-    end;
+    Update_Cache (U.all, Index);
+    return U.Cache.Element'Access;
   end Item_At;
 
   function Location (Obj : Unb_Node; Elem : Item; Start : Positive := 1)
