@@ -32,6 +32,10 @@ package BC.Support.Synchronization is
    pragma Elaborate_Body;
 
    --  Semaphores provide for mutual exclusion.
+   --
+   --  A semaphore variable can be copied, but doing so results in a
+   --  new semaphore (the locking properties are not shared with
+   --  copies).
    type Semaphore_Base is abstract tagged private;
    procedure Seize (The_Semaphore : in out Semaphore_Base) is abstract;
    procedure Release (The_Semaphore : in out Semaphore_Base) is abstract;
