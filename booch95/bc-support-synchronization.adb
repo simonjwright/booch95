@@ -1,4 +1,4 @@
---  Copyright 1999-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1999-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -24,18 +24,7 @@
 --  $Date$
 --  $Author$
 
-with Ada.Unchecked_Deallocation;
-
 package body BC.Support.Synchronization is
-
-   --  Semaphore_Base  --
-
-   procedure Delete (The_Semaphore : in out Semaphore_P) is
-      procedure Free is new Ada.Unchecked_Deallocation
-        (Semaphore_Base'Class, Semaphore_P);
-   begin
-      Free (The_Semaphore);
-   end Delete;
 
    --  Semaphore  --
 
@@ -58,25 +47,6 @@ package body BC.Support.Synchronization is
       end None_Pending;
 
    end Semaphore_Type;
-
-   procedure Initialize (The_Semaphore : in out Semaphore) is
-   begin
-      The_Semaphore.S := new Semaphore_Type;
-   end Initialize;
-
-   procedure Adjust (The_Semaphore : in out Semaphore) is
-   begin
-      The_Semaphore.S := new Semaphore_Type;
-   end Adjust;
-
-   procedure Finalize (The_Semaphore : in out Semaphore) is
-      procedure Free is new Ada.Unchecked_Deallocation
-        (Semaphore_Type, Semaphore_Type_P);
-   begin
-      if The_Semaphore.S /= null then
-         Free (The_Semaphore.S);
-      end if;
-   end Finalize;
 
    procedure Seize (The_Semaphore : in out Semaphore) is
    begin
@@ -137,25 +107,6 @@ package body BC.Support.Synchronization is
 
    end Recursive_Semaphore_Type;
 
-   procedure Initialize (The_Semaphore : in out Recursive_Semaphore) is
-   begin
-      The_Semaphore.S := new Recursive_Semaphore_Type;
-   end Initialize;
-
-   procedure Adjust (The_Semaphore : in out Recursive_Semaphore) is
-   begin
-      The_Semaphore.S := new Recursive_Semaphore_Type;
-   end Adjust;
-
-   procedure Finalize (The_Semaphore : in out Recursive_Semaphore) is
-      procedure Free is new Ada.Unchecked_Deallocation
-        (Recursive_Semaphore_Type, Recursive_Semaphore_Type_P);
-   begin
-      if The_Semaphore.S /= null then
-         Free (The_Semaphore.S);
-      end if;
-   end Finalize;
-
    procedure Seize (The_Semaphore : in out Recursive_Semaphore) is
    begin
       The_Semaphore.S.Seize;
@@ -171,15 +122,6 @@ package body BC.Support.Synchronization is
    begin
       return On_The_Semaphore.S.None_Pending;
    end None_Pending;
-
-   --  Monitor  --
-
-   procedure Delete (The_Monitor : in out Monitor_P) is
-      procedure Free is new Ada.Unchecked_Deallocation
-        (Monitor_Base'Class, Monitor_P);
-   begin
-      Free (The_Monitor);
-   end Delete;
 
    --  Single_Monitor  --
 
@@ -290,6 +232,5 @@ package body BC.Support.Synchronization is
    begin
       Release_From_Writing (The_Lock.Using.all);
    end Finalize;
-
 
 end BC.Support.Synchronization;

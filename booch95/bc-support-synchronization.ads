@@ -1,4 +1,4 @@
---  Copyright 1999-2004x Simon Wright <simon@pushface.org>
+--  Copyright 1999-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -32,18 +32,11 @@ package BC.Support.Synchronization is
    pragma Elaborate_Body;
 
    --  Semaphores provide for mutual exclusion.
-   --
-   --  A semaphore variable can be copied, but doing so results in a
-   --  new semaphore (the locking properties are not shared with
-   --  copies).
-   type Semaphore_Base is abstract tagged private;
+   type Semaphore_Base is abstract tagged limited private;
    procedure Seize (The_Semaphore : in out Semaphore_Base) is abstract;
    procedure Release (The_Semaphore : in out Semaphore_Base) is abstract;
    function None_Pending (On_The_Semaphore : Semaphore_Base) return Boolean
       is abstract;
-
-   type Semaphore_P is access all Semaphore_Base'Class;
-   procedure Delete (The_Semaphore : in out Semaphore_P);
 
 
    --  A Semaphore is like a standard POSIX mutex.
@@ -74,9 +67,6 @@ package BC.Support.Synchronization is
       is abstract;
    procedure Release_From_Writing (The_Monitor : in out Monitor_Base)
       is abstract;
-
-   type Monitor_P is access all Monitor_Base'Class;
-   procedure Delete (The_Monitor : in out Monitor_P);
 
 
    --  Single_Monitors allow one task at a time to have access, be it
@@ -123,8 +113,7 @@ package BC.Support.Synchronization is
 
 private
 
-   type Semaphore_Base
-      is abstract new Ada.Finalization.Controlled with null record;
+   type Semaphore_Base is abstract tagged limited null record;
 
    protected type Semaphore_Type is
       entry Seize;
@@ -134,14 +123,9 @@ private
       Seized : Boolean := False;
    end Semaphore_Type;
 
-   type Semaphore_Type_P is access all Semaphore_Type;
-
    type Semaphore is new Semaphore_Base with record
-      S : Semaphore_Type_P;
+      S : Semaphore_Type;
    end record;
-   procedure Initialize (The_Semaphore : in out Semaphore);
-   procedure Adjust (The_Semaphore : in out Semaphore);
-   procedure Finalize (The_Semaphore : in out Semaphore);
 
    protected type Recursive_Semaphore_Type is
       entry Seize;
@@ -153,14 +137,9 @@ private
       Count : Natural := 0;
    end Recursive_Semaphore_Type;
 
-   type Recursive_Semaphore_Type_P is access all Recursive_Semaphore_Type;
-
    type Recursive_Semaphore is new Semaphore_Base with record
-      S : Recursive_Semaphore_Type_P;
+      S : Recursive_Semaphore_Type;
    end record;
-   procedure Initialize (The_Semaphore : in out Recursive_Semaphore);
-   procedure Adjust (The_Semaphore : in out Recursive_Semaphore);
-   procedure Finalize (The_Semaphore : in out Recursive_Semaphore);
 
    type Monitor_Base is abstract tagged limited null record;
 
