@@ -32,7 +32,7 @@ package BC.Support.Dynamic is
   type Dyn_Node is private;
   -- An optimally-packed dynamic container whose items are stored on the heap
 
-  type Dyn_Node_Ref is access Dyn_Node;
+  type Dyn_Node_Ref is access all Dyn_Node;
 
   function Create (From : Dyn_Node) return Dyn_Node_Ref;
   -- Construct a new Dynamic container that is identical to the given container
