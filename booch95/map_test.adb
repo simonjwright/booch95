@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -159,6 +159,22 @@ procedure Map_Test is
                  "** P27: Map binding is not correct");
       Assertion (Maps.Are_Equal (M1, M2), "** P28: Maps are not equal");
       Maps.Clear (M2);
+      Maps.Bind (M1, '1', Gitems (4)'Access);
+      Maps.Bind (M2, '1', Gitems (4)'Access);
+      Maps.Bind (M2, '7', Gitems (5)'Access);
+      Maps.Bind (M2, '6', Gitems (6)'Access);
+      Maps.Bind (M2, '5', Gitems (7)'Access);
+      Assertion (Maps.Are_Equal (M1, M2), "** P28a: Maps are not equal");
+      Assertion (M1 = M2, "** P28b: Maps are not equal");
+      Maps.Rebind (M2, '1', Gitems (1)'Access);
+      Assertion (not Maps.Are_Equal (M1, M2), "** P28c: Maps are equal");
+      Assertion (M1 /= M2, "** P28d: Maps are equal");
+      Maps.Unbind (M2, '1');
+      Maps.Bind (M2, '4', Gitems (4)'Access);
+      Assertion (not Maps.Are_Equal (M1, M2), "** P28e: Maps are equal");
+      Assertion (M1 /= M2, "** P28f: Maps are equal");
+      Maps.Clear (M2);
+      Maps.Unbind (M1, '1');
       Assertion (not Maps.Is_Empty (M1), "** P29: Map is empty");
       Assertion (Maps.Extent (M1) = 3, "** P30: Map Extent is not correct");
       Assertion (Maps.Is_Bound (M1, '6'),
