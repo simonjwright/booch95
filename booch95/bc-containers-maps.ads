@@ -1,19 +1,24 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
+
+--  As a special exception, if other files instantiate generics from
+--  this unit, or you link this unit with other files to produce an
+--  executable, this unit does not by itself cause the resulting
+--  executable to be covered by the GNU General Public License.  This
+--  exception does not however invalidate any other reasons why the
+--  executable file might be covered by the GNU Public License.
 
 --  $RCSfile$
 --  $Revision$
@@ -34,7 +39,7 @@ package BC.Containers.Maps is
    --  its domain; the parameter Item denotes the universe from which
    --  the map draws its range. The parameters Key and Item typically
    --  represent different types, although they may may represent the
-   --  same types. Either may be a primitive type or user-defined.
+   --  same type. Either may be a primitive type or user-defined.
 
    type Abstract_Map is abstract new Container with private;
 
@@ -49,19 +54,18 @@ package BC.Containers.Maps is
 
    procedure Bind (M : in out Abstract_Map; K : Key; I : Item)
       is abstract;
-   --  If the key already exists in the map, raise
-   --  BC.Duplicate. Otherwise, add the key/item pair to the map.
+   --  If the key already exists in the map, raise BC.Duplicate.
+   --  Otherwise, add the key/item pair to the map.
 
    procedure Rebind (M : in out Abstract_Map; K : Key; I : Item)
       is abstract;
-   --  If the key does not exist in the map, raise
-   --  BC.Not_Found. Otherwise, change the key's binding to the given
-   --  value.
+   --  If the key does not exist in the map, raise BC.Not_Found.
+   --  Otherwise, change the key's binding to the given value.
 
    procedure Unbind (M : in out Abstract_Map; K : Key)
       is abstract;
-   --  If the key does not exist in the map, raise
-   --  BC.Not_Found. Otherwise, remove the key/item binding.
+   --  If the key does not exist in the map, raise BC.Not_Found.
+   --  Otherwise, remove the key/item binding.
 
    function Available (M : Abstract_Map) return Natural;
    --  Return the number of unused slots in the map.
@@ -82,16 +86,15 @@ package BC.Containers.Maps is
 
    function Item_Of (M : Abstract_Map; K : Key) return Item
       is abstract;
-   --  If the key does not exist in the map, raises
-   --  BC.Not_Found. Otherwise, return a copy of the item bound to the
-   --  given key.
+   --  If the key does not exist in the map, raises BC.Not_Found.
+   --  Otherwise, returns a copy of the item bound to the given key.
 
    --  Additional Iterator support
 
-   type Map_Iterator is new Iterator with private;
+   type Map_Iterator is abstract new Iterator with private;
 
-   function Current_Key (It : Map_Iterator'Class) return Key;
-   --  Return a copy of the current Key.
+   function Current_Key (It : Map_Iterator) return Key is abstract;
+   --  Returns a copy of the current Key.
 
    generic
       with procedure Apply (K : Key; I : Item; OK : out Boolean);
@@ -104,7 +107,7 @@ package BC.Containers.Maps is
       with procedure Apply (K : Key; I : in out Item; OK : out Boolean);
    procedure Modify (Using : in out Map_Iterator'Class);
    --  Call Apply for each Key/Item pair in the Container to which the
-   --  iterator Using is bound. The Item is a copy, the Value is the
+   --  iterator Using is bound. The Item is a copy, the Item is the
    --  actual content. The iteration will terminate early if Apply
    --  sets OK to False.
 
@@ -115,17 +118,6 @@ private
    type Key_Ptr is access all Key;
    for Key_Ptr'Storage_Size use 0;
 
-   procedure Attach (M : in out Abstract_Map; K : Key; I : Item);
-
-   function Number_Of_Buckets (M : Abstract_Map) return Natural;
-
-   function Length (M : Abstract_Map; Bucket : Positive) return Natural;
-
-   function Item_At
-     (M : Abstract_Map; Bucket, Index : Positive) return Item_Ptr;
-
-   function Key_At (M : Abstract_Map; Bucket, Index : Positive) return Key_Ptr;
-
    --  The new subprograms for Map iteration (which allow access to
    --  the Key as well as the Item) require the inherited
    --  For_The_Container to in fact be in Map'Class. This must be the
@@ -134,24 +126,10 @@ private
    --
    --   Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
    --
-   --  which GNAT fails at compilation time if M isn't actually a Map.
-   type Map_Iterator is new Iterator with record
+   --  which fails at compilation time if M isn't actually a Map.
+   type Map_Iterator is abstract new Iterator with record
       Bucket_Index : Natural := 0;
       Index : Natural := 0;
    end record;
-
-   --  Overriding primitive supbrograms of the concrete actual Iterator.
-
-   procedure Reset (It : in out Map_Iterator);
-
-   procedure Next (It : in out Map_Iterator);
-
-   function Is_Done (It : Map_Iterator) return Boolean;
-
-   function Current_Item (It : Map_Iterator) return Item;
-
-   function Current_Item (It : Map_Iterator) return Item_Ptr;
-
-   procedure Delete_Item_At (It : in out Map_Iterator);
 
 end BC.Containers.Maps;

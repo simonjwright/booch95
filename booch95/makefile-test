@@ -1,4 +1,4 @@
-# Copyright (C) 2001-2002 Simon Wright. All Rights Reserved.
+# Copyright (C) 2000-2002 Simon Wright. All Rights Reserved.
 #
 #      This program is free software; you can redistribute it
 #      and/or modify it under the terms of the Ada Community
@@ -36,12 +36,6 @@ test: testable
 	  ./$$t 2>&1; \
 	done
 
-concurrent_test: concurrent_testable
-	for t in $(CONCURRENT_TESTABLE); do \
-	  echo running $$t; \
-	  ./$$t 2>&1; \
-	done
-
 TESTABLE += avl_test
 avl_test: force
 
@@ -59,8 +53,6 @@ list_test: force
 
 TESTABLE += map_test
 map_test: force
-CONCURRENT_TESTABLE += map_test_concurrent
-map_test_concurrent: force
 
 TESTABLE += ordered_collection_test
 ordered_collection_test: force
@@ -70,8 +62,6 @@ ordered_queue_test: force
 
 TESTABLE += queue_test
 queue_test: force
-CONCURRENT_TESTABLE += queue_test_concurrent
-queue_test_concurrent: force
 
 TESTABLE += ring_test
 ring_test: force
@@ -95,8 +85,6 @@ TESTABLE += tree_test
 tree_test: force
 
 testable: $(TESTABLE)
-
-concurrent_testable: $(CONCURRENT_TESTABLE)
 
 .PHONY: force
 

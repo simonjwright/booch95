@@ -1,19 +1,17 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
 
 --  $Id$
 
@@ -137,6 +135,7 @@ procedure Ring_Test is
    Ring_B_P1, Ring_B_P2 : RB.Ring;
    Ring_D_P1, Ring_D_P2 : RD.Ring;
    Ring_U_P1, Ring_U_P2 : RU.Ring;
+   Ring_UM_P1, Ring_UM_P2 : RUM.Ring;
 
 begin
 
@@ -149,6 +148,8 @@ begin
    Test_Primitive (Ring_D_P1, Ring_D_P2);
    Put_Line ("...Unbounded Ring");
    Test_Primitive (Ring_U_P1, Ring_U_P2);
+   Put_Line ("...Unmanaged Ring");
+   Test_Primitive (Ring_UM_P1, Ring_UM_P2);
 
    Put_Line ("...Ring Active Iterator");
    Put_Line ("   Bounded:");
@@ -157,6 +158,8 @@ begin
    Test_Active_Iterator (Ring_D_P1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (Ring_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Ring_U_P1);
 
    Put_Line ("...Ring Passive Iterator");
    Put_Line ("   Bounded:");
@@ -164,13 +167,19 @@ begin
    Put_Line ("   Dynamic:");
    Test_Passive_Iterator (Ring_D_P1);
    Put_Line ("   Unbounded:");
+   Test_Passive_Iterator (Ring_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Ring_UM_P1);
 
    Assertion (RB.Top (Ring_B_P1) = '9', "** M01: Ring top is not correct");
    Assertion (RB.Extent (Ring_B_P2) = 2, "** M02: Ring depth is not correct");
    Assertion (RD.Top (Ring_D_P1) = '9', "** M05: Ring top is not correct");
    Assertion (RD.Extent (Ring_D_P2) = 2, "** M06: Ring depth is not correct");
    Assertion (RU.Top (Ring_U_P1) = '9', "** M09: Ring top is not correct");
+   Assertion (RUM.Top (Ring_UM_P1) = '9', "** M09a: Ring top is not correct");
    Assertion (RU.Extent (Ring_U_P2) = 2, "** M10: Ring depth is not correct");
+   Assertion (RUM.Extent (Ring_UM_P2) = 2,
+              "** M10a: Ring depth is not correct");
    Assertion (RB.Available (Ring_B_P1) = 97,
               "** M13: Available space is not correct");
    Assertion (RB.Available (Ring_B_P2) = 98,

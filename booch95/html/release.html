@@ -14,7 +14,165 @@
 
 <dl>
 
-<dt>2 June 2002</dt>
+<dt>dd mmm 2003
+
+<dd>
+
+<h3>Interface changes</h3>
+
+<p>None.
+
+<h3>Implementation changes</h3>
+
+<p>Minor changes to suppress warnings under GNAT 3.16.
+
+<p>The internal Bounded Hash Table is no longer Controlled.
+
+<h3>Documentation changes</h3>
+
+<p>None.
+
+<h3>New contributions</h3>
+
+<p>None.
+
+
+<dt>9 Mar 2003
+
+<dd>
+
+<h3>Interface changes</h3>
+
+<p>New <i>unmanaged</i> forms are provided for all the monolithic
+Containers. This means you don't need to supply a storage pool at all
+(and means you can use GNAT 3.12 if you have to!).
+
+<h3>Implementation changes</h3>
+
+<p>In <tt>BC.Support.Memory_Streams</tt>, <tt>Write_Contents</tt> did
+the actual writing one storage element at a
+time. <tt>Read_Contents</tt> requires a supplier <tt>Stream</tt> that
+has datagram properties (unlike, it turns out, <tt>GNAT.Sockets</tt>
+streams, even if based on a datagram protocol).
+
+<h3>Documentation changes</h3>
+
+<p>None.
+
+<h3>New contributions</h3>
+
+<p>None.
+
+
+<dt>11 Jan 2003
+
+<dd>
+
+<h3>Licence changes</h3>
+
+<p>The library is now released under the GNAT-modified GPL. My test
+and demonstration code is released under the GPL. Contributed code's
+licences remain unchanged.
+
+<h3>Interface changes</h3>
+
+<h4>Constraints revisited</h4>
+
+<p>For Bags, Maps and Sets in each form, and in all Bounded forms, the
+basic container is now unconstrained with a constrained subtype: for
+Unbounded Bags, for instance, the declarations are
+
+<pre>
+   generic
+      with function Hash (V : Item) return Natural is <>;
+      Buckets : Positive;
+      Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
+   package BC.Containers.Bags.Unbounded is
+      ...
+      type Unconstrained_Bag
+	(Number_Of_Buckets : Positive) is new Abstract_Bag with private;
+
+      subtype Bag is Unconstrained_Bag (Number_Of_Buckets => Buckets);
+</pre>
+
+<p>whereas for bounded bags the declarations are
+<pre>
+   generic
+      with function Hash (V : Item) return Natural is <>;
+      Buckets : Positive;
+      Maximum_Size : Positive;
+   package BC.Containers.Bags.Bounded is
+      ...
+      type Unconstrained_Bag
+	(Number_Of_Buckets : Positive;
+	 Maximum_Size : Positive) is new Abstract_Bag with private;
+
+      subtype Bag is Unconstrained_Bag (Number_Of_Buckets => Buckets,
+					Maximum_Size => Maximum_Size);
+</pre>
+
+<p>The intention is that users shouldn't need to change their source.
+
+<h4>Iterators</h4>
+
+<ul>
+
+<li>It used to be possible to create an empty Container, create an
+Iterator over it, populate the Container, and then just use the
+Iterator.
+<br>If you do that now, the Iterator will be "complete" (ie,
+<tt>Is_Done</tt> will typically return <tt>True</tt>) until you
+<tt>Reset</tt> it.
+<br>It's a Bad Idea to use an Iterator after modifying the associated
+Container without resetting it first.
+
+<li><tt>Delete_Item_At</tt> is now implemented for Bags, Maps and
+Sets.
+
+</ul>
+
+<h4>Concurrency</h4>
+
+<p>The slender support for concurrency (Guarded and Synchronized
+forms) has been removed.
+
+<p>You may find you need concurrency support when using the Components
+to help implement your own abstractions. You'll probably find that the
+best approach is to implement the required concurrency behaviour with
+tasks, protected types and (if you choose) semaphores and locks from
+<tt>BC.Support.Synchronization</tt>, using the Components within this
+environment.
+
+<h4>Memory streams</h4>
+
+<p><tt>BC.Support.Memory_Streams</tt> provides in-memory stream support.
+
+<h4>Other</h4>
+
+<p><tt>BC.Containers.Maps.Hash_Statistics</tt> and
+<tt>BC.Containers.Sets.Hash_Statistics</tt> are withdrawn.
+
+<p><tt>BC.Container_Error</tt> (raised when sorting unsortable
+container types) becomes <tt>Sort_Error</tt>.
+
+<p>The support for smart pointers (in <tt>BC.Smart</tt>) is
+deprecated; use <tt>BC.Support.Smart_Pointers</tt> instead.
+
+<h3>Documentation changes</h3>
+
+<p>There are some <a href="documentation.html#support">brief notes on
+the <tt>BC.Support</tt> packages</a>.
+
+<h3>Implementation changes</h3>
+
+<p>None not already discussed.
+
+<h3>New contributions</h3>
+
+<p>None.
+
+
+<p><dt>2 June 2002</dt>
 
 <dd>
 

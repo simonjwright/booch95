@@ -1,25 +1,30 @@
---   Copyright (C) 2001-2002 Simon Wright.
---   All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 2001-2002 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
+
+--  As a special exception, if other files instantiate generics from
+--  this unit, or you link this unit with other files to produce an
+--  executable, this unit does not by itself cause the resulting
+--  executable to be covered by the GNU General Public License.  This
+--  exception does not however invalidate any other reasons why the
+--  executable file might be covered by the GNU Public License.
 
 --  $RCSfile$
 --  $Revision$
 --  $Date$
 --  $Author$
 
+with Ada.Exceptions;
 with BC.Support.Exceptions;
 with System;
 with System.Address_To_Access_Conversions;
@@ -54,12 +59,6 @@ package body BC.Support.Bounded_Hash_Tables is
          end loop;
          return 0;
       end Location;
-
-
-      procedure Initialize (T : in out Table) is
-      begin
-         Clear (T);
-      end Initialize;
 
 
       function "=" (L, R : Table) return Boolean is
@@ -106,14 +105,15 @@ package body BC.Support.Bounded_Hash_Tables is
 
 
       procedure Bind (T : in out Table; I : Items.Item; V : Values.Value) is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          B : Index renames T.Buckets (Bucket);
       begin
          Assert (Location (T, B, I) = 0,
                  BC.Duplicate'Identity,
                  "Bind",
                  BSE.Duplicate);
-         Assert (T.Size < Maximum_Size,
+         Assert (T.Size < T.Maximum_Size,
                  BC.Overflow'Identity,
                  "Bind",
                  BSE.Full);
@@ -132,7 +132,8 @@ package body BC.Support.Bounded_Hash_Tables is
 
 
       procedure Rebind (T : in out Table; I : Items.Item; V : Values.Value) is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          C : constant Index := Location (T, T.Buckets (Bucket), I);
       begin
          Assert (C /= 0,
@@ -144,7 +145,8 @@ package body BC.Support.Bounded_Hash_Tables is
 
 
       procedure Unbind (T : in out Table; I : Items.Item) is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          Current : Index := T.Buckets (Bucket);
          Previous : Index := 0;
       begin
@@ -189,14 +191,16 @@ package body BC.Support.Bounded_Hash_Tables is
 
 
       function Is_Bound (T : Table; I : Items.Item) return Boolean is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
       begin
          return Location (T, T.Buckets (Bucket), I) /= 0;
       end Is_Bound;
 
 
       function Value_Of (T : Table; I : Items.Item) return Values.Value is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          C : constant Index := Location (T, T.Buckets (Bucket), I);
       begin
          Assert (C /= 0,
@@ -218,7 +222,7 @@ package body BC.Support.Bounded_Hash_Tables is
       begin
          return Items.Item_Ptr
            (Allow_Item_Access.To_Pointer
-            (T.Contents (Position).Item'Address));
+              (T.Contents (Position).Item'Address));
       end Access_Item_At;
 
 
@@ -233,8 +237,135 @@ package body BC.Support.Bounded_Hash_Tables is
       begin
          return Values.Value_Ptr
            (Allow_Value_Access.To_Pointer
-            (T.Contents (Position).Value'Address));
+              (T.Contents (Position).Value'Address));
       end Access_Value_At;
+
+
+      procedure Reset (T : Table;
+                       Bucket : out Positive;
+                       Index : out Positive) is
+      begin
+         if T.Size = 0 then
+            Bucket := T.Number_Of_Buckets + 1;
+            Index := Positive'Last;         --  we have to ensure it's > 0
+         else
+            Bucket := 1;
+            loop
+               exit when Bucket > T.Number_Of_Buckets;
+               if T.Buckets (Bucket) > 0 then
+                  Index := T.Buckets (Bucket);
+                  return;
+               end if;
+               Bucket := Bucket + 1;
+            end loop;
+            Ada.Exceptions.Raise_Exception
+              (Program_Error'Identity,
+               "BC.Support.Bounded_Hash_Tables.Reset: no items found");
+         end if;
+      end Reset;
+
+
+      function Is_Done (T : Table;
+                        Bucket : Positive;
+                        Index : Positive) return Boolean is
+         pragma Warnings (Off, Index);
+      begin
+         return Bucket > T.Number_Of_Buckets;
+      end Is_Done;
+
+
+      function Current_Item_Ptr (T : Table;
+                                 Bucket : Positive;
+                                 Index : Positive) return Items.Item_Ptr is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Current_Item_Ptr",
+                 BSE.Missing);
+         return Items.Item_Ptr
+           (Allow_Item_Access.To_Pointer
+            (T.Contents (Index).Item'Address));
+      end Current_Item_Ptr;
+
+
+      function Current_Value_Ptr (T : Table;
+                                  Bucket : Positive;
+                                  Index : Positive) return Values.Value_Ptr is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Current_Value_Ptr",
+                 BSE.Missing);
+         return Values.Value_Ptr
+           (Allow_Value_Access.To_Pointer
+            (T.Contents (Index).Value'Address));
+      end Current_Value_Ptr;
+
+
+      procedure Delete_Item_At (T : in out Table;
+                                Bucket : in out Positive;
+                                Index : in out  Positive) is
+         Next : Tables.Index;
+         Previous : Tables.Index;
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Delete_Item_At",
+                 BSE.Missing);
+         Next := T.Contents (Index).Next;
+         Previous := T.Buckets (Bucket);
+         if Previous = Index then
+            --  This is the first cell
+            T.Buckets (Bucket) := Next;
+         else
+            --  We have to find the previous Contents cell
+            while T.Contents (Previous).Next /= Index loop
+               Previous := T.Contents (Previous).Next;
+            end loop;
+            T.Contents (Previous).Next := Next;
+         end if;
+         --  Put the released cell on the free list
+         T.Contents (Index).Next := T.Free;
+         T.Free := Index;
+         T.Size := T.Size - 1;
+         --  Adjust Index
+         if Next = 0 then
+            --  That was the last cell in this bucket, on to the next
+            loop
+               Bucket := Bucket + 1;
+               exit when Bucket > T.Number_Of_Buckets;  --  we've done
+               if T.Buckets (Bucket) > 0 then
+                  Index := T.Buckets (Bucket);
+                  exit;
+               end if;
+            end loop;
+         else
+            Index := Next;
+         end if;
+      end Delete_Item_At;
+
+
+      procedure Next (T : Table;
+                      Bucket : in out Positive;
+                      Index : in out  Positive) is
+      begin
+         Assert (Bucket <= T.Number_Of_Buckets,
+                 BC.Not_Found'Identity,
+                 "Next",
+                 BSE.Missing);
+         if T.Contents (Index).Next > 0 then
+            Index := T.Contents (Index).Next;
+         else
+            loop
+               Bucket := Bucket + 1;
+               exit when Bucket > T.Number_Of_Buckets;
+               if T.Buckets (Bucket) > 0 then
+                  Index := T.Buckets (Bucket);
+                  exit;
+               end if;
+            end loop;
+         end if;
+      end Next;
 
 
    end Tables;

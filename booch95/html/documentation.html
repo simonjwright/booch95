@@ -21,7 +21,7 @@
  <A HREF="#storage">Storage Management</A><BR>
  <A HREF="#exceptions">Exceptions</A><BR>
  <A HREF="#iteration">Iteration</A><BR>
- <A HREF="#synchronization">Synchronization</A><BR>
+ <A HREF="#support">Support packages</A><BR>
  <A HREF="#conclusion">Conclusion</A><BR>
  
 
@@ -44,8 +44,8 @@ of memory management that are quite different from C++.
 abstractions (Bags, Collections, Deques, Graphs, Lists, Maps, Queues,
 Rings, Sets, Stacks, and Trees). The <B>Tools</B> category provides
 algorithmic abstractions (Searching, Sorting, etc.). The
-<B>Support</B> category contains all the &quot;concrete&quot; forms,
-plus structures to create the components.
+<B><a href="#support">Support</a></B> category contains all the
+&quot;concrete&quot; forms, plus structures to create the components.
 
 <p>Some of the structures permit structural sharing (graphs, lists,
 and trees).  Some structures may also be ordered (collections,
@@ -70,8 +70,6 @@ graphs, and binary, multiway, and AVL trees.
 <LI>Exceptions
 
 <LI>Idioms for iteration
-
-<LI>Synchronization forms
 
 </UL>
 
@@ -157,19 +155,22 @@ prohibited.
 <DD>Average storage size of each instance must be considered when
 setting chunk_size.  Indexing is as efficient as bounded, but
 insertion other than at the front or back of a structure is less
-efficient than the unbounded form.
+efficient than the unbounded form. Storage is allocated by a <a
+href="#storage">storage manager</a>.
 
 <DT><B>Unbounded</B>
 
 <DD>Space efficient, but requires memory allocation for each new item
-added (unless the storage management policy is &quot;Managed&quot;,
-see later discussions).  The most recently accessed item is cached.
+added, under the control of a <a href="#storage">storage manager</a>.
+The most recently accessed item is cached.
+
+<DT><B>Unmanaged</B>
+
+<DD>Space efficient, but requires memory allocation for each new item
+added, from the system's memory pool.  The most recently accessed item
+is cached.
 
 </DL>
-
-<p>There is also variations for the presence of multiple threads of
-control.  A component can take on a form of Sequential, Guarded, or
-Synchronous. These forms will be discussed later.
 
 
 <!---------------------------------------------------------------------->
@@ -180,15 +181,10 @@ Synchronous. These forms will be discussed later.
 <p>Each Abstract Base Class generally follows the same form of
 derivation:
 
-<img src="organization.jpg" alt="Picture of organisation of classes">
+<img src="organization.png" alt="Picture of organisation of classes">
 
 <p>(Each level is a derivation via inheritance. Each class is a
 generic using Item as the container parameter)
-
-<p>The Guarded forms are created by instantiating <tt>BC.Guarded</tt>
-with the concrete form, whereas the Synchronized forms have to be
-provided individually.
-
 
 <!---------------------------------------------------------------------->
 
@@ -216,9 +212,9 @@ Storage Pool for parameters.
 <p>Storage management on certain architectures can be complex, and so
 requires that all of our classes use a policy tailored to the
 platform, rather than using a general one assumed by the library
-designer to work in all circumstances.  By clearly isolating these
+designer to work in all circumstances. By clearly isolating these
 patterns of storage management, we can provide a robust, adaptable
-library. 
+library.
 
 <p>By treating the storage manager as an argument to all the dynamic
 and unbounded concrete structures, we effectively decouple storage
@@ -246,11 +242,12 @@ is specified when the pool is created.</dd>
 
 </dl>
 
-
-
 <p>Note that the supplied <tt>BC.Support.Managed_Storage</tt> will
 <strong>not</strong> support allocation of items larger than its chunk
 size.
+
+<p>For those who don't need this level of control, we provide
+<i>Unmanaged</i> forms.
 
 <!---------------------------------------------------------------------->
 
@@ -305,100 +302,80 @@ efficiency.
 <!---------------------------------------------------------------------->
 
 
-<H2><A NAME="synchronization">Synchronization</A></H2>
+<h2><a name="support">Support</a></h2>
 
-<p>Those components that provide structural sharing
-("<i>polylithic</i>") exist only in unprotected forms. Concurrent
-access by multiple tasks requires the user to provide her own access
-control.
-
-<p>Other components provide access control, when required, in one of
-two forms:
+<p>The support packages (<tt>BC.Support</tt> and children) come in two
+flavours:
 
 <ul>
 
-<li>guarded
+<li>support for the Containers, and
 
-<li>synchronized
-
-</ul>
-
-<h3>Guarded forms</h3>
-
-<p>Clients of guarded objects must follow the simple protocol of first
-Seizing the object, operating on it, and then Releasing it (even if
-exceptions occur).
-
-<p>Seizing a guarded object and failing to release it blocks the
-object's use indefinitely; releasing an object never seized is
-improper; and ignoring the protocol altogether is likely to result in
-interleaved tasks corrupting the state of the object.
-
-<p>Guarded forms are created by instantiating the package
-<tt>BC.Containers.Guarded</tt> with
-
-<ul>
-
-<li> a Container derived from BC.Containers.Container (ie, any of the
-supported Containers)
-
-<li> a type derived from <tt>Semaphore_Base</tt> (in
-<tt>BC.Support.Synchronisation</tt>)
+<li>general utilities.
 
 </ul>
 
-A standard <tt>Semaphore</tt> is supplied, using which will cause each
-object to have its own guard; an alternative possibility would be to
-create a new <tt>Semaphore</tt> type such that each object of that
-type accesses a common actual Semaphore. Using such a strategy, a
-global lock could be obtained on a whole group of objects in one
-operation.
+<p>The general utilities are:
 
-<p><font color="red"><em>Note particularly</em></font> that the
-standard Guard <font color="red"><em>will not work as you
-expect</em></font> for "polylithic" structures (Graphs, Lists, Binary
-and Multiway Trees).
+<dl>
 
-<h3>Synchronized forms</h3>
+<dt><tt>Managed_Storage</tt><dd>A storage pool by <a
+href="mailto:pat@classwide.com">Pat Rogers</a>, which can allocate
+objects up to a user-defined size (supplied as a constraint).
 
-<p>For synchronized objects, each operation on the object becomes an
-atomic transaction; clients don't have to worry about maintaining the
-proper protocol.
+<dt><tt>Unmanaged_Storage</tt><dd>A storage pool by <a
+href="mailto:pat@classwide.com">Pat Rogers</a>, implemented using the
+default storage pool (works for GNAT, ObjectAda, Apex, may work on
+others).
 
-<p>This is very much easier for the developer; however, if it's
-necessary to invoke several operations on one object as a single
-atomic transaction, the Guarded protocol should be used.
+<dt><tt>Memory_Streams</tt><dd>Support streaming to memory.
+
+<dt><tt>Smart_Pointers</tt><dd>Provide reference-counting pointers.
+
+<dt><tt>Standard_Storage</tt><dd>Interface to the standard storage
+pool (works for GNAT, ObjectAda, may work on others).
+
+<dt><tt>Synchronization</tt><dd>The Components don't provide forms
+that are directly suitable for use in concurrent programs. This is
+mainly because it's not possible to support all the ways that people
+might want to use them.
+
+<br>You'll probably want to use the Components to implement your own
+abstractions, so it's best to provide your own wrappers using
+protected types and tasks as needed.
+
+<br>This package provides Semaphores and Monitors which may be helpful.
+
+</dl>
+
 
 <!---------------------------------------------------------------------->
 
 
 <H2><A NAME="conclusion">Conclusion</A></H2>
 
-<p>Here's a table of the components and the forms to be supported
-(U=Unbounded, B=Bounded, D=Dynamic, G=Guarded, S=Synchronized).  The
-available components are shown in <font color="red">red</font>. Those
-for which it's appropriate to use the standard Guard are marked <font
-color="green">G</font>.
+<p>Here's a table of the components and the forms that are supported
+(U=Unbounded, B=Bounded, D=Dynamic, N=Unmanaged).
 
 <PRE>
-Bags         : <font color="red">UBD</font><font color="green">G</font>S
-Collections  : <font color="red">UBD</font><font color="green">G</font>S
-  (ordered)  : <font color="red">UBD</font><font color="green">G</font>S
-Dequeues     : <font color="red">UBD</font><font color="green">G</font>S
+Bags         : <font color="red">UBDN</font>
+Collections  : <font color="red">UBDN</font>
+  (ordered)  : <font color="red">UBDN</font>
+Dequeues     : <font color="red">UBDN</font>
 Graphs
   Directed   : <font color="red">U</font>
   Undirected : <font color="red">U</font>
 Lists
   Single     : <font color="red">U</font>
   Double     : <font color="red">U</font>
-Maps         : <font color="red">UBD</font><font color="green">G</font><font color="red">S</font>
-Queues       : <font color="red">UBD</font><font color="green">G</font><font color="red">S</font>
-  (ordered)  : <font color="red">UBD</font><font color="green">G</font>S
-Rings        : <font color="red">UBD</font><font color="green">G</font>S
-Sets         : <font color="red">UBD</font><font color="green">G</font>S
-Stacks       : <font color="red">UBD</font><font color="green">G</font>S
+Maps         : <font color="red">UBDN</font>
+Queues       : <font color="red">UBDN</font>
+  (ordered)  : <font color="red">UBDN</font>
+Rings        : <font color="red">UBDN</font>
+Sets         : <font color="red">UBDN</font>
+Stacks       : <font color="red">UBDN</font>
 Trees
-  AVL        : <font color="red">U</font><font color="green">G</font>
+  AVL        : <font color="red">U</font>
   Binary     : <font color="red">U</font>
   Multiway   : <font color="red">U</font>
 </PRE>

@@ -1,19 +1,24 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
+
+--  As a special exception, if other files instantiate generics from
+--  this unit, or you link this unit with other files to produce an
+--  executable, this unit does not by itself cause the resulting
+--  executable to be covered by the GNU General Public License.  This
+--  exception does not however invalidate any other reasons why the
+--  executable file might be covered by the GNU Public License.
 
 --  $RCSfile$
 --  $Revision$
@@ -105,6 +110,7 @@ private
    use IC;
    package Items is new BC.Support.Hash_Tables.Item_Signature
      (Item => Item,
+      Item_Ptr => Item_Ptr,
       Item_Container => IC.Dyn_Node);
 
    --  We need a dummy type for the Value component of the hash table.
@@ -121,21 +127,26 @@ private
 
    package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Items,
-      Values => Values,
-      Buckets => Buckets);
+      Values => Values);
 
    type Set is new Abstract_Set with record
-      Rep : Tables.Table;
+      Rep : Tables.Table (Number_Of_Buckets => Buckets);
    end record;
 
-   procedure Attach (S : in out Set; I : Item);
+   --  Iterators
 
-   procedure Detach (S : in out Set; I : Item);
+   type Dynamic_Set_Iterator is new Set_Iterator with null record;
 
-   function Number_Of_Buckets (S : Set) return Natural;
+   procedure Reset (It : in out Dynamic_Set_Iterator);
 
-   function Length (S : Set; Bucket : Positive) return Natural;
+   procedure Next (It : in out Dynamic_Set_Iterator);
 
-   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr;
+   function Is_Done (It : Dynamic_Set_Iterator) return Boolean;
+
+   function Current_Item (It : Dynamic_Set_Iterator) return Item;
+
+   function Current_Item_Ptr (It : Dynamic_Set_Iterator) return Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Dynamic_Set_Iterator);
 
 end BC.Containers.Sets.Dynamic;

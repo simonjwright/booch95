@@ -1,19 +1,18 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1994-1997 David Weller
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
 
 --  $RCSfile$
 --  $Revision$
@@ -33,6 +32,7 @@ procedure Queue_Test is
    use QB;
    use QD;
    use QU;
+   use QUM;
 
    procedure Process (C : Character; OK : out Boolean);
    procedure Process (C : Character; OK : out Boolean) is
@@ -203,6 +203,7 @@ procedure Queue_Test is
    Queue_B_P1, Queue_B_P2 : QB.Queue;
    Queue_D_P1, Queue_D_P2 : QD.Queue;
    Queue_U_P1, Queue_U_P2 : QU.Queue;
+   Queue_UM_P1, Queue_UM_P2 : QUM.Queue;
 
 begin
    Put_Line ("Starting queue tests");
@@ -217,6 +218,9 @@ begin
    Put_Line ("...Unbounded Queue");
    Test_Primitive (Queue_U_P1, Queue_U_P2);
 
+   Put_Line ("...Unmanaged Queue");
+   Test_Primitive (Queue_UM_P1, Queue_UM_P2);
+
    Put_Line ("...Queue Active Iterator");
    Put_Line ("   Bounded:");
    Test_Active_Iterator (Queue_B_P1);
@@ -224,6 +228,8 @@ begin
    Test_Active_Iterator (Queue_D_P1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (Queue_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Queue_UM_P1);
 
    Put_Line ("...Queue Passive Iterator");
    Put_Line ("   Bounded:");
@@ -232,6 +238,8 @@ begin
    Test_Passive_Iterator (Queue_D_P1);
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (Queue_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Queue_UM_P1);
 
    Assertion ((Front (Queue_B_P1) = '9'),
               "** M01: Queue front is not correct");
@@ -258,6 +266,8 @@ begin
    Test_Iterator_Deletion (Queue_D_P1);
    Put_Line ("   Unbounded:");
    Test_Iterator_Deletion (Queue_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Iterator_Deletion (Queue_UM_P1);
 
    Put_Line ("Completed queue tests");
 
