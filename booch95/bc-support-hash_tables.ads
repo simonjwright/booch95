@@ -42,6 +42,7 @@ generic
      (C : Item_Container; Index : Positive) return Item is <>;
   with function Location
      (C : Item_Container; I : Item; Start : Positive) return Natural is <>;
+  with procedure Free (C : in out Item_Container_Ptr) is <>;
   type Value_Container is private;
   type Value_Container_Ptr is access all Value_Container;
   with function Create
@@ -59,6 +60,7 @@ generic
      (C : Value_Container; Index : Positive) return Value_Ptr is <>;
   with function Location
      (C : Value_Container; V : Value; Start : Positive) return Natural is <>;
+  with procedure Free (C : in out Value_Container_Ptr) is <>;
 package BC.Support.Hash_Tables is
 
   -- The required operations appear to be Length(), Append(), ItemAt(), Clear(), Location(), Insert(), Replace(), Remove(), []
@@ -225,8 +227,8 @@ package BC.Support.Hash_Tables is
 
 private
 
-  type Item_Array is array (1 .. Buckets) of aliased Item_Container;
-  type Value_Array is array (1 .. Buckets) of aliased Value_Container;
+  type Item_Array is array (1 .. Buckets) of Item_Container_Ptr;
+  type Value_Array is array (1 .. Buckets) of Value_Container_Ptr;
 
   type Table is new Ada.Finalization.Controlled with record
     Items : Item_Array;
@@ -234,6 +236,7 @@ private
     Size : Natural := 0;
   end record;
 
+  procedure Initialize (T : in out Table);
   procedure Adjust (T : in out Table);
   procedure Finalize (T : in out Table);
 
