@@ -14,7 +14,7 @@
 
 <dl>
 
-<dt>dd mmm yyyy
+<dt>11 Jan 2003
 
 <dd>
 
@@ -71,8 +71,8 @@ Unbounded Bags, for instance, the declarations are
 Iterator over it, populate the Container, and then just use the
 Iterator.
 <br>If you do that now, the Iterator will be "complete" (ie,
-<tt>Is_Done</tt> will return <tt>True</tt>) until you <tt>Reset</tt>
-it -- for some Containers, anyway.
+<tt>Is_Done</tt> will typically return <tt>True</tt>) until you
+<tt>Reset</tt> it.
 <br>It's a Bad Idea to use an Iterator after modifying the associated
 Container without resetting it first.
 
@@ -89,8 +89,9 @@ forms) has been removed.
 <p>You may find you need concurrency support when using the Components
 to help implement your own abstractions. You'll probably find that the
 best approach is to implement the required concurrency behaviour with
-tasks and protected types, using the Components within this
-environment as sequential support.
+tasks, protected types and (if you choose) semaphores and locks from
+<tt>BC.Support.Synchronization</tt>, using the Components within this
+environment.
 
 <h4>Memory streams</h4>
 
@@ -109,11 +110,12 @@ deprecated; use <tt>BC.Support.Smart_Pointers</tt> instead.
 
 <h3>Documentation changes</h3>
 
-<p>None.
+<p>There are some <a href="documentation.html#support">brief notes on
+the <tt>BC.Support</tt> packages</a>.
 
 <h3>Implementation changes</h3>
 
-<p>None.
+<p>None not already discussed.
 
 <h3>New contributions</h3>
 
