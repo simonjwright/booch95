@@ -1,4 +1,4 @@
---   Copyright (C) 1994-2001 Grady Booch, David Weller, Steve Doiel
+--   Copyright (C) 1994-2002 Grady Booch, David Weller, Steve Doiel
 --   and Simon Wright.
 --   All Rights Reserved.
 --
@@ -121,11 +121,13 @@ package body BC.Containers is
    --  Primitive implementations
 
    procedure Lock (C : in out Container) is
+      pragma Warnings (Off, C);
    begin
       null;
    end Lock;
 
    procedure Unlock (C : in out Container) is
+      pragma Warnings (Off, C);
    begin
       null;
    end Unlock;

@@ -95,6 +95,7 @@ package body BC.Containers.Queues is
    end Reset;
 
    function Available (Q : in Abstract_Queue) return Natural is
+      pragma Warnings (Off, Q);
    begin
       return Natural'Last;
    end Available;
