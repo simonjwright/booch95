@@ -22,6 +22,7 @@ with BC.Containers.Collections;
 with BC.Containers.Collections.Bounded;
 with BC.Containers.Collections.Dynamic;
 with BC.Containers.Collections.Unbounded;
+with BC.Support.Standard_Storage;
 with Global_Heap;
 
 package Collection_Test_Support is
@@ -38,7 +39,6 @@ package Collection_Test_Support is
       Storage => Global_Heap.Storage);
 
    package CU is new Collections.Unbounded
-     (Storage_Manager => Global_Heap.Pool,
-      Storage => Global_Heap.Storage);
+     (Storage => BC.Support.Standard_Storage.Pool);
 
 end Collection_Test_Support;
