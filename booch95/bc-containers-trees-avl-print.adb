@@ -1,4 +1,4 @@
---  Copyright 1999-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1999-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -27,8 +27,9 @@
 with Ada.Text_IO;
 procedure BC.Containers.Trees.AVL.Print (T : AVL_Tree) is
    use Ada.Text_IO;
-   procedure Print_Node (N : AVL_Node_Ref; Indent : Natural);
-   procedure Print_Node (N : AVL_Node_Ref; Indent : Natural) is
+   procedure Print_Node (N : Support.AVL_Node_Ref; Indent : Natural);
+   procedure Print_Node (N : Support.AVL_Node_Ref; Indent : Natural) is
+      use type Support.AVL_Node_Ref;
    begin
       if N.Left /= null then
          Print_Node (N.Left, Indent + 1);
@@ -37,13 +38,13 @@ procedure BC.Containers.Trees.AVL.Print (T : AVL_Tree) is
          Put ("  ");
       end loop;
       Put ("element: " & Image (N.Element));
-      Put (" (" & Node_Balance'Image (N.Balance) & ")");
+      Put (" (" & Support.Node_Balance'Image (N.Balance) & ")");
       New_Line;
       if N.Right /= null then
          Print_Node (N.Right, Indent + 1);
       end if;
    end Print_Node;
 begin
-   Put_Line ("tree of size" & Natural'Image (T.Size));
-   Print_Node (T.Rep, 0);
+   Put_Line ("tree of size" & Natural'Image (T.Rep.Size));
+   Print_Node (T.Rep.Rep, 0);
 end BC.Containers.Trees.AVL.Print;
