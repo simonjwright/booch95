@@ -118,20 +118,21 @@ package body BC.Containers.Bags.Unbounded is
 
   function Length (B : Bag; Bucket : Positive) return Natural is
   begin
-    return IC.Length (Tables.Item_Bucket (B.Rep, Bucket).all);
+    return IC.Length (B.Rep.Items (Bucket));
   end Length;
 
   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (Tables.Item_Bucket (B.Rep, Bucket).all, Index);
+    return IC.Item_At (B.Rep.Items (Bucket), Index);
   end Item_At;
 
   function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
   begin
-    return VC.Item_At (Tables.Value_Bucket (B.Rep, Bucket).all, Index);
+    return VC.Item_At (B.Rep.Values (Bucket), Index);
   end Value_At;
 
   Empty_Container : Bag;
+  pragma Warnings (Off, Null_Container);
 
   function Null_Container return Bag is
   begin

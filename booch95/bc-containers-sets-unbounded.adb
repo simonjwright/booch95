@@ -96,15 +96,16 @@ package body BC.Containers.Sets.Unbounded is
 
   function Length (S : Set; Bucket : Positive) return Natural is
   begin
-    return IC.Length (Tables.Item_Bucket (S.Rep, Bucket).all);
+    return IC.Length (S.Rep.Items (Bucket));
   end Length;
 
   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (Tables.Item_Bucket (S.Rep, Bucket).all, Index);
+    return IC.Item_At (S.Rep.Items (Bucket), Index);
   end Item_At;
 
   Empty_Container : Set;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Set is
   begin
