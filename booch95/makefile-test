@@ -18,6 +18,11 @@
 
 # (GNU) Makefile for test of Booch Components distribution.
 
+#####################
+# Default build rule
+%: %.adb
+	gnatmake $(GNATMAKE_FLAGS) $@
+
 ########
 # Tests
 
@@ -37,62 +42,49 @@ concurrent_test: concurrent_testable
 
 TESTABLE += avl_test
 avl_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += bag_test
 bag_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += collection_test
 collection_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += graph_test
 graph_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += list_test
 list_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += map_test
 map_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 CONCURRENT_TESTABLE += map_test_concurrent
 map_test_concurrent: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += ordered_collection_test
 ordered_collection_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += ordered_queue_test
 ordered_queue_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += queue_test
 queue_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
+CONCURRENT_TESTABLE += queue_test_concurrent
+queue_test_concurrent: force
 
 TESTABLE += ring_test
 ring_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += set_test
 set_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += smart_test
 smart_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += stack_test
 stack_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 TESTABLE += tree_test
 tree_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@
 
 testable: $(TESTABLE)
 
