@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -25,14 +25,9 @@
 --  $Date$
 --  $Author$
 
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Sets.Unbounded is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Containers.Sets.Unbounded");
 
    procedure Clear (S : in out Unconstrained_Set) is
    begin
@@ -60,10 +55,6 @@ package body BC.Containers.Sets.Unbounded is
 
    procedure Remove (S : in out Unconstrained_Set; I : Item) is
    begin
-      Assert (Tables.Is_Bound (S.Rep, I),
-              BC.Not_Found'Identity,
-              "Remove",
-              BSE.Missing);
       Tables.Unbind (S.Rep, I);
    end Remove;
 

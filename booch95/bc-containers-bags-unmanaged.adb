@@ -25,14 +25,9 @@
 --  $Date$
 --  $Author$
 
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Bags.Unmanaged is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Containers.Bags.Unmanaged");
 
    procedure Clear (B : in out Unconstrained_Bag) is
    begin
@@ -55,10 +50,6 @@ package body BC.Containers.Bags.Unmanaged is
    procedure Remove (B : in out Unconstrained_Bag; I : Item) is
       Count : Positive;
    begin
-      Assert (Tables.Is_Bound (B.Rep, I),
-              BC.Not_Found'Identity,
-              "Remove",
-              BSE.Missing);
       Count := Tables.Value_Of (B.Rep, I);
       if Count = 1 then
          Tables.Unbind (B.Rep, I);

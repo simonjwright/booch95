@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -26,14 +26,9 @@
 --  $Date$
 --  $Author$
 
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Support.Bounded is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Support.Bounded");
 
    --  We can't take 'Access of non-aliased components. But if we
    --  alias discriminated objects they become constrained - even if
@@ -49,10 +44,9 @@ package body BC.Support.Bounded is
 
    procedure Insert (Obj : in out Bnd_Node; Elem : Item) is
    begin
-      Assert (Obj.Size < Obj.Maximum_Size,
-              BC.Overflow'Identity,
-              "Insert",
-              BSE.Full);
+      if Obj.Size >= Obj.Maximum_Size then
+         raise BC.Overflow;
+      end if;
       Obj.Start := ((Obj.Start - 2) mod Obj.Maximum_Size) + 1;
       Obj.Size := Obj.Size + 1;
       Obj.Elems (Obj.Start) := Elem;
@@ -60,14 +54,12 @@ package body BC.Support.Bounded is
 
    procedure Insert (Obj : in out Bnd_Node; Elem : Item; Before : Positive) is
    begin
-      Assert (Before <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Insert",
-              BSE.Invalid_Index);
-      Assert (Obj.Size < Obj.Maximum_Size,
-              BC.Overflow'Identity,
-              "Insert",
-              BSE.Full);
+      if Before > Obj'Size then
+         raise BC.Range_Error;
+      end if;
+      if Obj.Size >= Obj.Maximum_Size then
+         raise BC.Overflow;
+      end if;
       if Obj.Size = 0 or else Before = 1 then
          Insert (Obj, Elem);
       else
@@ -113,10 +105,9 @@ package body BC.Support.Bounded is
 
    procedure Append (Obj : in out Bnd_Node; Elem : Item) is
    begin
-      Assert (Obj.Size < Obj.Maximum_Size,
-              BC.Overflow'Identity,
-              "Append",
-              BSE.Full);
+      if Obj.Size >= Obj.Maximum_Size then
+         raise BC.Overflow;
+      end if;
       Obj.Size := Obj.Size + 1;
       Obj.Elems (((Obj.Start - 1 + Obj.Size - 1) mod Obj.Maximum_Size) + 1)
         := Elem;
@@ -124,14 +115,12 @@ package body BC.Support.Bounded is
 
    procedure Append (Obj : in out Bnd_Node; Elem : Item; After : Positive) is
    begin
-      Assert (After <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Append",
-              BSE.Invalid_Index);
-      Assert (Obj.Size < Obj.Maximum_Size,
-              BC.Overflow'Identity,
-              "Append",
-              BSE.Full);
+      if After > Obj.Size then
+         raise BC.Range_Error;
+      end if;
+      if Obj.Size >= Obj.Maximum_Size then
+         raise BC.Range_Error;
+      end if;
       if Obj.Size = 0 or else After = Obj.Size then
          Append (Obj, Elem);
       else
@@ -141,15 +130,9 @@ package body BC.Support.Bounded is
 
    procedure Remove (Obj : in out Bnd_Node; From : Positive) is
    begin
-      Assert (From <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Remove",
-              BSE.Invalid_Index);
-      --  XXX can this ever happen, given the test above?
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "Remove",
-              BSE.Empty);
+      if From > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       if Obj.Size = 1 then
          Clear (Obj);
       elsif From = 1 then
@@ -196,10 +179,9 @@ package body BC.Support.Bounded is
 
    procedure Replace (Obj : in out Bnd_Node; Index : Positive; Elem : Item) is
    begin
-      Assert (Index <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Replace",
-              BSE.Invalid_Index);
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       Obj.Elems (((Obj.Start - 1 + Index - 1) mod Obj.Maximum_Size) + 1)
         := Elem;
    end Replace;
@@ -216,29 +198,26 @@ package body BC.Support.Bounded is
 
    function First (Obj : Bnd_Node) return Item is
    begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "First",
-              BSE.Empty);
+      if Obj.Size = 0 then
+         raise BC.Underflow;
+      end if;
       return Obj.Elems (Obj.Start);
    end First;
 
    function Last (Obj : Bnd_Node) return Item is
    begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "Last",
-              BSE.Empty);
+      if Obj.Size = 0 then
+         raise BC.Underflow;
+      end if;
       return Obj.Elems
         (((Obj.Start - 1 + Obj.Size - 1) mod Obj.Maximum_Size) + 1);
    end Last;
 
    function Item_At (Obj : Bnd_Node; Index : Positive) return Item is
    begin
-      Assert (Index in 1 .. Obj.Size,
-              BC.Range_Error'Identity,
-              "Item_At",
-              BSE.Invalid_Index);
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       return Obj.Elems
         (((Obj.Start - 1 + Index - 1) mod Obj.Maximum_Size) + 1);
    end Item_At;
@@ -249,10 +228,9 @@ package body BC.Support.Bounded is
       --  return pointers to individual elements. This technique is due
       --  to Matthew Heaney.
    begin
-      Assert (Index in 1 .. Obj.Size,
-              BC.Range_Error'Identity,
-              "Item_At",
-              BSE.Invalid_Index);
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       return Item_Ptr
         (Allow_Element_Access.To_Pointer
            (Obj.Elems (((Obj.Start - 1 + Index - 1) mod Obj.Maximum_Size) + 1)
@@ -266,10 +244,9 @@ package body BC.Support.Bounded is
       if Obj.Size = 0 then
          return 0;
       end if;
-      Assert (Start <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Start",
-              BSE.Invalid_Index);
+      if Start > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       for I in Start .. Obj.Size loop
          if Obj.Elems (((Obj.Start - 1 + I - 1) mod Obj.Maximum_Size) + 1)
            = Elem then

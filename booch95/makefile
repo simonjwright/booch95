@@ -28,7 +28,7 @@ all::
 
 #GCOV_FLAGS = -ftest-coverage -fprofile-arcs
 
-GNATMAKE_FLAGS = -O2 -g -gnatqQafoy -gnatwaL -j2 -m -k
+GNATMAKE_FLAGS = -O2 -g -gnatqQafoy -gnatwaL -fstack-check -j2 -m -k
 GNATMAKE_FLAGS += $(GCOV_FLAGS)
 
 ADA_SOURCE = \
@@ -43,9 +43,11 @@ bc-support-bounded_hash_tables.ad[bs] \
 bc-support-dynamic.ad[bs] \
 bc-support-exceptions.ad[bs] \
 bc-support-hash_tables.ad[bs] \
+bc-support-high_resolution_time.ad[bs] \
 bc-support-managed_storage.ad[bs] \
 bc-support-memory_streams.ad[bs] \
 bc-support-standard_storage.ads \
+bc-support-statistics.ad[bs] \
 bc-support-synchronization.ad[bs] \
 bc-support-unbounded.ad[bs] \
 bc-support-unmanaged.ad[bs] \

@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -27,14 +27,9 @@
 --  $Author$
 
 with Ada.Unchecked_Deallocation;
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Lists.Double is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Containers.Lists.Double");
 
    --  We can't take 'Access of non-aliased components. But if we
    --  alias discriminated objects they become constrained - even if
@@ -94,10 +89,9 @@ package body BC.Containers.Lists.Double is
    procedure Insert (L : in out List; Elem : Item) is
    begin
       --  Ensure we only insert at a list's head.
-      Assert (L.Rep = null or else L.Rep.Previous = null,
-              BC.Not_Root'Identity,
-              "Insert",
-              BSE.Not_Root);
+      if L.Rep /= null and then L.Rep.Previous /= null then
+         raise BC.Not_Root;
+      end if;
       L.Rep := Create (Elem, Previous => null, Next => L.Rep);
    end Insert;
 
@@ -105,10 +99,9 @@ package body BC.Containers.Lists.Double is
       Ptr : Double_Node_Ref := From_List.Rep;
    begin
       --  Ensure we only insert at a list's head.
-      Assert (L.Rep = null or else L.Rep.Previous = null,
-              BC.Not_Root'Identity,
-              "Insert",
-              BSE.Not_Root);
+      if L.Rep /= null and then L.Rep.Previous /= null then
+         raise BC.Not_Root;
+      end if;
       if Ptr /= null then
          while Ptr.Next /= null loop
             Ptr := Ptr.Next;
@@ -135,10 +128,9 @@ package body BC.Containers.Lists.Double is
             Curr := Curr.Next;
             Index := Index + 1;
          end loop;
-         Assert (Curr /= null,
-                 BC.Range_Error'Identity,
-                 "Insert",
-                 BSE.Invalid_Index);
+         if Curr = null then
+            raise BC.Range_Error;
+         end if;
          Prev.Next := Create (Elem, Previous => Prev, Next => Curr);
       end if;
    end Insert;
@@ -156,19 +148,17 @@ package body BC.Containers.Lists.Double is
             Insert (L, From_List);
          else
             --  Ensure From_List is the head of a list.
-            Assert (Ptr /= null or else Ptr.Previous = null,
-                    BC.Not_Root'Identity,
-                    "Insert",
-                    BSE.Not_Root);
+            if Ptr.Previous /= null then
+               raise BC.Not_Root;
+            end if;
             while Curr /= null and then Index < Before loop
                Prev := Curr;
                Curr := Curr.Next;
                Index := Index + 1;
             end loop;
-            Assert (Curr /= null,
-                    BC.Range_Error'Identity,
-                    "Insert",
-                    BSE.Invalid_Index);
+            if Curr = null then
+               raise BC.Range_Error;
+            end if;
             while Ptr.Next /= null loop
                Ptr := Ptr.Next;
             end loop;
@@ -198,10 +188,9 @@ package body BC.Containers.Lists.Double is
       Curr : Double_Node_Ref := L.Rep;
    begin
       --  Ensure From_List is the head of a list.
-      Assert (From_List.Rep = null or else From_List.Rep.Previous = null,
-              BC.Not_Root'Identity,
-              "Append",
-              BSE.Not_Root);
+      if From_List.Rep /= null and then From_List.Rep.Previous /= null then
+         raise BC.Not_Root;
+      end if;
       if From_List.Rep /= null then
          if Curr /= null then
             while Curr.Next /= null loop
@@ -229,10 +218,9 @@ package body BC.Containers.Lists.Double is
             Curr := Curr.Next;
             Index := Index + 1;
          end loop;
-         Assert (Curr /= null,
-                 BC.Range_Error'Identity,
-                 "Append",
-                 BSE.Invalid_Index);
+         if Curr = null then
+            raise BC.Range_Error;
+         end if;
          Curr.Next := Create (Elem,
                                     Previous => Curr,
                                     Next => Curr.Next);
@@ -251,19 +239,18 @@ package body BC.Containers.Lists.Double is
             Append (L, From_List);
          else
             --  Ensure From_List is the head of a list.
-            Assert (From_List.Rep /= null or else
-                    From_List.Rep.Previous = null,
-                    BC.Not_Root'Identity,
-                    "Append",
-                    BSE.Not_Root);
+            --  XXX check this logic!
+            if From_List.Rep /= null and then
+              From_List.Rep.Previous /= null then
+               raise BC.Not_Root;
+            end if;
             while Curr /= null and then Index < After loop
                Curr := Curr.Next;
                Index := Index + 1;
             end loop;
-            Assert (Curr /= null,
-                    BC.Range_Error'Identity,
-                    "Append",
-                    BSE.Invalid_Index);
+            if Curr = null then
+               raise BC.Range_Error;
+            end if;
             while Ptr.Next /= null loop
                Ptr := Ptr.Next;
             end loop;
@@ -288,15 +275,13 @@ package body BC.Containers.Lists.Double is
          Curr := Curr.Next;
          Index := Index + 1;
       end loop;
-      Assert (Curr /= null,
-              BC.Range_Error'Identity,
-              "Remove",
-              BSE.Invalid_Index);
+      if Curr = null then
+         raise BC.Range_Error;
+      end if;
       --  Ensure we're not removing an aliased element.
-      Assert (Curr.Count = 1,
-              BC.Referenced'Identity,
-              "Remove",
-              BSE.Referenced);
+      if Curr.Count /= 1 then
+         raise BC.Referenced;
+      end if;
       if Prev /= null then
          Prev.Next := Curr.Next;
       else
@@ -323,10 +308,9 @@ package body BC.Containers.Lists.Double is
          Curr := Curr.Next;
          Index := Index + 1;
       end loop;
-      Assert (Curr /= null,
-              BC.Range_Error'Identity,
-              "Purge",
-              BSE.Invalid_Index);
+      if Curr = null then
+         raise BC.Range_Error;
+      end if;
       if Prev /= null then
          Prev.Next := null;
       else
@@ -356,10 +340,9 @@ package body BC.Containers.Lists.Double is
          Curr := Curr.Next;
          Index := Index + 1;
       end loop;
-      Assert (Curr /= null,
-              BC.Range_Error'Identity,
-              "Purge",
-              BSE.Invalid_Index);
+      if Curr = null then
+         raise BC.Range_Error;
+      end if;
       if Prev /= null then
          Prev.Next := null;
       else
@@ -418,18 +401,16 @@ package body BC.Containers.Lists.Double is
       Ptr : Double_Node_Ref := With_List.Rep;
       Index : Positive := 1;
    begin
-      Assert (Ptr /= null,
-              BC.Is_Null'Identity,
-              "Share",
-              BSE.Is_Null);
+      if Ptr = null then
+         raise BC.Is_Null;
+      end if;
       while Ptr /= null and then Index < Starting_At loop
          Ptr := Ptr.Next;
          Index := Index + 1;
       end loop;
-      Assert (Ptr /= null,
-              BC.Range_Error'Identity,
-              "Share",
-              BSE.Invalid_Index);
+      if Ptr = null then
+         raise BC.Range_Error;
+      end if;
       Clear (L);
       L.Rep := Ptr;
       L.Rep.Count := L.Rep.Count + 1;
@@ -437,10 +418,9 @@ package body BC.Containers.Lists.Double is
 
    procedure Share_Head (L : in out List; With_List : in List) is
    begin
-      Assert (With_List.Rep /= null,
-              BC.Is_Null'Identity,
-              "Share_Head",
-              BSE.Is_Null);
+      if With_List.Rep = null then
+         raise BC.Is_Null;
+      end if;
       Clear (L);
       L.Rep := With_List.Rep;
       L.Rep.Count := L.Rep.Count + 1;
@@ -449,10 +429,9 @@ package body BC.Containers.Lists.Double is
    procedure Share_Foot (L : in out List; With_List : in List) is
       Ptr : Double_Node_Ref := With_List.Rep;
    begin
-      Assert (Ptr /= null,
-              BC.Is_Null'Identity,
-              "Share_Foot",
-              BSE.Is_Null);
+      if Ptr = null then
+         raise BC.Is_Null;
+      end if;
       Clear (L);
       while Ptr.Next /= null loop
          Ptr := Ptr.Next;
@@ -464,14 +443,12 @@ package body BC.Containers.Lists.Double is
    procedure Swap_Tail (L : in out List; With_List : in out List) is
       Curr : Double_Node_Ref;
    begin
-      Assert (L.Rep /= null,
-              BC.Is_Null'Identity,
-              "Swap_Tail",
-              BSE.Is_Null);
-      Assert (With_List.Rep = null or else With_List.Rep.Previous = null,
-              BC.Not_Root'Identity,
-              "Swap_Tail",
-              BSE.Not_Root);
+      if L.Rep = null then
+         raise BC.Is_Null;
+      end if;
+      if With_List.Rep /= null and then With_List.Rep.Previous /= null then
+         raise BC.Not_Root;
+      end if;
       Curr := L.Rep.Next;
       L.Rep.Next := With_List.Rep;
       With_List.Rep.Previous := L.Rep;
@@ -484,10 +461,9 @@ package body BC.Containers.Lists.Double is
    procedure Tail (L : in out List) is
       Curr : Double_Node_Ref := L.Rep;
    begin
-      Assert (L.Rep /= null,
-              BC.Is_Null'Identity,
-              "Tail",
-              BSE.Is_Null);
+      if L.Rep = null then
+         raise BC.Is_Null;
+      end if;
       L.Rep := L.Rep.Next;
       if L.Rep /= null then
          L.Rep.Count := L.Rep.Count + 1;
@@ -505,10 +481,9 @@ package body BC.Containers.Lists.Double is
 
    procedure Predecessor (L : in out List) is
    begin
-      Assert (L.Rep /= null,
-              BC.Is_Null'Identity,
-              "Predecessor",
-              BSE.Is_Null);
+      if L.Rep = null then
+         raise BC.Is_Null;
+      end if;
       if L.Rep.Previous = null then
          Clear (L);
       else
@@ -520,10 +495,9 @@ package body BC.Containers.Lists.Double is
 
    procedure Set_Head (L : in out List; Elem : Item) is
    begin
-      Assert (L.Rep /= null,
-              BC.Is_Null'Identity,
-              "Set_Head",
-              BSE.Is_Null);
+      if L.Rep = null then
+         raise BC.Is_Null;
+      end if;
       L.Rep.Element := Elem;
    end Set_Head;
 
@@ -535,10 +509,9 @@ package body BC.Containers.Lists.Double is
          Curr := Curr.Next;
          Index := Index + 1;
       end loop;
-      Assert (Curr /= null,
-              BC.Range_Error'Identity,
-              "Set_Item",
-              BSE.Invalid_Index);
+      if Curr = null then
+         raise BC.Range_Error;
+      end if;
       Curr.Element := Elem;
    end Set_Item;
 
@@ -574,29 +547,26 @@ package body BC.Containers.Lists.Double is
 
    function Head (L : List) return Item is
    begin
-      Assert (L.Rep /= null,
-              BC.Is_Null'Identity,
-              "Head",
-              BSE.Is_Null);
+      if L.Rep = null then
+         raise BC.Is_Null;
+      end if;
       return L.Rep.Element;
    end Head;
 
    procedure Process_Head (L : in out List) is
    begin
-      Assert (L.Rep /= null,
-              BC.Is_Null'Identity,
-              "Process_Head",
-              BSE.Is_Null);
+      if L.Rep = null then
+         raise BC.Is_Null;
+      end if;
       Process (L.Rep.Element);
    end Process_Head;
 
    function Foot (L : List) return Item is
       Curr : Double_Node_Ref := L.Rep;
    begin
-      Assert (L.Rep /= null,
-              BC.Is_Null'Identity,
-              "Foot",
-              BSE.Is_Null);
+      if L.Rep = null then
+         raise BC.Is_Null;
+      end if;
       while Curr.Next /= null loop
          Curr := Curr.Next;
       end loop;
@@ -606,10 +576,9 @@ package body BC.Containers.Lists.Double is
    procedure Process_Foot (L : in out List) is
       Curr : Double_Node_Ref := L.Rep;
    begin
-      Assert (L.Rep /= null,
-              BC.Is_Null'Identity,
-              "Process_Foot",
-              BSE.Is_Null);
+      if L.Rep = null then
+         raise BC.Is_Null;
+      end if;
       while Curr.Next /= null loop
          Curr := Curr.Next;
       end loop;
@@ -637,18 +606,19 @@ package body BC.Containers.Lists.Double is
       Curr : Double_Node_Ref := L.Rep;
       Loc : Positive := 1;
    begin
-      Assert (L.Rep /= null,
-              BC.Is_Null'Identity,
-              "Item_At",
-              BSE.Is_Null);
+      if L.Rep = null then
+         raise BC.Is_Null;
+      end if;
       while Curr /= null and then Loc < Index loop
          Curr := Curr.Next;
          Loc := Loc + 1;
       end loop;
-      Assert (Curr /= null,
-              BC.Range_Error'Identity,
-              "Item_At",
-              BSE.Invalid_Index);
+      if Curr = null then
+         raise BC.Range_Error;
+      end if;
+      if Curr = null then
+         raise BC.Range_Error;
+      end if;
       return Item_Ptr
         (Allow_Element_Access.To_Pointer (Curr.Element'Address));
    end Item_At;
@@ -718,10 +688,9 @@ package body BC.Containers.Lists.Double is
          Prev := Curr;
          Curr := Curr.Next;
       end loop;
-      Assert (Curr /= null,
-              BC.Range_Error'Identity,
-              "Delete_Item_At",
-              BSE.Invalid_Index);
+      if Curr = null then
+         raise BC.Range_Error;
+      end if;
       --  we need a writable version of the Iterator
       declare
          package Conversions is new System.Address_To_Access_Conversions
