@@ -133,13 +133,13 @@ package body BC.Support.Unbounded is
     Obj.Cache_Index := 1;
   end Insert;
 
-  procedure Insert (Obj : in out Unb_Node; Elem : Item; Before : Natural) is
+  procedure Insert (Obj : in out Unb_Node; Elem : Item; Before : Positive) is
   begin
     Assert (Before <= Obj.Size,
             BC.Range_Error'Identity,
             "Insert",
             BSE.Invalid_Index);
-    if Obj.Size = 0 or else Before <= 1 then
+    if Obj.Size = 0 or else Before = 1 then
       Insert (Obj, Elem);
     else
       declare
@@ -172,13 +172,13 @@ package body BC.Support.Unbounded is
     Obj.Cache_Index := Obj.Size;
   end Append;
 
-  procedure Append (Obj : in out Unb_Node; Elem : Item; After : Natural) is
+  procedure Append (Obj : in out Unb_Node; Elem : Item; After : Positive) is
   begin
     Assert (After <= Obj.Size,
             BC.Range_Error'Identity,
             "Append",
             BSE.Invalid_Index);
-    if (Obj.Size = 0) or else (After <= 1) then
+    if Obj.Size = 0 then
       Append(Obj, Elem);
     else
       declare
@@ -201,7 +201,7 @@ package body BC.Support.Unbounded is
     end if;
   end Append;
 
-  procedure Remove (Obj : in out Unb_Node; From : Natural) is
+  procedure Remove (Obj : in out Unb_Node; From : Positive) is
   begin
     Assert (From <= Obj.Size,
             BC.Range_Error'Identity,
@@ -215,7 +215,6 @@ package body BC.Support.Unbounded is
       Clear (Obj);
     else
       declare
-        -- AObj : Unb_Node := Obj;  -- XXX why do we do this?
         Ptr : Nodes.Node_Ref;
       begin
         Update_Cache (Obj, From);
@@ -241,7 +240,6 @@ package body BC.Support.Unbounded is
           Obj.Cache_Index := 0;
         end if;
         Delete_Node (Ptr);
-        -- Obj := AObj;
       end;
     end if;
   end Remove;
