@@ -264,8 +264,10 @@ procedure Set_Test is
    Set_B_Pu1, Set_B_Pu2 : SB.Set;
    Set_D_Pu1, Set_D_Pu2 : SD.Set;
    Set_U_Pu1, Set_U_Pu2 : SU.Set;
+   Set_UM_Pu1, Set_UM_Pu2 : SUM.Set;
 
 begin
+
    Put_Line ("Starting set tests");
    Put_Line ("...Bounded Set");
    Test (Set_B_Pu1, Set_B_Pu2);
@@ -274,6 +276,8 @@ begin
    Test (Set_D_Pu1, Set_D_Pu2);
    Put_Line ("...Unbounded Set");
    Test (Set_U_Pu1, Set_U_Pu2);
+   Put_Line ("...Unmanaged Set");
+   Test (Set_UM_Pu1, Set_UM_Pu2);
 
    Put_Line ("...Set Active Iterator");
    Put_Line ("   Bounded:");
@@ -282,6 +286,8 @@ begin
    Test_Active_Iterator (Set_D_Pu1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (Set_U_Pu1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Set_UM_Pu1);
    Put_Line ("...Set Passive Iterator");
    Put_Line ("   Bounded:");
    Test_Passive_Iterator (Set_B_Pu1);
@@ -292,6 +298,9 @@ begin
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (Set_U_Pu1);
    Test_Passive_Modifying_Iterator (Set_U_Pu1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Set_UM_Pu1);
+   Test_Passive_Modifying_Iterator (Set_UM_Pu1);
 
    Assertion (SB.Is_Member (Set_B_Pu1, '1'),
               "** M01: Set membership is not correct");
