@@ -23,10 +23,16 @@
 <p>The closed generic iterators that take an additional <tt>Param</tt>
 now accept limited indefinite types.
 
+<p>Lists and Trees have been moved up a level; they are no longer
+children of <tt>BC.Containers</tt>.
+
 <h3>Implementation changes</h3>
 
 <p><tt>BC.Support.Statistics</tt> allows you to accumulate data with
 negative values.
+
+<p>The bounded Container forms are no longer <tt>Controlled</tt>. This
+is an efficiency improvement.
 
 <h3>Documentation changes</h3>
 
