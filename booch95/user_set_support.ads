@@ -1,4 +1,4 @@
--- Copyright (C) 1999 Simon Wright.
+-- Copyright (C) 1999-2001 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -36,7 +36,7 @@ package User_Set_Support is
 
   package Sets is new Containers.Sets;
 
-  function User_Char_Hash (C : User_Character) return Positive;
+  function User_Char_Hash (C : User_Character) return Natural;
 
   package SB is new Sets.Bounded (Hash => User_Char_Hash,
                                   Buckets => 3,

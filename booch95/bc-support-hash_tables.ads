@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -40,7 +40,7 @@ package BC.Support.Hash_Tables is
 
     type Item is private;
     with function "=" (L, R : Item) return Boolean is <>;
-    with function Hash (V : Item) return Positive is <>;
+    with function Hash (V : Item) return Natural is <>;
 
     type Item_Container is private;
     type Item_Container_Ptr is access all Item_Container;

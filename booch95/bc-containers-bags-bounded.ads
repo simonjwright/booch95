@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,7 +21,7 @@ with BC.Support.Bounded;
 with BC.Support.Hash_Tables;
 
 generic
-  with function Hash (V : Item) return Positive is <>;
+  with function Hash (V : Item) return Natural is <>;
   Buckets : Positive;
   Size : Positive;
 package BC.Containers.Bags.Bounded is

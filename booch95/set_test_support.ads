@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -30,7 +30,7 @@ package Set_Test_Support is
 
   package Sets is new Containers.Sets;
 
-  function Char_Hash (C : Character) return Positive;
+  function Char_Hash (C : Character) return Natural;
 
   package SB is new Sets.Bounded (Hash => Char_Hash,
                                   Buckets => 3,

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -31,7 +31,7 @@ package Map_Test_Support is
 
   package Maps is new Containers.Maps (Value => Chunks.Chunk_Ptr);
 
-  function Char_Hash (C : Character) return Positive;
+  function Char_Hash (C : Character) return Natural;
 
   package MB is new Maps.Bounded (Hash => Char_Hash,
                                   Buckets => 3,
