@@ -51,14 +51,15 @@ dramatically between releases over the next few iterations. You'll
 probably need to change your source at each issue; you'll certainly
 need to recompile).</p>
 
-<!-- The current version has the following components available (the
-<font color=red>red</font> parts are new since the last release):<p> -->
-The current version has the following components available:<p>
+The current version has the following components available (the
+<font color=red>red</font> parts are new since the last release):<p>
 
 <UL>
-<li><font color="red">Bounded Bags</font>
-<li><font color="red">Dynamic Bags</font>
+<li>Bounded Bags
+<li>Dynamic Bags
 <li>Unbounded Bags
+<li><font color="red">Unbounded Collections</font>
+<li><font color="red">Unbounded Ordered Collections</font>
 <li>Directed Graphs
 <li>Undirected Graphs
 <LI>Single Lists 
@@ -69,9 +70,9 @@ The current version has the following components available:<p>
 <LI>Bounded Queues 
 <LI>Dynamic Queues
 <LI>Unbounded Queues
-<LI><font color="red">Unbounded Rings</font>
-<LI><font color="red">Unbounded Guarded Rings</font>
-<LI><font color="red">Unbounded Synchronized Rings</font>
+<LI>Unbounded Rings
+<LI>Unbounded Guarded Rings
+<LI>Unbounded Synchronized Rings
 <li>Bounded Sets
 <li>Dynamic Sets
 <li>Unbounded Sets
@@ -182,7 +183,8 @@ That said, I've tried to use a common style throughout.<p>
 
 <dd>
 
-As discussed <a href="documentation.html#synchronization">elsewhere</a>, there are two forms of support for concurrency:
+As discussed <ahref="documentation.html#synchronization">elsewhere</a>,
+there are two forms of support for concurrency:
 
 <dl>
 <dt>guarded<dd>where objects must be locked by the client, and
