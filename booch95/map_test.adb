@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -334,6 +334,12 @@ procedure Map_Test is
    end record;
    The_U : U := (MU.Null_Container, MU.Null_Container);
 
+   type UM is record
+      Map_UM_Pu1 : MUM.Map;
+      Map_UM_Pu2 : MUM.Map;
+   end record;
+   The_UM : UM := (MUM.Null_Container, MUM.Null_Container);
+
 begin
 
    Put_Line ("Starting map tests");
@@ -344,6 +350,8 @@ begin
    Test (The_D.Map_D_Pu1, The_D.Map_D_Pu2);
    Put_Line ("...Unbounded Map");
    Test (The_U.Map_U_Pu1, The_U.Map_U_Pu2);
+   Put_Line ("...Unmanaged Map");
+   Test (The_UM.Map_UM_Pu1, The_UM.Map_UM_Pu2);
 
    Put_Line ("...Map Simple Active Iterator");
    Put_Line ("   Bounded:");
@@ -352,6 +360,8 @@ begin
    Test_Simple_Active_Iterator (The_D.Map_D_Pu1);
    Put_Line ("   Unbounded:");
    Test_Simple_Active_Iterator (The_U.Map_U_Pu1);
+   Put_Line ("   Unmanaged:");
+   Test_Simple_Active_Iterator (The_UM.Map_UM_Pu1);
 
    Put_Line ("...Map Active Iterator");
    Put_Line ("   Bounded:");
@@ -360,6 +370,8 @@ begin
    Test_Active_Iterator (The_D.Map_D_Pu1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (The_U.Map_U_Pu1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (The_UM.Map_UM_Pu1);
 
    Put_Line ("...Map Passive Iterator");
    Put_Line ("   Bounded:");
@@ -371,6 +383,9 @@ begin
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (The_U.Map_U_Pu1);
    Test_Passive_Modifying_Iterator (The_U.Map_U_Pu1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (The_UM.Map_UM_Pu1);
+   Test_Passive_Modifying_Iterator (The_UM.Map_UM_Pu1);
 
    Put_Line ("...Map Iterator Deletion");
    Put_Line ("   Bounded:");
@@ -388,6 +403,12 @@ begin
    Put_Line ("   Unbounded:");
    declare
       M : MU.Map;
+   begin
+      Test_Iterator_Deletion (M);
+   end;
+   Put_Line ("   Unmanaged:");
+   declare
+      M : MUM.Map;
    begin
       Test_Iterator_Deletion (M);
    end;
