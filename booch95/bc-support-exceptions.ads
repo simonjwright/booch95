@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -31,33 +31,6 @@ with Ada.Text_IO;
 package BC.Support.Exceptions is
 
    pragma Elaborate_Body;
-
-   --  These codes are shorthand for standard messages
-   type Reason is (No_Reason_Given,
-                   Disjoint,
-                   Duplicate,
-                   Empty,
-                   Full,
-                   Illegal,
-                   Invalid_Index,
-                   Invalid_Number,
-                   Missing,
-                   Not_Empty,
-                   Not_Root,
-                   Is_Null,
-                   Out_Of_Memory,
-                   Referenced,
-                   Timing,
-                   Too_Large,
-                   Too_Small);
-
-   generic
-      Module : String;
-   procedure Assert (Condition : Boolean;
-                     Raising_If_False : Ada.Exceptions.Exception_Id;
-                     From_Subprogram : String;
-                     With_Reason : Reason := No_Reason_Given);
-   pragma Inline (Assert);
 
    procedure Report
      (The_Exception : Ada.Exceptions.Exception_Occurrence;
