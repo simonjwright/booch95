@@ -47,6 +47,7 @@ procedure Set_Test is
 --    end Print_Set;
 
   procedure Test (S1, S2 : in out Sets.Set'Class) is
+    Status : Boolean;
   begin
     Assertion (Sets.Is_Empty (S1),
                "** P01: Set is not initially empty");
@@ -150,18 +151,14 @@ procedure Set_Test is
                "** P47: Set membership is not correct");
     Sets.Remove (S1, '2');
     Sets.Remove (S1, '3');
-    begin
-      Sets.Add (S1, '3');
-    exception
-      when others =>
-        Put_Line ("** P48: Set add is not correct");
-    end;
-    begin
-      Sets.Add (S1, '3');
-    exception
-      when BC.Duplicate => null;
-      when others => Put_Line ("** P48: Set add is not correct");
-    end;
+    Sets.Add (S1, '3', Added => Status);
+    if not Status then
+      Put_Line ("** P48: Set add is not correct");
+    end if;
+    Sets.Add (S1, '3', Added => Status);
+    if Status then
+      Put_Line ("** P49: Set add is not correct");
+    end if;
     begin
       Sets.Remove (S1, '3');
     exception
@@ -170,9 +167,10 @@ procedure Set_Test is
     end;
     begin
       Sets.Remove (S1, '3');
+      Put_Line ("** P51: Set remove is not correct");
     exception
       when BC.Not_Found => null;
-      when others => Put_Line ("** P50: Set remove is not correct");
+      when others => Put_Line ("** P51: Set remove is not correct");
     end;
   end Test;
 
