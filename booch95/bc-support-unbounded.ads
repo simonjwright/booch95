@@ -29,9 +29,7 @@ generic
    type Item is private;
    with function "=" (L, R : Item) return Boolean is <>;
    type Item_Ptr is access all Item;
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-Storage : in out Storage_Manager;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Support.Unbounded is
 
    pragma Elaborate_Body;
@@ -85,7 +83,7 @@ package BC.Support.Unbounded is
 
 private
 
-   package Nodes is new BC.Support.Nodes (Item, Storage_Manager, Storage);
+   package Nodes is new BC.Support.Nodes (Item, Storage);
 
    type Unb_Node is new Ada.Finalization.Controlled with record
       Rep : Nodes.Node_Ref;
