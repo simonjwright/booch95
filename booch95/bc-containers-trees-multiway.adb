@@ -17,7 +17,6 @@
 
 -- $Id$
 
-with Ada.Unchecked_Deallocation;
 with BC.Support.Exceptions;
 
 package body BC.Containers.Trees.Multiway is
