@@ -26,7 +26,7 @@ package body BC.Support.Bounded_Hash_Tables is
 
    package BSE renames BC.Support.Exceptions;
    procedure Assert
-   is new BSE.Assert ("BC.Support.Bounded_Tables");
+   is new BSE.Assert ("BC.Support.Bounded_Hash_Tables");
 
 
    package body Tables is
