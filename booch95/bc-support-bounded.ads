@@ -82,23 +82,34 @@ package BC.Support.Bounded is
 
   function Location (Obj : Bnd_Node;
                      Elem : in Item;
-                     Start : in Natural := 1) return Natural;
+                     Start : in Positive := 1) return Natural;
   -- Returns the first index in which the given item is found. Returns 0
   -- if unsuccessful.
 
   procedure Free (Obj : in out Bnd_Node_Ref);
   -- Dispose of the Node referred to, having first Cleared it
 
+  pragma Inline (Insert);
+  pragma Inline (Append);
+  pragma Inline (Remove);
+  pragma Inline (Replace);
+  pragma Inline (Available);
+  pragma Inline (Length);
+  pragma Inline (First);
+  pragma Inline (Last);
+  pragma Inline (Item_At);
+  pragma Inline (Location);
+
 private
 
-  type Elem_Array is array (Positive range 1 .. Max_Size) of Item;
+  subtype Elem_Range is Natural range 0 .. Max_Size - 1;
+  type Elem_Array is array (Elem_Range) of Item;
 
-  -- XXX
-  -- This representation is not the same as the C++ components;
-  -- there's a considerable optimisation tht's been omitted.
-  subtype Size_Range is Natural range 0..Max_Size;
+  subtype Size_Range is Natural range 0 .. Max_Size;
+
   type Bnd_Node is record
     Elems : Elem_Array;
+    Start : Elem_Range := 0;
     Size : Size_Range := 0;
   end record;
 
