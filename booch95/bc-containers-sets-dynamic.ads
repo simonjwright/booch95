@@ -123,15 +123,16 @@ private
       Location => IC.Location);
 
    --  We need a dummy type for the Value component of the hash table.
-   type Boolean_Ptr is access all Boolean;
-   package VC is new BC.Support.Dynamic (Item => Boolean,
-                                         Item_Ptr => Boolean_Ptr,
+   type Dummy is null record;
+   type Dummy_Ptr is access all Dummy;
+   package VC is new BC.Support.Dynamic (Item => Dummy,
+                                         Item_Ptr => Dummy_Ptr,
                                          Storage => Storage,
                                          Initial_Size => Initial_Size);
    package Values is new BC.Support.Hash_Tables.Value_Signature
-     (Value => Boolean,
-      Value_Ptr => Boolean_Ptr,
-      Eq => Standard."=",
+     (Value => Dummy,
+      Value_Ptr => Dummy_Ptr,
+      Eq => "=",
       Value_Container => VC.Dyn_Node,
       Clear => VC.Clear,
       Insert => VC.Insert,
