@@ -36,9 +36,6 @@ package BC.Containers.Maps is
 
   type Map is abstract new Container with private;
 
-  -- Can't actually have Create cos this Map is abstract
-  --  function Create (Using : Hash) return Map;
-
   function Are_Equal (L, R : Map'Class) return Boolean;
   -- Return True if and only if both maps have the same extent and the same
   -- item/value pairs; return False otherwise. The cached item/value pair
