@@ -18,9 +18,12 @@
 -- $Id$
 
 with BC.Support.Dynamic;
+with System.Storage_Pools;
 
 generic
-  with package Dyn_Stack_Nodes is new BC.Support.Dynamic(Item,Item_Ptr);
+  type Storage_Manager (<>)
+  is new System.Storage_Pools.Root_Storage_Pool with private;
+  Storage : in out Storage_Manager;
 package BC.Containers.Stacks.Dynamic is
 
   type Dyn_Stack is new Stack with private;
@@ -56,6 +59,9 @@ private
   procedure Purge (Obj : in out Dyn_Stack);
   procedure Add (Obj : in out Dyn_Stack; Elem : in out Item);
   function Cardinality (Obj : Dyn_Stack) return Integer;
+
+  package Dyn_Stack_Nodes
+  is new BC.Support.Dynamic (Item, Item_Ptr, Storage_Manager, Storage);
 
   type Dyn_Stack is new Stack with record
     Rep : Dyn_Stack_Nodes.Dyn_Node_Ref;
