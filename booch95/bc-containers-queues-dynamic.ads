@@ -21,10 +21,10 @@ with BC.Support.Dynamic;
 with System.Storage_Pools;
 
 generic
-  Initial_Size : Positive;
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
+  Initial_Size : Positive := 10;
 package BC.Containers.Queues.Dynamic is
 
   pragma Elaborate_Body;
