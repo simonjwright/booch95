@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML VERSION="2.0">
+<HEAD>
+<TITLE>The Ada95 Booch Components</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff">
+
+<H1><IMG SRC="ada95lgo.gif" ALT="Compiler problems" ></H1>
+
+<p><i>Compiler problems</i></p>
+
+<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4" ></P>
+
+<dl>
+
+<dt>3 October 1998</dt>
+
+<dd>When <a href="mailto:progers@acm.org">Pat Rogers</a> added Storage
+Management, we found problems with different compilers. I guess this is
+an area of the language that's not been very heavily used up to now.
+<br>
+<dl>
+
+<dt>GNAT 3.10p</dt>
+<dd>No problems.</dd>
+
+<dt>GNAT 3.11a1</dt>
+<dd>No problems.</dd>
+
+<dt>GNAT 3.11b</dt>
+<dd><tt>BC.Support.Unmanaged_Storage</tt> fails to compile.
+<br>The simplest workround is to use GNAT's
+<tt>System.System.Pool_Global</tt>
+instead.
+</dd>
+
+<dt>ObjectAda Special Edition Version 7.1</dt>
+<dd><tt>BC.Support.Unmanaged_Storage</tt> fails to compile.
+<br>We don't have a workround for this.
+</dd>
+</dl>
+
+</dd>
+
+</dl>
+
+<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4" ></P>
+
+<p><i>Last update: 3.x.98</i></p>
+
+</BODY>
+</HTML>
