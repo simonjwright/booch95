@@ -17,56 +17,55 @@
 
 -- $Id$
 
-with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Maps.Unbounded is
 
   function "=" (L, R : Map) return Boolean is
   begin
-    return Tables."=" (L.Rep.all, R.Rep.all);
+    return Tables."=" (L.Rep, R.Rep);
   end "=";
 
   procedure Clear (M : in out Map) is
   begin
-    Tables.Clear (M.Rep.all);
+    Tables.Clear (M.Rep);
   end Clear;
 
   procedure Bind
      (M : in out Map; K : Key; I : Item) is
   begin
-    Tables.Bind (M.Rep.all, K, I);
+    Tables.Bind (M.Rep, K, I);
   end Bind;
 
   procedure Rebind
      (M : in out Map; K : Key; I : Item) is
   begin
-    Tables.Rebind (M.Rep.all, K, I);
+    Tables.Rebind (M.Rep, K, I);
   end Rebind;
 
   procedure Unbind (M : in out Map; K : Key) is
   begin
-    Tables.Unbind (M.Rep.all, K);
+    Tables.Unbind (M.Rep, K);
   end Unbind;
 
   function Extent (M : Map) return Natural is
   begin
-    return Tables.Extent (M.Rep.all);
+    return Tables.Extent (M.Rep);
   end Extent;
 
   function Is_Empty (M : Map) return Boolean is
   begin
-    return Tables.Extent (M.Rep.all) = 0;
+    return Tables.Extent (M.Rep) = 0;
   end Is_Empty;
 
   function Is_Bound (M : Map; K : Key) return Boolean is
   begin
-    return Tables.Is_Bound (M.Rep.all, K);
+    return Tables.Is_Bound (M.Rep, K);
   end Is_Bound;
 
   function Item_Of (M : Map; K : Key) return Item is
   begin
-    return Tables.Value_Of (M.Rep.all, K);
+    return Tables.Value_Of (M.Rep, K);
   end Item_Of;
 
   package Address_Conversions
@@ -83,26 +82,9 @@ package body BC.Containers.Maps.Unbounded is
 
   -- Private implementations
 
-  procedure Initialize (M : in out Map) is
-  begin
-    M.Rep := new Tables.Table;
-  end Initialize;
-
-  procedure Adjust (M : in out Map) is
-    P : Table_P := M.Rep;
-  begin
-    M.Rep := new Tables.Table'(P.all);
-  end Adjust;
-
-  procedure Finalize (M : in out Map) is
-    procedure Free is new Ada.Unchecked_Deallocation (Tables.Table, Table_P);
-  begin
-    Free (M.Rep);
-  end Finalize;
-
   procedure Attach (M : in out Map; K : Key; I : Item) is
   begin
-    Tables.Bind (M.Rep.all, K, I);
+    Tables.Bind (M.Rep, K, I);
   end Attach;
 
   function Number_Of_Buckets (M : Map) return Natural is
