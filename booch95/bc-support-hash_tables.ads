@@ -160,12 +160,6 @@ package BC.Support.Hash_Tables is
       --  BC.Not_Found; otherwise, return the value corresponding to
       --  this item.
 
-      function Access_Value_Of (T : Table;
-                                I : Items.Item) return Values.Value_Ptr;
-      --  If the item does not have a binding in the hash table, raise
-      --  BC.Not_Found; otherwise, return a pointer to the value
-      --  corresponding to this item.
-
    end Tables;
 
 end BC.Support.Hash_Tables;
