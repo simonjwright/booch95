@@ -188,6 +188,38 @@ package body BC.Graphs.Undirected is
   -- Graph iterators --
   ---------------------
 
+  procedure Reset (It : in out Graph_Iterator) is
+  begin
+    It.Index := It.G.Rep;
+  end Reset;
+
+
+  procedure Next (It : in out Graph_Iterator) is
+  begin
+    if It.Index /= null then
+      It.Index := It.Index.Next;
+    end if;
+  end Next;
+
+
+  function Is_Done (It : Graph_Iterator) return Boolean is
+  begin
+    return It.Index = null;
+  end Is_Done;
+
+
+  procedure Current_Item (It : Graph_Iterator; V : in out Vertex) is
+  begin
+    Assert (It.Index /= null,
+            BC.Is_Null'Identity,
+            "Current_Item(Graph_Iterator)",
+            BSE.Is_Null);
+    Clear (V);
+    V.Rep := It.Index;
+    V.Rep.Count := V.Rep.Count + 1;
+  end Current_Item;
+
+
   function Visit_Vertices
      (It : access Passive_Graph_Iterator) return Boolean is
     Iter : Graph_Iterator (It.G);
