@@ -184,7 +184,9 @@ procedure List_Test is
     L2 := T3;
     Assertion ((Head (L2) = '9'), "** S78: List Item is not correct");
     Clear (L1);
+    Clear (T3);
     L1 := L2;
+    Clear (L2);
     Remove (L1, 1);
     Remove (L1, 8);
     Remove (L1, 4);
@@ -377,7 +379,9 @@ procedure List_Test is
     L2 := T3;
     Assertion ((Head (L2) = '9'), "** D78: List Item is not correct");
     Clear (L1);
+    Clear (T3);
     L1 := L2;
+    Clear (L2);
     Remove (L1, 1);
     Remove (L1, 8);
     Remove (L1, 4);
