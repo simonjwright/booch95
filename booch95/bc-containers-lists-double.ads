@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -25,6 +25,12 @@ with System.Storage_Pools;
 generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Lists.Double is
+
+   -------------------------------------------------------------------
+   --  WARNING: If  you just want a standard  container to support  --
+   --  iteration, filtering and sorting, use Collections. The List  --
+   --  components are much more complex than you'll need.           --
+   -------------------------------------------------------------------
 
    pragma Elaborate_Body;
 
