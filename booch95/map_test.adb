@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -161,13 +161,13 @@ procedure Map_Test is
   procedure Test_Passive_Iterator (M : in out Maps.Map'Class) is
     procedure Visitor is new Maps.Visit (Process);
   begin
-    Visitor (M);
+    Visitor (Over_The_Container => M);
   end Test_Passive_Iterator;
 
   procedure Test_Passive_Modifying_Iterator (M : in out Maps.Map'Class) is
     procedure Modifier is new Maps.Modify (Process_Modifiable);
   begin
-    Modifier (M);
+    Modifier (Over_The_Container => M);
   end Test_Passive_Modifying_Iterator;
 
   Map_B_Pu1, Map_B_Pu2 : MB.Bounded_Map;
