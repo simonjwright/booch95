@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -22,9 +22,6 @@ with BC.Containers.Rings;
 with BC.Containers.Rings.Bounded;
 with BC.Containers.Rings.Dynamic;
 with BC.Containers.Rings.Unbounded;
-with BC.Containers.Guarded;
-with BC.Containers.Rings.Unbounded.Synchronized;
-with BC.Support.Synchronization;
 with Global_Heap;
 
 package Ring_Test_Support is
@@ -43,14 +40,5 @@ package Ring_Test_Support is
   package RU is new Rings.Unbounded (Storage_Manager => Global_Heap.Pool,
                                      Storage => Global_Heap.Storage);
   subtype Unbounded_Ring is RU.Unbounded_Ring;
-
-  package RUG is new Containers.Guarded
-     (Base_Container => RU.Unbounded_Ring,
-      Semaphore => BC.Support.Synchronization.Semaphore);
-  subtype Guarded_Unbounded_Ring is RUG.Guarded_Container;
-
-  package RUS is new RU.Synchronized
-     (Monitor => BC.Support.Synchronization.Single_Monitor);
-  subtype Synchronized_Unbounded_Ring is RUS.Synchronized_Unbounded_Ring;
 
 end Ring_Test_Support;
