@@ -59,15 +59,13 @@ package BC.Containers is
 
   generic
     with procedure Apply (Elem : in Item; OK : out Boolean);
-    Over_The_Container : Container'Class;
-  procedure Visit;
+  procedure Visit (Over_The_Container : Container'Class);
   -- Call Apply with a copy of each Item in the Container. The iteration
   -- will terminate early if Apply sets OK to False.
 
   generic
     with procedure Apply (Elem : in out Item; OK : out Boolean);
-    Over_The_Container : Container'Class;
-  procedure Modify;
+  procedure Modify (Over_The_Container : Container'Class);
   -- Call Apply for each Item in the Container. The iteration will terminate
   -- early if Apply sets OK to False.
 

@@ -61,7 +61,7 @@ package body BC.Containers is
     Apply (Current_Item (SP.Value (SP.Pointer (In_The_Iterator)).all).all);
   end Access_Current_Item;
 
-  procedure Visit is
+  procedure Visit  (Over_The_Container : Container'Class) is
     It : Iterator := New_Iterator (Over_The_Container);
     Success : Boolean;
   begin
@@ -72,7 +72,7 @@ package body BC.Containers is
     end loop;
   end Visit;
 
-  procedure Modify is
+  procedure Modify (Over_The_Container : Container'Class) is
     It : Iterator := New_Iterator (Over_The_Container);
     Success : Boolean;
     procedure Caller (I : in out Item) is
