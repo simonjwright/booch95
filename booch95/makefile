@@ -88,6 +88,10 @@ aonix_test: aonix_testable
 	  ./$$t 2>$$t.log; \
 	done
 
+AONIX_TESTABLE += bag_test_aonix
+bag_test_aonix: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
 AONIX_TESTABLE += map_test_aonix
 map_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
@@ -174,6 +178,7 @@ ADA_SOURCE = \
 ada_units.ad[bs] \
 ada_unit_support.ad[bs] \
 bag_test.ad[bs] \
+bag_test_aonix.ad[bs] \
 bag_test_support.ad[bs] \
 bc-containers-bags-bounded.ad[bs] \
 bc-containers-bags-dynamic.ad[bs] \
