@@ -148,6 +148,8 @@ queue_test: force
 
 ADA_SOURCE += \
 bc-containers-rings.ad[bs] \
+bc-containers-rings-bounded.ad[bs] \
+bc-containers-rings-dynamic.ad[bs] \
 bc-containers-rings-unbounded.ad[bs] \
 bc-containers-rings-unbounded-guarded.ad[bs] \
 bc-containers-rings-unbounded-synchronized.ad[bs]
