@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -24,8 +24,7 @@ package BC.Containers.Maps is
   pragma Elaborate_Body;
 
   -- A map denotes a collection forming a dictionary of domain/range
-  -- pairs. Maps are cached, so that the most recently accessed
-  -- domain/range pair can be found in times on the order of O(1).
+  -- pairs.
 
   -- The parameter Item denotes the universe from which the map draws its
   -- domain; the parameter Value denotes the universe from which the map
@@ -37,31 +36,27 @@ package BC.Containers.Maps is
 
   function Are_Equal (L, R : Map'Class) return Boolean;
   -- Return True if and only if both maps have the same extent and the same
-  -- item/value pairs; return False otherwise. The cached item/value pair
-  -- is unaffected.
+  -- item/value pairs; return False otherwise.
   -- Can't call this "=" because of the standard one for Map.
 
   procedure Clear (M : in out Map)
     is abstract;
-  -- Empty the map of all item/value pairs. The cached item/value pair is
-  -- cleared.
+  -- Empty the map of all item/value pairs.
 
   procedure Bind (M : in out Map; I : Item; V : Value)
     is abstract;
   -- If the item already exists in the map, raise BC.Duplicate. Otherwise,
-  -- add the item/value pair to the map. The cached item/value pair is set
-  -- to this new binding.
+  -- add the item/value pair to the map.
 
   procedure Rebind (M : in out Map; I : Item; V : Value)
     is abstract;
   -- If the item does not exist in the map, raise BC.Not_Found. Otherwise,
-  -- change the item's binding to the given value. The cached item/value
-  -- pair is set to this new binding.
+  -- change the item's binding to the given value.
 
   procedure Unbind (M : in out Map; I : Item)
     is abstract;
   -- If the item does not exist in the map, raise BC.Not_Found. Otherwise,
-  -- remove the item/value binding. The cached item/value pair is cleared.
+  -- remove the item/value binding.
 
   function Extent (M : Map) return Natural
     is abstract;
@@ -75,16 +70,12 @@ package BC.Containers.Maps is
   function Is_Bound (M : Map; I : Item) return Boolean
     is abstract;
   -- Return True if and only if there is a binding for the given item in
-  -- the map; otherwise, return False. The cached item/value pair is used
-  -- to accelerate the search; if there is a cache hit, the time complexity
-  -- of this operation is O(1).
+  -- the map; otherwise, return False.
 
   function Value_Of (M : Map; I : Item) return Value
     is abstract;
   -- If the item does not exist in the map, raises BC.Not_Found. Otherwise,
-  -- return a constant pointer to the value bound to the given item. The
-  -- cached item/value pair is used to accelerate the search; if there is a
-  -- cache hit, the time complexity of this operation is O(1).
+  -- return a constant pointer to the value bound to the given item.
 
   -- Additional Iterator support
 
