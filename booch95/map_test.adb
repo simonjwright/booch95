@@ -208,8 +208,8 @@ procedure Map_Test is
   The_GU : GU := (MUG.Null_Container, MUG.Null_Container);
 
   type SU is record
-    Map_US_Pu1 : Synchronized_Unbounded_Map;
-    Map_US_Pu2 : Synchronized_Unbounded_Map;
+    Map_US_Pu1 : MUS.Synchronized_Map;
+    Map_US_Pu2 : MUS.Synchronized_Map;
   end record;
   The_SU: SU := (MUS.Null_Container, MUS.Null_Container);
 
