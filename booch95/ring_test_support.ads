@@ -38,15 +38,13 @@ package Ring_Test_Support is
 --   package RD is new Rings.Dynamic (Storage_Manager => Global_Heap.Pool,
 --                                     Storage => Global_Heap.Storage);
 
-  package RUB is new Rings.Unbounded (Storage_Manager => Global_Heap.Pool,
+  package RU is new Rings.Unbounded (Storage_Manager => Global_Heap.Pool,
                                      Storage => Global_Heap.Storage);
 
-  package RUG is new RUB.Guarded
+  package RUG is new RU.Guarded
      (Semaphore => BC.Support.Synchronization.Semaphore);
 
-  package RUS is new RUB.Synchronized
+  package RUS is new RU.Synchronized
      (Monitor => BC.Support.Synchronization.Single_Monitor);
-
-  package RU renames RUG;
 
 end Ring_Test_Support;
