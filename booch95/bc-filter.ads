@@ -29,13 +29,13 @@ generic
    with package Source is new BC.Containers (Item);
    --  A Container instantiation.
 
-   type From is new Source.Container with private;
+   type From (<>) is new Source.Container with private;
    --  The Container type which contains the source Items.
 
    with package Target is new BC.Containers (Item);
    --  A Container instantiation (possibly different from Source).
 
-   type To is new Target.Container with private;
+   type To (<>) is new Target.Container with private;
    --  The Container type which is to contain the filtered Items.
 
    with function Pass (I : Item) return Boolean is <>;
