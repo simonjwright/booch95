@@ -24,7 +24,7 @@ package body BC.Support.Hash_Tables is
 
   package BSE renames BC.Support.Exceptions;
   procedure Assert
-  is new BSE.Assert ("BC.Support.Tables");
+  is new BSE.Assert ("BC.Support.Hash_Tables");
 
 
   package body Tables is
