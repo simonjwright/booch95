@@ -1,0 +1,71 @@
+# Copyright (C) 1998-2000 Simon Wright. All Rights Reserved.
+#
+#      This program is free software; you can redistribute it
+#      and/or modify it under the terms of the Ada Community
+#      License which comes with this Library.
+#
+#      This program is distributed in the hope that it will be
+#      useful, but WITHOUT ANY WARRANTY; without even the implied
+#      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+#      PURPOSE. See the Ada Community License for more details.
+#      You should have received a copy of the Ada Community
+#      License with this library, in the file named "Ada Community
+#      License" or "ACL". If not, contact the author of this library
+#      for a copy.
+#
+
+# $Id$
+
+# (GNU) Makefile for demos of Booch Components distribution.
+
+########
+# Demos
+
+GNATMAKE_FLAGS = -I.. -O2 -g -gnata -gnatwu -gnatwl
+
+all:: demos
+
+DEMOS += ada_units
+ada_units: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+DEMOS += lists_traversal
+lists_traversal: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+DEMOS += ordering_test
+ordering_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+DEMOS += storage
+storage: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+DEMOS += test_synchronization
+test_synchronization: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+DEMOS += time_lists
+time_lists: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+DEMOS += time_queues
+time_queues: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+DEMOS += unmanaged_storage
+unmanaged_storage: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+DEMOS += user_set
+user_set: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+DEMOS += word_count
+word_count: bcwords.ada
+	gnatchop -w bcwords.ada
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+demos: $(DEMOS)
+
+.PHONY: force
