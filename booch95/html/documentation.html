@@ -179,13 +179,23 @@ concrete structures, we effectively decouple storage management policy from
 its implementation, and make it possible for library users to insert their
 own storage management policy without changing the library. This is a classic
 example of extensibility through instantiation instead of inheritance. </P>
-<P>The only requirement we place upon our storage manager is that they provide
-the same well-defined protocol. This is accomplished through a specific
-derivation of Ada.Storage_Pools, from which a user may extend themselves. 
 
-<font color=red>
-<p>At present storage management is not externally controllable.</p>
-</font>
+<P>The only requirement we place upon storage managers is that they provide
+the same well-defined protocol. This is defined by the standard package
+Ada.Storage_Pools.</p>
+
+<p>Two predefined managers are available:
+<dl>
+
+<dt><tt>BC.Support.Unmanaged_Storage</tt></dt>
+<dd>is effectively the default heap manager.</dd>
+
+<dt><tt>BC.Support.Managed_Storage</tt></dt>
+<dd>provides management of store within a pool whose unit (chunk) size
+is specified when the pool is created.</dd>
+
+</dl>
+</p>
 
 <!---------------------------------------------------------------------->
 
@@ -196,16 +206,10 @@ derivation of Ada.Storage_Pools, from which a user may extend themselves.
 the user from having to include a separate &quot;Exceptions&quot; package. Exception
 behaviour of the BCs is standard and portable, unlike other languages. </p>
 
-<font color=red>
-<p>At present the only declared exception is
-<tt>Should_Have_Been_Overridden</tt>, which will only be raised if the
+<p>As well as the exceptions from the C++ Components, an exception
+<tt>Should_Have_Been_Overridden</tt> is possible. It will only be raised if the
 implementor has forgotten to override a private subprogram of an
-abstract class. Internally, the BCs use <tt>pragma Assert</tt> which
-is reasonably portable and follows the original C++ scheme; it does
-mean that you'll need to compile with vendor-specific switches in
-order to get error messages (other than just 'Constraint Error').
-This decision may be revisited.</p>
-</font>
+abstract class (such subprograms can't be abstract, see RM95 3.9.3(10)).</p>
 
 <!----------------------------------------------------------------------> 
 
