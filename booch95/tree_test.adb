@@ -488,36 +488,57 @@ procedure Tree_Test is
       Multiway_Post_Order (T, Success);
    end Test_Multiway_Iteration;
 
---     procedure Test_AVL_Iteration;
---     procedure Test_AVL_Iteration is
---        T : TA.AVL_Tree;
---        It : TAI.Iterator := TAI.New_Iterator (T);
---        Dummy : Boolean;
---     begin
---        TA.Insert (T, 'd', Dummy);
---        TA.Insert (T, 'c', Dummy);
---        TA.Insert (T, 'e', Dummy);
---        TA.Insert (T, 'f', Dummy);
---        TA.Insert (T, 'b', Dummy);
---        TA.Insert (T, 'g', Dummy);
---        TA.Insert (T, 'h', Dummy);
---        TA.Insert (T, 'i', Dummy);
---        TA.Insert (T, 'a', Dummy);
---        TA.Insert (T, 'l', Dummy);
---        TA.Insert (T, 'k', Dummy);
---        TA.Insert (T, 'm', Dummy);
---        TA.Insert (T, 'j', Dummy);
---        TA.Insert (T, 'n', Dummy);
---        TA.Insert (T, 'p', Dummy);
---        TA.Insert (T, 'o', Dummy);
---        TAI.Reset (It);
---        Put_Line ("AVL iteration");
---        while not TAI.Is_Done (It) loop
---           Put (TAI.Current_Item (It));
---           TAI.Next (It);
---        end loop;
---        New_Line;
---     end Test_AVL_Iteration;
+   procedure Test_AVL_Iteration;
+   procedure Test_AVL_Iteration is
+      procedure Print (C : Character; OK : out Boolean);
+      procedure Print is new Containers.Visit (Print);
+      procedure Print (C : Character; OK : out Boolean) is
+      begin
+         OK := True;
+         Put (C);
+      end Print;
+      T : TA.AVL_Tree;
+      It : Containers.Iterator'Class := TA.New_Iterator (T);
+      Dummy : Boolean;
+      Input : constant String := "qwertyuiopasdfghjklzxcvbnm";
+   begin
+      Put_Line ("...AVL iteration (empty)");
+      Containers.Reset (It);
+      Print (It);
+      New_Line;
+      Containers.Reset (It);
+      while not Containers.Is_Done (It) loop
+         Put (Containers.Current_Item (It));
+         Containers.Next (It);
+      end loop;
+      New_Line;
+      Put_Line ("...AVL iteration (one element)");
+      TA.Clear (T);
+      TA.Insert (T, '1', Dummy);
+      Containers.Reset (It);
+      Print (It);
+      New_Line;
+      Containers.Reset (It);
+      while not Containers.Is_Done (It) loop
+         Put (Containers.Current_Item (It));
+         Containers.Next (It);
+      end loop;
+      New_Line;
+      Put_Line ("...AVL iteration (many elements)");
+      TA.Clear (T);
+      for C in Input'Range loop
+         TA.Insert (T, Input (C), Dummy);
+      end loop;
+      Containers.Reset (It);
+      Print (It);
+      New_Line;
+      Containers.Reset (It);
+      while not Containers.Is_Done (It) loop
+         Put (Containers.Current_Item (It));
+         Containers.Next (It);
+      end loop;
+      New_Line;
+   end Test_AVL_Iteration;
 
 begin
 
@@ -534,7 +555,7 @@ begin
 
    Put_Line ("...AVL Tree");
    Test_Primitive (A_Tree_P1);
---     Test_AVL_Iteration;
+   Test_AVL_Iteration;
 
    Put_Line ("Completed Tree tests");
 
