@@ -1,0 +1,343 @@
+-- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- All Rights Reserved.
+--
+--      This program is free software; you can redistribute it
+--      and/or modify it under the terms of the Ada Community
+--      License which comes with this Library.
+--
+--      This program is distributed in the hope that it will be
+--      useful, but WITHOUT ANY WARRANTY; without even the implied
+--      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+--      PURPOSE. See the Ada Community License for more details.
+--      You should have received a copy of the Ada Community
+--      License with this library, in the file named "Ada Community
+--      License" or "ACL". If not, contact the author of this library
+--      for a copy.
+--
+
+-- $Id$
+
+with Ada.Text_Io;
+with BC;
+with Set_Test_Support;
+
+procedure Set_Test is
+
+  use Ada.Text_Io;
+  use Set_Test_Support;
+
+  procedure Assertion (B : Boolean; S : String) is
+  begin
+    if not B then
+      Put_Line (S);
+    end if;
+  end Assertion;
+
+--    procedure Print_Set (S : in out Sets.Set'Class; Named : String) is
+--      procedure Print (Item : Character; OK : out Boolean) is
+--      begin
+--        Put (" " & Item);
+--        OK := True;
+--      end Print;
+--      procedure Visitor is new Containers.Visit (Print);
+--    begin
+--      Put ("Set " & Named);
+--      Visitor (S);
+--      New_Line;
+--    end Print_Set;
+
+  procedure Test (S1, S2 : in out Sets.Set'Class) is
+  begin
+    Assertion (Sets.Is_Empty (S1),
+               "** P01: Set is not initially empty");
+    Assertion (Sets.Extent (S1) = 0,
+               "** P02: Set Extent is not initially zero");
+    --| s1.Add('1');
+    Sets.Add (S1, '1');
+    --| s1.Add('2');
+    Sets.Add (S1, '2');
+    --| s1.Add('3');
+    Sets.Add (S1, '3');
+    --| assertion(!(s1.IsEmpty()), "** P03: Set is empty");
+    Assertion (not Sets.Is_Empty (S1), "** P03: Set is empty");
+    --| assertion((s1.Extent() == 3), "** P04: Set extent is not correct");
+    Assertion (Sets.Extent (S1) = 3, "** P04: Set extent is not correct");
+    --| assertion(s1.IsMember('1'), "** P05: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '1'),
+               "** P05: Set membership is not correct");
+    --| assertion(s1.IsMember('2'), "** P06: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '2'),
+               "** P06: Set membership is not correct");
+    --| assertion(s1.IsMember('3'), "** P07: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '3'),
+               "** P07: Set membership is not correct");
+    --| s1.Clear();
+    Sets.Clear (S1);
+    --| assertion(s1.IsEmpty(), "** P08: Set is not empty");
+    Assertion (Sets.Is_Empty (S1), "** P08: Set is not empty");
+    --| assertion((s1.Extent() == 0), "** P09: Set extent is not zero");
+    Assertion (Sets.Extent (S1) = 0, "** P09: Set extent is not zero");
+    --| s1.Add('4');
+    Sets.Add (S1, '4');
+    --| s1.Add('5');
+    Sets.Add (S1, '5');
+    --| s1.Add('6');
+    Sets.Add (S1, '6');
+    --| assertion(!(s1.IsEmpty()), "** P10: Set is empty");
+    Assertion (not Sets.Is_Empty (S1), "** P10: Set is empty");
+    --| assertion((s1.Extent() == 3), "** P11: Set extent is not correct");
+    Assertion (Sets.Extent (S1) = 3, "** P11: Set extent is not correct");
+    --| assertion(s1.IsMember('4'), "** P12: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '4'),
+               "** P12: Set membership is not correct");
+    --| assertion(s1.IsMember('5'), "** P13: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '5'),
+               "** P13: Set membership is not correct");
+    --| assertion(s1.IsMember('6'), "** P14: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '6'),
+               "** P14: Set membership is not correct");
+    --| s1.Remove('4');
+    Sets.Remove (S1, '4');
+    --| s1.Remove('6');
+    Sets.Remove (S1, '6');
+    --| assertion(!(s1.IsEmpty()), "** P15: Set is empty");
+    Assertion (not Sets.Is_Empty (S1), "** P15: Set is empty");
+    --| assertion((s1.Extent() == 1), "** P16: Set extent is not correct");
+    Assertion (Sets.Extent (S1) = 1, "** P16: Set extent is not correct");
+    --| assertion(!(s1.IsMember('4')), "** P17: Set membership is not correct");
+    Assertion (not Sets.Is_Member (S1, '4'),
+               "** P17: Set membership is not correct");
+    --| assertion(s1.IsMember('5'), "** P18: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '5'),
+               "** P18: Set membership is not correct");
+    --| assertion(!(s1.IsMember('6')), "** P19: Set membership is not correct");
+    Assertion (not Sets.Is_Member (S1, '6'),
+               "** P19: Set membership is not correct");
+    --| s1.Remove('5');
+    Sets.Remove (S1, '5');
+    --| assertion(s1.IsEmpty(), "** P20: Set is not empty");
+    Assertion (Sets.Is_Empty (S1), "** P20: Set is not empty");
+    --| assertion((s1.Extent() == 0), "** P21: Set extent is not zero");
+    Assertion (Sets.Extent (S1) = 0, "** P21: Set extent is not zero");
+    --| s1.Add('7');
+    Sets.Add (S1, '7');
+    --| s1.Add('8');
+    Sets.Add (S1, '8');
+    --| s1.Add('9');
+    Sets.Add (S1, '9');
+    --| s1.Remove('8');
+    Sets.Remove (S1, '8');
+    --| s1.Remove('9');
+    Sets.Remove (S1, '9');
+    --| assertion(!(s1.IsEmpty()), "** P22: Set is empty");
+    Assertion (not Sets.Is_Empty (S1), "** P22: Set is empty");
+    --| assertion((s1.Extent() == 1), "** P23: Set extent is not correct");
+    Assertion (Sets.Extent (S1) = 1, "** P23: Set extent is not correct");
+    --| assertion(s1.IsMember('7'), "** P24: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '7'),
+               "** P24: Set membership is not correct");
+    --| s2 = s1;
+    S2 := S1;
+    --| assertion(!(s1.IsEmpty()), "** P25: Set is empty");
+    Assertion (not Sets.Is_Empty (S1), "** P25: Set is empty");
+    --| assertion((s1.Extent() == 1), "** P26: Set extent is not correct");
+    Assertion (Sets.Extent (S1) = 1, "** P26: Set extent is not correct");
+    --| assertion(s1.IsMember('7'), "** P27: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '7'),
+               "** P27: Set membership is not correct");
+    --| assertion(!(s2.IsEmpty()), "** P28: Set is empty");
+    Assertion (not Sets.Is_Empty (S2), "** P28: Set is empty");
+    --| assertion((s2.Extent() == 1), "** P29: Set extent is not correct");
+    Assertion (Sets.Extent (S2) = 1, "** P29: Set extent is not correct");
+    --| assertion(s2.IsMember('7'), "** P30: Set membership is not correct");
+    Assertion (Sets.Is_Member (S2, '7'),
+               "** P30: Set membership is not correct");
+    --| assertion((s1 == s2), "** P31: Sets are not equal");
+    Assertion (Sets.Are_Equal (S1, S2), "** P31: Sets are not equal");
+    --| assertion(s2.IsSubset(s1), "** P32: Sets are not subsets");
+    Assertion (Sets.Is_Subset (S2, S1), "** P32: Sets are not subsets");
+    --| assertion(!(s2.IsProperSubset(s1)), "** P33: Sets are proper subsets");
+    Assertion (not Sets.Is_Proper_Subset (S2, S1),
+               "** P33: Sets are proper subsets");
+    --| s1.Add('1');
+    Sets.Add (S1, '1');
+    --| s1.Add('2');
+    Sets.Add (S1, '2');
+    --| s1.Add('3');
+    Sets.Add (S1, '3');
+    --| assertion(s2.IsSubset(s1), "** P34: Sets are not subsets");
+    Assertion (Sets.Is_Subset (S2, S1), "** P34: Sets are not subsets");
+    --| assertion(s2.IsProperSubset(s1), "** P35: Sets are not proper subsets");
+    Assertion (Sets.Is_Proper_Subset (S2, S1),
+               "** P35: Sets are not proper subsets");
+    --| s2.Add('8');
+    Sets.Add (S2, '8');
+    --| s2.Add('9');
+    Sets.Add (S2, '9');
+    --| s1.Union(s2);
+    Sets.Union (S1, S2);
+    --| assertion((s1.Extent() == 6), "** P36: Set extent is not correct");
+    Assertion (Sets.Extent (S1) = 6, "** P36: Set extent is not correct");
+    --| assertion(s1.IsMember('8'), "** P37: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '8'),
+               "** P37: Set membership is not correct");
+    --| assertion(s1.IsMember('9'), "** P38: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '9'),
+               "** P38: Set membership is not correct");
+    --| s1.Remove('9');
+    Sets.Remove (S1, '9');
+    --| assertion(!(s2.IsSubset(s1)), "** P39: Sets are subsets");
+    Assertion (not Sets.Is_Subset (S2, S1),
+               "** P39: Sets are subsets");
+    --| assertion(!(s2.IsProperSubset(s1)), "** P40: Sets are proper subsets");
+    Assertion (not Sets.Is_Proper_Subset (S2, S1),
+               "** P40: Sets are proper subsets");
+    --| s1.Intersection(s2);
+    Sets.Intersection (S1, S2);
+    --| assertion((s1.Extent() == 2), "** P41: Set extent is not correct");
+    Assertion (Sets.Extent (S1) = 2, "** P41: Set extent is not correct");
+    --| assertion(s1.IsMember('7'), "** P42: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '7'),
+               "** P42: Set membership is not correct");
+    --| assertion(s1.IsMember('8'), "** P43: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '8'),
+               "** P43: Set membership is not correct");
+    --| s1.Add('1');
+    Sets.Add (S1, '1');
+    --| s1.Add('2');
+    Sets.Add (S1, '2');
+    --| s1.Add('3');
+    Sets.Add (S1, '3');
+    --| s1.Difference(s2);
+    Sets.Difference (S1, S2);
+    --| assertion((s1.Extent() == 3), "** P44: Set extent is not correct");
+    Assertion (Sets.Extent (S1) = 3, "** P44: Set extent is not correct");
+    --| assertion(s1.IsMember('1'), "** P45: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '1'),
+               "** P45: Set membership is not correct");
+    --| assertion(s1.IsMember('2'), "** P46: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '2'),
+               "** P46: Set membership is not correct");
+    --| assertion(s1.IsMember('3'), "** P47: Set membership is not correct");
+    Assertion (Sets.Is_Member (S1, '3'),
+               "** P47: Set membership is not correct");
+    --| s1.Remove('2');
+    Sets.Remove (S1, '2');
+    --| s1.Remove('3');
+    Sets.Remove (S1, '3');
+    --| assertion(s1.Add('3'), "** P48: Set add is not correct");
+    begin
+      Sets.Add (S1, '3');
+    exception
+      when others =>
+        Put_Line ("** P48: Set add is not correct");
+    end;
+    --| assertion(!s1.Add('3'), "** P49: Set add is not correct");
+    begin
+      Sets.Add (S1, '3');
+    exception
+      when BC.Duplicate => null;
+      when others => Put_Line ("** P48: Set add is not correct");
+    end;
+    --| assertion(s1.Remove('3'), "** P50: Set remove is not correct");
+    begin
+      Sets.Remove (S1, '3');
+    exception
+      when others =>
+        Put_Line ("** P50: Set remove is not correct");
+    end;
+    --| assertion(!s1.Remove('3'), "** P51: Set remove is not correct");
+    begin
+      Sets.Remove (S1, '3');
+    exception
+      when BC.Not_Found => null;
+      when others => Put_Line ("** P50: Set remove is not correct");
+    end;
+  end Test;
+
+  procedure Test_Active_Iterator (S : in out Sets.Set'Class) is
+    use Containers; use Sets; use SB;
+    Iter : Containers.Iterator := New_Iterator (S);
+  begin
+    while not Containers.Is_Done (Iter) loop
+      Put_Line ("      Item: "
+                & Containers.Current_Item (Iter));
+      Containers.Next (Iter);
+    end loop;
+  end Test_Active_Iterator;
+
+  procedure Process (Item : Character; OK : out Boolean) is
+  begin
+    Put_Line ("      Item: " & Item);
+    OK := True;
+  end Process;
+
+  procedure Process_Modifiable (Item : in out Character; OK : out Boolean) is
+  begin
+    Put_Line ("      Item (RW): " & Item);
+    OK := True;
+  end Process_Modifiable;
+
+  procedure Test_Passive_Iterator (S : in out Sets.Set'Class) is
+    procedure Visitor is new Containers.Visit (Process);
+  begin
+    Visitor (S);
+  end Test_Passive_Iterator;
+
+  procedure Test_Passive_Modifying_Iterator (S : in out Sets.Set'Class) is
+    procedure Modifier is new Containers.Modify (Process_Modifiable);
+  begin
+    Modifier (S);
+  end Test_Passive_Modifying_Iterator;
+
+  Set_B_Pu1, Set_B_Pu2 : SB.Bounded_Set;
+  Set_D_Pu1, Set_D_Pu2 : SD.Dynamic_Set;
+  Set_U_Pu1, Set_U_Pu2 : SU.Unbounded_Set;
+
+begin
+  Put_Line ("Starting set tests");
+  Put_Line ("...Bounded Set");
+  Test (Set_B_Pu1, Set_B_Pu2);
+  Put_Line ("...Dynamic Set");
+  --    Preallocate (Set_D_Pu1, 50);
+  SD.Preallocate (Set_D_Pu1, 50);
+  --    Test (Set_D_Pu1, Set_D_Pu2);
+  Test (Set_D_Pu1, Set_D_Pu2);
+  Put_Line ("...Unbounded Set");
+  Test (Set_U_Pu1, Set_U_Pu2);
+
+  Put_Line ("...Set Active Iterator");
+  Put_Line ("   Bounded:");
+  Test_Active_Iterator (Set_B_Pu1);
+  Put_Line ("   Dynamic:");
+  Test_Active_Iterator (Set_D_Pu1);
+  Put_Line ("   Unbounded:");
+  Test_Active_Iterator (Set_U_Pu1);
+  Put_Line ("...Set Passive Iterator");
+  Put_Line ("   Bounded:");
+  Test_Passive_Iterator (Set_B_Pu1);
+  Test_Passive_Modifying_Iterator (Set_B_Pu1);
+  Put_Line ("   Dynamic:");
+  Test_Passive_Iterator (Set_D_Pu1);
+  Test_Passive_Modifying_Iterator (Set_D_Pu1);
+  Put_Line ("   Unbounded:");
+  Test_Passive_Iterator (Set_U_Pu1);
+  Test_Passive_Modifying_Iterator (Set_U_Pu1);
+
+  Assertion (SB.Is_Member (Set_B_Pu1, '1'),
+             "** M01: Set membership is not correct");
+  Assertion (SB.Extent (Set_B_Pu2) = 3, "** M02: Set extent is not correct");
+  Assertion (SD.Is_Member (Set_D_Pu1, '1'),
+             "** M05: Set membership is not correct");
+  Assertion (SD.Extent (Set_D_Pu2) = 3, "** M06: Set extent is not correct");
+--| assertion(set_u_p1.IsMember('1'), "** M09: Set membership is not correct");
+--| assertion((set_u_p2.Extent() == 3), "** M10: Set extent is not correct");
+  Assertion (SU.Is_Member (Set_U_Pu1, '1'),
+             "** M09: Set membership is not correct");
+  Assertion (SU.Extent (Set_U_Pu2) = 3, "** M10: Set extent is not correct");
+  Assertion (SB.Available (Set_B_Pu1) = 299,
+             "** M13: Available space is not correct");
+  Assertion (SB.Available (Set_B_Pu2) = 297,
+             "** M14: Available space is not correct");
+  Put_Line ("Completed set tests");
+end Set_Test;
