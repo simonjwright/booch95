@@ -44,7 +44,7 @@ procedure Queue_Test is
   end Assertion;
 
   procedure Test_Active_Iterator (Q : Container'Class) is
-    Iter : Iterator := New_Iterator (Q);
+    Iter : Iterator'Class := New_Iterator (Q);
     Success : Boolean;
     Temp : Character;
   begin
@@ -139,13 +139,13 @@ procedure Queue_Test is
 
   procedure Test_Passive_Iterator (Q : Container'Class) is
     procedure Iterate is new Visit (Apply => Process);
-    Iter : Iterator := New_Iterator (Q);
+    Iter : Iterator'Class := New_Iterator (Q);
   begin
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
   procedure Test_Iterator_Deletion (Q : in out Queue'Class) is
-    Iter : Iterator := New_Iterator (Q);
+    Iter : Iterator'Class := New_Iterator (Q);
     Delete : Boolean;
   begin
     Clear (Q);

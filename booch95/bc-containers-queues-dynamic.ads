@@ -76,7 +76,7 @@ package BC.Containers.Queues.Dynamic is
   function Chunk_Size (Q : Dynamic_Queue) return Natural;
   -- Returns the Chunk_Size
 
-  function New_Iterator (For_The_Queue : Dynamic_Queue) return Iterator;
+  function New_Iterator (For_The_Queue : Dynamic_Queue) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Queue.
 
 private
