@@ -15,10 +15,7 @@
 --      for a copy.
 --
 
---  $RCSfile$
---  $Revision$
---  $Date$
---  $Author$
+--  $Id$
 
 generic
    type Key is private;
@@ -31,7 +28,7 @@ package BC.Containers.Maps is
    --  pairs.
 
    --  The parameter Key denotes the universe from which the map draws
-   --  its domain; the parameter Item denotes the universe from which
+   --  its doamin; the parameter Item denotes the universe from which
    --  the map draws its range. The parameters Key and Item typically
    --  represent different types, although they may may represent the
    --  same types. Either may be a primitive type or user-defined.
