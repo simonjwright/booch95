@@ -35,30 +35,30 @@ package BC.Containers.Queues.Dynamic is
   function Create (Size : Positive) return Dynamic_Queue;
   -- Creates a new Dynamic Queue that is preallocated for 'Size' elements
 
-  procedure Clear (Obj : in out Dynamic_Queue);
+  procedure Clear (Q : in out Dynamic_Queue);
   -- Empty the queue of all items.
 
-  procedure Append (Obj : in out Dynamic_Queue; Elem : Item);
+  procedure Append (Q : in out Dynamic_Queue; Elem : Item);
   -- Add the item to the back of the queue; the item itself is copied.
 
-  procedure Pop (Obj : in out Dynamic_Queue);
+  procedure Pop (Q : in out Dynamic_Queue);
   -- Remove the item from the front of the queue.
 
-  procedure Remove (Obj : in out Dynamic_Queue; From : Positive);
+  procedure Remove (Q : in out Dynamic_Queue; From : Positive);
   -- Remove the item at the given index.
 
-  function Length (Obj : in Dynamic_Queue) return Natural;
+  function Length (Q : in Dynamic_Queue) return Natural;
   -- Return the number of items in the queue.
 
-  function Is_Empty (Obj : in Dynamic_Queue) return Boolean;
+  function Is_Empty (Q : in Dynamic_Queue) return Boolean;
   -- Return True if and only if there are no items in the queue.
 
-  function Front (Obj : in Dynamic_Queue) return Item;
+  function Front (Q : in Dynamic_Queue) return Item;
   -- Return a copy of the item at the front of the queue.
 
   -- XXX need generic accessor
 
-  function Location (Obj : in Dynamic_Queue; Elem : Item) return Natural;
+  function Location (Q : in Dynamic_Queue; Elem : Item) return Natural;
   -- Return the first index at which the item is found; return 0 if the
   -- item does not exist in the queue.
 
@@ -66,14 +66,14 @@ package BC.Containers.Queues.Dynamic is
   -- Return True if and only if both queues have the same length and the same
   -- items in the same order; return False otherwise.
 
-  procedure Preallocate (Obj : in out Dynamic_Queue; Size : Natural);
+  procedure Preallocate (Q : in out Dynamic_Queue; Size : Natural);
   -- Allocates 'Size' additional storage elements for the Queue
 
-  procedure Set_Chunk_Size (Obj : in out Dynamic_Queue; Size : Natural);
+  procedure Set_Chunk_Size (Q : in out Dynamic_Queue; Size : Natural);
   -- Establishes the Size the Queue will grow if the Queue exhausts its
   -- current size.
 
-  function Chunk_Size (Obj : Dynamic_Queue) return Natural;
+  function Chunk_Size (Q : Dynamic_Queue) return Natural;
   -- Returns the Chunk_Size
 
   function New_Iterator (For_The_Queue : Dynamic_Queue) return Iterator;
@@ -81,9 +81,9 @@ package BC.Containers.Queues.Dynamic is
 
 private
 
-  function Item_At (Obj : Dynamic_Queue; Index : Positive) return Item_Ptr;
-  function Cardinality (Obj : Dynamic_Queue) return Natural;
-  procedure Purge (Obj : in out Dynamic_Queue);
+  function Cardinality (Q : Dynamic_Queue) return Natural;
+  function Item_At (Q : Dynamic_Queue; Index : Positive) return Item_Ptr;
+  procedure Purge (Q : in out Dynamic_Queue);
 
   package Dynamic_Queue_Nodes
   is new BC.Support.Dynamic (Item => Item,
@@ -95,8 +95,8 @@ private
     Rep : Dynamic_Queue_Nodes.Dyn_Node_Ref;
   end record;
 
-  procedure Initialize (Obj : in out Dynamic_Queue);
-  procedure Adjust (Obj : in out Dynamic_Queue);
-  procedure Finalize (Obj : in out Dynamic_Queue);
+  procedure Initialize (Q : in out Dynamic_Queue);
+  procedure Adjust (Q : in out Dynamic_Queue);
+  procedure Finalize (Q : in out Dynamic_Queue);
 
 end BC.Containers.Queues.Dynamic;
