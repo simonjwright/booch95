@@ -1,4 +1,4 @@
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -15,7 +15,7 @@
 --  $Id$
 
 with Ada.Finalization;
-with BC.Smart;
+with BC.Support.Smart_Pointers;
 
 package Smart_Test_Support is
 
@@ -28,7 +28,7 @@ package Smart_Test_Support is
 
    procedure Finalize (The_T : in out T);
 
-   package Smart is new BC.Smart (T => T, P => P);
+   package Smart is new BC.Support.Smart_Pointers (T => T, P => P);
 
    function Create (Ch : Character) return Smart.Pointer;
    function Value (P : Smart.Pointer) return Character;
