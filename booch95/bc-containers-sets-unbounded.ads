@@ -19,7 +19,6 @@
 
 with BC.Support.Unbounded;
 with BC.Support.Hash_Tables;
-with BC.Support.Hash_Tables.Print;
 with System.Storage_Pools;
 
 generic
