@@ -26,6 +26,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Stacks.Dynamic is
 
+  pragma Elaborate_Body;
+
   type Dynamic_Stack is new Stack with private;
   -- A dynamic Stack exhibits similar performance to a Bounded_Stack,
   -- except its size is limited only to available memory.  It dynamically
@@ -56,8 +58,6 @@ package BC.Containers.Stacks.Dynamic is
 
   function Top (S : in Dynamic_Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
-
-  -- XXX need accessor generic
 
   procedure Preallocate (S : in out Dynamic_Stack; Size : Natural);
   -- Allocates 'Size' additional storage elements for the Stack

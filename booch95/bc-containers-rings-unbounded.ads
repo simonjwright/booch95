@@ -26,6 +26,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Rings.Unbounded is
 
+  pragma Elaborate_Body;
+
   type Unbounded_Ring is new Ring with private;
 
   function "=" (Left, Right : in Unbounded_Ring) return Boolean;

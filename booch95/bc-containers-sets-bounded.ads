@@ -26,6 +26,8 @@ generic
   Size : Positive;
 package BC.Containers.Sets.Bounded is
 
+  pragma Elaborate_Body;
+
   -- A set denotes a collection of items, drawn from some well-defined
   -- universe. A set may not contain duplicate items.
 
