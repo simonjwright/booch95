@@ -103,7 +103,11 @@ and
 My thought is to replace the "<tt>in Item_Ptr</tt>"s by "<tt>in out
 Item</tt>"s.<br>
 
-This means we need either a generic or a procedure access parameter.
+This means we need either a generic or a procedure access parameter (I
+think the latter will be impossible; either we'll be taking the access
+at too low a level, or we'll find ourselves wanting to take
+<tt>'Access</tt> of a procedure inside a generic where the type was
+declared outside ..)
 
 </dd>
 
@@ -113,8 +117,7 @@ This means we need either a generic or a procedure access parameter.
 
 <P><A HREF="index.html">[index]</A></p>
 
-<p><i>Last update: 3.x.98</i></p>
+<p><i>Last update: 4.x.98</i></p>
 
-<!------------------------------------------------------------------->
 </BODY>
 </HTML>
