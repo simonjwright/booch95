@@ -19,17 +19,18 @@
 
 with Ada.Exceptions;
 with Ada.Text_IO;
+with Assertions;
 with BC;
 with Collection_Test_Support;
 
 procedure Collection_Test is
 
    use Ada.Text_IO;
+   use Assertions;
    use Collection_Test_Support;
    use Containers;
    use Collections;
 
-   procedure Assertion (Cond : Boolean; Message : String);
    procedure Process (C : Character; OK : out Boolean);
    procedure Process_Modifiable (Item : in out Character; OK : out Boolean);
    procedure Test_Active_Iterator (C : Container'Class);
@@ -39,41 +40,64 @@ procedure Collection_Test is
      (C : in out Containers.Container'Class);
    procedure Test_Primitive (C1, C2 : in out Abstract_Collection'Class);
 
+   package Iteration_Check is
+      procedure Reset;
+      procedure Register (C : Character);
+      procedure Check (Expected : String; Message : String);
+   end Iteration_Check;
+   package body Iteration_Check is
+      Last_Char : Integer := 0;
+      Results : String (1 .. 32);
+      procedure Reset is
+      begin
+         Last_Char := 0;
+      end Reset;
+      procedure Register (C : Character) is
+      begin
+         Last_Char := Last_Char + 1;
+         Results (Last_Char) := C;
+      end Register;
+      procedure Check (Expected : String; Message : String) is
+      begin
+         Assertion (Expected'Length = Last_Char,
+                    Message & ", length error");
+         if Expected'Length = Last_Char then
+            Assertion (Expected = Results (1 .. Last_Char),
+                       Message & ", mismatch");
+         end if;
+      end Check;
+   end Iteration_Check;
+
    procedure Process (C : Character; OK : out Boolean) is
    begin
-      Put_Line ("Item: " & C);
+      Iteration_Check.Register (C);
       OK := True;
    end Process;
 
-   procedure Assertion (Cond : Boolean; Message : String) is
-   begin
-      if not Cond then
-         Put_Line (Message);
-      end if;
-   end Assertion;
-
    procedure Test_Active_Iterator (C : Container'Class) is
       Iter : Iterator'Class := New_Iterator (C);
-      Success : Boolean;
-      Temp : Character;
+      Dummy : Boolean;
    begin
+      Iteration_Check.Reset;
       while not Is_Done (Iter) loop
-         Temp := Current_Item (Iter);
-         Process (Temp, Success);
+         Process (Current_Item (Iter), Dummy);
          Next (Iter);
       end loop;
+      Iteration_Check.Check ("z7", "I01: active iterator");
    end Test_Active_Iterator;
 
    procedure Test_Passive_Iterator (C : Container'Class) is
       procedure Iterate is new Visit (Apply => Process);
       Iter : Iterator'Class := New_Iterator (C);
    begin
+      Iteration_Check.Reset;
       Iterate (Using => Iter);
+      Iteration_Check.Check ("z7", "I02: passive iterator");
    end Test_Passive_Iterator;
 
    procedure Process_Modifiable (Item : in out Character; OK : out Boolean) is
    begin
-      Put_Line ("Item (RW): " & Item);
+      Iteration_Check.Register (Item);
       OK := True;
    end Process_Modifiable;
 
@@ -82,7 +106,9 @@ procedure Collection_Test is
       procedure Modifier is new Containers.Modify (Process_Modifiable);
       Iter : Containers.Iterator'Class := Containers.New_Iterator (C);
    begin
+      Iteration_Check.Reset;
       Modifier (Using => Iter);
+      Iteration_Check.Check ("z7", "I03: passive modifying iterator");
    end Test_Passive_Modifying_Iterator;
 
    procedure Test_Iterator_Deletion (C : in out Abstract_Collection'Class) is
@@ -249,6 +275,8 @@ begin
    Test_Iterator_Deletion (Collection_U_P1);
 
    Put_Line ("Completed Collection tests");
+
+   Assertions.Report;
 
 exception
    when E : others =>
