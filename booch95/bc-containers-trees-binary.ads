@@ -27,7 +27,7 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Trees.Binary is
 
-  type Binary_Tree is new Ada.Finalization.Controlled with private;
+  type Binary_Tree is private;
 
   type Child_Branch is (Left, Right);
 
