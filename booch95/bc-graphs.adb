@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -17,8 +17,10 @@
 
 -- $Id$
 
+with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
 with BC.Support.Exceptions;
+with System;
 
 with Ada.Text_Io;
 
@@ -55,8 +57,9 @@ package body BC.Graphs is
     Curr : Vertex_Node_Ptr := G.Rep;
     Next : Vertex_Node_Ptr;
   begin
-    -- In the C++, this was done using Iterators which created a Vertex.
-    -- We can't do that, because our Vertices are abstract.
+    -- In the C++, this was done using Iterators which created a Vertex and
+    -- then called Destroy_Vertex.  We can't do that, because our Vertices
+    -- are abstract.
     while Curr /= null loop
       Next := Curr.Next;
       Clear_Vertex_Node (G, Curr);
@@ -80,36 +83,6 @@ package body BC.Graphs is
     G.Rep := V.Rep;
     G.Rep.Count := G.Rep.Count + 1;
   end Create_Vertex;
-
-
-  procedure Create_Arc (G : in out Graph;
-                        A : in out Arc'Class;
-                        I : Arc_Item;
-                        From : in out Vertex'Class;
-                        To : in out Vertex'Class) is
-  begin
-    Clear (A);
-    A.Rep := new Arc_Node'(Ada.Finalization.Controlled with
-                           Item => I,
-                           Enclosing => G'Unchecked_Access,
-                           From => From.Rep,
-                           To => To.Rep,
-                           Next_Incoming => null,
-                           Next_Outgoing => null,
-                           Count => 1);
-    if To.Rep /= null then
-      A.Rep.Next_Incoming := To.Rep.Incoming;
-      To.Rep.Incoming := A.Rep;
-      A.Rep.Count := A.Rep.Count + 1;
-      To.Rep.Count := To.Rep.Count + 1;
-    end if;
-    if From.Rep /= null then
-      A.Rep.Next_Outgoing := From.Rep.Outgoing;
-      From.Rep.Outgoing := A.Rep;
-      A.Rep.Count := A.Rep.Count + 1;
-      From.Rep.Count := From.Rep.Count + 1;
-    end if;
-  end Create_Arc;
 
 
   procedure Destroy_Vertex (G : in out Graph;
@@ -138,44 +111,46 @@ package body BC.Graphs is
             BC.Not_Found'Identity,
             "Destroy_Arc",
             BSE.Disjoint);
-    if A.Rep.To /= null then
-      Prev := null;
-      Curr := A.Rep.To.Incoming;
-      while Curr /= A.Rep loop
-        Prev := Curr;
-        Curr := Curr.Next_Incoming;
-      end loop;
-      if Prev = null then
-        A.Rep.To.Incoming := Curr.Next_Incoming;
-      else
-        Prev.Next_Incoming := Curr.Next_Incoming;
+    if A.Rep /= null then
+      if A.Rep.To /= null then
+        Prev := null;
+        Curr := A.Rep.To.Incoming;
+        while Curr /= A.Rep loop
+          Prev := Curr;
+          Curr := Curr.Next_Incoming;
+        end loop;
+        if Prev = null then
+          A.Rep.To.Incoming := Curr.Next_Incoming;
+        else
+          Prev.Next_Incoming := Curr.Next_Incoming;
+        end if;
+        A.Rep.To.Count := A.Rep.To.Count - 1;
+        A.Rep.Count := A.Rep.Count - 1;
       end if;
-      A.Rep.To.Count := A.Rep.To.Count - 1;
-      A.Rep.Count := A.Rep.Count - 1;
-    end if;
-    if A.Rep.From /= null then
-      Prev := null;
-      Curr := A.Rep.From.Outgoing;
-      while Curr /= A.Rep loop
-        Prev := Curr;
-        Curr := Curr.Next_Outgoing;
-      end loop;
-      if Prev = null then
-        A.Rep.From.Outgoing := Curr.Next_Outgoing;
-      else
-        Prev.Next_Outgoing := Curr.Next_Outgoing;
+      if A.Rep.From /= null then
+        Prev := null;
+        Curr := A.Rep.From.Outgoing;
+        while Curr /= A.Rep loop
+          Prev := Curr;
+          Curr := Curr.Next_Outgoing;
+        end loop;
+        if Prev = null then
+          A.Rep.From.Outgoing := Curr.Next_Outgoing;
+        else
+          Prev.Next_Outgoing := Curr.Next_Outgoing;
+        end if;
+        A.Rep.From.Count := A.Rep.From.Count - 1;
+        A.Rep.Count := A.Rep.Count - 1;
       end if;
-      A.Rep.From.Count := A.Rep.From.Count - 1;
-      A.Rep.Count := A.Rep.Count - 1;
+      A.Rep.From := null;
+      A.Rep.To := null;
+      A.Rep.Next_Incoming := null;
+      A.Rep.Next_Outgoing := null;
+      A.Rep.Enclosing := null;
+      -- should we decrement the count one more, like Destroy_Vertex?
+      -- (presumably for the lost Enclosing?)
+      Clear (A);
     end if;
-    A.Rep.From := null;
-    A.Rep.To := null;
-    A.Rep.Next_Incoming := null;
-    A.Rep.Next_Outgoing := null;
-    A.Rep.Enclosing := null;
-    -- should we decrement the count one more, like Destroy_Vertex?
-    -- (presumably for the lost Enclosing?)
-    Clear (A);
   end Destroy_Arc;
 
 
@@ -195,6 +170,10 @@ package body BC.Graphs is
   begin
     return G.Rep = null;
   end Is_Empty;
+
+
+  function To_Ptr is new Ada.Unchecked_Conversion (System.Address,
+                                                   Graph_Ptr);
 
 
   function Is_Member (G : Graph; V : Vertex'Class) return Boolean is
@@ -218,7 +197,7 @@ package body BC.Graphs is
     if A.Rep = null then
       return False;
     else
-      return A.Rep.Enclosing = G'Unrestricted_Access;
+      return A.Rep.Enclosing = To_Ptr (G'Address);
     end if;
   end Is_Member;
 
@@ -288,40 +267,6 @@ package body BC.Graphs is
   end Item;
 
 
-  function Number_Of_Incoming_Arcs (V : Vertex) return Natural is
-    Count : Natural := 0;
-    Curr : Arc_Node_Ptr;
-  begin
-    Assert (V.Rep /= null,
-            BC.Is_Null'Identity,
-            "Number_Of_Incoming_Arcs",
-            BSE.Is_Null);
-    Curr := V.Rep.Incoming;
-    while Curr /= null loop
-      Curr := Curr.Next_Incoming;
-      Count := Count + 1;
-    end loop;
-    return Count;
-  end Number_Of_Incoming_Arcs;
-
-
-  function Number_Of_Outgoing_Arcs (V : Vertex) return Natural is
-    Count : Natural := 0;
-    Curr : Arc_Node_Ptr;
-  begin
-    Assert (V.Rep /= null,
-            BC.Is_Null'Identity,
-            "Number_Of_Outgoing_Arcs",
-            BSE.Is_Null);
-    Curr := V.Rep.Outgoing;
-    while Curr /= null loop
-      Curr := Curr.Next_Outgoing;
-      Count := Count + 1;
-    end loop;
-    return Count;
-  end Number_Of_Outgoing_Arcs;
-
-
   function Enclosing_Graph (V : Vertex) return Graph_Ptr is
   begin
     Assert (V.Rep /= null,
@@ -365,70 +310,6 @@ package body BC.Graphs is
   end Set_Item;
 
 
-  procedure Set_From_Vertex (A : in out Arc; V : access Vertex'Class) is
-    Prev, Curr : Arc_Node_Ptr;
-  begin
-    Assert (A.Rep /= null,
-            BC.Is_Null'Identity,
-            "Set_From_Vertex",
-            BSE.Is_Null);
-    if A.Rep.From /= null then
-      Prev := null;
-      Curr := A.Rep.From.Outgoing;
-      while Curr /= A.Rep loop
-        Prev := Curr;
-        Curr := Curr.Next_Outgoing;
-      end loop;
-      if Prev = null then
-        A.Rep.From.Outgoing := Curr.Next_Outgoing;
-      else
-        Prev.Next_Outgoing := Curr.Next_Outgoing;
-      end if;
-      A.Rep.From.Count := A.Rep.From.Count - 1;
-      A.Rep.Count := A.Rep.Count - 1;
-    end if;
-    if V.Rep /= null then
-      A.Rep.Next_Outgoing := V.Rep.Outgoing;
-      V.Rep.Outgoing := A.Rep;
-      A.Rep.Count := A.Rep.Count + 1;
-      V.Rep.Count := V.Rep.Count + 1;
-    end if;
-    A.Rep.From := V.Rep;
-  end Set_From_Vertex;
-
-
-  procedure Set_To_Vertex (A : in out Arc; V : access Vertex'Class) is
-    Prev, Curr : Arc_Node_Ptr;
-  begin
-    Assert (A.Rep /= null,
-            BC.Is_Null'Identity,
-            "Set_From_Vertex",
-            BSE.Is_Null);
-    if A.Rep.To /= null then
-      Prev := null;
-      Curr := A.Rep.To.Incoming;
-      while Curr /= A.Rep loop
-        Prev := Curr;
-        Curr := Curr.Next_Incoming;
-      end loop;
-      if Prev = null then
-        A.Rep.To.Incoming := Curr.Next_Incoming;
-      else
-        Prev.Next_Incoming := Curr.Next_Incoming;
-      end if;
-      A.Rep.To.Count := A.Rep.To.Count - 1;
-      A.Rep.Count := A.Rep.Count - 1;
-    end if;
-    if V.Rep /= null then
-      A.Rep.Next_Incoming := V.Rep.Incoming;
-      V.Rep.Incoming := A.Rep;
-      A.Rep.Count := A.Rep.Count + 1;
-      V.Rep.Count := V.Rep.Count + 1;
-    end if;
-    A.Rep.To := V.Rep;
-  end Set_To_Vertex;
-
-
   function Is_Null (A : Arc) return Boolean is
   begin
     return A.Rep = null;
@@ -459,34 +340,6 @@ package body BC.Graphs is
             BSE.Is_Null);
     return A.Rep.Item'Access;
   end Item;
-
-
-  procedure From_Vertex (A : Arc; V : in out Vertex'Class) is
-  begin
-    Assert (A.Rep /= null,
-            BC.Is_Null'Identity,
-            "From_Vertex",
-            BSE.Is_Null);
-    Clear (V);
-    V.Rep := A.Rep.From;
-    if V.Rep /= null then
-      V.Rep.Count := V.Rep.Count + 1;
-    end if;
-  end From_Vertex;
-
-
-  procedure To_Vertex (A : Arc; V : in out Vertex'Class) is
-  begin
-    Assert (A.Rep /= null,
-            BC.Is_Null'Identity,
-            "To_Vertex",
-            BSE.Is_Null);
-    Clear (V);
-    V.Rep := A.Rep.To;
-    if V.Rep /= null then
-      V.Rep.Count := V.Rep.Count + 1;
-    end if;
-  end To_Vertex;
 
 
   function Enclosing_Graph (A : Arc) return Graph_Ptr is
