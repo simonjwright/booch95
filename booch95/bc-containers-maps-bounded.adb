@@ -95,6 +95,11 @@ package body BC.Containers.Maps.Bounded is
       return Buckets;
    end Number_Of_Buckets;
 
+   function Length (M : Map; Bucket : Positive) return Natural is
+   begin
+      return Tables.Bucket_Extent (M.Rep, Bucket);
+   end Length;
+
    function Item_At
      (M : Map; Bucket, Index : Positive) return Item_Ptr is
    begin

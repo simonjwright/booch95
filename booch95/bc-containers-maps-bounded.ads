@@ -113,6 +113,8 @@ private
 
    function Number_Of_Buckets (M : Map) return Natural;
 
+   function Length (M : Map; Bucket : Positive) return Natural;
+
    function Item_At
      (M : Map; Bucket, Index : Positive) return Item_Ptr;
 
