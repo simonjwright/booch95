@@ -137,6 +137,7 @@ package body BC.Containers.Rings.Unbounded is
   end Finalize;
 
   Empty_Container : Ring;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Ring is
   begin
