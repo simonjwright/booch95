@@ -19,6 +19,23 @@
 
 package body BC.Containers is
 
+  function Cardinality (C : Container) return Natural is
+  begin
+    raise Should_Have_Been_Overridden;
+    return 0;
+  end Cardinality;
+
+  procedure Purge (C : in out Container) is
+  begin
+    raise Should_Have_Been_Overridden;
+  end Purge;
+
+  function Item_At (C : Container; Index : Positive) return Item_Ptr is
+  begin
+    raise Should_Have_Been_Overridden;
+    return null;
+  end Item_At;
+
   procedure Reset (Obj : in out Iterator) is
   begin
     Reset (SP.Value (SP.Pointer (Obj)).all);
