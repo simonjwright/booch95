@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,7 +21,7 @@ with BC.Support.Bounded;
 with BC.Support.Hash_Tables;
 
 generic
-  with function Hash (V : Item) return Positive is <>;
+  with function Hash (V : Item) return Natural is <>;
   Buckets : Positive;
   Size : Positive;
 package BC.Containers.Maps.Bounded is
@@ -29,8 +29,7 @@ package BC.Containers.Maps.Bounded is
   pragma Elaborate_Body;
 
   -- A map denotes a collection forming a dictionary of domain/range
-  -- pairs. Maps are cached, so that the most recently accessed
-  -- domain/range pair can be found on the order of O(1).
+  -- pairs.
 
   -- The hash function (the generic parameter Hash) determines the
   -- allocation of pairs to hash buckets. The value returned must not
@@ -48,22 +47,19 @@ package BC.Containers.Maps.Bounded is
   function Null_Container return Bounded_Map;
 
   procedure Clear (M : in out Bounded_Map);
-  -- Empty the map of all item/value pairs. The cached item/value pair is
-  -- cleared.
+  -- Empty the map of all item/value pairs.
 
   procedure Bind (M : in out Bounded_Map; I : Item; V : Value);
   -- If the item already exists in the map, raise BC.Duplicate. Otherwise,
-  -- add the item/value pair to the map. The cached item/value pair is set
-  -- to this new binding.
+  -- add the item/value pair to the map.
 
   procedure Rebind (M : in out Bounded_Map; I : Item; V : Value);
   -- If the item does not exist in the map, raise BC.Not_Found. Otherwise,
-  -- change the item's binding to the given value. The cached item/value
-  -- pair is set to this new binding.
+  -- change the item's binding to the given value
 
   procedure Unbind (M : in out Bounded_Map; I : Item);
   -- If the item does not exist in the map, raise BC.Not_Found. Otherwise,
-  -- remove the item/value binding. The cached item/value pair is cleared.
+  -- remove the item/value binding.
 
   function Available (M : Bounded_Map) return Natural;
   -- Return the number of unused slots in the map. Note, since hash buckets
@@ -79,15 +75,11 @@ package BC.Containers.Maps.Bounded is
 
   function Is_Bound (M : Bounded_Map; I : Item) return Boolean;
   -- Return True if and only if there is a binding for the given item in
-  -- the map; otherwise, return False. The cached item/value pair is used
-  -- to accelerate the search; if there is a cache hit, the time complexity
-  -- of this operation is O(1).
+  -- the map; otherwise, return False.
 
   function Value_Of (M : Bounded_Map; I : Item) return Value;
   -- If the item does not exist in the map, raises BC.Not_Found. Otherwise,
-  -- return a constant pointer to the value bound to the given item. The
-  -- cached item/value pair is used to accelerate the search; if there is a
-  -- cache hit, the time complexity of this operation is O(1).
+  -- return a constant pointer to the value bound to the given item.
 
   function New_Iterator (For_The_Map : Bounded_Map) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Map.
