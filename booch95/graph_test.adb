@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -607,7 +607,7 @@ procedure Graph_Test is
 
   procedure Process_Directed_Vertex (V : AG.Vertex'Class; OK : out Boolean) is
     DV : DG.Directed_Vertex := DG.Directed_Vertex (V);
-    Iter : AG.Vertex_Iterator := DG.New_Vertex_Iterator (DV);
+    Iter : AG.Vertex_Iterator := DG.New_Vertex_Outgoing_Iterator (DV);
   begin
     Put_Line ("    Vertex: " & DG.Item (DV)
               & " (" & Integer'Image (DG.Number_Of_Incoming_Arcs (DV))
@@ -640,8 +640,9 @@ procedure Graph_Test is
 
   procedure Test_Directed_Passive_Iterator (G : in out DG.Directed_Graph) is
     procedure Visit is new AG.Visit_Vertices (Apply => Process_Directed_Vertex);
+    It : AG.Graph_Iterator := DG.New_Graph_Iterator (G);
   begin
-    Visit (G);
+    Visit (It);
   end Test_Directed_Passive_Iterator;
 
   procedure Process_Arc (A : UG.Undirected_Arc; OK : out Boolean) is
@@ -701,8 +702,9 @@ procedure Graph_Test is
   procedure Test_Undirected_Passive_Iterator (G : in out UG.Undirected_Graph) is
     procedure Visit is new AG.Visit_Vertices
        (Apply => Process_Undirected_Vertex);
+    It : AG.Graph_Iterator := UG.New_Graph_Iterator (G);
   begin
-    Visit (G);
+    Visit (It);
   end Test_Undirected_Passive_Iterator;
 
   D_G : DG.Directed_Graph;
