@@ -309,9 +309,9 @@ COPYING
 
 dist: README $(DISTRIBUTION_FILES)
 	-@rm -rf dist
-	mkdir -p dist/download dist/contrib
+	mkdir -p dist/download
 	cp -p README $(DISTRIBUTION_FILES) dist/download/
-	cp -pR contrib dist/contrib/
+	cp -pR contrib dist/
 	cp -p html/*.{html,gif,jpg,png} html/x.ada \
 	  html/coldframe-hash.{tgz,zip} dist/
 
