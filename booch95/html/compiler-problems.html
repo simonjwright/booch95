@@ -14,6 +14,18 @@
 
 <dl>
 
+<p><dt><a name="16mar2002">16 March 2002</a>
+
+<dd>GNAT 3.12 won't accept
+
+<pre>
+   type T is access Integer;
+   Pool : System.Storage_Pools.Root_Storage_Pool
+     renames T'Storage_Pool;
+</pre>
+
+Instead, you have to use <tt>T'Storage_Pool</tt> directly.
+
 <p><dt><a name="31jan2002">16 January 2002</a>
 
 <dd><tt>User_Map</tt> (in <a
