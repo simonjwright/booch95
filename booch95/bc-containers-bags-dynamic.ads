@@ -101,6 +101,10 @@ private
                                         Storage_Manager => Storage_Manager,
                                         Storage => Storage);
   use IC;
+  package Items is new BC.Support.Hash_Tables.Item_Signature
+     (Item => Item,
+      Item_Container => IC.Dyn_Node,
+      Item_Container_Ptr => IC.Dyn_Node_Ref);
 
   type Positive_Ptr is access all Positive;
   package VC is new BC.Support.Dynamic (Item => Positive,
@@ -108,16 +112,16 @@ private
                                         Storage_Manager => Storage_Manager,
                                         Storage => Storage);
   use VC;
-
-  package Tables is new BC.Support.Hash_Tables
-     (Item => Item,
-      Value => Positive,
+  package Values is new BC.Support.Hash_Tables.Value_Signature
+     (Value => Positive,
       Value_Ptr => Positive_Ptr,
-      Buckets => Buckets,
-      Item_Container => IC.Dyn_Node,
-      Item_Container_Ptr => IC.Dyn_Node_Ref,
       Value_Container => VC.Dyn_Node,
       Value_Container_Ptr => VC.Dyn_Node_Ref);
+
+  package Tables is new BC.Support.Hash_Tables.Tables
+     (Items => Items,
+      Values => Values,
+      Buckets => Buckets);
 
   type Dynamic_Bag is new Bag with record
     Rep : Tables.Table;
