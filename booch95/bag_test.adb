@@ -193,6 +193,7 @@ procedure Bag_Test is
     Bags.Remove (B1, '1');
     Bags.Remove (B1, '1');
     Bags.Remove (B1, '1');
+    Bags.Add (B1, 'z');
   end Test;
 
   procedure Test_Active_Iterator (B : in out Bags.Bag'Class) is
@@ -274,12 +275,12 @@ begin
   Test_Passive_Iterator (Bag_U_P1);
   Test_Passive_Modifying_Iterator (Bag_U_P1);
 
-  Assertion (Bags.Total_Size (Bag_D_P1) = 1,
-             "** M05: Bag TotalSize is not correct");
+  Assertion (Bags.Total_Size (Bag_D_P1) = 2,
+             "** M05: Bag Total_Size is not correct");
 --    Assertion (BD.Count (Bag_D_P2. '8') = 2,
 --               "** M06: Bag Count is not correct");
 -- the statement above triggers a bug box in GNAT 3.11b2 and 3.11p
-  Assertion (Bags.Total_Size (Bag_U_P1) = 1,
+  Assertion (Bags.Total_Size (Bag_U_P1) = 2,
              "** M07: Bag Total_Size is not correct");
   Assertion (BU.Count (Bag_U_P2, '8') = 2,
              "** M10: Bag Count is not correct");
