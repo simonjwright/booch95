@@ -42,7 +42,6 @@ procedure Stack_Test is
       Put_Line (Message);
     end if;
   end Assertion;
-  pragma Inline (Assertion);
 
   procedure Test_Active_Iterator (L : Container'Class) is
     Iter : Iterator := New_Iterator (L);
