@@ -30,11 +30,6 @@ package BC.Support.Bounded_Hash_Tables is
    -- Values may be either primitive types or user-defined
    -- non-limited types.
 
-   -- Item_Container and Value_Container provide the concrete container
-   -- for each bucket. These types will normally be provided by
-   -- instantiations of the bounded, dynamic, and unbounded support
-   -- packages defined for this library.
-
 
    generic
 
@@ -104,7 +99,7 @@ package BC.Support.Bounded_Hash_Tables is
       procedure Bind (T : in out Table; I : Items.Item; V : Values.Value);
       -- Generate a hash value for the item to select a bucket. If the item
       -- already exists in that bucket, raise BC.Duplicate; otherwise, insert
-      -- the Item/value pair in the selected container.
+      -- the item/value pair in the selected container.
 
       procedure Rebind (T : in out Table; I : Items.Item; V : Values.Value);
       -- Generate a hash value for the item to select a bucket. If the item
@@ -133,16 +128,11 @@ package BC.Support.Bounded_Hash_Tables is
       -- BC.Not_Found; otherwise, return a pointer to the value corresponding
       -- to this item.
 
-      function Length (T : Table; Bucket : Bucket_Index) return Natural;
-      -- Support for iteration.
-
-      function Item_At
-        (T : Table; Bucket : Bucket_Index; Position : Cell_Index)
+      function Access_Item_At (T : Table; Position : Cell_Index)
         return Items.Item_Ptr;
       -- Support for iteration.
 
-      function Value_At
-        (T : Table; Bucket : Bucket_Index; Position : Cell_Index)
+      function Access_Value_At (T : Table; Position : Cell_Index)
         return Values.Value_Ptr;
       -- Support for iteration.
 
