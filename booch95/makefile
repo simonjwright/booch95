@@ -46,8 +46,8 @@ README
 dist: $(DISTRIBUTION_FILES)
 	-@rm -rf distribution
 	mkdir -p distribution/download
-	cp $(DISTRIBUTION_FILES) distribution/download/
-	cp ACL html/*.html html/*.gif distribution/
+	cp -p $(DISTRIBUTION_FILES) distribution/download/
+	cp -p ACL html/*.html html/*.gif distribution/
 
 ADA_SOURCE = \
 bc-containers-lists-double.ad[bs] \
@@ -101,11 +101,11 @@ tree_test.ad[bs]
 
 SOURCE = makefile ACL README $(ADA_SOURCE)
 
-bc.tar.gz:
+bc.tar.gz: $(SOURCE)
 	tar zcvf bc.tar.gz $(SOURCE)
 
-bc.zip:
+bc.zip: $(SOURCE)
 	zip -l bc.zip $(SOURCE)
 
-bc.src:
+bc.src: $(ADA_SOURCE)
 	cat $(ADA_SOURCE) > bc.src
