@@ -1,4 +1,4 @@
---  Copyright (C) 2001 Simon Wright.
+--  Copyright (C) 2001-2002 Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -45,3 +45,4 @@ generic
    --  A procedure to add an Item to the destination Container.
 
 procedure BC.Copy (Input : From; Output : in out To);
+pragma Elaborate_Body (BC.Copy);
