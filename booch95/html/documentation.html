@@ -155,13 +155,20 @@ prohibited.
 <DD>Average storage size of each instance must be considered when
 setting chunk_size.  Indexing is as efficient as bounded, but
 insertion other than at the front or back of a structure is less
-efficient than the unbounded form.
+efficient than the unbounded form. Storage is allocated by a <a
+href="#storage">storage manager</a>.
 
 <DT><B>Unbounded</B>
 
 <DD>Space efficient, but requires memory allocation for each new item
-added (unless the storage management policy is &quot;Managed&quot;,
-see later discussions).  The most recently accessed item is cached.
+added, under the control of a <a href="#storage">storage manager</a>.
+The most recently accessed item is cached.
+
+<DT><B>Unmanaged</B>
+
+<DD>Space efficient, but requires memory allocation for each new item
+added, from the system's memory pool.  The most recently accessed item
+is cached.
 
 </DL>
 
@@ -205,9 +212,9 @@ Storage Pool for parameters.
 <p>Storage management on certain architectures can be complex, and so
 requires that all of our classes use a policy tailored to the
 platform, rather than using a general one assumed by the library
-designer to work in all circumstances.  By clearly isolating these
+designer to work in all circumstances. By clearly isolating these
 patterns of storage management, we can provide a robust, adaptable
-library. 
+library.
 
 <p>By treating the storage manager as an argument to all the dynamic
 and unbounded concrete structures, we effectively decouple storage
@@ -235,11 +242,12 @@ is specified when the pool is created.</dd>
 
 </dl>
 
-
-
 <p>Note that the supplied <tt>BC.Support.Managed_Storage</tt> will
 <strong>not</strong> support allocation of items larger than its chunk
 size.
+
+<p>For those who don't need this level of control, we provide
+<i>Unmanaged</i> forms.
 
 <!---------------------------------------------------------------------->
 
@@ -347,25 +355,25 @@ protected types and tasks as needed.
 <H2><A NAME="conclusion">Conclusion</A></H2>
 
 <p>Here's a table of the components and the forms that are supported
-(U=Unbounded, B=Bounded, D=Dynamic).
+(U=Unbounded, B=Bounded, D=Dynamic, N=Unmanaged).
 
 <PRE>
-Bags         : <font color="red">UBD</font>
-Collections  : <font color="red">UBD</font>
-  (ordered)  : <font color="red">UBD</font>
-Dequeues     : <font color="red">UBD</font>
+Bags         : <font color="red">UBD</font>N
+Collections  : <font color="red">UBDN</font>
+  (ordered)  : <font color="red">UBDN</font>
+Dequeues     : <font color="red">UBD</font>N
 Graphs
   Directed   : <font color="red">U</font>
   Undirected : <font color="red">U</font>
 Lists
   Single     : <font color="red">U</font>
   Double     : <font color="red">U</font>
-Maps         : <font color="red">UBD</font>
-Queues       : <font color="red">UBD</font>
-  (ordered)  : <font color="red">UBD</font>
-Rings        : <font color="red">UBD</font>
-Sets         : <font color="red">UBD</font>
-Stacks       : <font color="red">UBD</font>
+Maps         : <font color="red">UBDN</font>
+Queues       : <font color="red">UBDN</font>
+  (ordered)  : <font color="red">UBDN</font>
+Rings        : <font color="red">UBD</font>N
+Sets         : <font color="red">UBD</font>N
+Stacks       : <font color="red">UBDN</font>
 Trees
   AVL        : <font color="red">U</font>
   Binary     : <font color="red">U</font>
