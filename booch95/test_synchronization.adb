@@ -14,15 +14,16 @@
 
 --  $Id$
 
-with Ada.Calendar;
 with Ada.Text_IO;
-with BC.Support.Synchronization;
+with BC.Support.High_Resolution_Time;
+with BC.Support.Synchronization.Debug;
 with GNAT.Exception_Traces;
 
 procedure Test_Synchronization is
 
    use Ada.Text_IO;
    use BC.Support.Synchronization;
+   use BC.Support.Synchronization.Debug;
 
    task type Semaphore_Test (Id : Positive; Using : access Semaphore) is
       entry Start;
@@ -136,7 +137,7 @@ begin
 
    declare
 
-      M : aliased Single_Monitor;
+      M : aliased Debug_Single_Monitor;
 
       R1 : Reader (1, M'Access);
       R2 : Reader (2, M'Access);
@@ -170,7 +171,7 @@ begin
 
    declare
 
-      M : aliased Multiple_Monitor;
+      M : aliased Debug_Multiple_Monitor;
 
       R1 : Reader (1, M'Access);
       R2 : Reader (2, M'Access);
@@ -204,37 +205,25 @@ begin
 
    declare
 
-      N : constant := 10_000;
       S : aliased Single_Monitor;
-      Start : Ada.Calendar.Time;
-      Null_Interval, Real_Interval : Duration;
-      J : Integer := 0;
-      use type Ada.Calendar.Time;
+      Start : BC.Support.High_Resolution_Time.Time;
+      Interval : Duration;
+      use type BC.Support.High_Resolution_Time.Time;
 
    begin
 
-      Start := Ada.Calendar.Clock;
-      for I in 1 .. N loop
-         begin
-            J := J + 1;
-         end;
-      end loop;
-      Null_Interval := Ada.Calendar.Clock - Start;
-
-      Start := Ada.Calendar.Clock;
-      for I in 1 .. N loop
-         declare
-            L : Read_Lock (S'Access);
-            pragma Warnings (Off, L);
-         begin
-            J := J + 1;
-         end;
-      end loop;
-      Real_Interval := Ada.Calendar.Clock - Start;
+      Start := BC.Support.High_Resolution_Time.Clock;
+      declare
+         L : Read_Lock (S'Access);
+         pragma Warnings (Off, L);
+      begin
+         null;
+      end;
+      Interval := BC.Support.High_Resolution_Time.Clock - Start;
 
       Ada.Text_IO.Put_Line
         ("Acquiring a read lock took"
-         & Duration'Image ((Real_Interval - Null_Interval)/ N)
+         & Duration'Image (Interval)
          & " seconds.");
 
    end;
