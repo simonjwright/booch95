@@ -36,7 +36,7 @@ package BC.Containers is
 
   -- Active iteration
 
-  type Iterator (<>) is abstract tagged private;
+  type Iterator (<>) is abstract new Ada.Finalization.Controlled with private;
 
   function New_Iterator (For_The_Container : Container) return Iterator'Class
     is abstract;
@@ -150,7 +150,7 @@ private
 
   type Container_Ptr is access all Container'Class;
 
-  type Iterator is abstract tagged record
+  type Iterator is abstract new Ada.Finalization.Controlled with record
     For_The_Container : Container_Ptr;
   end record;
 
