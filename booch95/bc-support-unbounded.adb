@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -27,14 +27,9 @@
 --  $Author$
 
 with Ada.Unchecked_Deallocation;
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Support.Unbounded is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Support.Unbounded");
 
    --  We can't take 'Access of components of constant (in parameter)
    --  objects; but we need to be able to do this so that we can
@@ -74,10 +69,9 @@ package body BC.Support.Unbounded is
 
    procedure Update_Cache (Obj : in out Unb_Node; Index : Positive) is
    begin
-      Assert (Index <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Update_Cache",
-              BSE.Invalid_Index);
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       if Obj.Cache /= null then
          if Index = Obj.Cache_Index then
             return;
@@ -148,10 +142,9 @@ package body BC.Support.Unbounded is
 
    procedure Insert (Obj : in out Unb_Node; Elem : Item; Before : Positive) is
    begin
-      Assert (Before <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Insert",
-              BSE.Invalid_Index);
+      if Before > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       if Obj.Size = 0 or else Before = 1 then
          Insert (Obj, Elem);
       else
@@ -187,10 +180,9 @@ package body BC.Support.Unbounded is
 
    procedure Append (Obj : in out Unb_Node; Elem : Item; After : Positive) is
    begin
-      Assert (After <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Append",
-              BSE.Invalid_Index);
+      if After > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       if Obj.Size = 0 then
          Append (Obj, Elem);
       else
@@ -216,14 +208,12 @@ package body BC.Support.Unbounded is
 
    procedure Remove (Obj : in out Unb_Node; From : Positive) is
    begin
-      Assert (From <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Remove",
-              BSE.Invalid_Index);
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "Remove",
-              BSE.Empty);
+      if From > Obj.Size then
+         raise BC.Range_Error;
+      end if;
+      if Obj.Size = 0 then
+         raise BC.Underflow;
+      end if;
       if Obj.Size = 1 then
          Clear (Obj);
       else
@@ -259,10 +249,9 @@ package body BC.Support.Unbounded is
 
    procedure Replace (Obj : in out Unb_Node; Index : Positive; Elem : Item) is
    begin
-      Assert (Index <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Replace",
-              BSE.Invalid_Index);
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       if not ((Obj.Cache /= null) and then (Index = Obj.Cache_Index)) then
          declare
             Ptr : Node_Ref := Obj.Rep;
@@ -288,29 +277,26 @@ package body BC.Support.Unbounded is
 
    function First (Obj : Unb_Node) return Item is
    begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "First",
-              BSE.Empty);
+      if Obj.Size = 0 then
+         raise BC.Underflow;
+      end if;
       return Obj.Rep.Element;
    end First;
 
    function Last (Obj : Unb_Node) return Item is
    begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "Last",
-              BSE.Empty);
+      if Obj.Size = 0 then
+         raise BC.Underflow;
+      end if;
       return Obj.Last.Element;
    end Last;
 
    function Item_At (Obj : Unb_Node; Index : Positive) return Item is
       Tmp : Item_Ptr;
    begin
-      Assert (Index <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Item_At",
-              BSE.Invalid_Index);
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       Tmp := Item_At (Obj, Index);
       return Tmp.all;
    end Item_At;
@@ -323,10 +309,9 @@ package body BC.Support.Unbounded is
       --  think this is a bug; the pointer aliasing is a nasty trick,
       --  after all.
    begin
-      Assert (Index <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Item_At",
-              BSE.Invalid_Index);
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       Update_Cache (U.all, Index);
       return Item_Ptr
         (Allow_Element_Access.To_Pointer (U.Cache.Element'Address));
@@ -344,10 +329,9 @@ package body BC.Support.Unbounded is
       if Obj.Size = 0 then
          return 0;
       end if;
-      Assert (Start <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Location",
-              BSE.Invalid_Index);
+      if Start > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       if (Start = Obj.Cache_Index) and then (Elem = Obj.Cache.Element) then
          return Obj.Cache_Index;
       end if;
