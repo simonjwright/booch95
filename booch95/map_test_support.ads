@@ -36,7 +36,7 @@ package Map_Test_Support is
 
   package MB is new Maps.Bounded (Hash => Char_Hash,
                                   Buckets => 3,
-                                  Size => 100);
+                                  Maximum_Size => 100);
 
   package MD is new Maps.Dynamic (Hash => Char_Hash,
                                   Buckets => 3,

@@ -34,7 +34,7 @@ package Bag_Test_Support is
 
   package BB is new Bags.Bounded (Hash => Char_Hash,
                                   Buckets => 3,
-                                  Size => 100);
+                                  Maximum_Size => 100);
 
   package BD is new Bags.Dynamic (Hash => Char_Hash,
                                   Buckets => 3,

@@ -34,7 +34,7 @@ package Set_Test_Support is
 
   package SB is new Sets.Bounded (Hash => Char_Hash,
                                   Buckets => 3,
-                                  Size => 100);
+                                  Maximum_Size => 100);
 
   package SD is new Sets.Dynamic (Hash => Char_Hash,
                                   Buckets => 3,
