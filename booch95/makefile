@@ -302,7 +302,8 @@ dist: $(DISTRIBUTION_FILES)
 	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
 	cp -p README distribution/download/
 	cp -p WAVEFRONT-README distribution/wavefront/README
-	cp -p ACL html/*.html html/x.ada html/*.gif html/*.jpg distribution/
+	cp -p ACL html/*.html html/x.ada html/*.gif html/*.jpg \
+	  html/coldframe-hash.{tgz,zip} distribution/
 
 SOURCE = makefile ACL README $(ADA_SOURCE)
 
@@ -327,6 +328,6 @@ bc-$(DATE).src: $(ADA_SOURCE) $(TEST_SRC) $(DEMO_SRC)
 	cat $(ADA_SOURCE) $(TEST_SRC) $(DEMO_SRC) > $@
 
 bc-html-$(DATE).zip: force
-	(cd html; zip ../$@ *.gif *.jpg *.html)
+	(cd html; zip ../$@ *.gif *.jpg *.html coldframe-hash.{tgz,zip})
 
 .PHONY: force
