@@ -21,7 +21,6 @@
 --  $Author$
 
 with Ada.Finalization;
-with BC.Support.Nodes;
 with System.Storage_Pools;
 
 generic
@@ -128,12 +127,24 @@ package BC.Containers.Trees.Binary is
 
 private
 
-   package Nodes is new BC.Support.Nodes (Item, Storage);
+   --  Type denoting a simple node consisting of an item, a pointer to
+   --  the parent, pointers to the left and right items, and a
+   --  reference count
 
-   procedure Purge (Node : in out Nodes.Binary_Node_Ref);
+   type Binary_Node;
+   type Binary_Node_Ref is access Binary_Node;
+   for Binary_Node_Ref'Storage_Pool use Storage;
+
+   type Binary_Node is record
+      Element : Item;
+      Parent, Left, Right : Binary_Node_Ref;
+      Count : Natural := 1;
+   end record;
+
+   procedure Purge (Node : in out Binary_Node_Ref);
 
    type Binary_Tree is new Ada.Finalization.Controlled with record
-      Rep : Nodes.Binary_Node_Ref;
+      Rep : Binary_Node_Ref;
    end record;
 
    procedure Initialize (T : in out Binary_Tree);

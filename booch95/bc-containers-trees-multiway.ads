@@ -21,7 +21,6 @@
 --  $Author$
 
 with Ada.Finalization;
-with BC.Support.Nodes;
 with System.Storage_Pools;
 
 generic
@@ -116,10 +115,22 @@ package BC.Containers.Trees.Multiway is
 
 private
 
-   package Nodes is new BC.Support.Nodes (Item, Storage);
+   --  Type denoting a simple node consisting of an item, a pointer to
+   --  the parent, pointers to the child and sibling items, and a
+   --  reference count
+
+   type Multiway_Node;
+   type Multiway_Node_Ref is access Multiway_Node;
+   for Multiway_Node_Ref'Storage_Pool use Storage;
+
+   type Multiway_Node is record
+      Element : Item;
+      Parent, Child, Sibling : Multiway_Node_Ref;
+      Count : Natural := 1;
+   end record;
 
    type Multiway_Tree is new Ada.Finalization.Controlled with record
-      Rep : Nodes.Multiway_Node_Ref;
+      Rep : Multiway_Node_Ref;
    end record;
 
    procedure Initialize (T : in out Multiway_Tree);
