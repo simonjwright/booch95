@@ -17,7 +17,7 @@
 
 -- $Id$
 
-generic package Bc.Containers.Lists is
+generic package BC.Containers.Lists is
 
   -- A single list is a rooted sequence of zero or more items, with a link
   -- from one item to its following item. A double list is a rooted
@@ -71,4 +71,4 @@ generic package Bc.Containers.Lists is
   -- the optimizations possible with having a previous pointer in the
   -- doubly-linked list class.
 
-end;
+end BC.Containers.Lists ;
