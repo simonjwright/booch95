@@ -122,6 +122,23 @@ package BC.Containers is
   -- iterator Using is bound. The iteration will terminate early if Apply
   -- sets OK to False.
 
+  -- Copying and filtering
+
+  generic
+    type From is new Container with private;
+    type To is new Container with private;
+    with procedure Clear (The_Container : in out To) is <>;
+    with procedure Add (To_The_Container : in out To; I : Item) is <>;
+  procedure Copy (Input : From; Output : in out To);
+
+  generic
+    type From is new Container with private;
+    type To is new Container with private;
+    with function Pass (I : Item) return Boolean is <>;
+    with procedure Clear (The_Container : in out To) is <>;
+    with procedure Add (To_The_Container : in out To; I : Item) is <>;
+  procedure Filter (Input : From; Output : in out To);
+
 private
 
   -- We need access to Items; but we must make sure that no actual

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller, Steve Doiel
+-- Copyright (C) 1994-2001 Grady Booch, David Weller, Steve Doiel
 -- and Simon Wright.
 -- All Rights Reserved.
 --
@@ -111,6 +111,38 @@ package body BC.Containers is
       Next (Using);
     end loop;
   end Modify_With_In_Out_Param;
+
+  procedure Copy (Input : From; Output : in out To) is
+    procedure Ins (I : Item; OK : out Boolean);
+    pragma Inline (Ins);
+    procedure Cp is new Visit (Ins);
+    procedure Ins (I : Item; OK : out Boolean) is
+    begin
+      Add (Output, I);
+      OK := True;
+    end Ins;
+    It : Iterator'Class := New_Iterator (Input);
+  begin
+    Clear (Output);
+    Cp (It);
+  end Copy;
+
+  procedure Filter (Input : From; Output : in out To) is
+    procedure Ins (I : Item; OK : out Boolean);
+    pragma Inline (Ins);
+    procedure Filt is new Visit (Ins);
+    procedure Ins (I : Item; OK : out Boolean) is
+    begin
+      if Pass (I) then
+        Add (Output, I);
+      end if;
+      OK := True;
+    end Ins;
+    It : Iterator'Class := New_Iterator (Input);
+  begin
+    Clear (Output);
+    Filt (It);
+  end Filter;
 
   -- Primitive implementations
 
