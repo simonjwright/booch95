@@ -23,8 +23,10 @@ package body BC.Support.Unbounded is
 
   use type Nodes.Node_Ref;
 
-  procedure Free is new
+  procedure Delete_Node is new
      Ada.Unchecked_Deallocation (Nodes.Node, Nodes.Node_Ref);
+  procedure Delete_Unb_Node is new
+     Ada.Unchecked_Deallocation (Unb_Node, Unb_Node_Ref);
 
   function Create (From : Unb_Node) return Unb_Node is
     Obj : Unb_Node := From;
@@ -72,7 +74,7 @@ package body BC.Support.Unbounded is
     while Obj.Rep /= null loop
       Ptr := Obj.Rep;
       Obj.Rep := Obj.Rep.Next;
-      Free (Ptr);
+      Delete_Node (Ptr);
     end loop;
     Obj := Empty_Node;
   end Clear;
@@ -184,7 +186,7 @@ package body BC.Support.Unbounded is
           AObj.Cache := null;
           AObj.Cache_Index := 0;
         end if;
-        Free (Ptr);
+        Delete_Node (Ptr);
         Obj := AObj;
       end;
     end if;
@@ -300,5 +302,17 @@ package body BC.Support.Unbounded is
     end loop;
     return 0;
   end Location;
+
+  procedure Free (Obj : in out Unb_Node_Ref) is
+    Ptr : Nodes.Node_Ref;
+  begin
+    -- code to delete Rep copied from Clear()
+    while Obj.Rep /= null loop
+      Ptr := Obj.Rep;
+      Obj.Rep := Obj.Rep.Next;
+      Delete_Node (Ptr);
+    end loop;
+    Delete_Unb_Node (Obj);
+  end Free;
 
 end BC.Support.Unbounded;
