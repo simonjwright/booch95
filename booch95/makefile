@@ -84,6 +84,8 @@ bag_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 ADA_SOURCE += \
+bc-containers-collections-bounded.ad[bs] \
+bc-containers-collections-dynamic.ad[bs] \
 bc-containers-collections-unbounded.ad[bs] \
 bc-containers-collections.ad[bs]
 TESTABLE += collection_test
@@ -122,6 +124,7 @@ ADA_SOURCE += \
 bc-containers-maps-bounded.ad[bs] \
 bc-containers-maps-dynamic.ad[bs] \
 bc-containers-maps-unbounded.ad[bs] \
+bc-containers-maps-synchronized.ad[bs] \
 bc-containers-maps-unbounded-guarded.ad[bs] \
 bc-containers-maps-unbounded-synchronized.ad[bs] \
 bc-containers-maps.ad[bs]
@@ -131,6 +134,8 @@ map_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
 
 ADA_SOURCE += \
+bc-containers-collections-ordered-bounded.ad[bs] \
+bc-containers-collections-ordered-dynamic.ad[bs] \
 bc-containers-collections-ordered-unbounded.ad[bs] \
 bc-containers-collections-ordered.ad[bs]
 TESTABLE += ordered_collection_test
