@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -32,16 +32,16 @@ package body BC.Containers.Lists.Single is
   package Allow_Element_Access
   is new System.Address_To_Access_Conversions (Item);
 
-  use type Single_Nodes.Single_Node_Ref;
+  use type Nodes.Single_Node_Ref;
 
-  function "=" (L, R : Single_List) return Boolean is
+  function "=" (L, R : List) return Boolean is
   begin
     return L.Rep = R.Rep;
   end "=";
 
-  procedure Clear (L : in out Single_List) is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
-    Ptr : Single_Nodes.Single_Node_Ref;
+  procedure Clear (L : in out List) is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
+    Ptr : Nodes.Single_Node_Ref;
   begin
     while Curr /= null loop
       Ptr := Curr;
@@ -50,19 +50,19 @@ package body BC.Containers.Lists.Single is
         Ptr.Count := Ptr.Count - 1;
         exit;
       else
-        Single_Nodes.Delete (Ptr);
+        Nodes.Delete (Ptr);
       end if;
     end loop;
     L.Rep := null;
   end Clear;
 
-  procedure Insert (L : in out Single_List; Elem : Item) is
+  procedure Insert (L : in out List; Elem : Item) is
   begin
-    L.Rep := Single_Nodes.Create (Elem, Next => L.Rep);
+    L.Rep := Nodes.Create (Elem, Next => L.Rep);
   end Insert;
 
-  procedure Insert (L : in out Single_List; From_List : in Single_List) is
-    Ptr : Single_Nodes.Single_Node_Ref := From_List.Rep;
+  procedure Insert (L : in out List; From_List : in List) is
+    Ptr : Nodes.Single_Node_Ref := From_List.Rep;
   begin
     if Ptr /= null then
       while Ptr.Next /= null loop
@@ -74,11 +74,9 @@ package body BC.Containers.Lists.Single is
     L.Rep.Count := L.Rep.Count + 1;
   end Insert;
 
-  procedure Insert (L : in out Single_List;
-                    Elem : Item;
-                    Before : Positive) is
-    Prev : Single_Nodes.Single_Node_Ref;
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  procedure Insert (L : in out List; Elem : Item; Before : Positive) is
+    Prev : Nodes.Single_Node_Ref;
+    Curr : Nodes.Single_Node_Ref := L.Rep;
     Index: Positive := 1;
   begin
     if Curr = null or else Before = 1 then
@@ -93,16 +91,16 @@ package body BC.Containers.Lists.Single is
               BC.Range_Error'Identity,
               "Insert",
               BSE.Invalid_Index);
-      Prev.Next := Single_Nodes.Create (Elem, Next => Curr);
+      Prev.Next := Nodes.Create (Elem, Next => Curr);
     end if;
   end Insert;
 
-  procedure Insert (L : in out Single_List;
-                    From_List: in out Single_List;
+  procedure Insert (L : in out List;
+                    From_List: in out List;
                     Before : Positive) is
-    Prev : Single_Nodes.Single_Node_Ref;
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
-    Ptr  : Single_Nodes.Single_Node_Ref := From_List.Rep;
+    Prev : Nodes.Single_Node_Ref;
+    Curr : Nodes.Single_Node_Ref := L.Rep;
+    Ptr  : Nodes.Single_Node_Ref := From_List.Rep;
     Index: Positive := 1;
   begin
     if Ptr /= null then
@@ -128,21 +126,21 @@ package body BC.Containers.Lists.Single is
     end if;
   end Insert;
 
-  procedure Append (L : in out Single_List; Elem : Item) is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  procedure Append (L : in out List; Elem : Item) is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
   begin
     if Curr /= null then
       while Curr.Next /= null loop
         Curr := Curr.Next;
       end loop;
-      Curr.Next := Single_Nodes.Create (Elem, Next => null);
+      Curr.Next := Nodes.Create (Elem, Next => null);
     else
-      L.Rep := Single_Nodes.Create (Elem, Next => null);
+      L.Rep := Nodes.Create (Elem, Next => null);
     end if;
   end Append;
 
-  procedure Append (L : in out Single_List; From_List : in Single_List) is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  procedure Append (L : in out List; From_List : in List) is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
   begin
     if From_List.Rep /= null then
       if Curr /= null then
@@ -159,8 +157,8 @@ package body BC.Containers.Lists.Single is
     end if;
   end Append;
 
-  procedure Append (L : in out Single_List; Elem : Item; After : Positive) is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  procedure Append (L : in out List; Elem : Item; After : Positive) is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
     Index: Positive := 1;
   begin
     if Curr = null then
@@ -174,15 +172,13 @@ package body BC.Containers.Lists.Single is
               BC.Range_Error'Identity,
               "Append",
               BSE.Invalid_Index);
-      Curr.Next := Single_Nodes.Create (Elem, Next => Curr.Next);
+      Curr.Next := Nodes.Create (Elem, Next => Curr.Next);
     end if;
   end Append;
 
-  procedure Append (L : in out Single_List;
-                    From_List : in Single_List;
-                    After : Positive) is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
-    Ptr  : Single_Nodes.Single_Node_Ref := From_List.Rep;
+  procedure Append (L : in out List; From_List : in List; After : Positive) is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
+    Ptr  : Nodes.Single_Node_Ref := From_List.Rep;
     Index: Positive := 1;
   begin
     if Ptr /= null then
@@ -207,9 +203,9 @@ package body BC.Containers.Lists.Single is
     end if;
   end Append;
 
-  procedure Remove (L : in out Single_List; From : Positive) is
-    Prev : Single_Nodes.Single_Node_Ref;
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  procedure Remove (L : in out List; From : Positive) is
+    Prev : Nodes.Single_Node_Ref;
+    Curr : Nodes.Single_Node_Ref := L.Rep;
     Index: Positive := 1;
   begin
     while Curr /= null and then Index < From loop
@@ -229,14 +225,14 @@ package body BC.Containers.Lists.Single is
     if Curr.Count > 1 then
       Curr.Count := Curr.Count - 1;
     else
-      Single_Nodes.Delete (Curr);
+      Nodes.Delete (Curr);
     end if;
   end Remove;
 
-  procedure Purge (L : in out Single_List; From : Positive) is
-    Prev : Single_Nodes.Single_Node_Ref;
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
-    Ptr : Single_Nodes.Single_Node_Ref;
+  procedure Purge (L : in out List; From : Positive) is
+    Prev : Nodes.Single_Node_Ref;
+    Curr : Nodes.Single_Node_Ref := L.Rep;
+    Ptr : Nodes.Single_Node_Ref;
     Index : Positive := 1;
   begin
     while Curr /= null and then Index < From loop
@@ -260,16 +256,16 @@ package body BC.Containers.Lists.Single is
         Ptr.Count := Ptr.Count - 1;
         exit;
       else
-        Single_Nodes.Delete (Ptr);
+        Nodes.Delete (Ptr);
       end if;
     end loop;
   end Purge;
 
-  procedure Purge (L : in out Single_List;
+  procedure Purge (L : in out List;
                    From : Positive;
                    Count : Positive) is
-    Prev, Ptr : Single_Nodes.Single_Node_Ref;
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+    Prev, Ptr : Nodes.Single_Node_Ref;
+    Curr : Nodes.Single_Node_Ref := L.Rep;
     Index : Positive := 1;
     Shared_Node_Found : Boolean := False;
   begin
@@ -296,7 +292,7 @@ package body BC.Containers.Lists.Single is
           Ptr.Count := Ptr.Count - 1;
           Shared_Node_Found := True;
         else
-          Single_Nodes.Delete (Ptr);
+          Nodes.Delete (Ptr);
         end if;
       end if;
       Index := Index + 1;
@@ -313,16 +309,14 @@ package body BC.Containers.Lists.Single is
     end if;
   end Purge;
 
-  procedure Preserve (L : in out Single_List; From : Positive) is
-    Temp : Single_List;
+  procedure Preserve (L : in out List; From : Positive) is
+    Temp : List;
   begin
     Share(Temp, L, From);
     Share_Head(L, Temp);
   end Preserve;
 
-  procedure Preserve (L: in out Single_List;
-                      From : Positive;
-                      Count : Positive) is
+  procedure Preserve (L: in out List; From : Positive; Count : Positive) is
   begin
     Preserve (L, From);
     if Length (L) > Count then
@@ -330,10 +324,8 @@ package body BC.Containers.Lists.Single is
     end if;
   end Preserve;
 
-  procedure Share (L : in out Single_List;
-                   With_List: Single_List;
-                   Starting_At : Positive) is
-    Ptr : Single_Nodes.Single_Node_Ref := With_List.Rep;
+  procedure Share (L : in out List; With_List: List; Starting_At : Positive) is
+    Ptr : Nodes.Single_Node_Ref := With_List.Rep;
     Index : Positive := 1;
   begin
     Assert (Ptr /= null,
@@ -353,8 +345,7 @@ package body BC.Containers.Lists.Single is
     L.Rep.Count := L.Rep.Count + 1;
   end Share;
 
-  procedure Share_Head (L : in out Single_List;
-                        With_List : in Single_List) is
+  procedure Share_Head (L : in out List; With_List : in List) is
   begin
     Assert (With_List.Rep /= null,
             BC.Is_Null'Identity,
@@ -365,9 +356,8 @@ package body BC.Containers.Lists.Single is
     L.Rep.Count := L.Rep.Count + 1;
   end Share_Head;
 
-  procedure Share_Foot (L : in out Single_List;
-                        With_List : in Single_List) is
-    Ptr : Single_Nodes.Single_Node_Ref := With_List.Rep;
+  procedure Share_Foot (L : in out List; With_List : in List) is
+    Ptr : Nodes.Single_Node_Ref := With_List.Rep;
   begin
     Assert (Ptr /= null,
             BC.Is_Null'Identity,
@@ -381,9 +371,8 @@ package body BC.Containers.Lists.Single is
     L.Rep.Count := L.Rep.Count + 1;
   end Share_Foot;
 
-  procedure Swap_Tail (L : in out Single_List;
-                       With_List: in out Single_List) is
-    Curr : Single_Nodes.Single_Node_Ref;
+  procedure Swap_Tail (L : in out List; With_List: in out List) is
+    Curr : Nodes.Single_Node_Ref;
   begin
     Assert (L.Rep /= null,
             BC.Is_Null'Identity,
@@ -394,8 +383,8 @@ package body BC.Containers.Lists.Single is
     With_List.Rep := Curr;
   end Swap_Tail;
 
-  procedure Tail(L : in out Single_List) is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  procedure Tail (L : in out List) is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
   begin
     Assert (L.Rep /= null,
             BC.Is_Null'Identity,
@@ -408,11 +397,11 @@ package body BC.Containers.Lists.Single is
     if Curr.Count > 1 then
       Curr.Count := Curr.Count - 1;
     else
-      Single_Nodes.Delete (Curr);
+      Nodes.Delete (Curr);
     end if;
   end Tail;
 
-  procedure Set_Head (L : in out Single_List; Elem : Item) is
+  procedure Set_Head (L : in out List; Elem : Item) is
   begin
     Assert (L.Rep /= null,
             BC.Is_Null'Identity,
@@ -421,10 +410,8 @@ package body BC.Containers.Lists.Single is
     L.Rep.Element := Elem;
   end Set_Head;
 
-  procedure Set_Item (L : in out Single_List;
-                      Elem : Item;
-                      At_Loc : Positive) is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  procedure Set_Item (L : in out List; Elem : Item; At_Loc : Positive) is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
     Index: Positive := 1;
   begin
     while Curr /= null and then Index < At_Loc loop
@@ -438,8 +425,8 @@ package body BC.Containers.Lists.Single is
     Curr.Element := Elem;
   end Set_Item;
 
-  function Length (L : Single_List) return Natural is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  function Length (L : List) return Natural is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
     Count : Natural := 0;
   begin
     while Curr /= null loop
@@ -449,17 +436,17 @@ package body BC.Containers.Lists.Single is
     return Count;
   end Length;
 
-  function Is_Null (L : Single_List) return Boolean is
+  function Is_Null (L : List) return Boolean is
   begin
     return L.Rep = null;
   end Is_Null;
 
-  function Is_Shared (L : Single_List) return Boolean is
+  function Is_Shared (L : List) return Boolean is
   begin
     return L.Rep /= null and then L.Rep.Count > 1;
   end Is_Shared;
 
-  function Head (L : Single_List) return Item is
+  function Head (L : List) return Item is
   begin
     Assert (L.Rep /= null,
             BC.Is_Null'Identity,
@@ -468,7 +455,7 @@ package body BC.Containers.Lists.Single is
     return L.Rep.Element;
   end Head;
 
-  procedure Process_Head (L : in out Single_List) is
+  procedure Process_Head (L : in out List) is
   begin
     Assert (L.Rep /= null,
             BC.Is_Null'Identity,
@@ -477,8 +464,8 @@ package body BC.Containers.Lists.Single is
     Process (L.Rep.Element);
   end Process_Head;
 
-  function Foot (L : Single_List) return Item is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  function Foot (L : List) return Item is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
   begin
     Assert (L.Rep /= null,
             BC.Is_Null'Identity,
@@ -490,8 +477,8 @@ package body BC.Containers.Lists.Single is
     return Curr.Element;
   end Foot;
 
-  procedure Process_Foot (L : in out Single_List) is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  procedure Process_Foot (L : in out List) is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
   begin
     Assert (L.Rep /= null,
             BC.Is_Null'Identity,
@@ -503,16 +490,16 @@ package body BC.Containers.Lists.Single is
     Process (Curr.Element);
   end Process_Foot;
 
-  function Item_At (L : Single_List; Index : Positive) return Item is
+  function Item_At (L : List; Index : Positive) return Item is
   begin
     return Item_At (L, Index).all;
   end Item_At;
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Single_List);
+  is new System.Address_To_Access_Conversions (List);
 
-  function New_Iterator (For_The_List : Single_List) return Iterator'Class is
-    Result : Single_List_Iterator;
+  function New_Iterator (For_The_List : List) return Iterator'Class is
+    Result : List_Iterator;
   begin
     Result.For_The_Container :=
        Address_Conversions.To_Pointer (For_The_List'Address).all'Access;
@@ -520,8 +507,8 @@ package body BC.Containers.Lists.Single is
     return Result;
   end New_Iterator;
 
-  function Item_At (L : Single_List; Index : Positive) return Item_Ptr is
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  function Item_At (L : List; Index : Positive) return Item_Ptr is
+    Curr : Nodes.Single_Node_Ref := L.Rep;
     Loc : Positive := 1;
   begin
     Assert (L.Rep /= null,
@@ -540,42 +527,42 @@ package body BC.Containers.Lists.Single is
        (Allow_Element_Access.To_Pointer (Curr.Element'Address));
   end Item_At;
 
-  procedure Initialize (L : in out Single_List) is
+  procedure Initialize (L : in out List) is
   begin
     null;
   end Initialize;
 
-  procedure Adjust (L : in out Single_List) is
+  procedure Adjust (L : in out List) is
   begin
     if L.Rep /= null then
       L.Rep.Count := L.Rep.Count + 1;
     end if;
   end Adjust;
 
-  procedure Finalize (L : in out Single_List) is
+  procedure Finalize (L : in out List) is
   begin
     Clear (L);
   end Finalize;
 
-  procedure Reset (It : in out Single_List_Iterator) is
-    L : Single_List'Class renames Single_List'Class (It.For_The_Container.all);
+  procedure Reset (It : in out List_Iterator) is
+    L : List'Class renames List'Class (It.For_The_Container.all);
   begin
     It.Index := L.Rep;
   end Reset;
 
-  procedure Next (It : in out Single_List_Iterator) is
+  procedure Next (It : in out List_Iterator) is
   begin
     if It.Index /= null then
       It.Index := It.Index.Next;
     end if;
   end Next;
 
-  function Is_Done (It : Single_List_Iterator) return Boolean is
+  function Is_Done (It : List_Iterator) return Boolean is
   begin
     return It.Index = null;
   end Is_Done;
 
-  function Current_Item (It : Single_List_Iterator) return Item is
+  function Current_Item (It : List_Iterator) return Item is
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -583,7 +570,7 @@ package body BC.Containers.Lists.Single is
     return It.Index.Element;
   end Current_Item;
 
-  function Current_Item_Ptr (It : Single_List_Iterator) return Item_Ptr is
+  function Current_Item_Ptr (It : List_Iterator) return Item_Ptr is
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -592,10 +579,10 @@ package body BC.Containers.Lists.Single is
        (Allow_Element_Access.To_Pointer (It.Index.Element'Address));
   end Current_Item_Ptr;
 
-  procedure Delete_Item_At (It : Single_List_Iterator) is
-    L : Single_List'Class renames Single_List'Class (It.For_The_Container.all);
-    Prev : Single_Nodes.Single_Node_Ref;
-    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  procedure Delete_Item_At (It : List_Iterator) is
+    L : List'Class renames List'Class (It.For_The_Container.all);
+    Prev : Nodes.Single_Node_Ref;
+    Curr : Nodes.Single_Node_Ref := L.Rep;
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -611,7 +598,7 @@ package body BC.Containers.Lists.Single is
     -- we need a writable version of the Iterator
     declare
       package Conversions is new System.Address_To_Access_Conversions
-         (Single_List_Iterator'Class);
+         (List_Iterator'Class);
       P : Conversions.Object_Pointer := Conversions.To_Pointer (It'Address);
     begin
       P.Index := Curr.Next;
@@ -624,13 +611,13 @@ package body BC.Containers.Lists.Single is
     if Curr.Count > 1 then
       Curr.Count := Curr.Count - 1;
     else
-      Single_Nodes.Delete (Curr);
+      Nodes.Delete (Curr);
     end if;
   end Delete_Item_At;
 
-  Empty_Container : Single_List;
+  Empty_Container : List;
 
-  function Null_Container return Single_List is
+  function Null_Container return List is
   begin
     return Empty_Container;
   end Null_Container;

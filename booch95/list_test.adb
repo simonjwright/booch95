@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -39,7 +39,7 @@ procedure List_Test is
     end if;
   end Assertion;
 
-  procedure Test_Single (L1, L2, T1, T2, T3 : in out Single_List) is
+  procedure Test_Single (L1, L2, T1, T2, T3 : in out LS.List) is
   begin
     Assertion (Is_Null (L1), "** S01: List is not initially null");
     Assertion ((Length (L1) = 0), "** S02: List Length is not initially zero");
@@ -226,13 +226,13 @@ procedure List_Test is
     Assertion ((Length (T1) = 5), "** S97: List Length is not correct");
   end Test_Single;
 
-  procedure Test_Single (L1, L2 : in out Single_List) is
-    T1, T2, T3 : Single_List;
+  procedure Test_Single (L1, L2 : in out LS.List) is
+    T1, T2, T3 : LS.List;
   begin
     Test_Single (L1, L2, T1, T2, T3);
   end Test_Single;
 
-  procedure Test_Double (L1, L2, T1, T2, T3 : in out Double_List) is
+  procedure Test_Double (L1, L2, T1, T2, T3 : in out LD.List) is
   begin
     Assertion (Is_Null (L1), "** D01: List is not initially null");
     Assertion ((Length (L1) = 0), "** D02: List Length is not initially zero");
@@ -426,8 +426,8 @@ procedure List_Test is
     Assertion (Is_Null (T1), "** D101: List is not null");
   end Test_Double;
 
-  procedure Test_Double (L1, L2 : in out Double_List) is
-    T1, T2, T3 : Double_List;
+  procedure Test_Double (L1, L2 : in out LD.List) is
+    T1, T2, T3 : LD.List;
   begin
     Test_Double (L1, L2, T1, T2, T3);
   end Test_Double;
@@ -457,7 +457,7 @@ procedure List_Test is
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
-  procedure Test_Iterator_Deletion (L : in out Single_List) is
+  procedure Test_Iterator_Deletion (L : in out LS.List) is
     Iter : Iterator'Class := New_Iterator (L);
     Delete : Boolean;
   begin
@@ -497,7 +497,7 @@ procedure List_Test is
     Assertion (Length (L) = 0, "** IS07: List length is not zero");
   end Test_Iterator_Deletion;
 
-  procedure Test_Iterator_Deletion (L : in out Double_List) is
+  procedure Test_Iterator_Deletion (L : in out LD.List) is
     Iter : Iterator'Class := New_Iterator (L);
     Delete : Boolean;
   begin
@@ -537,9 +537,9 @@ procedure List_Test is
     Assertion (Length (L) = 0, "** ID07: List length is not zero");
   end Test_Iterator_Deletion;
 
-  Slist_P1, Slist_P2 : Single_List;
+  Slist_P1, Slist_P2 : LS.List;
 
-  Dlist_P1, Dlist_P2 : Double_List;
+  Dlist_P1, Dlist_P2 : LD.List;
 
 begin
   Put_Line ("Starting list tests");

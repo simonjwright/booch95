@@ -1,4 +1,4 @@
--- Copyright (C) 1998,2000 Simon Wright.
+-- Copyright (C) 1998,2000-2001 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -27,8 +27,8 @@ with Lists_For_Timing;
 
 procedure Time_Lists is
 
-  S : Lists_For_Timing.S.Single_List;
-  D : Lists_For_Timing.D.Double_List;
+  S : Lists_For_Timing.S.List;
+  D : Lists_For_Timing.D.List;
 
   procedure Iterate is
     Total : Integer;
