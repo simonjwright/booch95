@@ -132,7 +132,15 @@ private
 
   type Container is abstract new Ada.Finalization.Controlled with null record;
 
-  -- Private primitive operations.
+  -- Support for concurrency protection. The base implementation of
+  -- these procedures does nothing; derived types override as
+  -- required.
+
+  procedure Lock (C : in out Container);
+
+  procedure Unlock (C : in out Container);
+
+  -- Private primitive operations of Container.
   -- These should ideally be abstract; instead, we provide implementations,
   -- but they raise Should_Have_Been_Overridden.
 
@@ -146,6 +154,9 @@ private
     For_The_Container : Container_Ptr;
   end record;
 
+  -- Private primitive operations of Iterator.
+  -- These should ideally be abstract; instead, we provide implementations,
+  -- but they raise Should_Have_Been_Overridden.
   function Current_Item_Ptr (It : Iterator) return Item_Ptr;
 
 end BC.Containers;
