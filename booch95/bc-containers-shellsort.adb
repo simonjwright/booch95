@@ -53,5 +53,5 @@ procedure BC.Containers.Shellsort (C : in out Container) is
 begin
    Sort (C);
 exception
-   when Should_Have_Been_Overridden => raise Container_Error;
+   when Should_Have_Been_Overridden => raise Sort_Error;
 end BC.Containers.Shellsort;

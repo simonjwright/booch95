@@ -27,9 +27,6 @@ package BC is
    --  The following exceptions may be raised by improper use of the
    --  Components.
 
-   Container_Error : exception;
-   --  Attempt to sort an inappropriate Container (Bag, Map, Set).
-
    Duplicate : exception;
    --  Attempt to insert an item in a Map under a  duplicate key.
 
@@ -52,6 +49,9 @@ package BC is
    Referenced : exception;
    --  Attempt to Remove a List element that's aliased by another
    --  List.
+
+   Sort_Error : exception;
+   --  Attempt to sort an inappropriate Container (Bag, Map, Set).
 
    Storage_Error : exception;
    --  Raised by BC.Support.Managed_Storage when the requested size is
