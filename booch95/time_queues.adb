@@ -46,27 +46,36 @@ procedure Time_Queues is
     Result := Q_Application (B_Iter'Access);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
-       (".. bounded queue took" & Taken'Img & " sec, sum" & Total'Img);
+       (".. bounded queue took"
+        & Duration'Image (Taken)
+        & " sec, sum"
+        & Integer'Image (Total));
 
     Total := 0;
     Start := Ada.Calendar.Clock;
     Result := Q_Application (D_Iter'Access);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
-       (".. dynamic queue took" & Taken'Img & " sec, sum" & Total'Img);
+       (".. dynamic queue took"
+        & Duration'Image (Taken)
+        & " sec, sum"
+        & Integer'Image (Total));
 
     Total := 0;
     Start := Ada.Calendar.Clock;
     Result := Q_Application (U_Iter'Access);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
-       (".. unbounded queue took" & Taken'Img & " sec, sum" & Total'Img);
+       (".. unbounded queue took"
+        & Duration'Image (Taken)
+        & " sec, sum"
+        & Integer'Image (Total));
 
   end Iterate;
   procedure Time (N : Integer) is
   begin
     Ada.Text_Io.Put_Line
-       ("timing iteration over containers of length" & N'Img);
+       ("timing iteration over containers of length" & Integer'Image (N));
     Queues_For_Timing.B.Clear (B);
     Queues_For_Timing.D.Clear (D);
     Queues_For_Timing.D.Preallocate (D, 1024);
