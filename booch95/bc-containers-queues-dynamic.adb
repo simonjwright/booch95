@@ -21,13 +21,6 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Queues.Dynamic is
 
-  function Create (Size : Positive) return Dynamic_Queue is
-    Temp : Dynamic_Queue;
-  begin
-    Temp.Rep := Dynamic_Queue_Nodes.Create (Size);
-    return Temp;
-  end Create;
-
   function "=" (Left, Right : Dynamic_Queue) return Boolean is
     use Dynamic_Queue_Nodes;
   begin
@@ -109,7 +102,7 @@ package body BC.Containers.Queues.Dynamic is
 
   procedure Initialize (Q : in out Dynamic_Queue) is
   begin
-    Q.Rep := Dynamic_Queue_Nodes.Create;
+    Q.Rep := Dynamic_Queue_Nodes.Create (Initial_Size);
   end Initialize;
 
   procedure Adjust (Q : in out Dynamic_Queue) is
