@@ -17,12 +17,15 @@
 
 -- $Id$
 
+with System;
+
 package body BC.Containers.Collections is
 
   function Are_Equal (Left, Right : Collection'Class) return Boolean is
   begin
-    -- XXX left out the optimisation which checks whether L, R are
-    -- identical.
+    if System."=" (Left'Address, Right'Address) then
+      return True;
+    end if;
     if Cardinality (Left) /= Cardinality (Right) then
       return False;
     end if;
@@ -45,12 +48,14 @@ package body BC.Containers.Collections is
   procedure Copy (From : Collection'Class; To : in out Collection'Class) is
     Iter : Iterator := New_Iterator (From);
   begin
-    Purge (To);
-    Reset (Iter);
-    while not Is_Done (Iter) loop
-      Add (To, Current_Item (Iter));
-      Next (Iter);
-    end loop;
+    if System."/=" (From'Address, To'Address) then
+      Purge (To);
+      Reset (Iter);
+      while not Is_Done (Iter) loop
+        Add (To, Current_Item (Iter));
+        Next (Iter);
+      end loop;
+   end if;
   end Copy;
 
   procedure Add (C : in out Collection; Elem : Item) is
