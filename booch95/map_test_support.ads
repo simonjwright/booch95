@@ -21,6 +21,7 @@ with BC.Containers;
 with BC.Containers.Maps;
 with BC.Containers.Maps.Bounded;
 with BC.Containers.Maps.Dynamic;
+with BC.Containers.Maps.Unbounded;
 with Chunks;
 with Global_Heap;
 
@@ -40,6 +41,11 @@ package Map_Test_Support is
                                   Buckets => 3,
                                   Storage_Manager => Global_Heap.Pool,
                                   Storage => Global_Heap.Storage);
+
+  package MU is new Maps.Unbounded (Hash => Char_Hash,
+                                    Buckets => 3,
+                                    Storage_Manager => Global_Heap.Pool,
+                                    Storage => Global_Heap.Storage);
 
   Gitems : array (0 .. 9) of aliased Chunks.Chunk;
 
