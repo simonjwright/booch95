@@ -22,75 +22,77 @@ package BC.Containers.Collections is
 
   pragma Elaborate_Body;
 
-  type Collection is abstract new Container with private;
+  type Abstract_Collection is abstract new Container with private;
 
   -- A collection denotes an indexed collection of items, drawn from
   -- some well-defined universe. A collection may contain duplicate
   -- items; a collection owns a copy of each item.
 
-  function Are_Equal (Left, Right : Collection'Class) return Boolean;
+  function Are_Equal (Left, Right : Abstract_Collection'Class) return Boolean;
   -- Return True if and only if both collections have the same extent
   -- and the same items in the same order; return False otherwise.
   -- Can't call this "=" because of the standard one for Collection.
 
-  procedure Copy (From : Collection'Class; To : in out Collection'Class);
+  procedure Copy (From : Abstract_Collection'Class;
+                  To : in out Abstract_Collection'Class);
   -- This operation MUST be called for dissimilar Collections in place of
   -- assignment.
 
-  procedure Clear (C : in out Collection) is abstract;
+  procedure Clear (C : in out Abstract_Collection) is abstract;
   -- Empty the collection of all items.
 
-  procedure Insert (C : in out Collection; Elem : Item) is abstract;
+  procedure Insert (C : in out Abstract_Collection; Elem : Item) is abstract;
   -- Add the item to the front of the collection.
 
-  procedure Insert (C : in out Collection; Elem : Item; Before : Positive)
-    is abstract;
+  procedure Insert (C : in out Abstract_Collection;
+                    Elem : Item; Before : Positive) is abstract;
   -- Add the item before the given index item in the collection; if
   -- before is 1, the item is added to the front of the collection.
 
-  procedure Append (C : in out Collection; Elem : Item) is abstract;
+  procedure Append (C : in out Abstract_Collection; Elem : Item) is abstract;
   -- Add the item at the end of the collection.
 
-  procedure Append (C : in out Collection; Elem : Item; After : Positive)
-    is abstract;
+  procedure Append (C : in out Abstract_Collection;
+                    Elem : Item;
+                    After : Positive) is abstract;
   -- Add the item after the given index item in the collection.
 
-  procedure Remove (C : in out Collection; At_Index : Positive) is abstract;
+  procedure Remove (C : in out Abstract_Collection;
+                    At_Index : Positive) is abstract;
   -- Remove the item at the given index in the collection.
 
-  procedure Replace (C : in out Collection; At_Index : Positive; Elem : Item)
-    is abstract;
+  procedure Replace (C : in out Abstract_Collection;
+                     At_Index : Positive; Elem : Item) is abstract;
   -- Replace the item at the given index with the given item.
 
-  function Length (C : Collection) return Natural is abstract;
+  function Length (C : Abstract_Collection) return Natural is abstract;
   -- Return the number of items in the collection.
 
-  function Is_Empty (C : Collection) return Boolean is abstract;
+  function Is_Empty (C : Abstract_Collection) return Boolean is abstract;
   -- Return True if and only if there are no items in the collection.
 
-  function First (C : Collection) return Item is abstract;
+  function First (C : Abstract_Collection) return Item is abstract;
   -- Return a copy of the item at the front of the collection.
 
-  function Last (C : Collection) return Item is abstract;
+  function Last (C : Abstract_Collection) return Item is abstract;
   -- Return a copy of the item at the end of the collection.
 
-  function Item_At
-     (C : Collection; At_Index : Positive) return Item is abstract;
+  function Item_At (C : Abstract_Collection;
+                    At_Index : Positive) return Item is abstract;
   -- Return a copy of the item at the indicated position in the collection.
 
-  function Location (C : Collection; Elem : Item) return Natural is abstract;
+  function Location (C : Abstract_Collection;
+                     Elem : Item) return Natural is abstract;
   -- Return the first index at which the item is found (0 if the
   -- item desn't exist in the collecton).
 
 private
 
-  type Collection is abstract new Container with null record;
+  type Abstract_Collection is abstract new Container with null record;
 
---   procedure Add (C : in out Collection; Elem : Item);
+  procedure Lock (C : in out Abstract_Collection);
 
-  procedure Lock (C : in out Collection);
-
-  procedure Unlock (C : in out Collection);
+  procedure Unlock (C : in out Abstract_Collection);
 
   type Collection_Iterator is new Iterator with record
     Index : Natural;

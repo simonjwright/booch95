@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,71 +21,69 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Queues.Ordered.Bounded is
 
-  procedure Clear (Q : in out Bounded_Ordered_Queue) is
+  procedure Clear (Q : in out Queue) is
   begin
-    Bounded_Ordered_Queue_Nodes.Clear (Q.Rep.all);
+    Queue_Nodes.Clear (Q.Rep.all);
   end Clear;
 
-  procedure Append (Q : in out Bounded_Ordered_Queue; Elem : Item) is
+  procedure Append (Q : in out Queue; Elem : Item) is
   begin
-    for Index in 1 .. Bounded_Ordered_Queue_Nodes.Length (Q.Rep.all)
+    for Index in 1 .. Queue_Nodes.Length (Q.Rep.all)
     loop
-      if Elem < Bounded_Ordered_Queue_Nodes.Item_At (Q.Rep.all, Index)
+      if Elem < Queue_Nodes.Item_At (Q.Rep.all, Index)
       then
-        Bounded_Ordered_Queue_Nodes.Insert (Q.Rep.all, Elem, Index);
+        Queue_Nodes.Insert (Q.Rep.all, Elem, Index);
         return;
       end if;
     end loop;
-    Bounded_Ordered_Queue_Nodes.Append (Q.Rep.all, Elem);
+    Queue_Nodes.Append (Q.Rep.all, Elem);
   end Append;
 
-  procedure Pop (Q : in out Bounded_Ordered_Queue) is
+  procedure Pop (Q : in out Queue) is
   begin
-    Bounded_Ordered_Queue_Nodes.Remove (Q.Rep.all, 1);
+    Queue_Nodes.Remove (Q.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Q : in out Bounded_Ordered_Queue; From : Positive) is
+  procedure Remove (Q : in out Queue; From : Positive) is
   begin
-    Bounded_Ordered_Queue_Nodes.Remove (Q.Rep.all, From);
+    Queue_Nodes.Remove (Q.Rep.all, From);
   end Remove;
 
-  function Available (Q: in Bounded_Ordered_Queue) return Natural is
+  function Available (Q: in Queue) return Natural is
   begin
-    return Bounded_Ordered_Queue_Nodes.Available (Q.Rep.all);
+    return Queue_Nodes.Available (Q.Rep.all);
   end Available;
 
-  function Length (Q : Bounded_Ordered_Queue) return Natural is
+  function Length (Q : Queue) return Natural is
   begin
-    return Bounded_Ordered_Queue_Nodes.Length (Q.Rep.all);
+    return Queue_Nodes.Length (Q.Rep.all);
   end Length;
 
-  function Is_Empty (Q : Bounded_Ordered_Queue) return Boolean is
+  function Is_Empty (Q : Queue) return Boolean is
   begin
-    return Bounded_Ordered_Queue_Nodes.Length (Q.Rep.all) = 0;
+    return Queue_Nodes.Length (Q.Rep.all) = 0;
   end Is_Empty;
 
-  function Front (Q : Bounded_Ordered_Queue) return Item is
+  function Front (Q : Queue) return Item is
   begin
-    return Bounded_Ordered_Queue_Nodes.First (Q.Rep.all);
+    return Queue_Nodes.First (Q.Rep.all);
   end Front;
 
-  function Location
-     (Q : Bounded_Ordered_Queue; Elem : Item) return Natural is
+  function Location (Q : Queue; Elem : Item) return Natural is
   begin
-    return Bounded_Ordered_Queue_Nodes.Location (Q.Rep.all, Elem);
+    return Queue_Nodes.Location (Q.Rep.all, Elem);
   end Location;
 
-  function "=" (Left, Right : Bounded_Ordered_Queue) return Boolean is
-    use Bounded_Ordered_Queue_Nodes;
+  function "=" (Left, Right : Queue) return Boolean is
+    use Queue_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Bounded_Ordered_Queue);
+  is new System.Address_To_Access_Conversions (Queue);
 
-  function New_Iterator
-     (For_The_Queue : Bounded_Ordered_Queue) return Iterator'Class is
+  function New_Iterator (For_The_Queue : Queue) return Iterator'Class is
     Result : Queue_Iterator;
   begin
     Result.For_The_Container :=
@@ -94,25 +92,24 @@ package body BC.Containers.Queues.Ordered.Bounded is
     return Result;
   end New_Iterator;
 
-  function Item_At
-     (Q : Bounded_Ordered_Queue; Index : Positive) return Item_Ptr is
+  function Item_At (Q : Queue; Index : Positive) return Item_Ptr is
   begin
-    return Bounded_Ordered_Queue_Nodes.Item_At (Q.Rep.all, Index);
+    return Queue_Nodes.Item_At (Q.Rep.all, Index);
   end Item_At;
 
-  procedure Adjust (Q : in out Bounded_Ordered_Queue) is
+  procedure Adjust (Q : in out Queue) is
   begin
-    Q.Rep := Bounded_Ordered_Queue_Nodes.Create (From => Q.Rep.all);
+    Q.Rep := Queue_Nodes.Create (From => Q.Rep.all);
   end Adjust;
 
-  procedure Finalize (Q : in out Bounded_Ordered_Queue) is
+  procedure Finalize (Q : in out Queue) is
   begin
-    Bounded_Ordered_Queue_Nodes.Free (Q.Rep); -- does a Clear()
+    Queue_Nodes.Free (Q.Rep); -- does a Clear()
   end Finalize;
 
-  Empty_Container : Bounded_Ordered_Queue;
+  Empty_Container : Queue;
 
-  function Null_Container return Bounded_Ordered_Queue is
+  function Null_Container return Queue is
   begin
     return Empty_Container;
   end Null_Container;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -30,35 +30,36 @@ package BC.Containers.Bags is
   -- The parameter Item denotes the universe from which the bag draws its
   -- items. Items may be a primitive type or user-defined.
 
-  type Bag is abstract new Container with private;
+  type Abstract_Bag is abstract new Container with private;
 
-  function Are_Equal (L, R : Bag'Class) return Boolean;
+  function Are_Equal (L, R : Abstract_Bag'Class) return Boolean;
   -- Return True if and only if both bags have the same number of distinct
   -- items, and the same items themselves, each with the same count; return
   -- False otherwise.
   -- Can't call this "=" because of the standard one for Bag.
 
-  procedure Clear (B : in out Bag) is abstract;
+  procedure Clear (B : in out Abstract_Bag) is abstract;
   -- Empty the bag of all items.
 
-  procedure Add (B : in out Bag; I : Item; Added : out Boolean) is abstract;
+  procedure Add
+     (B : in out Abstract_Bag; I : Item; Added : out Boolean) is abstract;
   -- Add the item to the bag. If the item is not already a distinct member
   -- of the bag, copy the item and add it to the bag and set Added to
   -- True. If the item already exists, then increment the number of that
   -- item and set Added to False.
 
-  procedure Add (B : in out Bag'Class; I : Item);
+  procedure Add (B : in out Abstract_Bag'Class; I : Item);
   -- Add the item to the bag. If the item is not already a distinct member
   -- of the bag, copy the item and add it to the bag; if it is, increment
   -- the number of that item.
 
-  procedure Remove (B : in out Bag; I : Item) is abstract;
+  procedure Remove (B : in out Abstract_Bag; I : Item) is abstract;
   -- If the item is not a member of the bag, raise BC.Not_Found. Otherwise,
   -- if there is exactly one of the item in the bag, remove the item in the
   -- bag; if there is more than one of the item in the bag, simply decrement
   -- its number.
 
-  procedure Union (B : in out Bag'Class; O : Bag'Class);
+  procedure Union (B : in out Abstract_Bag'Class; O : Abstract_Bag'Class);
   -- Perform a logical bag union; at the completion of this operation, the
   -- bag B contains the items and counts found in its original state
   -- combined with the bag O. For each item in the bag O, if the item is
@@ -66,7 +67,8 @@ package BC.Containers.Bags is
   -- and its count to the bag S. If the item already is a member, increment
   -- its count in S.
 
-  procedure Intersection (B : in out Bag'Class; O : Bag'Class);
+  procedure Intersection
+     (B : in out Abstract_Bag'Class; O : Abstract_Bag'Class);
   -- Perform a logical bag intersection; at the completion of this
   -- operation, the bag B contains the items found both in its original
   -- state and in the bag O. For each item in the bag O, if the item is not
@@ -74,7 +76,7 @@ package BC.Containers.Bags is
   -- already is a member of S, set its count to the lower of the two
   -- counts. Items in the bag S but not in the bag O are also removed.
 
-  procedure Difference (B : in out Bag'Class; O : Bag'Class);
+  procedure Difference (B : in out Abstract_Bag'Class; O : Abstract_Bag'Class);
   -- Perform a logical bag difference; at the completion of this operation,
   -- the bag B contains the items found in its original state, less those
   -- found in the bag O. For each item in the bag O, if the item is not
@@ -84,27 +86,29 @@ package BC.Containers.Bags is
   -- count more than that in the bag O, decrement the count in the bag S by
   -- the count in the bag O.
 
-  function Extent (B : Bag) return Natural is abstract;
+  function Extent (B : Abstract_Bag) return Natural is abstract;
   -- Return the number of distinct items in the bag.
 
-  function Total_Size (B : Bag'Class) return Natural;
+  function Total_Size (B : Abstract_Bag'Class) return Natural;
   -- Return the total number of items in the bag.
 
-  function Count (B : Bag; I : Item) return Natural is abstract;
+  function Count (B : Abstract_Bag; I : Item) return Natural is abstract;
   -- Return the number of times the item occurs in the bag.
 
-  function Is_Empty (B : Bag) return Boolean is abstract;
+  function Is_Empty (B : Abstract_Bag) return Boolean is abstract;
   -- Return True if and only if there are no items in the bag.
 
-  function Is_Member (B : Bag; I : Item) return Boolean is abstract;
+  function Is_Member (B : Abstract_Bag; I : Item) return Boolean is abstract;
   -- Return True if and only if the item exists in the bag.
 
-  function Is_Subset (B : Bag'Class; O : Bag'Class) return Boolean;
+  function Is_Subset
+     (B : Abstract_Bag'Class; O : Abstract_Bag'Class) return Boolean;
   -- Return True if and only if the bag B has the same or fewer distinct
   -- items than in the bag O and equal or less numbers of each such item
   -- than in the bag O.
 
-  function Is_Proper_Subset (B : Bag'Class; O : Bag'Class) return Boolean;
+  function Is_Proper_Subset
+     (B : Abstract_Bag'Class; O : Abstract_Bag'Class) return Boolean;
   -- Return True if and only if
   -- all the distinct items in the bag B are also in the bag O, and
   -- either at least one of the items in the bag B has a lower number
@@ -114,23 +118,25 @@ package BC.Containers.Bags is
 
 private
 
-  type Bag is abstract new Container with null record;
+  type Abstract_Bag is abstract new Container with null record;
 
-  procedure Attach (B : in out Bag; I : Item; C : Positive);
+  procedure Attach (B : in out Abstract_Bag; I : Item; C : Positive);
 
-  procedure Detach (B : in out Bag; I : Item);
+  procedure Detach (B : in out Abstract_Bag; I : Item);
 
-  procedure Set_Value (B : in out Bag; I : Item; C : Positive);
+  procedure Set_Value (B : in out Abstract_Bag; I : Item; C : Positive);
 
-  function Multiplicity (B : Bag'Class) return Natural;
+  function Multiplicity (B : Abstract_Bag'Class) return Natural;
 
-  function Number_Of_Buckets (B : Bag) return Natural;
+  function Number_Of_Buckets (B : Abstract_Bag) return Natural;
 
-  function Length (B : Bag; Bucket : Positive) return Natural;
+  function Length (B : Abstract_Bag; Bucket : Positive) return Natural;
 
-  function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr;
+  function Item_At
+     (B : Abstract_Bag; Bucket, Index : Positive) return Item_Ptr;
 
-  function Value_At (B : Bag; Bucket, Index : Positive) return Positive;
+  function Value_At
+     (B : Abstract_Bag; Bucket, Index : Positive) return Positive;
 
   type Bag_Iterator is new Iterator with record
     Bucket_Index : Natural := 0;

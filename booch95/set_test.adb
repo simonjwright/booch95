@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -46,7 +46,7 @@ procedure Set_Test is
 --      New_Line;
 --    end Print_Set;
 
-  procedure Test (S1, S2 : in out Sets.Set'Class) is
+  procedure Test (S1, S2 : in out Sets.Abstract_Set'Class) is
     Status : Boolean;
   begin
     Assertion (Sets.Is_Empty (S1),
@@ -175,7 +175,7 @@ procedure Set_Test is
     Sets.Add (S1, 'z', Added => Status);
   end Test;
 
-  procedure Test_Active_Iterator (S : in out Sets.Set'Class) is
+  procedure Test_Active_Iterator (S : in out Sets.Abstract_Set'Class) is
     use Containers; use Sets; use SB;
     Iter : Containers.Iterator'Class := New_Iterator (S);
   begin
@@ -213,9 +213,9 @@ procedure Set_Test is
     Modifier (Using => Iter);
   end Test_Passive_Modifying_Iterator;
 
-  Set_B_Pu1, Set_B_Pu2 : SB.Bounded_Set;
-  Set_D_Pu1, Set_D_Pu2 : SD.Dynamic_Set;
-  Set_U_Pu1, Set_U_Pu2 : SU.Unbounded_Set;
+  Set_B_Pu1, Set_B_Pu2 : SB.Set;
+  Set_D_Pu1, Set_D_Pu2 : SD.Set;
+  Set_U_Pu1, Set_U_Pu2 : SU.Set;
 
 begin
   Put_Line ("Starting set tests");

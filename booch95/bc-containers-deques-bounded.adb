@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,78 +21,78 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Deques.Bounded is
 
-  procedure Clear (D : in out Bounded_Deque) is
+  procedure Clear (D : in out Deque) is
   begin
-    Bounded_Deque_Nodes.Clear (D.Rep.all);
+    Deque_Nodes.Clear (D.Rep.all);
   end Clear;
 
-  procedure Append (D : in out Bounded_Deque;
+  procedure Append (D : in out Deque;
                     Elem : Item;
                     Location : Deque_End := Back) is
   begin
     if Location = Back then
-      Bounded_Deque_Nodes.Append (D.Rep.all, Elem);
+      Deque_Nodes.Append (D.Rep.all, Elem);
     else
-      Bounded_Deque_Nodes.Insert (D.Rep.all, Elem);
+      Deque_Nodes.Insert (D.Rep.all, Elem);
     end if;
   end Append;
 
-  procedure Pop (D : in out Bounded_Deque; Location : Deque_End := Front) is
+  procedure Pop (D : in out Deque; Location : Deque_End := Front) is
   begin
     if Location = Front then
-      Bounded_Deque_Nodes.Remove (D.Rep.all, 1);
+      Deque_Nodes.Remove (D.Rep.all, 1);
     else
-      Bounded_Deque_Nodes.Remove (D.Rep.all,
-                                  Bounded_Deque_Nodes.Length (D.Rep.all));
+      Deque_Nodes.Remove (D.Rep.all,
+                          Deque_Nodes.Length (D.Rep.all));
     end if;
   end Pop;
 
-  procedure Remove (D : in out Bounded_Deque; From : Positive) is
+  procedure Remove (D : in out Deque; From : Positive) is
   begin
-    Bounded_Deque_Nodes.Remove (D.Rep.all, From);
+    Deque_Nodes.Remove (D.Rep.all, From);
   end Remove;
 
-  function Available (D: in Bounded_Deque) return Natural is
+  function Available (D: in Deque) return Natural is
   begin
-    return Bounded_Deque_Nodes.Available (D.Rep.all);
+    return Deque_Nodes.Available (D.Rep.all);
   end Available;
 
-  function Length (D : Bounded_Deque) return Natural is
+  function Length (D : Deque) return Natural is
   begin
-    return Bounded_Deque_Nodes.Length (D.Rep.all);
+    return Deque_Nodes.Length (D.Rep.all);
   end Length;
 
-  function Is_Empty (D : Bounded_Deque) return Boolean is
+  function Is_Empty (D : Deque) return Boolean is
   begin
-    return Bounded_Deque_Nodes.Length (D.Rep.all) = 0;
+    return Deque_Nodes.Length (D.Rep.all) = 0;
   end Is_Empty;
 
-  function Front (D : Bounded_Deque) return Item is
+  function Front (D : Deque) return Item is
   begin
-    return Bounded_Deque_Nodes.First (D.Rep.all);
+    return Deque_Nodes.First (D.Rep.all);
   end Front;
 
-  function Back (D : Bounded_Deque) return Item is
+  function Back (D : Deque) return Item is
   begin
-    return Bounded_Deque_Nodes.Last (D.Rep.all);
+    return Deque_Nodes.Last (D.Rep.all);
   end Back;
 
-  function Location (D : Bounded_Deque; Elem : Item) return Natural is
+  function Location (D : Deque; Elem : Item) return Natural is
   begin
-    return Bounded_Deque_Nodes.Location (D.Rep.all, Elem);
+    return Deque_Nodes.Location (D.Rep.all, Elem);
   end Location;
 
-  function "=" (Left, Right : Bounded_Deque) return Boolean is
-    use Bounded_Deque_Nodes;
+  function "=" (Left, Right : Deque) return Boolean is
+    use Deque_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Bounded_Deque);
+  is new System.Address_To_Access_Conversions (Deque);
 
   function New_Iterator
-     (For_The_Deque : Bounded_Deque) return Iterator'Class is
+     (For_The_Deque : Deque) return Iterator'Class is
     Result : Deque_Iterator;
   begin
     Result.For_The_Container :=
@@ -101,24 +101,24 @@ package body BC.Containers.Deques.Bounded is
     return Result;
   end New_Iterator;
 
-  function Item_At (D : Bounded_Deque; Index : Positive) return Item_Ptr is
+  function Item_At (D : Deque; Index : Positive) return Item_Ptr is
   begin
-    return Bounded_Deque_Nodes.Item_At (D.Rep.all, Index);
+    return Deque_Nodes.Item_At (D.Rep.all, Index);
   end Item_At;
 
-  procedure Adjust (D : in out Bounded_Deque) is
+  procedure Adjust (D : in out Deque) is
   begin
-    D.Rep := Bounded_Deque_Nodes.Create (From => D.Rep.all);
+    D.Rep := Deque_Nodes.Create (From => D.Rep.all);
   end Adjust;
 
-  procedure Finalize (D : in out Bounded_Deque) is
+  procedure Finalize (D : in out Deque) is
   begin
-    Bounded_Deque_Nodes.Free (D.Rep); -- does a Clear()
+    Deque_Nodes.Free (D.Rep); -- does a Clear()
   end Finalize;
 
-  Empty_Container : Bounded_Deque;
+  Empty_Container : Deque;
 
-  function Null_Container return Bounded_Deque is
+  function Null_Container return Deque is
   begin
     return Empty_Container;
   end Null_Container;

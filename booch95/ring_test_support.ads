@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -31,14 +31,11 @@ package Ring_Test_Support is
   package Rings is new Containers.Rings;
 
   package RB is new Rings.Bounded (Maximum_Size => 100);
-  subtype Bounded_Ring is RB.Bounded_Ring;
 
   package RD is new Rings.Dynamic (Storage_Manager => Global_Heap.Pool,
                                     Storage => Global_Heap.Storage);
-  subtype Dynamic_Ring is RD.Dynamic_Ring;
 
   package RU is new Rings.Unbounded (Storage_Manager => Global_Heap.Pool,
                                      Storage => Global_Heap.Storage);
-  subtype Unbounded_Ring is RU.Unbounded_Ring;
 
 end Ring_Test_Support;

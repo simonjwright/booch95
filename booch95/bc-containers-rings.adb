@@ -21,7 +21,7 @@ with System;
 
 package body BC.Containers.Rings is
 
-  function Are_Equal (Left, Right : Ring'Class) return Boolean is
+  function Are_Equal (Left, Right : Abstract_Ring'Class) return Boolean is
   begin
     if System."=" (Left'Address, Right'Address) then
       return True;
@@ -45,7 +45,8 @@ package body BC.Containers.Rings is
     end;
   end Are_Equal;
 
-  procedure Copy (From : Ring'Class; To : in out Ring'Class) is
+  procedure Copy (From : Abstract_Ring'Class;
+                  To : in out Abstract_Ring'Class) is
     Iter : Iterator'Class := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
@@ -67,34 +68,35 @@ package body BC.Containers.Rings is
     end if;
   end Copy;
 
-  procedure Mark (R : in out Ring) is
+  procedure Mark (R : in out Abstract_Ring) is
   begin
     R.Mark := R.Top;
   end Mark;
 
-  procedure Rotate_To_Mark (R : in out Ring) is
+  procedure Rotate_To_Mark (R : in out Abstract_Ring) is
   begin
     R.Top := R.Mark;
   end Rotate_To_Mark;
 
-  function At_Mark (R : Ring) return Boolean is
+  function At_Mark (R : Abstract_Ring) return Boolean is
   begin
     return R.Mark = R.Top;
   end At_Mark;
 
-  procedure Initialize (R : in out Ring) is
+  procedure Initialize (R : in out Abstract_Ring) is
   begin
     R.Top := 0;
     R.Mark := 0;
   end Initialize;
 
-  procedure Add (R : in out Ring; Elem : Item) is
+  procedure Add (R : in out Abstract_Ring; Elem : Item) is
   begin
     raise Should_Have_Been_Overridden;
   end Add;
 
   procedure Reset (It : in out Ring_Iterator) is
-    R : Ring'Class renames Ring'Class (It.For_The_Container.all);
+    R : Abstract_Ring'Class
+       renames Abstract_Ring'Class (It.For_The_Container.all);
   begin
     if Extent (R) = 0 then
       It.Index := 0;
@@ -104,7 +106,8 @@ package body BC.Containers.Rings is
   end Reset;
 
   function Is_Done (It : Ring_Iterator) return Boolean is
-    R : Ring'Class renames Ring'Class (It.For_The_Container.all);
+    R : Abstract_Ring'Class
+    renames Abstract_Ring'Class (It.For_The_Container.all);
   begin
     return It.Index = 0 or else It.Index > Extent (R);
   end Is_Done;
@@ -115,7 +118,8 @@ package body BC.Containers.Rings is
   end Next;
 
   function Current_Item (It : Ring_Iterator) return Item is
-    R : Ring'Class renames Ring'Class (It.For_The_Container.all);
+    R : Abstract_Ring'Class
+    renames Abstract_Ring'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -133,7 +137,8 @@ package body BC.Containers.Rings is
   end Current_Item;
 
   function Current_Item_Ptr (It : Ring_Iterator) return Item_Ptr is
-    R : Ring'Class renames Ring'Class (It.For_The_Container.all);
+    R : Abstract_Ring'Class
+    renames Abstract_Ring'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;

@@ -28,93 +28,93 @@ package BC.Containers.Collections.Dynamic is
 
   pragma Elaborate_Body;
 
-  type Dynamic_Collection is new Collection with private;
+  type Collection is new Abstract_Collection with private;
 
-  function Null_Container return Dynamic_Collection;
+  function Null_Container return Collection;
 
-  function "=" (Left, Right : in Dynamic_Collection) return Boolean;
+  function "=" (Left, Right : in Collection) return Boolean;
 
-  procedure Clear (C : in out Dynamic_Collection);
+  procedure Clear (C : in out Collection);
   -- Empty the collection of all items.
 
-  procedure Insert (C : in out Dynamic_Collection; Elem : Item);
+  procedure Insert (C : in out Collection; Elem : Item);
   -- Add the item to the front of the collection.
 
-  procedure Insert (C : in out Dynamic_Collection;
+  procedure Insert (C : in out Collection;
                     Elem : Item;
                     Before : Positive);
   -- Add the item before the given index item in the collection; if
   -- before is 1, the item is added to the front of the collection.
 
-  procedure Append (C : in out Dynamic_Collection; Elem : Item);
+  procedure Append (C : in out Collection; Elem : Item);
   -- Add the item at the end of the collection.
 
-  procedure Append (C : in out Dynamic_Collection;
+  procedure Append (C : in out Collection;
                     Elem : Item;
                     After : Positive);
   -- Add the item after the given index item in the collection.
 
-  procedure Remove (C : in out Dynamic_Collection; At_Index : Positive);
+  procedure Remove (C : in out Collection; At_Index : Positive);
   -- Remove the item at the given index in the collection.
 
-  procedure Replace (C : in out Dynamic_Collection;
+  procedure Replace (C : in out Collection;
                      At_Index : Positive;
                      Elem : Item);
   -- Replace the item at the given index with the given item.
 
-  function Length (C : Dynamic_Collection) return Natural;
+  function Length (C : Collection) return Natural;
   -- Return the number of items in the collection.
 
-  function Is_Empty (C : Dynamic_Collection) return Boolean;
+  function Is_Empty (C : Collection) return Boolean;
   -- Return True if and only if there are no items in the collection.
 
-  function First (C : Dynamic_Collection) return Item;
+  function First (C : Collection) return Item;
   -- Return a copy of the item at the front of the collection.
 
-  function Last (C : Dynamic_Collection) return Item;
+  function Last (C : Collection) return Item;
   -- Return a copy of the item at the end of the collection.
 
   function Item_At
-     (C : Dynamic_Collection; At_Index : Positive) return Item;
+     (C : Collection; At_Index : Positive) return Item;
   -- Return a copy of the item at the indicated position in the collection.
 
-  function Location (C : Dynamic_Collection; Elem : Item) return Natural;
+  function Location (C : Collection; Elem : Item) return Natural;
   -- Return the first index at which the item is found (0 if the
   -- item desn't exist in the collecton).
 
-  function Create (Size : Positive) return Dynamic_Collection;
+  function Create (Size : Positive) return Collection;
   -- Creates a new Dynamic Collection that is preallocated for 'Size' elements
 
-  procedure Preallocate (C : in out Dynamic_Collection; Size : Natural);
+  procedure Preallocate (C : in out Collection; Size : Natural);
   -- Allocates 'Size' additional storage elements for the Collection
 
-  procedure Set_Chunk_Size (C : in out Dynamic_Collection; Size : Natural);
+  procedure Set_Chunk_Size (C : in out Collection; Size : Natural);
   -- Establishes the Size the Collection will grow if the Collection
   -- exhausts its current size.
 
-  function Chunk_Size (C : Dynamic_Collection) return Natural;
+  function Chunk_Size (C : Collection) return Natural;
   -- Returns the Chunk_Size
 
   function New_Iterator
-     (For_The_Collection : Dynamic_Collection) return Iterator'Class;
+     (For_The_Collection : Collection) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Collection.
 
 private
 
-  function Item_At (C : Dynamic_Collection; Index : Positive) return Item_Ptr;
+  function Item_At (C : Collection; Index : Positive) return Item_Ptr;
 
-  package Dynamic_Collection_Nodes
+  package Collection_Nodes
   is new BC.Support.Dynamic (Item => Item,
                              Item_Ptr => Item_Ptr,
                              Storage_Manager => Storage_Manager,
                              Storage => Storage);
 
-  type Dynamic_Collection is new Collection with record
-    Rep : Dynamic_Collection_Nodes.Dyn_Node_Ref;
+  type Collection is new Abstract_Collection with record
+    Rep : Collection_Nodes.Dyn_Node_Ref;
   end record;
 
-  procedure Initialize (C : in out Dynamic_Collection);
-  procedure Adjust (C : in out Dynamic_Collection);
-  procedure Finalize (C : in out Dynamic_Collection);
+  procedure Initialize (C : in out Collection);
+  procedure Adjust (C : in out Collection);
+  procedure Finalize (C : in out Collection);
 
 end BC.Containers.Collections.Dynamic;

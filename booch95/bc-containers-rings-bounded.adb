@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,37 +21,37 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Rings.Bounded is
 
-  function "=" (Left, Right : in Bounded_Ring) return Boolean is
-    use Bounded_Ring_Nodes;
+  function "=" (Left, Right : in Ring) return Boolean is
+    use Ring_Nodes;
   begin
     return Left.Top = Right.Top and then Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Clear (R : in out Bounded_Ring) is
+  procedure Clear (R : in out Ring) is
   begin
-    Bounded_Ring_Nodes.Clear (R.Rep.all);
+    Ring_Nodes.Clear (R.Rep.all);
     R.Top := 0;
     R.Mark := 0;
   end Clear;
 
-  procedure Insert (R : in out Bounded_Ring; Elem : Item) is
+  procedure Insert (R : in out Ring; Elem : Item) is
   begin
     if R.Top = 0 then
       R.Top := 1;
       R.Mark := 1;
-      Bounded_Ring_Nodes.Insert (R.Rep.all, Elem);
+      Ring_Nodes.Insert (R.Rep.all, Elem);
     else
       if R.Mark /= 0 then
         R.Mark := R.Mark + 1;
       end if;
-      Bounded_Ring_Nodes.Insert (R.Rep.all, Elem, Before => R.Top);
+      Ring_Nodes.Insert (R.Rep.all, Elem, Before => R.Top);
     end if;
   end Insert;
 
-  procedure Pop (R : in out Bounded_Ring) is
+  procedure Pop (R : in out Ring) is
     Size : Natural;
   begin
-    Bounded_Ring_Nodes.Remove (R.Rep.all, R.Top);
+    Ring_Nodes.Remove (R.Rep.all, R.Top);
     Size := Extent (R);
     if Size = 0 then
       R.Top := 0;
@@ -68,7 +68,7 @@ package body BC.Containers.Rings.Bounded is
     end if;
   end Pop;
 
-  procedure Rotate (R : in out Bounded_Ring; Dir : Direction := Forward) is
+  procedure Rotate (R : in out Ring; Dir : Direction := Forward) is
   begin
     if Dir = Forward then
       R.Top := R.Top + 1;
@@ -84,30 +84,30 @@ package body BC.Containers.Rings.Bounded is
     end if;
   end Rotate;
 
-  function Available (R : in Bounded_Ring) return Natural is
+  function Available (R : in Ring) return Natural is
   begin
-    return Bounded_Ring_Nodes.Available (R.Rep.all);
+    return Ring_Nodes.Available (R.Rep.all);
   end Available;
 
-  function Extent (R : Bounded_Ring) return Natural is
+  function Extent (R : Ring) return Natural is
   begin
-    return Bounded_Ring_Nodes.Length (R.Rep.all);
+    return Ring_Nodes.Length (R.Rep.all);
   end Extent;
 
-  function Is_Empty (R : Bounded_Ring) return Boolean is
+  function Is_Empty (R : Ring) return Boolean is
   begin
-    return Bounded_Ring_Nodes.Length (R.Rep.all) = 0;
+    return Ring_Nodes.Length (R.Rep.all) = 0;
   end Is_Empty;
 
-  function Top (R : Bounded_Ring) return Item is
+  function Top (R : Ring) return Item is
   begin
-    return Bounded_Ring_Nodes.Item_At (R.Rep.all, R.Top);
+    return Ring_Nodes.Item_At (R.Rep.all, R.Top);
   end Top;
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Bounded_Ring);
+  is new System.Address_To_Access_Conversions (Ring);
 
-  function New_Iterator (For_The_Ring : Bounded_Ring) return Iterator'Class is
+  function New_Iterator (For_The_Ring : Ring) return Iterator'Class is
     Result : Ring_Iterator;
   begin
     Result.For_The_Container :=
@@ -116,34 +116,34 @@ package body BC.Containers.Rings.Bounded is
     return Result;
   end New_Iterator;
 
-  procedure Add (R : in out Bounded_Ring; Elem : Item) is
+  procedure Add (R : in out Ring; Elem : Item) is
   begin
-    Bounded_Ring_Nodes.Append (R.Rep.all, Elem);
+    Ring_Nodes.Append (R.Rep.all, Elem);
   end Add;
 
-  function Item_At (R : Bounded_Ring; Index : Positive) return Item_Ptr is
+  function Item_At (R : Ring; Index : Positive) return Item_Ptr is
   begin
-    return Bounded_Ring_Nodes.Item_At (R.Rep.all, Index);
+    return Ring_Nodes.Item_At (R.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (R : in out Bounded_Ring) is
+  procedure Initialize (R : in out Ring) is
   begin
-    Initialize (Ring (R));
+    Initialize (Abstract_Ring (R));
   end Initialize;
 
-  procedure Adjust (R : in out Bounded_Ring) is
+  procedure Adjust (R : in out Ring) is
   begin
-    R.Rep := Bounded_Ring_Nodes.Create (From => R.Rep.all);
+    R.Rep := Ring_Nodes.Create (From => R.Rep.all);
   end Adjust;
 
-  procedure Finalize (R : in out Bounded_Ring) is
+  procedure Finalize (R : in out Ring) is
   begin
-    Bounded_Ring_Nodes.Free (R.Rep);
+    Ring_Nodes.Free (R.Rep);
   end Finalize;
 
-  Empty_Container : Bounded_Ring;
+  Empty_Container : Ring;
 
-  function Null_Container return Bounded_Ring is
+  function Null_Container return Ring is
   begin
     return Empty_Container;
   end Null_Container;

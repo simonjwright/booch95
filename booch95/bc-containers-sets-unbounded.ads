@@ -45,32 +45,32 @@ package BC.Containers.Sets.Unbounded is
   -- the number of buckets. The quality of the hash function has a
   -- significant impact upon performance.
 
-  type Unbounded_Set is new Set with private;
+  type Set is new Abstract_Set with private;
 
-  function Null_Container return Unbounded_Set;
+  function Null_Container return Set;
 
-  procedure Clear (S : in out Unbounded_Set);
+  procedure Clear (S : in out Set);
   -- Empty the set of all items.
 
-  procedure Add (S : in out Unbounded_Set; I : Item; Added : out Boolean);
+  procedure Add (S : in out Set; I : Item; Added : out Boolean);
   -- Add the item to the set. If the item is not already a distinct member
   -- of the set, copy the item and add it to the set and set Added to
   -- True. If the item already exists, then set Added to False.
 
-  procedure Remove (S : in out Unbounded_Set; I : Item);
+  procedure Remove (S : in out Set; I : Item);
   -- If the item is not a member of the set, raise BC.Not_Found. Otherwise,
   -- remove the item from the set.
 
-  function Extent (S : Unbounded_Set) return Natural;
+  function Extent (S : Set) return Natural;
   -- Return the number of items in the set.
 
-  function Is_Empty (S : Unbounded_Set) return Boolean;
+  function Is_Empty (S : Set) return Boolean;
   -- Return True if and only if there are no items in the set.
 
-  function Is_Member (S : Unbounded_Set; I : Item) return Boolean;
+  function Is_Member (S : Set; I : Item) return Boolean;
   -- Return True if and only if the item exists in the set.
 
-  function New_Iterator (For_The_Set : Unbounded_Set) return Iterator'Class;
+  function New_Iterator (For_The_Set : Set) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Set.
 
 private
@@ -103,19 +103,18 @@ private
       Values => Values,
       Buckets => Buckets);
 
-  type Unbounded_Set is new Set with record
+  type Set is new Abstract_Set with record
     Rep : Tables.Table;
   end record;
 
-  procedure Attach (S : in out Unbounded_Set; I : Item);
+  procedure Attach (S : in out Set; I : Item);
 
-  procedure Detach (S : in out Unbounded_Set; I : Item);
+  procedure Detach (S : in out Set; I : Item);
 
-  function Number_Of_Buckets (S : Unbounded_Set) return Natural;
+  function Number_Of_Buckets (S : Set) return Natural;
 
-  function Length (S : Unbounded_Set; Bucket : Positive) return Natural;
+  function Length (S : Set; Bucket : Positive) return Natural;
 
-  function Item_At
-     (S : Unbounded_Set; Bucket, Index : Positive) return Item_Ptr;
+  function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr;
 
 end BC.Containers.Sets.Unbounded;

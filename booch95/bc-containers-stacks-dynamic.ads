@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -28,71 +28,71 @@ package BC.Containers.Stacks.Dynamic is
 
   pragma Elaborate_Body;
 
-  type Dynamic_Stack is new Stack with private;
+  type Stack is new Abstract_Stack with private;
   -- A dynamic Stack exhibits similar performance to a Bounded_Stack,
   -- except its size is limited only to available memory.  It dynamically
   -- grows in a linear fashion (based on Chunk_Size).  There is currently
   -- no support for linear collapsing of the Stack.
 
-  function Null_Container return Dynamic_Stack;
+  function Null_Container return Stack;
 
-  function Create (Size : Positive) return Dynamic_Stack;
+  function Create (Size : Positive) return Stack;
   -- Creates a new Dynamic Stack that is preallocated for 'Size' elements
 
-  function "=" (Left, Right : Dynamic_Stack) return Boolean;
+  function "=" (Left, Right : Stack) return Boolean;
   -- Return True if and only if both stacks have the same depth and the
   -- same items in the same order; return False otherwise.
 
-  procedure Clear (S : in out Dynamic_Stack);
+  procedure Clear (S : in out Stack);
   -- Empty the Stack of all items.
 
-  procedure Push (S : in out Dynamic_Stack; Elem : Item);
+  procedure Push (S : in out Stack; Elem : Item);
   -- Add a copy of the item to the top of the Stack.
 
-  procedure Pop (S : in out Dynamic_Stack);
+  procedure Pop (S : in out Stack);
   -- Remove the item from the top of the Stack.
 
-  function Depth (S : in Dynamic_Stack) return Natural;
+  function Depth (S : in Stack) return Natural;
   -- Returns the number of items in the Stack
 
-  function Is_Empty (S : in Dynamic_Stack) return Boolean;
+  function Is_Empty (S : in Stack) return Boolean;
   -- Returns True if and only if no items are in the stack
 
-  function Top (S : in Dynamic_Stack) return Item;
+  function Top (S : in Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
 
-  procedure Preallocate (S : in out Dynamic_Stack; Size : Natural);
+  procedure Preallocate (S : in out Stack; Size : Natural);
   -- Allocates 'Size' additional storage elements for the Stack
 
-  procedure Set_Chunk_Size (S : in out Dynamic_Stack; Size : Natural);
+  procedure Set_Chunk_Size (S : in out Stack; Size : Natural);
   -- Establishes the Size the Stack will grow if the Stack exhausts its
   -- current size.
 
-  function Chunk_Size (S : Dynamic_Stack) return Natural;
+  function Chunk_Size (S : Stack) return Natural;
   -- Returns the Chunk_Size
 
-  function New_Iterator (For_The_Stack : Dynamic_Stack) return Iterator'Class;
+  function New_Iterator (For_The_Stack : Stack) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Stack.
 
 private
 
-  function Item_At (S : Dynamic_Stack; Index : Positive) return Item_Ptr;
+  function Item_At (S : Stack; Index : Positive) return Item_Ptr;
 
-  procedure Add (S : in out Dynamic_Stack; Elem : Item);
-  procedure Remove (S : in out Dynamic_Stack; From : Positive);
+  procedure Add (S : in out Stack; Elem : Item);
+  procedure Remove (S : in out Stack; From : Positive);
 
-  package Dynamic_Stack_Nodes
+  package Stack_Nodes
   is new BC.Support.Dynamic (Item => Item,
                              Item_Ptr => Item_Ptr,
                              Storage_Manager => Storage_Manager,
                              Storage => Storage);
 
-  type Dynamic_Stack is new Stack with record
-    Rep : Dynamic_Stack_Nodes.Dyn_Node_Ref;
+  type Stack is new Abstract_Stack with record
+    Rep : Stack_Nodes.Dyn_Node_Ref;
   end record;
 
-  procedure Initialize (S : in out Dynamic_Stack);
-  procedure Adjust (S : in out Dynamic_Stack);
-  procedure Finalize (S : in out Dynamic_Stack);
+  procedure Initialize (S : in out Stack);
+  procedure Adjust (S : in out Stack);
+  procedure Finalize (S : in out Stack);
 
 end BC.Containers.Stacks.Dynamic;

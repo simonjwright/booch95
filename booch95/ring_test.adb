@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -59,7 +59,7 @@ procedure Ring_Test is
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
-  procedure Test_Primitive (R1, R2 : in out Ring'Class) is
+  procedure Test_Primitive (R1, R2 : in out Abstract_Ring'Class) is
   begin
     Assertion (Is_Empty (R1), "** P01: Ring is not initially empty");
     Assertion (Extent (R1) = 0, "** P02: Ring extent is not initially zero");
@@ -128,9 +128,9 @@ procedure Ring_Test is
     Assertion (At_Mark (R2), "** P40: Ring at mark");
   end Test_Primitive;
 
-  Ring_B_P1, Ring_B_P2 : Bounded_Ring;
-  Ring_D_P1, Ring_D_P2 : Dynamic_Ring;
-  Ring_U_P1, Ring_U_P2 : Unbounded_Ring;
+  Ring_B_P1, Ring_B_P2 : RB.Ring;
+  Ring_D_P1, Ring_D_P2 : RD.Ring;
+  Ring_U_P1, Ring_U_P2 : RU.Ring;
 
 begin
 

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -55,7 +55,7 @@ procedure Ordered_Queue_Test is
     end loop;
   end Test_Active_Iterator;
 
-  procedure Test_Primitive (Q1, Q2 : in out Ordered_Queue'Class) is
+  procedure Test_Primitive (Q1, Q2 : in out Abstract_Ordered_Queue'Class) is
   begin
     Assertion (Is_Empty (Q1), "** P01: Queue is not initially empty");
     Assertion (Length (Q1) = 0, "** P02: Queue length is not initially zero");
@@ -132,7 +132,7 @@ procedure Ordered_Queue_Test is
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
-  procedure Test_Iterator_Deletion (Q : in out Ordered_Queue'Class) is
+  procedure Test_Iterator_Deletion (Q : in out Abstract_Ordered_Queue'Class) is
     Iter : Iterator'Class := New_Iterator (Q);
     Delete : Boolean;
   begin
@@ -172,9 +172,9 @@ procedure Ordered_Queue_Test is
     Assertion (Length (Q) = 0, "** I07: Queue length is not zero");
   end Test_Iterator_Deletion;
 
-  Queue_B_P1, Queue_B_P2 : QB.Bounded_Ordered_Queue;
-  Queue_D_P1, Queue_D_P2 : QD.Dynamic_Ordered_Queue;
-  Queue_U_P1, Queue_U_P2 : QU.Unbounded_Ordered_Queue;
+  Queue_B_P1, Queue_B_P2 : QB.Queue;
+  Queue_D_P1, Queue_D_P2 : QD.Queue;
+  Queue_U_P1, Queue_U_P2 : QU.Queue;
 
 begin
   Put_Line ("Starting ordered queue tests");

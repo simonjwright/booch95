@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,51 +21,50 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Stacks.Bounded is
 
-  procedure Clear (S : in out Bounded_Stack) is
+  procedure Clear (S : in out Stack) is
   begin
-    Bounded_Stack_Nodes.Clear (S.Rep.all);
+    Stack_Nodes.Clear (S.Rep.all);
   end Clear;
 
-  procedure Push (S : in out Bounded_Stack; Elem : Item) is
+  procedure Push (S : in out Stack; Elem : Item) is
   begin
-    Bounded_Stack_Nodes.Insert (S.Rep.all, Elem);
+    Stack_Nodes.Insert (S.Rep.all, Elem);
   end Push;
 
-  procedure Pop (S : in out Bounded_Stack) is
+  procedure Pop (S : in out Stack) is
   begin
-    Bounded_Stack_Nodes.Remove (S.Rep.all, 1);
+    Stack_Nodes.Remove (S.Rep.all, 1);
   end Pop;
 
-  function Available (S: in Bounded_Stack) return Natural is
+  function Available (S: in Stack) return Natural is
   begin
-    return Bounded_Stack_Nodes.Available (S.Rep.all);
+    return Stack_Nodes.Available (S.Rep.all);
   end Available;
 
-  function Depth (S : Bounded_Stack) return Natural is
+  function Depth (S : Stack) return Natural is
   begin
-    return Bounded_Stack_Nodes.Length (S.Rep.all);
+    return Stack_Nodes.Length (S.Rep.all);
   end Depth;
 
-  function Is_Empty (S : Bounded_Stack) return Boolean is
+  function Is_Empty (S : Stack) return Boolean is
   begin
-    return Bounded_Stack_Nodes.Length (S.Rep.all) = 0;
+    return Stack_Nodes.Length (S.Rep.all) = 0;
   end Is_Empty;
 
-  function Top (S : Bounded_Stack) return Item is
+  function Top (S : Stack) return Item is
   begin
-    return Bounded_Stack_Nodes.First (S.Rep.all);
+    return Stack_Nodes.First (S.Rep.all);
   end Top;
 
-  function "=" (Left, Right : Bounded_Stack) return Boolean is
+  function "=" (Left, Right : Stack) return Boolean is
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Bounded_Stack);
+  is new System.Address_To_Access_Conversions (Stack);
 
-  function New_Iterator
-     (For_The_Stack : Bounded_Stack) return Iterator'Class is
+  function New_Iterator (For_The_Stack : Stack) return Iterator'Class is
     Result : Stack_Iterator;
   begin
     Result.For_The_Container :=
@@ -75,34 +74,34 @@ package body BC.Containers.Stacks.Bounded is
   end New_Iterator;
 
   function Item_At
-     (S : Bounded_Stack; Index : Positive) return Item_Ptr is
+     (S : Stack; Index : Positive) return Item_Ptr is
   begin
-    return Bounded_Stack_Nodes.Item_At (S.Rep.all, Index);
+    return Stack_Nodes.Item_At (S.Rep.all, Index);
   end Item_at;
 
-  procedure Add (S : in out Bounded_Stack; Elem : Item) is
+  procedure Add (S : in out Stack; Elem : Item) is
   begin
-    Bounded_Stack_Nodes.Append (S.Rep.all, Elem);
+    Stack_Nodes.Append (S.Rep.all, Elem);
   end Add;
 
-  procedure Remove (S : in out Bounded_Stack; From : Positive) is
+  procedure Remove (S : in out Stack; From : Positive) is
   begin
-    Bounded_Stack_Nodes.Remove (S.Rep.all, From);
+    Stack_Nodes.Remove (S.Rep.all, From);
   end Remove;
 
-  procedure Adjust (S : in out Bounded_Stack) is
+  procedure Adjust (S : in out Stack) is
   begin
-    S.Rep := Bounded_Stack_Nodes.Create (S.Rep.all);
+    S.Rep := Stack_Nodes.Create (S.Rep.all);
   end Adjust;
 
-  procedure Finalize (S : in out Bounded_Stack) is
+  procedure Finalize (S : in out Stack) is
   begin
     Free (S.Rep);
   end Finalize;
 
-  Empty_Container : Bounded_Stack;
+  Empty_Container : Stack;
 
-  function Null_Container return Bounded_Stack is
+  function Null_Container return Stack is
   begin
     return Empty_Container;
   end Null_Container;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -26,7 +26,7 @@ package body BC.Containers.Sets is
   procedure Assert
   is new BSE.Assert ("BC.Containers.Sets");
 
-  function Are_Equal (L, R : Set'Class) return Boolean is
+  function Are_Equal (L, R : Abstract_Set'Class) return Boolean is
     It : Iterator'Class := New_Iterator (L);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -43,13 +43,13 @@ package body BC.Containers.Sets is
     return True;
   end Are_Equal;
 
-  procedure Add (S : in out Set'Class; I : Item) is
+  procedure Add (S : in out Abstract_Set'Class; I : Item) is
     Dummy : Boolean;
   begin
     Add (S, I, Added => Dummy);
   end Add;
 
-  procedure Union (S : in out Set'Class; O : Set'Class) is
+  procedure Union (S : in out Abstract_Set'Class; O : Abstract_Set'Class) is
     It : Iterator'Class := New_Iterator (O);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -66,7 +66,8 @@ package body BC.Containers.Sets is
     end loop;
   end Union;
 
-  procedure Intersection (S : in out Set'Class; O : Set'Class) is
+  procedure Intersection (S : in out Abstract_Set'Class;
+                          O : Abstract_Set'Class) is
     It : Iterator'Class := New_Iterator (S);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -84,7 +85,8 @@ package body BC.Containers.Sets is
     end loop;
   end Intersection;
 
-  procedure Difference (S : in out Set'Class; O : Set'Class) is
+  procedure Difference (S : in out Abstract_Set'Class;
+                        O : Abstract_Set'Class) is
     It : Iterator'Class := New_Iterator (O);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -101,7 +103,8 @@ package body BC.Containers.Sets is
     end loop;
   end Difference;
 
-  function Is_Subset (S : Set'Class; O : Set'Class) return Boolean is
+  function Is_Subset (S : Abstract_Set'Class;
+                      O : Abstract_Set'Class) return Boolean is
     It : Iterator'Class := New_Iterator (S);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -118,7 +121,8 @@ package body BC.Containers.Sets is
     return True;
   end Is_Subset;
 
-  function Is_Proper_Subset (S : Set'Class; O : Set'Class) return Boolean is
+  function Is_Proper_Subset (S : Abstract_Set'Class;
+                             O : Abstract_Set'Class) return Boolean is
     It : Iterator'Class := New_Iterator (S);
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -136,7 +140,8 @@ package body BC.Containers.Sets is
   end Is_Proper_Subset;
 
   procedure Reset (It : in out Set_Iterator) is
-    S : Set'Class renames Set'Class (It.For_The_Container.all);
+    S : Abstract_Set'Class
+       renames Abstract_Set'Class (It.For_The_Container.all);
   begin
     It.Index := 0;
     if Extent (S) = 0 then
@@ -154,7 +159,8 @@ package body BC.Containers.Sets is
   end Reset;
 
   procedure Next (It : in out Set_Iterator) is
-    S : Set'Class renames Set'Class (It.For_The_Container.all);
+    S : Abstract_Set'Class
+       renames Abstract_Set'Class (It.For_The_Container.all);
   begin
     if It.Bucket_Index <= Number_Of_Buckets (S) then
       if It.Index < Length (S, It.Bucket_Index) then
@@ -174,7 +180,8 @@ package body BC.Containers.Sets is
   end Next;
 
   function Is_Done (It : Set_Iterator) return Boolean is
-    S : Set'Class renames Set'Class (It.For_The_Container.all);
+    S : Abstract_Set'Class
+    renames Abstract_Set'Class (It.For_The_Container.all);
   begin
     if It.Bucket_Index = 0
        or else It.Bucket_Index > Number_Of_Buckets (S) then
@@ -202,7 +209,8 @@ package body BC.Containers.Sets is
   end Is_Done;
 
   function Current_Item (It : Set_Iterator) return Item is
-    S : Set'Class renames Set'Class (It.For_The_Container.all);
+    S : Abstract_Set'Class
+    renames Abstract_Set'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -212,7 +220,8 @@ package body BC.Containers.Sets is
 
   function Current_Item_Ptr (It : Set_Iterator) return Item_Ptr is
     -- XXX this should probably not be permitted!
-    S : Set'Class renames Set'Class (It.For_The_Container.all);
+    S : Abstract_Set'Class
+    renames Abstract_Set'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -230,29 +239,30 @@ package body BC.Containers.Sets is
 
   -- Subprograms to be overridden
 
-  procedure Attach (S : in out Set; I : Item) is
+  procedure Attach (S : in out Abstract_Set; I : Item) is
   begin
     raise Should_Have_Been_Overridden;
   end Attach;
 
-  procedure Detach (S : in out Set; I : Item) is
+  procedure Detach (S : in out Abstract_Set; I : Item) is
   begin
     raise Should_Have_Been_Overridden;
   end Detach;
 
-  function Number_Of_Buckets (S : Set) return Natural is
+  function Number_Of_Buckets (S : Abstract_Set) return Natural is
   begin
     raise Should_Have_Been_Overridden;
     return 0;
   end Number_Of_Buckets;
 
-  function Length (S : Set; Bucket : Positive) return Natural is
+  function Length (S : Abstract_Set; Bucket : Positive) return Natural is
   begin
     raise Should_Have_Been_Overridden;
     return 0;
   end Length;
 
-  function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr is
+  function Item_At (S : Abstract_Set;
+                    Bucket, Index : Positive) return Item_Ptr is
   begin
     raise Should_Have_Been_Overridden;
     return null;

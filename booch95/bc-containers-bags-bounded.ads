@@ -44,43 +44,43 @@ package BC.Containers.Bags.Bounded is
   -- the number of buckets. The quality of the hash function has a
   -- significant impact upon performance.
 
-  type Bounded_Bag is new Bag with private;
+  type Bag is new Abstract_Bag with private;
 
-  function Null_Container return Bounded_Bag;
+  function Null_Container return Bag;
 
-  procedure Clear (B : in out Bounded_Bag);
+  procedure Clear (B : in out Bag);
   -- Empty the bag of all items.
 
-  procedure Add (B : in out Bounded_Bag; I : Item; Added : out Boolean);
+  procedure Add (B : in out Bag; I : Item; Added : out Boolean);
   -- Add the item to the bag. If the item is not already a distinct member
   -- of the bag, copy the item and add it to the bag and set Added to
   -- True. If the item already exists, then increment the number of that
   -- item and set Added to False.
 
-  function Available (B : Bounded_Bag) return Natural;
+  function Available (B : Bag) return Natural;
   -- Return the number of unused slots in the bag. Note, since hash buckets
   -- are of fixed size in the bounded bag it will probably not be possible
   -- to use all these slots.
 
-  procedure Remove (B : in out Bounded_Bag; I : Item);
+  procedure Remove (B : in out Bag; I : Item);
   -- If the item is not a member of the bag, raise BC.Not_Found. Otherwise,
   -- if there is exactly one of the item in the bag, remove the item in the
   -- bag; if there is more than one of the item in the bag, simply decrement
   -- its number.
 
-  function Extent (B : Bounded_Bag) return Natural;
+  function Extent (B : Bag) return Natural;
   -- Return the number of distinct items in the bag.
 
-  function Count (B : Bounded_Bag; I : Item) return Natural;
+  function Count (B : Bag; I : Item) return Natural;
   -- Return the number of times the item occurs in the bag.
 
-  function Is_Empty (B : Bounded_Bag) return Boolean;
+  function Is_Empty (B : Bag) return Boolean;
   -- Return True if and only if there are no items in the bag.
 
-  function Is_Member (B : Bounded_Bag; I : Item) return Boolean;
+  function Is_Member (B : Bag; I : Item) return Boolean;
   -- Return True if and only if the item exists in the bag.
 
-  function New_Iterator (For_The_Bag : Bounded_Bag) return Iterator'Class;
+  function New_Iterator (For_The_Bag : Bag) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Bag.
 
 private
@@ -110,24 +110,22 @@ private
       Values => Values,
       Buckets => Buckets);
 
-  type Bounded_Bag is new Bag with record
+  type Bag is new Abstract_Bag with record
     Rep : Tables.Table;
   end record;
 
-  procedure Attach (B : in out Bounded_Bag; I : Item; C : Positive);
+  procedure Attach (B : in out Bag; I : Item; C : Positive);
 
-  procedure Detach (B : in out Bounded_Bag; I : Item);
+  procedure Detach (B : in out Bag; I : Item);
 
-  procedure Set_Value (B : in out Bounded_Bag; I : Item; C : Positive);
+  procedure Set_Value (B : in out Bag; I : Item; C : Positive);
 
-  function Number_Of_Buckets (B : Bounded_Bag) return Natural;
+  function Number_Of_Buckets (B : Bag) return Natural;
 
-  function Length (B : Bounded_Bag; Bucket : Positive) return Natural;
+  function Length (B : Bag; Bucket : Positive) return Natural;
 
-  function Item_At
-     (B : Bounded_Bag; Bucket, Index : Positive) return Item_Ptr;
+  function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr;
 
-  function Value_At
-     (B : Bounded_Bag; Bucket, Index : Positive) return Positive;
+  function Value_At (B : Bag; Bucket, Index : Positive) return Positive;
 
 end BC.Containers.Bags.Bounded;

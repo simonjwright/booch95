@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -37,7 +37,7 @@ procedure Map_Test is
     end if;
   end Assertion;
 
-  procedure Test (M1, M2 : in out Map'Class) is
+  procedure Test (M1, M2 : in out Abstract_Map'Class) is
   begin
     Assertion (Maps.Is_Empty (M1),
                "** P01: Map is not initially empty");
@@ -133,7 +133,7 @@ procedure Map_Test is
     Maps.Bind (M1, '6', Gitems (6)'Access);
   end Test;
 
-  procedure Test_Simple_Active_Iterator (M : in out Map'Class) is
+  procedure Test_Simple_Active_Iterator (M : in out Abstract_Map'Class) is
     Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
   begin
     while not Is_Done (Map_Iter) loop
@@ -143,7 +143,7 @@ procedure Map_Test is
     end loop;
   end Test_Simple_Active_Iterator;
 
-  procedure Test_Active_Iterator (M : in out Map'Class) is
+  procedure Test_Active_Iterator (M : in out Abstract_Map'Class) is
     Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
   begin
     while not Is_Done (Map_Iter) loop
@@ -169,14 +169,14 @@ procedure Map_Test is
     OK := True;
   end Process_Modifiable;
 
-  procedure Test_Passive_Iterator (M : in out Map'Class) is
+  procedure Test_Passive_Iterator (M : in out Abstract_Map'Class) is
     procedure Visitor is new Maps.Visit (Process);
     Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
   begin
     Visitor (Using => Map_Iter);
   end Test_Passive_Iterator;
 
-  procedure Test_Passive_Modifying_Iterator (M : in out Map'Class) is
+  procedure Test_Passive_Modifying_Iterator (M : in out Abstract_Map'Class) is
     procedure Modifier is new Maps.Modify (Process_Modifiable);
     Map_Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
   begin
@@ -184,20 +184,20 @@ procedure Map_Test is
   end Test_Passive_Modifying_Iterator;
 
   type B is record
-    Map_B_Pu1 : MB.Bounded_Map;
-    Map_B_Pu2 : MB.Bounded_Map;
+    Map_B_Pu1 : MB.Map;
+    Map_B_Pu2 : MB.Map;
   end record;
   The_B: B := (MB.Null_Container, MB.Null_Container);
 
   type D is record
-    Map_D_Pu1 : MD.Dynamic_Map;
-    Map_D_Pu2 : MD.Dynamic_Map;
+    Map_D_Pu1 : MD.Map;
+    Map_D_Pu2 : MD.Map;
   end record;
   The_D: D := (MD.Null_Container, MD.Null_Container);
 
   type U is record
-    Map_U_Pu1 : MU.Unbounded_Map;
-    Map_U_Pu2 : MU.Unbounded_Map;
+    Map_U_Pu1 : MU.Map;
+    Map_U_Pu2 : MU.Map;
   end record;
   The_U: U := (MU.Null_Container, MU.Null_Container);
 
@@ -253,13 +253,13 @@ begin
              "** M06: Map Extent is not correct");
   -- I don't understand this one ..
   declare
-    Map_D_Pu3 : MD.Dynamic_Map := The_D.Map_D_Pu1;
+    Map_D_Pu3 : MD.Map := The_D.Map_D_Pu1;
   begin
     Assertion (MD."=" (The_D.Map_D_Pu1, Map_D_Pu3),
                "** M08: Maps are not equal");
   end;
   declare
-    Map_U_Pu3 : MU.Unbounded_Map := The_U.Map_U_Pu1;
+    Map_U_Pu3 : MU.Map := The_U.Map_U_Pu1;
   begin
     Assertion (MU."=" (The_U.Map_U_Pu1, Map_U_Pu3),
                "** M09: Maps are not equal");

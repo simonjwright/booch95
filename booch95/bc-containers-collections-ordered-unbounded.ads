@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -28,83 +28,79 @@ package BC.Containers.Collections.Ordered.Unbounded is
 
   pragma Elaborate_Body;
 
-  type Unbounded_Ordered_Collection is new Ordered_Collection with private;
+  type Collection is new Abstract_Ordered_Collection with private;
 
-  function Null_Container return Unbounded_Ordered_Collection;
+  function Null_Container return Collection;
 
-  function "=" (Left, Right : in Unbounded_Ordered_Collection) return Boolean;
+  function "=" (Left, Right : in Collection) return Boolean;
 
-  procedure Clear (C : in out Unbounded_Ordered_Collection);
+  procedure Clear (C : in out Collection);
   -- Empty the collection of all items.
 
-  procedure Insert (C : in out Unbounded_Ordered_Collection; Elem : Item);
+  procedure Insert (C : in out Collection; Elem : Item);
   -- Add the item to the collection, starting at the front.
 
-  procedure Insert (C : in out Unbounded_Ordered_Collection;
+  procedure Insert (C : in out Collection;
                     Elem : Item;
                     Before : Positive);
   -- Add the item to the collection, starting at the front.
 
-  procedure Append (C : in out Unbounded_Ordered_Collection; Elem : Item);
+  procedure Append (C : in out Collection; Elem : Item);
   -- Add the item to the collection, starting at the end.
 
-  procedure Append (C : in out Unbounded_Ordered_Collection;
+  procedure Append (C : in out Collection;
                     Elem : Item;
                     After : Positive);
   -- Add the item to the collection, starting at the end.
 
-  procedure Remove
-     (C : in out Unbounded_Ordered_Collection; At_Index : Positive);
+  procedure Remove (C : in out Collection; At_Index : Positive);
   -- Remove the item at the given index in the collection.
 
-  procedure Replace (C : in out Unbounded_Ordered_Collection;
+  procedure Replace (C : in out Collection;
                      At_Index : Positive;
                      Elem : Item);
   -- Replace the item at the given index with the given item.
 
-  function Length (C : Unbounded_Ordered_Collection) return Natural;
+  function Length (C : Collection) return Natural;
   -- Return the number of items in the collection.
 
-  function Is_Empty (C : Unbounded_Ordered_Collection) return Boolean;
+  function Is_Empty (C : Collection) return Boolean;
   -- Return True if and only if there are no items in the collection.
 
-  function First (C : Unbounded_Ordered_Collection) return Item;
+  function First (C : Collection) return Item;
   -- Return a copy of the item at the front of the collection.
 
-  function Last (C : Unbounded_Ordered_Collection) return Item;
+  function Last (C : Collection) return Item;
   -- Return a copy of the item at the end of the collection.
 
-  function Item_At
-     (C : Unbounded_Ordered_Collection; At_Index : Positive) return Item;
+  function Item_At (C : Collection; At_Index : Positive) return Item;
   -- Return a copy of the item at the indicated position in the collection.
 
-  function Location
-     (C : Unbounded_Ordered_Collection; Elem : Item) return Natural;
+  function Location (C : Collection; Elem : Item) return Natural;
   -- Return the first index at which the item is found (0 if the
   -- item desn't exist in the collecton).
 
-  function New_Iterator
-     (For_The_Collection : Unbounded_Ordered_Collection) return Iterator'Class;
+  function New_Iterator (For_The_Collection : Collection) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Collection.
 
 private
 
   function Item_At
-     (C : Unbounded_Ordered_Collection; Index : Positive) return Item_Ptr;
+     (C : Collection; Index : Positive) return Item_Ptr;
 
-  package Unbounded_Ordered_Collection_Nodes
+  package Collection_Nodes
   is new BC.Support.Unbounded (Item => Item,
                                Item_Ptr => Item_Ptr,
                                Storage_Manager => Storage_Manager,
                                Storage => Storage);
 
-  type Unbounded_Ordered_Collection is new Ordered_Collection with record
-    Rep : Unbounded_Ordered_Collection_Nodes.Unb_Node_Ref
-       := new Unbounded_Ordered_Collection_Nodes.Unb_Node;
+  type Collection is new Abstract_Ordered_Collection with record
+    Rep : Collection_Nodes.Unb_Node_Ref
+       := new Collection_Nodes.Unb_Node;
   end record;
 
-  procedure Initialize (C : in out Unbounded_Ordered_Collection);
-  procedure Adjust (C : in out Unbounded_Ordered_Collection);
-  procedure Finalize (C : in out Unbounded_Ordered_Collection);
+  procedure Initialize (C : in out Collection);
+  procedure Adjust (C : in out Collection);
+  procedure Finalize (C : in out Collection);
 
 end BC.Containers.Collections.Ordered.Unbounded;

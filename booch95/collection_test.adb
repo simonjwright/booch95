@@ -27,9 +27,6 @@ procedure Collection_Test is
   use Collection_Test_Support;
   use Containers;
   use Collections;
-  use CB;
-  use CD;
-  use CU;
 
   procedure Process (C : Character; OK : out Boolean) is
   begin
@@ -77,7 +74,7 @@ procedure Collection_Test is
     Modifier (Using => Iter);
   end Test_Passive_Modifying_Iterator;
 
-  procedure Test_Iterator_Deletion (C : in out Collection'Class) is
+  procedure Test_Iterator_Deletion (C : in out Abstract_Collection'Class) is
     Iter : Iterator'Class := New_Iterator (C);
     Delete : Boolean;
   begin
@@ -117,7 +114,7 @@ procedure Collection_Test is
     Assertion (Length (C) = 0, "** IS07: Collection length is not zero");
   end Test_Iterator_Deletion;
 
-  procedure Test_Primitive (C1, C2 : in out Collection'Class) is
+  procedure Test_Primitive (C1, C2 : in out Abstract_Collection'Class) is
   begin
     for C in Character'('a') .. Character'('z') loop
       Append (C1, C);
@@ -191,9 +188,9 @@ procedure Collection_Test is
     Insert (C1, 'z');
   end Test_Primitive;
 
-  Collection_B_P1, Collection_B_P2 : CB.Bounded_Collection;
-  Collection_D_P1, Collection_D_P2 : CD.Dynamic_Collection;
-  Collection_U_P1, Collection_U_P2 : CU.Unbounded_Collection;
+  Collection_B_P1, Collection_B_P2 : CB.Collection;
+  Collection_D_P1, Collection_D_P2 : CD.Collection;
+  Collection_U_P1, Collection_U_P2 : CU.Collection;
 
 begin
 
@@ -203,7 +200,7 @@ begin
   Test_Primitive (Collection_B_P1, Collection_B_P2);
 
   Put_Line ("...Dynamic Collection");
-  Preallocate (Collection_D_P1, 50);
+  CD.Preallocate (Collection_D_P1, 50);
   Test_Primitive (Collection_D_P1, Collection_D_P2);
 
   Put_Line ("...Unbounded Collection");

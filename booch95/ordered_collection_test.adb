@@ -28,9 +28,6 @@ procedure Ordered_Collection_Test is
   use Containers;
   use Base_Collections;
   use Collections;
-  use CB;
-  use CD;
-  use CU;
 
   procedure Process (C : Character; OK : out Boolean) is
   begin
@@ -70,15 +67,15 @@ procedure Ordered_Collection_Test is
     OK := True;
   end Process_Modifiable;
 
-  procedure Test_Passive_Modifying_Iterator
-     (C : in out Containers.Container'Class) is
+  procedure Test_Passive_Modifying_Iterator (C : in out Container'Class) is
     procedure Modifier is new Containers.Modify (Process_Modifiable);
     Iter : Containers.Iterator'Class := Containers.New_Iterator (C);
   begin
     Modifier (Using => Iter);
   end Test_Passive_Modifying_Iterator;
 
-  procedure Test_Iterator_Deletion (C : in out Collection'Class) is
+  procedure Test_Iterator_Deletion
+     (C : in out Abstract_Ordered_Collection'Class) is
     Iter : Iterator'Class := New_Iterator (C);
     Delete : Boolean;
   begin
@@ -118,7 +115,8 @@ procedure Ordered_Collection_Test is
     Assertion (Length (C) = 0, "** IS07: Collection length is not zero");
   end Test_Iterator_Deletion;
 
-  procedure Test_Primitive (C1, C2 : in out Collection'Class) is
+  procedure Test_Primitive
+     (C1, C2 : in out Abstract_Ordered_Collection'Class) is
   begin
     for C in Character'('a') .. Character'('z') loop
       Append (C1, C);
@@ -192,9 +190,9 @@ procedure Ordered_Collection_Test is
     Insert (C1, 'z');
   end Test_Primitive;
 
-  Collection_B_P1, Collection_B_P2 : CB.Bounded_Ordered_Collection;
-  Collection_D_P1, Collection_D_P2 : CD.Dynamic_Ordered_Collection;
-  Collection_U_P1, Collection_U_P2 : CU.Unbounded_Ordered_Collection;
+  Collection_B_P1, Collection_B_P2 : CB.Collection;
+  Collection_D_P1, Collection_D_P2 : CD.Collection;
+  Collection_U_P1, Collection_U_P2 : CU.Collection;
 
 begin
 
@@ -204,7 +202,7 @@ begin
   Test_Primitive (Collection_B_P1, Collection_B_P2);
 
   Put_Line ("...Dynamic Ordered Collection");
-  Preallocate (Collection_D_P1, 50);
+  CD.Preallocate (Collection_D_P1, 50);
   Test_Primitive (Collection_D_P1, Collection_D_P2);
 
   Put_Line ("...Unbounded Ordered Collection");

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -61,7 +61,7 @@ procedure Stack_Test is
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
-  procedure Test_Primitive (S1, S2 : in out Stack'Class) is
+  procedure Test_Primitive (S1, S2 : in out Abstract_Stack'Class) is
   begin
     for I in Character'('a') .. Character'('z') loop
       Push (S1, I);
@@ -137,7 +137,7 @@ procedure Stack_Test is
     Push (S1, 'z');
   end Test_Primitive;
 
-  procedure Test_Iterator_Deletion (S : in out Stack'Class) is
+  procedure Test_Iterator_Deletion (S : in out Abstract_Stack'Class) is
     Iter : Iterator'Class := New_Iterator (S);
     Delete : Boolean;
   begin
@@ -177,9 +177,9 @@ procedure Stack_Test is
     Assertion (Depth (S) = 0, "** I07: Stack length is not zero");
   end Test_Iterator_Deletion;
 
-  Stack_B_P1, Stack_B_P2 : SB.Bounded_Stack;
-  Stack_D_P1, Stack_D_P2 : SD.Dynamic_Stack;
-  Stack_U_P1, Stack_U_P2 : SU.Unbounded_Stack;
+  Stack_B_P1, Stack_B_P2 : SB.Stack;
+  Stack_D_P1, Stack_D_P2 : SD.Stack;
+  Stack_U_P1, Stack_U_P2 : SU.Stack;
 
 begin
 

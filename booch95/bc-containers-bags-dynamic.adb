@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -26,8 +26,8 @@ package body BC.Containers.Bags.Dynamic is
   procedure Assert
   is new BSE.Assert ("BC.Containers.Bags.Dynamic");
 
-  function Create (Size : Positive) return Dynamic_Bag is
-    Result : Dynamic_Bag;
+  function Create (Size : Positive) return Bag is
+    Result : Bag;
   begin
     for B in 1 .. Buckets loop
       IC.Set_Chunk_Size (Tables.Item_Bucket (Result.Rep, B).all, Size);
@@ -36,12 +36,12 @@ package body BC.Containers.Bags.Dynamic is
     return Result;
   end Create;
 
-  procedure Clear (B : in out Dynamic_Bag) is
+  procedure Clear (B : in out Bag) is
   begin
     Tables.Clear (B.Rep);
   end Clear;
 
-  procedure Add (B : in out Dynamic_Bag; I : Item; Added : out Boolean) is
+  procedure Add (B : in out Bag; I : Item; Added : out Boolean) is
   begin
     if Tables.Is_Bound (B.Rep, I) then
       Tables.Rebind (B.Rep, I, Tables.Value_Of (B.Rep, I) + 1);
@@ -52,7 +52,7 @@ package body BC.Containers.Bags.Dynamic is
     end if;
   end Add;
 
-  procedure Remove (B : in out Dynamic_Bag; I : Item) is
+  procedure Remove (B : in out Bag; I : Item) is
     Count : Positive;
   begin
     Assert (Tables.Is_Bound (B.Rep, I),
@@ -67,12 +67,12 @@ package body BC.Containers.Bags.Dynamic is
     end if;
   end Remove;
 
-  function Extent (B : Dynamic_Bag) return Natural is
+  function Extent (B : Bag) return Natural is
   begin
     return Tables.Extent (B.Rep);
   end Extent;
 
-  function Count (B : Dynamic_Bag; I : Item) return Natural is
+  function Count (B : Bag; I : Item) return Natural is
   begin
     if not Tables.Is_Bound (B.Rep, I) then
       return 0;
@@ -81,17 +81,17 @@ package body BC.Containers.Bags.Dynamic is
     end if;
   end  Count;
 
-  function Is_Empty (B : Dynamic_Bag) return Boolean is
+  function Is_Empty (B : Bag) return Boolean is
   begin
     return Tables.Extent (B.Rep) = 0;
   end Is_Empty;
 
-  function Is_Member (B : Dynamic_Bag; I : Item) return Boolean is
+  function Is_Member (B : Bag; I : Item) return Boolean is
   begin
     return Tables.Is_Bound (B.Rep, I);
   end Is_Member;
 
-  procedure Preallocate (B : in out Dynamic_Bag; Size : Positive) is
+  procedure Preallocate (B : in out Bag; Size : Positive) is
   begin
     for Bucket in 1 .. Buckets loop
       IC.Preallocate (Tables.Item_Bucket (B.Rep, Bucket).all, Size);
@@ -99,7 +99,7 @@ package body BC.Containers.Bags.Dynamic is
     end loop;
   end Preallocate;
 
-  procedure Set_Chunk_Size (B : in out Dynamic_Bag; Size : Positive) is
+  procedure Set_Chunk_Size (B : in out Bag; Size : Positive) is
   begin
     for Bucket in 1 .. Buckets loop
       IC.Set_Chunk_Size (Tables.Item_Bucket (B.Rep, Bucket).all, Size);
@@ -107,16 +107,15 @@ package body BC.Containers.Bags.Dynamic is
     end loop;
   end Set_Chunk_Size;
 
-  function Chunk_Size (B : Dynamic_Bag) return Positive is
+  function Chunk_Size (B : Bag) return Positive is
   begin
     return IC.Chunk_Size (Tables.Item_Bucket (B.Rep, 1).all);
   end Chunk_Size;
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Dynamic_Bag);
+  is new System.Address_To_Access_Conversions (Bag);
 
-  function New_Iterator
-     (For_The_Bag : Dynamic_Bag) return Iterator'Class is
+  function New_Iterator (For_The_Bag : Bag) return Iterator'Class is
     Result : Bag_Iterator;
   begin
     Result.For_The_Container :=
@@ -127,46 +126,44 @@ package body BC.Containers.Bags.Dynamic is
 
   -- Private implementations
 
-  procedure Attach (B : in out Dynamic_Bag; I : Item; C : Positive) is
+  procedure Attach (B : in out Bag; I : Item; C : Positive) is
   begin
     Tables.Bind (B.Rep, I, C);
   end Attach;
 
-  procedure Detach (B : in out Dynamic_Bag; I : Item) is
+  procedure Detach (B : in out Bag; I : Item) is
   begin
     Tables.Unbind (B.Rep, I);
   end Detach;
 
-  procedure Set_Value (B : in out Dynamic_Bag; I : Item; C : Positive) is
+  procedure Set_Value (B : in out Bag; I : Item; C : Positive) is
   begin
     Tables.Rebind (B.Rep, I, C);
   end Set_Value;
 
-  function Number_Of_Buckets (B : Dynamic_Bag) return Natural is
+  function Number_Of_Buckets (B : Bag) return Natural is
   begin
     return Buckets;
   end Number_Of_Buckets;
 
-  function Length (B : Dynamic_Bag; Bucket : Positive) return Natural is
+  function Length (B : Bag; Bucket : Positive) return Natural is
   begin
     return IC.Length (Tables.Item_Bucket (B.Rep, Bucket).all);
   end Length;
 
-  function Item_At
-     (B : Dynamic_Bag; Bucket, Index : Positive) return Item_Ptr is
+  function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
   begin
     return IC.Item_At (Tables.Item_Bucket (B.Rep, Bucket).all, Index);
   end Item_At;
 
-  function Value_At
-     (B : Dynamic_Bag; Bucket, Index : Positive) return Positive is
+  function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
   begin
     return VC.Item_At (Tables.Value_Bucket (B.Rep, Bucket).all, Index);
   end Value_At;
 
-  Empty_Container : Dynamic_Bag;
+  Empty_Container : Bag;
 
-  function Null_Container return Dynamic_Bag is
+  function Null_Container return Bag is
   begin
     return Empty_Container;
   end Null_Container;

@@ -21,94 +21,94 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Collections.Bounded is
 
-  function "=" (Left, Right : in Bounded_Collection) return Boolean is
-    use Bounded_Collection_Nodes;
+  function "=" (Left, Right : in Collection) return Boolean is
+    use Collection_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Clear (C : in out Bounded_Collection) is
+  procedure Clear (C : in out Collection) is
   begin
-    Bounded_Collection_Nodes.Clear (C.Rep.all);
+    Collection_Nodes.Clear (C.Rep.all);
   end Clear;
 
-  procedure Insert (C : in out Bounded_Collection; Elem : Item) is
+  procedure Insert (C : in out Collection; Elem : Item) is
   begin
-    Bounded_Collection_Nodes.Insert (C.Rep.all, Elem);
+    Collection_Nodes.Insert (C.Rep.all, Elem);
   end Insert;
 
-  procedure Insert (C : in out Bounded_Collection;
+  procedure Insert (C : in out Collection;
                     Elem : Item;
                     Before : Positive) is
   begin
-    Bounded_Collection_Nodes.Insert (C.Rep.all, Elem, Before);
+    Collection_Nodes.Insert (C.Rep.all, Elem, Before);
   end Insert;
 
-  procedure Append (C : in out Bounded_Collection; Elem : Item) is
+  procedure Append (C : in out Collection; Elem : Item) is
   begin
-    Bounded_Collection_Nodes.Append (C.Rep.all, Elem);
+    Collection_Nodes.Append (C.Rep.all, Elem);
   end Append;
 
-  procedure Append (C : in out Bounded_Collection;
+  procedure Append (C : in out Collection;
                     Elem : Item;
                     After : Positive) is
   begin
-    Bounded_Collection_Nodes.Append (C.Rep.all, Elem, After);
+    Collection_Nodes.Append (C.Rep.all, Elem, After);
   end Append;
 
-  procedure Remove (C : in out Bounded_Collection; At_Index : Positive) is
+  procedure Remove (C : in out Collection; At_Index : Positive) is
   begin
-    Bounded_Collection_Nodes.Remove (C.Rep.all, At_Index);
+    Collection_Nodes.Remove (C.Rep.all, At_Index);
   end Remove;
 
-  procedure Replace (C : in out Bounded_Collection;
+  procedure Replace (C : in out Collection;
                      At_Index : Positive;
                      Elem : Item) is
   begin
-    Bounded_Collection_Nodes.Replace (C.Rep.all, At_Index, Elem);
+    Collection_Nodes.Replace (C.Rep.all, At_Index, Elem);
   end Replace;
 
-  function Available (C: in Bounded_Collection) return Natural is
+  function Available (C: in Collection) return Natural is
   begin
-    return Bounded_Collection_Nodes.Available (C.Rep.all);
+    return Collection_Nodes.Available (C.Rep.all);
   end Available;
 
-  function Length (C : Bounded_Collection) return Natural is
+  function Length (C : Collection) return Natural is
   begin
-    return Bounded_Collection_Nodes.Length (C.Rep.all);
+    return Collection_Nodes.Length (C.Rep.all);
   end Length;
 
-  function Is_Empty (C : Bounded_Collection) return Boolean is
+  function Is_Empty (C : Collection) return Boolean is
   begin
-    return Bounded_Collection_Nodes.Length (C.Rep.all) = 0;
+    return Collection_Nodes.Length (C.Rep.all) = 0;
   end Is_Empty;
 
-  function First (C : Bounded_Collection) return Item is
+  function First (C : Collection) return Item is
   begin
-    return Bounded_Collection_Nodes.First (C.Rep.all);
+    return Collection_Nodes.First (C.Rep.all);
   end First;
 
-  function Last (C : Bounded_Collection) return Item is
+  function Last (C : Collection) return Item is
   begin
-    return Bounded_Collection_Nodes.Last (C.Rep.all);
+    return Collection_Nodes.Last (C.Rep.all);
   end Last;
 
   function Item_At
-     (C : Bounded_Collection; At_Index : Positive) return Item is
+     (C : Collection; At_Index : Positive) return Item is
   begin
     return Item_At (C, At_Index).all;
   end Item_At;
 
-  function Location (C : Bounded_Collection; Elem : Item) return Natural is
+  function Location (C : Collection; Elem : Item) return Natural is
   begin
-    return Bounded_Collection_Nodes.Location (C.Rep.all, Elem);
+    return Collection_Nodes.Location (C.Rep.all, Elem);
   end Location;
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Bounded_Collection);
+  is new System.Address_To_Access_Conversions (Collection);
 
   function New_Iterator
-     (For_The_Collection : Bounded_Collection) return Iterator'Class is
+     (For_The_Collection : Collection) return Iterator'Class is
     Result : Collection_Iterator;
   begin
     Result.For_The_Container :=
@@ -118,24 +118,24 @@ package body BC.Containers.Collections.Bounded is
   end New_Iterator;
 
   function Item_At
-     (C : Bounded_Collection; Index : Positive) return Item_Ptr is
+     (C : Collection; Index : Positive) return Item_Ptr is
   begin
-    return Bounded_Collection_Nodes.Item_At (C.Rep.all, Index);
+    return Collection_Nodes.Item_At (C.Rep.all, Index);
   end Item_At;
 
-  procedure Adjust (C : in out Bounded_Collection) is
+  procedure Adjust (C : in out Collection) is
   begin
-    C.Rep := Bounded_Collection_Nodes.Create (From => C.Rep.all);
+    C.Rep := Collection_Nodes.Create (From => C.Rep.all);
   end Adjust;
 
-  procedure Finalize (C : in out Bounded_Collection) is
+  procedure Finalize (C : in out Collection) is
   begin
-    Bounded_Collection_Nodes.Free (C.Rep);
+    Collection_Nodes.Free (C.Rep);
   end Finalize;
 
-  Empty_Container : Bounded_Collection;
+  Empty_Container : Collection;
 
-  function Null_Container return Bounded_Collection is
+  function Null_Container return Collection is
   begin
     return Empty_Container;
   end Null_Container;

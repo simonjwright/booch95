@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -29,72 +29,72 @@ package BC.Containers.Queues.Dynamic is
 
   pragma Elaborate_Body;
 
-  type Dynamic_Queue is new Queue with private;
+  type Queue is new Abstract_Queue with private;
   -- A dynamic Queue exhibits similar performance to a Bounded_Queue,
   -- except its size is limited only to available memory.  It dynamically
   -- grows in a linear fashion (based on Chunk_Size).  There is currently
   -- no support for linear collapsing of the Queue.
 
-  function Null_Container return Dynamic_Queue;
+  function Null_Container return Queue;
 
-  procedure Clear (Q : in out Dynamic_Queue);
+  procedure Clear (Q : in out Queue);
   -- Empty the queue of all items.
 
-  procedure Append (Q : in out Dynamic_Queue; Elem : Item);
+  procedure Append (Q : in out Queue; Elem : Item);
   -- Add the item to the back of the queue; the item itself is copied.
 
-  procedure Pop (Q : in out Dynamic_Queue);
+  procedure Pop (Q : in out Queue);
   -- Remove the item from the front of the queue.
 
-  procedure Remove (Q : in out Dynamic_Queue; From : Positive);
+  procedure Remove (Q : in out Queue; From : Positive);
   -- Remove the item at the given index.
 
-  function Length (Q : in Dynamic_Queue) return Natural;
+  function Length (Q : in Queue) return Natural;
   -- Return the number of items in the queue.
 
-  function Is_Empty (Q : in Dynamic_Queue) return Boolean;
+  function Is_Empty (Q : in Queue) return Boolean;
   -- Return True if and only if there are no items in the queue.
 
-  function Front (Q : in Dynamic_Queue) return Item;
+  function Front (Q : in Queue) return Item;
   -- Return a copy of the item at the front of the queue.
 
-  function Location (Q : in Dynamic_Queue; Elem : Item) return Natural;
+  function Location (Q : in Queue; Elem : Item) return Natural;
   -- Return the first index at which the item is found; return 0 if the
   -- item does not exist in the queue.
 
-  function "=" (Left, Right : Dynamic_Queue) return Boolean;
+  function "=" (Left, Right : Queue) return Boolean;
   -- Return True if and only if both queues have the same length and the same
   -- items in the same order; return False otherwise.
 
-  procedure Preallocate (Q : in out Dynamic_Queue; Size : Natural);
+  procedure Preallocate (Q : in out Queue; Size : Natural);
   -- Allocates 'Size' additional storage elements for the Queue
 
-  procedure Set_Chunk_Size (Q : in out Dynamic_Queue; Size : Natural);
+  procedure Set_Chunk_Size (Q : in out Queue; Size : Natural);
   -- Establishes the Size the Queue will grow if the Queue exhausts its
   -- current size.
 
-  function Chunk_Size (Q : Dynamic_Queue) return Natural;
+  function Chunk_Size (Q : Queue) return Natural;
   -- Returns the Chunk_Size
 
-  function New_Iterator (For_The_Queue : Dynamic_Queue) return Iterator'Class;
+  function New_Iterator (For_The_Queue : Queue) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Queue.
 
 private
 
-  function Item_At (Q : Dynamic_Queue; Index : Positive) return Item_Ptr;
+  function Item_At (Q : Queue; Index : Positive) return Item_Ptr;
 
-  package Dynamic_Queue_Nodes
+  package Queue_Nodes
   is new BC.Support.Dynamic (Item => Item,
                              Item_Ptr => Item_Ptr,
                              Storage_Manager => Storage_Manager,
                              Storage => Storage);
 
-  type Dynamic_Queue is new Queue with record
-    Rep : Dynamic_Queue_Nodes.Dyn_Node_Ref;
+  type Queue is new Abstract_Queue with record
+    Rep : Queue_Nodes.Dyn_Node_Ref;
   end record;
 
-  procedure Initialize (Q : in out Dynamic_Queue);
-  procedure Adjust (Q : in out Dynamic_Queue);
-  procedure Finalize (Q : in out Dynamic_Queue);
+  procedure Initialize (Q : in out Queue);
+  procedure Adjust (Q : in out Queue);
+  procedure Finalize (Q : in out Queue);
 
 end BC.Containers.Queues.Dynamic;

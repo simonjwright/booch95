@@ -45,47 +45,47 @@ package BC.Containers.Sets.Dynamic is
   -- the number of buckets. The quality of the hash function has a
   -- significant impact upon performance.
 
-  type Dynamic_Set is new Set with private;
+  type Set is new Abstract_Set with private;
 
-  function Null_Container return Dynamic_Set;
+  function Null_Container return Set;
 
-  function Create (Size : Positive) return Dynamic_Set;
+  function Create (Size : Positive) return Set;
   -- Creates a new Dynamic Set each of whose buckets is preallocated for
   -- 'Size' elements
 
-  procedure Clear (S : in out Dynamic_Set);
+  procedure Clear (S : in out Set);
   -- Empty the set of all items.
 
-  procedure Add (S : in out Dynamic_Set; I : Item; Added : out Boolean);
+  procedure Add (S : in out Set; I : Item; Added : out Boolean);
   -- Add the item to the set. If the item is not already a distinct member
   -- of the set, copy the item and add it to the set and set Added to
   -- True. If the item already exists, then set Added to False.
 
-  procedure Remove (S : in out Dynamic_Set; I : Item);
+  procedure Remove (S : in out Set; I : Item);
   -- If the item is not a member of the set, raise BC.Not_Found. Otherwise,
   -- remove the item from the set.
 
-  function Extent (S : Dynamic_Set) return Natural;
+  function Extent (S : Set) return Natural;
   -- Return the number of items in the set.
 
-  function Is_Empty (S : Dynamic_Set) return Boolean;
+  function Is_Empty (S : Set) return Boolean;
   -- Return True if and only if there are no items in the set.
 
-  function Is_Member (S : Dynamic_Set; I : Item) return Boolean;
+  function Is_Member (S : Set; I : Item) return Boolean;
   -- Return True if and only if the item exists in the set.
 
-  procedure Preallocate (S : in out Dynamic_Set; Size : Positive);
+  procedure Preallocate (S : in out Set; Size : Positive);
   -- Allocates 'Size' additional storage elements for each bucket of the
   -- Set
 
-  procedure Set_Chunk_Size (S : in out Dynamic_Set; Size : Positive);
+  procedure Set_Chunk_Size (S : in out Set; Size : Positive);
   -- Establishes the Size each bucket of the Set will grow if the Set
   -- exhausts its current size.
 
-  function Chunk_Size (S : Dynamic_Set) return Positive;
+  function Chunk_Size (S : Set) return Positive;
   -- Returns the Chunk_Size.
 
-  function New_Iterator (For_The_Set : Dynamic_Set) return Iterator'Class;
+  function New_Iterator (For_The_Set : Set) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Set.
 
 private
@@ -118,19 +118,18 @@ private
       Values => Values,
       Buckets => Buckets);
 
-  type Dynamic_Set is new Set with record
+  type Set is new Abstract_Set with record
     Rep : Tables.Table;
   end record;
 
-  procedure Attach (S : in out Dynamic_Set; I : Item);
+  procedure Attach (S : in out Set; I : Item);
 
-  procedure Detach (S : in out Dynamic_Set; I : Item);
+  procedure Detach (S : in out Set; I : Item);
 
-  function Number_Of_Buckets (S : Dynamic_Set) return Natural;
+  function Number_Of_Buckets (S : Set) return Natural;
 
-  function Length (S : Dynamic_Set; Bucket : Positive) return Natural;
+  function Length (S : Set; Bucket : Positive) return Natural;
 
-  function Item_At
-     (S : Dynamic_Set; Bucket, Index : Positive) return Item_Ptr;
+  function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr;
 
 end BC.Containers.Sets.Dynamic;

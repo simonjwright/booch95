@@ -1,4 +1,4 @@
--- Copyright (C) 1999-2000 Simon Wright.
+-- Copyright (C) 1999-2001 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -32,8 +32,8 @@ procedure Ordering_Test is
                           ", ident =>" & Integer'Image (Elem.Ident));
     Ok := True;
   end Report_Element;
-  C : Ordering_Support.CU.Unbounded_Ordered_Collection;
-  Q : Ordering_Support.QU.Unbounded_Ordered_Queue;
+  C : Ordering_Support.CU.Collection;
+  Q : Ordering_Support.QU.Queue;
 begin
   for Ident in 1 .. 5 loop
     Ordering_Support.CU.Append

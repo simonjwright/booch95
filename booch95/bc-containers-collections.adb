@@ -21,7 +21,7 @@ with System;
 
 package body BC.Containers.Collections is
 
-  function Are_Equal (Left, Right : Collection'Class) return Boolean is
+  function Are_Equal (Left, Right : Abstract_Collection'Class) return Boolean is
   begin
     if System."=" (Left'Address, Right'Address) then
       return True;
@@ -45,7 +45,8 @@ package body BC.Containers.Collections is
     end;
   end Are_Equal;
 
-  procedure Copy (From : Collection'Class; To : in out Collection'Class) is
+  procedure Copy (From : Abstract_Collection'Class;
+                  To : in out Abstract_Collection'Class) is
     Iter : Iterator'Class := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
@@ -60,23 +61,19 @@ package body BC.Containers.Collections is
    end if;
   end Copy;
 
-  procedure Add (C : in out Collection; Elem : Item) is
-  begin
-    raise Should_Have_Been_Overridden;
-  end Add;
-
-  procedure Lock (C : in out Collection) is
+  procedure Lock (C : in out Abstract_Collection) is
   begin
     null;
   end Lock;
 
-  procedure Unlock (C : in out Collection) is
+  procedure Unlock (C : in out Abstract_Collection) is
   begin
     null;
   end Unlock;
 
   procedure Reset (It : in out Collection_Iterator) is
-    C : Collection'Class renames Collection'Class(It.For_The_Container.all);
+    C : Abstract_Collection'Class
+       renames Abstract_Collection'Class(It.For_The_Container.all);
   begin
     if Length (C) = 0 then
       It.Index := 0;
@@ -86,7 +83,8 @@ package body BC.Containers.Collections is
   end Reset;
 
   function Is_Done (It : Collection_Iterator) return Boolean is
-    C : Collection'Class renames Collection'Class(It.For_The_Container.all);
+    C : Abstract_Collection'Class
+    renames Abstract_Collection'Class(It.For_The_Container.all);
   begin
     return It.Index = 0 or else It.Index > Length (C);
   end Is_Done;
@@ -97,7 +95,8 @@ package body BC.Containers.Collections is
   end Next;
 
   function Current_Item (It : Collection_Iterator) return Item is
-    C : Collection'Class renames Collection'Class(It.For_The_Container.all);
+    C : Abstract_Collection'Class
+    renames Abstract_Collection'Class(It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -106,7 +105,8 @@ package body BC.Containers.Collections is
   end Current_Item;
 
   function Current_Item_Ptr (It : Collection_Iterator) return Item_Ptr is
-    C : Collection'Class renames Collection'Class(It.For_The_Container.all);
+    C : Abstract_Collection'Class
+    renames Abstract_Collection'Class(It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
@@ -115,7 +115,8 @@ package body BC.Containers.Collections is
   end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Collection_Iterator) is
-    C : Collection'Class renames Collection'Class(It.For_The_Container.all);
+    C : Abstract_Collection'Class
+       renames Abstract_Collection'Class(It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;

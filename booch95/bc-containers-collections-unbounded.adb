@@ -21,89 +21,89 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Collections.Unbounded is
 
-  function "=" (Left, Right : in Unbounded_Collection) return Boolean is
-    use Unbounded_Collection_Nodes;
+  function "=" (Left, Right : in Collection) return Boolean is
+    use Collection_Nodes;
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Clear (C : in out Unbounded_Collection) is
+  procedure Clear (C : in out Collection) is
   begin
-    Unbounded_Collection_Nodes.Clear (C.Rep.all);
+    Collection_Nodes.Clear (C.Rep.all);
   end Clear;
 
-  procedure Insert (C : in out Unbounded_Collection; Elem : Item) is
+  procedure Insert (C : in out Collection; Elem : Item) is
   begin
-    Unbounded_Collection_Nodes.Insert (C.Rep.all, Elem);
+    Collection_Nodes.Insert (C.Rep.all, Elem);
   end Insert;
 
-  procedure Insert (C : in out Unbounded_Collection;
+  procedure Insert (C : in out Collection;
                     Elem : Item;
                     Before : Positive) is
   begin
-    Unbounded_Collection_Nodes.Insert (C.Rep.all, Elem, Before);
+    Collection_Nodes.Insert (C.Rep.all, Elem, Before);
   end Insert;
 
-  procedure Append (C : in out Unbounded_Collection; Elem : Item) is
+  procedure Append (C : in out Collection; Elem : Item) is
   begin
-    Unbounded_Collection_Nodes.Append (C.Rep.all, Elem);
+    Collection_Nodes.Append (C.Rep.all, Elem);
   end Append;
 
-  procedure Append (C : in out Unbounded_Collection;
+  procedure Append (C : in out Collection;
                     Elem : Item;
                     After : Positive) is
   begin
-    Unbounded_Collection_Nodes.Append (C.Rep.all, Elem, After);
+    Collection_Nodes.Append (C.Rep.all, Elem, After);
   end Append;
 
-  procedure Remove (C : in out Unbounded_Collection; At_Index : Positive) is
+  procedure Remove (C : in out Collection; At_Index : Positive) is
   begin
-    Unbounded_Collection_Nodes.Remove (C.Rep.all, At_Index);
+    Collection_Nodes.Remove (C.Rep.all, At_Index);
   end Remove;
 
-  procedure Replace (C : in out Unbounded_Collection;
+  procedure Replace (C : in out Collection;
                      At_Index : Positive;
                      Elem : Item) is
   begin
-    Unbounded_Collection_Nodes.Replace (C.Rep.all, At_Index, Elem);
+    Collection_Nodes.Replace (C.Rep.all, At_Index, Elem);
   end Replace;
 
-  function Length (C : Unbounded_Collection) return Natural is
+  function Length (C : Collection) return Natural is
   begin
-    return Unbounded_Collection_Nodes.Length (C.Rep.all);
+    return Collection_Nodes.Length (C.Rep.all);
   end Length;
 
-  function Is_Empty (C : Unbounded_Collection) return Boolean is
+  function Is_Empty (C : Collection) return Boolean is
   begin
-    return Unbounded_Collection_Nodes.Length (C.Rep.all) = 0;
+    return Collection_Nodes.Length (C.Rep.all) = 0;
   end Is_Empty;
 
-  function First (C : Unbounded_Collection) return Item is
+  function First (C : Collection) return Item is
   begin
-    return Unbounded_Collection_Nodes.First (C.Rep.all);
+    return Collection_Nodes.First (C.Rep.all);
   end First;
 
-  function Last (C : Unbounded_Collection) return Item is
+  function Last (C : Collection) return Item is
   begin
-    return Unbounded_Collection_Nodes.Last (C.Rep.all);
+    return Collection_Nodes.Last (C.Rep.all);
   end Last;
 
   function Item_At
-     (C : Unbounded_Collection; At_Index : Positive) return Item is
+     (C : Collection; At_Index : Positive) return Item is
   begin
     return Item_At (C, At_Index).all;
   end Item_At;
 
-  function Location (C : Unbounded_Collection; Elem : Item) return Natural is
+  function Location (C : Collection; Elem : Item) return Natural is
   begin
-    return Unbounded_Collection_Nodes.Location (C.Rep.all, Elem);
+    return Collection_Nodes.Location (C.Rep.all, Elem);
   end Location;
 
   package Address_Conversions
-  is new System.Address_To_Access_Conversions (Unbounded_Collection);
+  is new System.Address_To_Access_Conversions (Collection);
 
   function New_Iterator
-     (For_The_Collection : Unbounded_Collection) return Iterator'Class is
+     (For_The_Collection : Collection) return Iterator'Class is
     Result : Collection_Iterator;
   begin
     Result.For_The_Container :=
@@ -113,29 +113,29 @@ package body BC.Containers.Collections.Unbounded is
   end New_Iterator;
 
   function Item_At
-     (C : Unbounded_Collection; Index : Positive) return Item_Ptr is
+     (C : Collection; Index : Positive) return Item_Ptr is
   begin
-    return Unbounded_Collection_Nodes.Item_At (C.Rep.all, Index);
+    return Collection_Nodes.Item_At (C.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (C : in out Unbounded_Collection) is
+  procedure Initialize (C : in out Collection) is
   begin
     null;
   end Initialize;
 
-  procedure Adjust (C : in out Unbounded_Collection) is
+  procedure Adjust (C : in out Collection) is
   begin
-    C.Rep := Unbounded_Collection_Nodes.Create (From => C.Rep.all);
+    C.Rep := Collection_Nodes.Create (From => C.Rep.all);
   end Adjust;
 
-  procedure Finalize (C : in out Unbounded_Collection) is
+  procedure Finalize (C : in out Collection) is
   begin
-    Unbounded_Collection_Nodes.Free (C.Rep);
+    Collection_Nodes.Free (C.Rep);
   end Finalize;
 
-  Empty_Container : Unbounded_Collection;
+  Empty_Container : Collection;
 
-  function Null_Container return Unbounded_Collection is
+  function Null_Container return Collection is
   begin
     return Empty_Container;
   end Null_Container;

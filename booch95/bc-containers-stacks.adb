@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,12 +21,12 @@ with System;
 
 package body BC.Containers.Stacks is
 
-  procedure Process_Top (S : in out Stack'Class) is
+  procedure Process_Top (S : in out Abstract_Stack'Class) is
   begin
     Process (Item_At (S, 1).all);
   end Process_Top;
 
-  function Are_Equal (Left, Right : Stack'Class) return Boolean is
+  function Are_Equal (Left, Right : Abstract_Stack'Class) return Boolean is
   begin
     if System."=" (Left'Address, Right'Address) then
       return True;
@@ -50,7 +50,8 @@ package body BC.Containers.Stacks is
     end;
   end Are_Equal;
 
-  procedure Copy (From : Stack'Class; To : in out Stack'Class) is
+  procedure Copy (From : Abstract_Stack'Class;
+                  To : in out Abstract_Stack'Class) is
     Iter : Iterator'Class := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
@@ -65,12 +66,12 @@ package body BC.Containers.Stacks is
 
   -- Subprograms to be overridden
 
-  procedure Add (S : in out Stack; Elem : Item) is
+  procedure Add (S : in out Abstract_Stack; Elem : Item) is
   begin
     raise Should_Have_Been_Overridden;
   end Add;
 
-  procedure Remove (S : in out Stack; From : Positive) is
+  procedure Remove (S : in out Abstract_Stack; From : Positive) is
   begin
     raise Should_Have_Been_Overridden;
   end Remove;
@@ -78,7 +79,8 @@ package body BC.Containers.Stacks is
   -- Iterators
 
   procedure Reset (It : in out Stack_Iterator) is
-    S : Stack'Class renames Stack'Class (It.For_The_Container.all);
+    S : Abstract_Stack'Class
+       renames Abstract_Stack'Class (It.For_The_Container.all);
   begin
     if Depth (S) = 0 then
       It.Index := 0;
@@ -93,7 +95,8 @@ package body BC.Containers.Stacks is
   end Next;
 
   function Is_Done (It : Stack_Iterator) return Boolean is
-    S : Stack'Class renames Stack'Class (It.For_The_Container.all);
+    S : Abstract_Stack'Class
+    renames Abstract_Stack'Class (It.For_The_Container.all);
   begin
     return It.Index = 0 or else It.Index > Depth (S);
   end Is_Done;
@@ -115,7 +118,8 @@ package body BC.Containers.Stacks is
   end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Stack_Iterator) is
-    S : Stack'Class renames Stack'Class (It.For_The_Container.all);
+    S : Abstract_Stack'Class
+       renames Abstract_Stack'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;

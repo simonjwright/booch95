@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -21,13 +21,13 @@ generic
   with function "<" (L, R : Item) return Boolean is <>;
 package BC.Containers.Queues.Ordered is
 
-  type Ordered_Queue is abstract new Queue with private;
+  type Abstract_Ordered_Queue is abstract new Abstract_Queue with private;
 
   -- A ordered queue denotes a sequence of items, in which items are
   -- stored and removed in order.
 
 private
 
-  type Ordered_Queue is abstract new Queue with null record;
+  type Abstract_Ordered_Queue is abstract new Abstract_Queue with null record;
 
 end BC.Containers.Queues.Ordered;
