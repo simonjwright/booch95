@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -61,7 +61,7 @@ package body BC.Containers.Bags.Bounded is
     Count : Natural := 0;
   begin
     for P in 1 .. Buckets loop
-      Count := Count + IC.Available (Tables.Item_Bucket (B.Rep, P).all);
+      Count := Count + IC.Available (B.Rep.Items (P));
     end loop;
     return Count;
   end Available;
@@ -126,20 +126,21 @@ package body BC.Containers.Bags.Bounded is
 
   function Length (B : Bag; Bucket : Positive) return Natural is
   begin
-    return IC.Length (Tables.Item_Bucket (B.Rep, Bucket).all);
+    return IC.Length (B.Rep.Items (Bucket));
   end Length;
 
   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (Tables.Item_Bucket (B.Rep, Bucket).all, Index);
+    return IC.Item_At (B.Rep.Items (Bucket), Index);
   end Item_At;
 
   function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
   begin
-    return VC.Item_At (Tables.Value_Bucket (B.Rep, Bucket).all, Index);
+    return VC.Item_At (B.Rep.Values (Bucket), Index);
   end Value_At;
 
   Empty_Container : Bag;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Bag is
   begin
