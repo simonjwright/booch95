@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML VERSION="2.0">
 <HEAD>
-<TITLE>Component Documentation</TITLE>
+<TITLE>The Ada95 Booch Components (Component documentation)</TITLE>
 </HEAD>
 <BODY BGCOLOR="#ffffff">
 
@@ -274,14 +274,30 @@ object's use indefinitely; releasing an object never seized is
 improper; and ignoring the protocol altogether is likely to result in
 interleaved tasks corrupting the state of the object.
 
-<p>Guarded forms are created by instantiating a generic package using
-a type derived from <tt>Semaphore_Base</tt> (in
-<tt>BC.Support.Synchronisation</tt>). A standard <tt>Semaphore</tt> is
-supplied, using which will cause each object to have its own guard; an
-alternative possibility would be to create a new <tt>Semaphore</tt>
-type such that each object of that type accessed a common actual
-Semaphore. Using such a strategy, a global lock could be obtained on a
-whole group of objects in one operation.
+<p>Guarded forms are created by instantiating the package
+<tt>BC.Containers.Guarded</tt> with
+
+<ul>
+
+<li> a Container derived from BC.Containers.Container (ie, any of the
+supported Containers)
+
+<li> a type derived from <tt>Semaphore_Base</tt> (in
+<tt>BC.Support.Synchronisation</tt>)
+
+</ul>
+
+A standard <tt>Semaphore</tt> is supplied, using which will cause each
+object to have its own guard; an alternative possibility would be to
+create a new <tt>Semaphore</tt> type such that each object of that
+type accesses a common actual Semaphore. Using such a strategy, a
+global lock could be obtained on a whole group of objects in one
+operation.
+
+<p><font color="red"><em>Note particularly</em></font> that the
+standard Guard <font color="red"><em>will not work as you
+expect</em></font> for "polylithic" structures (Graphs, Lists, Binarly
+and Multiway Trees).
 
 <h3>Synchronized forms</h3>
 
@@ -297,28 +313,32 @@ atomic transaction, the Guarded protocol should be used.
 
 
 <H2><A NAME="conclusion">Conclusion</A></H2>
-<P>Here's a table of the components and the forms to be supported<BR>
- (U=Unbounded, B=Bounded, D=Dynamic, G=Guarded, S=Synchronized).<br>
-The available components are shown in <font color="red">red</font>.</P>
+
+<P>Here's a table of the components and the forms to be supported
+(U=Unbounded, B=Bounded, D=Dynamic, G=Guarded, S=Synchronized).  The
+available components are shown in <font color="red">red</font>. Those
+for which it's appropriate to use the standard Guard are marked <font
+color="green">G</font>.
+
 <PRE>
-Bags         : <font color="red">UBD</font>GS
-Collections  : <font color="red">U</font>BDGS
-  (ordered)  : <font color="red">U</font>BDGS
-Dequeues     : <font color="red">U</font>BDGS
+Bags         : <font color="red">UBD</font><font color="green">G</font>S
+Collections  : <font color="red">UBD</font><font color="green">G</font>S
+  (ordered)  : <font color="red">UBD</font><font color="green">G</font>S
+Dequeues     : <font color="red">UBD</font><font color="green">G</font>S
 Graphs
   Directed   : <font color="red">U</font>
   Undirected : <font color="red">U</font>
 Lists
   Single     : <font color="red">U</font>
   Double     : <font color="red">U</font>
-Maps         : <font color="red">UBD</font><font color="green">GS (only for Unbounded)</font>
-Queues       : <font color="red">UBD</font>GS
-  (ordered)  : <font color="red">U</font>BDGS
-Rings        : <font color="red">U</font>BD<font color="red">GS</font>
-Sets         : <font color="red">UBD</font>GS
-Stacks       : <font color="red">UBD</font>GS
+Maps         : <font color="red">UBD</font><font color="green">G</font>S
+Queues       : <font color="red">UBD</font><font color="green">G</font>S
+  (ordered)  : <font color="red">UBD</font><font color="green">G</font>S
+Rings        : <font color="red">UBD</font><font color="green">G</font>S
+Sets         : <font color="red">UBD</font><font color="green">G</font>S
+Stacks       : <font color="red">UBD</font><font color="green">G</font>S
 Trees
-  AVL        : <font color="red">U</font>
+  AVL        : <font color="red">U</font><font color="green">G</font>
   Binary     : <font color="red">U</font>
   Multiway   : <font color="red">U</font>
 </PRE>
