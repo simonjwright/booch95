@@ -112,7 +112,7 @@ package body BC.Containers.Deques is
     return Item_At (D, It.Index);
   end Current_Item_Ptr;
 
-  procedure Delete_Item_At (It : Deque_Iterator) is
+  procedure Delete_Item_At (It : in out Deque_Iterator) is
     D : Abstract_Deque'Class
        renames Abstract_Deque'Class (It.For_The_Container.all);
   begin

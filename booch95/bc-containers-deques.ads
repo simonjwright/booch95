@@ -101,6 +101,6 @@ private
 
   function Current_Item_Ptr (It : Deque_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : Deque_Iterator);
+  procedure Delete_Item_At (It : in out Deque_Iterator);
 
 end BC.Containers.Deques;
