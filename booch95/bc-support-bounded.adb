@@ -35,20 +35,6 @@ package body BC.Support.Bounded is
    package Allow_Element_Access
    is new System.Address_To_Access_Conversions (Item);
 
-   function "=" (Left, Right : Bnd_Node) return Boolean is
-   begin
-      if Left.Size /= Right.Size then
-         return False;
-      else
-         for I in 1 .. Left.Size loop
-            if Item'(Item_At (Left, I)) /= Item'(Item_At (Right, I)) then
-               return False;
-            end if;
-         end loop;
-         return True;
-      end if;
-   end "=";
-
    procedure Clear (Obj : in out Bnd_Node) is
    begin
       Obj.Start := 1;
@@ -256,11 +242,6 @@ package body BC.Support.Bounded is
       --  objects; but we need to be able to do this so that we can
       --  return pointers to individual elements. This technique is due
       --  to Matthew Heaney.
-      subtype This_Elem_Array is Elem_Array (1 .. Obj.Maximum_Size);
-      package Allow_Access
-      is new System.Address_To_Access_Conversions (This_Elem_Array);
-      E : Allow_Access.Object_Pointer
-        := Allow_Access.To_Pointer (Obj.Elems (Obj.Elems'First)'Address);
    begin
       Assert (Index in 1 .. Obj.Size,
               BC.Range_Error'Identity,
@@ -268,7 +249,7 @@ package body BC.Support.Bounded is
               BSE.Invalid_Index);
       return Item_Ptr
         (Allow_Element_Access.To_Pointer
-           (E (((Obj.Start - 1 + Index - 1) mod Obj.Maximum_Size) + 1)
+           (Obj.Elems (((Obj.Start - 1 + Index - 1) mod Obj.Maximum_Size) + 1)
             'Address));
    end Item_At;
 
@@ -291,6 +272,21 @@ package body BC.Support.Bounded is
       end loop;
       return 0;
    end Location;
+
+   --  OA wants this to be after Item_At, so it can inline it.
+   function "=" (Left, Right : Bnd_Node) return Boolean is
+   begin
+      if Left.Size /= Right.Size then
+         return False;
+      else
+         for I in 1 .. Left.Size loop
+            if Item'(Item_At (Left, I)) /= Item'(Item_At (Right, I)) then
+               return False;
+            end if;
+         end loop;
+         return True;
+      end if;
+   end "=";
 
    procedure Write_Bnd_Node
      (Stream : access Ada.Streams.Root_Stream_Type'Class;
