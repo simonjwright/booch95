@@ -28,7 +28,10 @@ all::
 ########
 # Tests
 
+GCOV_FLAGS = -ftest-coverage -fprofile-arcs
+
 GNATMAKE_FLAGS = -O2 -g -gnata -gnatf -gnatwu -gnatwl -gnaty -j2
+GNATMAKE_FLAGS += $(GCOV_FLAGS)
 
 ADA_SOURCE = \
 bc.ad[bs] \
