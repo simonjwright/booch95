@@ -57,8 +57,6 @@ procedure Time_Lists is
         & Integer'Image (Total));
 
     Total := 0;
-    It := Lists_For_Timing.C.New_Iterator
-       (Lists_For_Timing.C.Container'Class (D));
     Start := Ada.Calendar.Clock;
     D_Application (It);
     Taken := Ada.Calendar.Clock - Start;
