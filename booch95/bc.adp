@@ -7,5 +7,5 @@ main=${current}
 main_unit=${current}
 build_dir=/home/simon/bc/
 casing=~/.emacs_case_exceptions/
-src_dir=/home/simon/bc/
-obj_dir=/home/simon/bc/
+
+
