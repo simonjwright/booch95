@@ -26,6 +26,8 @@ package BC.Support.Unbounded is
 
   type Unb_Node is private;
 
+  type Unb_Node_Ref is access Unb_Node;
+
   function Create (From : Unb_Node) return Unb_Node;
 
   function "=" (Left, Right : Unb_Node) return Boolean;
@@ -47,7 +49,8 @@ package BC.Support.Unbounded is
   function Location (Obj : access Unb_Node; Elem : Item; Start : Positive := 1)
                      return Natural;
 
-  type Unb_Node_Ref is access Unb_Node;
+  procedure Free (Obj : in out Unb_Node_Ref);
+  -- Dispose of the Node referred to, having first Cleared it
 
 private
 
