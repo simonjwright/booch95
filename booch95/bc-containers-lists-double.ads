@@ -165,7 +165,7 @@ private
   function Cardinality (Obj : Double_List) return Natural;
 
   package Double_Nodes
-  is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
+  is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
   type Double_List is new Container with record
     Rep : Double_Nodes.Double_Node_Ref;
