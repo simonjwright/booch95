@@ -74,10 +74,7 @@ private
                              Maximum_Size => Maximum_Size);
 
   type Queue is new Abstract_Queue with record
-    Rep : Queue_Nodes.Bnd_Node_Ref := new Queue_Nodes.Bnd_Node;
+    Rep : Queue_Nodes.Bnd_Node;
   end record;
-
-  procedure Adjust (Q : in out Queue);
-  procedure Finalize (Q : in out Queue);
 
 end BC.Containers.Queues.Bounded;
