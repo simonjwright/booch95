@@ -18,17 +18,14 @@
 -- $Id$
 
 with Text_Io;
-with Root_Container;
-with Root_Trees;
-with Root_Trees;
-with Root_Bin_Trees;
-with Root_Mway_Trees;
+with Tree_Test_Support;
 with Character_References;
 
 procedure Tree_Test is
 
   use Text_IO;
-  use Character_References;
+  use Tree_Test_Support;
+--    use Character_References;
 
   procedure Assertion (Cond : Boolean; Message : String) is
   begin
@@ -40,10 +37,10 @@ procedure Tree_Test is
 
   -- I used this while trying to figure out my booboos. An example
   -- (not good) of how to approach tree traversal.
-  procedure Print_Tree (T : Root_Bin_Trees.Binary_Tree;
+  procedure Print_Tree (T : TB.Binary_Tree;
                         Message : String := "";
                         Depth : Natural := 0) is
-    use Root_Bin_Trees;
+    use TB;
     procedure Indent (To : Natural := Depth) is
     begin
       for N in 1 .. Integer (To) loop
@@ -82,8 +79,8 @@ procedure Tree_Test is
     end if;
   end Print_Tree;
 
-  procedure Test_Primitive (T1, T2 : in out Root_Bin_Trees.Binary_Tree) is
-    use Root_Bin_Trees;
+  procedure Test_Primitive (T1, T2 : in out TB.Binary_Tree) is
+    use TB;
     Tt1, Tt2, Tt3 : Binary_Tree;
   begin
     Clear (T1);
@@ -181,10 +178,10 @@ procedure Tree_Test is
     Assertion (Item_At (Tt1) = '7', "** B40: Tree item is not correct");
   end Test_Primitive;
 
-  B_Tree_P1, B_Tree_P2 : aliased Root_Bin_Trees.Binary_Tree;
+  B_Tree_P1, B_Tree_P2 : aliased TB.Binary_Tree;
 
-  procedure Test_Primitive (T1, T2 : in out Root_Mway_Trees.Multiway_Tree) is
-    use Root_Mway_Trees;
+  procedure Test_Primitive (T1, T2 : in out TM.Multiway_Tree) is
+    use TM;
     Tt1, Tt2, Tt3 : Multiway_Tree;
   begin
     Assertion (Is_Null (T1), "** M01: Tree is not initially null");
@@ -288,7 +285,7 @@ procedure Tree_Test is
     Assertion (Item_At (Tt2) = '1', "** M47: Tree item is not correct");
   end Test_Primitive;
 
-  M_Tree_P1, M_Tree_P2 : aliased Root_Mway_Trees.Multiway_Tree;
+  M_Tree_P1, M_Tree_P2 : aliased TM.Multiway_Tree;
 
 begin
 
