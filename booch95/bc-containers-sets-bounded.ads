@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -101,13 +101,15 @@ private
    package Items is new BC.Support.Bounded_Hash_Tables.Item_Signature
      (Item => Item,
       Item_Ptr => Item_Ptr,
-      Eq => "=");
+      Eq => "=",
+      Hash => Hash);
 
    --  We need a dummy type for the Value component of the hash table.
-   type Boolean_Ptr is access all Boolean;
+   type Dummy is null record;
+   type Dummy_Ptr is access all Dummy;
    package Values is new BC.Support.Bounded_Hash_Tables.Value_Signature
-     (Value => Boolean,
-      Value_Ptr => Boolean_Ptr,
+     (Value => Dummy,
+      Value_Ptr => Dummy_Ptr,
       Eq => "=");
 
    package Tables is new BC.Support.Bounded_Hash_Tables.Tables

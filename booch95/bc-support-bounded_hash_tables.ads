@@ -1,4 +1,4 @@
---  Copyright 2001-2003 Simon Wright <simon@pushface.org>
+--  Copyright 2001-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -46,7 +46,7 @@ package BC.Support.Bounded_Hash_Tables is
       type Item is private;
       type Item_Ptr is access all Item;
       with function Eq (L, R : Item) return Boolean;
-      with function Hash (V : Item) return Natural is <>;
+      with function Hash (V : Item) return Natural;
 
    package Item_Signature is end Item_Signature;
 

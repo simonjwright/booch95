@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2003 Simon Wright <simon@pushface.org>
+--  Copyright 2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -41,7 +41,7 @@ package body BC.Containers.Sets.Unmanaged is
       if Tables.Is_Bound (S.Rep, I) then
          Added := False;
       else
-         Tables.Bind (S.Rep, I, True);
+         Tables.Bind (S.Rep, I, Dummy'(null record));
          Added := True;
       end if;
    end Add;
@@ -49,7 +49,7 @@ package body BC.Containers.Sets.Unmanaged is
    procedure Add (S : in out Unconstrained_Set; I : Item) is
    begin
       if not Tables.Is_Bound (S.Rep, I) then
-         Tables.Bind (S.Rep, I, True);
+         Tables.Bind (S.Rep, I, Dummy'(null record));
       end if;
    end Add;
 
