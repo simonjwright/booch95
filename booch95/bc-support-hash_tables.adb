@@ -217,6 +217,7 @@ package body BC.Support.Hash_Tables is
                end if;
             end loop;
          end if;
+         T.Size := T.Size - 1;
       end Delete_Item_At;
 
 
