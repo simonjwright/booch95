@@ -1,5 +1,5 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
--- $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with BC.Containers;
 with BC.Containers.Collections;
@@ -27,18 +30,21 @@ with Global_Heap;
 
 package Ordered_Collection_Test_Support is
 
-  package Containers is new BC.Containers (Item => Character);
+   package Containers is new BC.Containers (Item => Character);
 
-  package Base_Collections is new Containers.Collections;
+   package Base_Collections is new Containers.Collections;
 
-  package Collections is new Base_Collections.Ordered;
+   package Collections is new Base_Collections.Ordered;
 
-  package CB is new Collections.Bounded (Maximum_Size => 100);
+   package CB is new Collections.Bounded
+     (Maximum_Size => 100);
 
-  package CD is new Collections.Dynamic (Storage_Manager => Global_Heap.Pool,
-                                    Storage => Global_Heap.Storage);
+   package CD is new Collections.Dynamic
+     (Storage_Manager => Global_Heap.Pool,
+      Storage => Global_Heap.Storage);
 
-  package CU is new Collections.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                           Storage => Global_Heap.Storage);
+   package CU is new Collections.Unbounded
+     (Storage_Manager => Global_Heap.Pool,
+      Storage => Global_Heap.Storage);
 
 end Ordered_Collection_Test_Support;

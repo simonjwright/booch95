@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,23 +15,26 @@
 --      for a copy.
 --
 
--- $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 generic
-  with function "<" (L, R : Item) return Boolean is <>;
+   with function "<" (L, R : Item) return Boolean is <>;
 package BC.Containers.Collections.Ordered is
 
-  type Abstract_Ordered_Collection
-    is abstract new Abstract_Collection with private;
+   type Abstract_Ordered_Collection
+      is abstract new Abstract_Collection with private;
 
-  -- An ordered collection denotes a sorted indexed collection of
-  -- items, drawn from some well-defined universe. An ordered
-  -- collection may contain duplicate items; it owns a copy of each
-  -- item.
+   --  An ordered collection denotes a sorted indexed collection of
+   --  items, drawn from some well-defined universe. An ordered
+   --  collection may contain duplicate items; it owns a copy of each
+   --  item.
 
 private
 
-  type Abstract_Ordered_Collection
-    is abstract new Abstract_Collection with null record;
+   type Abstract_Ordered_Collection
+      is abstract new Abstract_Collection with null record;
 
 end BC.Containers.Collections.Ordered;

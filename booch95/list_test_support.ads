@@ -1,5 +1,5 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
--- $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with BC.Containers;
 with BC.Containers.Lists;
@@ -25,14 +28,14 @@ with Global_Heap;
 
 package List_Test_Support is
 
-  package Containers is new BC.Containers (Item => Character);
+   package Containers is new BC.Containers (Item => Character);
 
-  package Lists is new Containers.Lists;
+   package Lists is new Containers.Lists;
 
-  package LS is new Lists.Single (Storage_Manager => Global_Heap.Pool,
-                                  Storage => Global_Heap.Storage);
+   package LS is new Lists.Single (Storage_Manager => Global_Heap.Pool,
+                                   Storage => Global_Heap.Storage);
 
-  package LD is new Lists.Double (Storage_Manager => Global_Heap.Pool,
-                                  Storage => Global_Heap.Storage);
+   package LD is new Lists.Double (Storage_Manager => Global_Heap.Pool,
+                                   Storage => Global_Heap.Storage);
 
 end List_Test_Support;

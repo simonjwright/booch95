@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,19 +15,22 @@
 --      for a copy.
 --
 
--- $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 generic
-  with function "<" (L, R : Item) return Boolean is <>;
+   with function "<" (L, R : Item) return Boolean is <>;
 package BC.Containers.Queues.Ordered is
 
-  type Abstract_Ordered_Queue is abstract new Abstract_Queue with private;
+   type Abstract_Ordered_Queue is abstract new Abstract_Queue with private;
 
-  -- A ordered queue denotes a sequence of items, in which items are
-  -- stored and removed in order.
+   --  A ordered queue denotes a sequence of items, in which items are
+   --  stored and removed in order.
 
 private
 
-  type Abstract_Ordered_Queue is abstract new Abstract_Queue with null record;
+   type Abstract_Ordered_Queue is abstract new Abstract_Queue with null record;
 
 end BC.Containers.Queues.Ordered;

@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,84 +15,90 @@
 --      for a copy.
 --
 
--- $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 generic
 package BC.Containers.Queues is
 
-  pragma Elaborate_Body;
+   pragma Elaborate_Body;
 
-  type Abstract_Queue is abstract new Container with private;
+   type Abstract_Queue is abstract new Container with private;
 
-  -- A queue denotes a sequence of items, in which items may be added
-  -- from one end and removed from the opposite end of the sequence.
+   --  A queue denotes a sequence of items, in which items may be
+   --  added from one end and removed from the opposite end of the
+   --  sequence.
 
-  procedure Clear (Q : in out Abstract_Queue) is abstract;
-  -- Empty the queue of all items.
+   procedure Clear (Q : in out Abstract_Queue) is abstract;
+   --  Empty the queue of all items.
 
-  procedure Append (Q : in out Abstract_Queue; Elem : Item) is abstract;
-  -- Add the item to the back of the queue; the item itself is copied.
+   procedure Append (Q : in out Abstract_Queue; Elem : Item) is abstract;
+   --  Add the item to the back of the queue; the item itself is
+   --  copied.
 
-  procedure Pop (Q : in out Abstract_Queue) is abstract;
-  -- Remove the item from the front of the queue.
+   procedure Pop (Q : in out Abstract_Queue) is abstract;
+   --  Remove the item from the front of the queue.
 
-  procedure Pop_Value (Q : in out Abstract_Queue; Elem : out Item);
-  -- Remove and return the item from the front of the queue.
+   procedure Pop_Value (Q : in out Abstract_Queue; Elem : out Item);
+   --  Remove and return the item from the front of the queue.
 
-  procedure Remove (Q : in out Abstract_Queue; From : Positive) is abstract;
-  -- Remove the item at the given index (may be a balking operation).
+   procedure Remove (Q : in out Abstract_Queue; From : Positive) is abstract;
+   --  Remove the item at the given index (may be a balking
+   --  operation).
 
-  function Available (Q : in Abstract_Queue) return Natural;
-  -- Indicates number of empty "Item slots" left in Queue
+   function Available (Q : in Abstract_Queue) return Natural;
+   --  Indicates number of empty "Item slots" left in Queue
 
-  function Length (Q : in Abstract_Queue) return Natural is abstract;
-  -- Return the number of items in the queue.
+   function Length (Q : in Abstract_Queue) return Natural is abstract;
+   --  Return the number of items in the queue.
 
-  function Is_Empty (Q : in Abstract_Queue) return Boolean is abstract;
-  -- Return True if and only if there are no items in the queue.
+   function Is_Empty (Q : in Abstract_Queue) return Boolean is abstract;
+   --  Return True if and only if there are no items in the queue.
 
-  function Front (Q : in Abstract_Queue) return Item is abstract;
-  -- Return a copy of the item at the front of the queue.
+   function Front (Q : in Abstract_Queue) return Item is abstract;
+   --  Return a copy of the item at the front of the queue.
 
-  generic
-    with procedure Process (Elem : in out Item);
-  procedure Process_Front (Q : in out Abstract_Queue'Class);
-  -- Access the item at the front of the queue.
+   generic
+      with procedure Process (Elem : in out Item);
+   procedure Process_Front (Q : in out Abstract_Queue'Class);
+   --  Access the item at the front of the queue.
 
-  function Location (Q : in Abstract_Queue; Elem : in Item) return Natural
-    is abstract;
-  -- Return the first index at which the item is found; return 0 if the
-  -- item does not exist in the queue.
+   function Location (Q : in Abstract_Queue; Elem : in Item) return Natural
+      is abstract;
+   --  Return the first index at which the item is found; return 0 if
+   --  the item does not exist in the queue.
 
-  function Are_Equal (Left, Right : Abstract_Queue'Class) return Boolean;
-  -- Return True if and only if both queues have the same length and the same
-  -- items in the same order; return False otherwise.
+   function Are_Equal (Left, Right : Abstract_Queue'Class) return Boolean;
+   --  Return True if and only if both queues have the same length and
+   --  the same items in the same order; return False otherwise.
 
-  procedure Copy (From : Abstract_Queue'Class;
-                  To : in out Abstract_Queue'Class);
-  -- This operation MUST be called for dissimilar Queues in place of
-  -- assignment.
+   procedure Copy (From : Abstract_Queue'Class;
+                   To : in out Abstract_Queue'Class);
+   --  This operation MUST be called for dissimilar Queues in place of
+   --  assignment.
 
 private
 
-  type Abstract_Queue is abstract new Container with null record;
+   type Abstract_Queue is abstract new Container with null record;
 
-  type Queue_Iterator is new Iterator with record
-    Index : Natural;
-  end record;
+   type Queue_Iterator is new Iterator with record
+      Index : Natural;
+   end record;
 
-  -- Overriding primitive supbrograms of the concrete actual Iterator.
+   --  Overriding primitive supbrograms of the concrete actual Iterator.
 
-  procedure Reset (It : in out Queue_Iterator);
+   procedure Reset (It : in out Queue_Iterator);
 
-  procedure Next (It : in out Queue_Iterator);
+   procedure Next (It : in out Queue_Iterator);
 
-  function Is_Done (It : Queue_Iterator) return Boolean;
+   function Is_Done (It : Queue_Iterator) return Boolean;
 
-  function Current_Item (It : Queue_Iterator) return Item;
+   function Current_Item (It : Queue_Iterator) return Item;
 
-  function Current_Item_Ptr (It : Queue_Iterator) return Item_Ptr;
+   function Current_Item_Ptr (It : Queue_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : in out Queue_Iterator);
+   procedure Delete_Item_At (It : in out Queue_Iterator);
 
 end BC.Containers.Queues;
