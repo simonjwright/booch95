@@ -107,8 +107,10 @@ package body BC.Support.Memory_Streams is
                            Stream : in out Stream_Type) is
       use type Ada.Streams.Stream_Element_Offset;
    begin
-      pragma Assert (From'Length <= Stream.Capacity);
       Reset (Stream);
+      if From'Length > Stream.Capacity then
+         raise Ada.IO_Exceptions.End_Error;
+      end if;
       Stream.Buffer (1 .. From'Length) := From;
       Stream.Next_Write := From'Length + 1;
    end Set_Contents;
