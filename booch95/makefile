@@ -141,6 +141,7 @@ DISTRIBUTION_FILES = \
 bc-$(DATE).tgz \
 bc-$(DATE).zip \
 bc-$(DATE).src \
+bc-html-$(DATE).zip \
 ACL
 
 dist: $(DISTRIBUTION_FILES)
@@ -254,5 +255,8 @@ bc-$(DATE).zip: bc-$(DATE)
 
 bc-$(DATE).src: $(ADA_SOURCE)
 	cat $(ADA_SOURCE) > $@
+
+bc-html-$(DATE).zip: force
+	(cd html; zip ../$@ *.gif *.html)
 
 .PHONY: force
