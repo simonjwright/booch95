@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -93,19 +93,23 @@ package BC.Containers.Maps.Unbounded is
 private
 
    package KC is new BC.Support.Unbounded (Item => Key,
+                                           "=" => Maps."=",
                                            Item_Ptr => Key_Ptr,
                                            Storage => Storage);
    use KC;
    package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
+      "=" => Maps."=",
       Item_Container => KC.Unb_Node);
 
    package IC is new BC.Support.Unbounded (Item => Item,
+                                           "=" => Containers."=",
                                            Item_Ptr => Item_Ptr,
                                            Storage => Storage);
    use IC;
    package Items is new BC.Support.Hash_Tables.Value_Signature
      (Value => Item,
+      "=" => Containers."=",
       Value_Ptr => Item_Ptr,
       Value_Container => IC.Unb_Node);
 
