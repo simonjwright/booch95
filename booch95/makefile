@@ -1,4 +1,4 @@
-# Copyright 1998-2002 Simon Wright <simon@pushface.org>
+# Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 # This package is free software; you can redistribute it and/or
 # modify it under terms of the GNU General Public License as
