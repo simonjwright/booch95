@@ -26,6 +26,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Lists.Double is
 
+  pragma Elaborate_Body;
+
   -- Doubly-linked list
 
   type Double_List is new Container with private;
@@ -146,12 +148,18 @@ package BC.Containers.Lists.Double is
   function Head (L : Double_List) return Item;
   -- Return a copy of the item at the head of the list.
 
-  -- XXX need accessor generic
+  generic
+    with procedure Process (Elem : in out Item);
+  procedure Process_Head (L : in out Double_List);
+  -- Access the item at the head of the list.
 
   function Foot (L : Double_List) return Item;
   -- Return a copy of the item at the end of the list.
 
-  -- XXX need accessor generic
+  generic
+    with procedure Process (Elem : in out Item);
+  procedure Process_Foot (L : in out Double_List);
+  -- Access the item at the end of the list.
 
   function Item_At (L : Double_List; Index : Positive) return Item;
   -- Return a copy of the item at the given index.
