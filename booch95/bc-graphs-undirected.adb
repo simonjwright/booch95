@@ -40,7 +40,7 @@ package body BC.Graphs.Undirected is
     Clear (A);
     A.Rep := new Arc_Node'(Ada.Finalization.Controlled with
                            Item => I,
-                           Enclosing => G'Unchecked_access,
+                           Enclosing => G'Unchecked_Access,
                            From => First.Rep,
                            To => Second.Rep,
                            Next_Incoming => null,
