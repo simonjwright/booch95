@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -43,6 +43,9 @@ package BC is
   -- subprogram that should have been overridden for a derived type.
   -- Used only where the subprogram is private (and therefore can't be
   -- abstract).
+
+  Not_Yet_Implemented : exception;
+  -- Raised when a feature hasn't yet been implemented.
 
 end BC;
 

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -17,12 +17,33 @@
 
 -- $Id$
 
+with System;
+
 package body BC.Containers.Queues is
+
+  procedure Process_Front (Q : in out Queue'Class) is
+  begin
+    Process (Item_At (Q, 1).all);
+  end Process_Front;
+
+  procedure Copy (From : Queue'Class; To : in out Queue'Class) is
+    Iter : Iterator := New_Iterator (From);
+  begin
+    if System."/=" (From'Address, To'Address) then
+      Clear (To);
+      Reset (Iter);
+      while not Is_Done (Iter) loop
+        Append (To, Current_Item (Iter));
+        Next (Iter);
+      end loop;
+    end if;
+  end Copy;
 
   function Are_Equal (Left, Right : Queue'Class) return Boolean is
   begin
-    -- XXX left out the optimisation which checks whether L, R are
-    -- identical.
+    if System."=" (Left'Address, Right'Address) then
+      return True;
+    end if;
     if Cardinality (Left) /= Cardinality (Right) then
       return False;
     end if;
@@ -41,22 +62,6 @@ package body BC.Containers.Queues is
       return True;
     end;
   end Are_Equal;
-
-  procedure Copy (From : Queue'Class; To : in out Queue'Class) is
-    Iter : Iterator := New_Iterator (From);
-  begin
-    Clear (To);
-    Reset (Iter);
-    while not Is_Done (Iter) loop
-      Append (To, Current_Item (Iter));
-      Next (Iter);
-    end loop;
-  end Copy;
-
-  procedure Add (Obj : in out Queue; Elem : Item) is
-  begin
-    raise Should_Have_Been_Overridden;
-  end Add;
 
   procedure Initialize (It : in out Queue_Iterator) is
   begin
@@ -97,5 +102,13 @@ package body BC.Containers.Queues is
     end if;
     return Item_At (It.Q.all, It.Index);
   end Current_Item;
+
+  procedure Delete_Item_At (It : Queue_Iterator) is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    Remove (It.Q.all, It.Index);
+  end Delete_Item_At;
 
 end BC.Containers.Queues;

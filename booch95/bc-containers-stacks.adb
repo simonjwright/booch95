@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -17,12 +17,20 @@
 
 -- $Id$
 
+with System;
+
 package body BC.Containers.Stacks is
+
+  procedure Process_Top (S : in out Stack'Class) is
+  begin
+    Process (Item_At (S, 1).all);
+  end Process_Top;
 
   function Are_Equal (Left, Right : Stack'Class) return Boolean is
   begin
-    -- XXX left out the optimisation which checks whether L, R are
-    -- identical.
+    if System."=" (Left'Address, Right'Address) then
+      return True;
+    end if;
     if Cardinality (Left) /= Cardinality (Right) then
       return False;
     end if;
@@ -45,18 +53,29 @@ package body BC.Containers.Stacks is
   procedure Copy (From : Stack'Class; To : in out Stack'Class) is
     Iter : Iterator := New_Iterator (From);
   begin
-    Clear (To);
-    Reset (Iter);
-    while not Is_Done (Iter) loop
-      Add (To, Current_Item (Iter));
-      Next (Iter);
-    end loop;
+    if System."/=" (From'Address, To'Address) then
+      Clear (To);
+      Reset (Iter);
+      while not Is_Done (Iter) loop
+        Add (To, Current_Item (Iter));
+        Next (Iter);
+      end loop;
+    end if;
   end Copy;
 
-  procedure Add (Obj : in out Stack; Elem : Item) is
+  -- Subprograms to be overridden
+
+  procedure Add (S : in out Stack; Elem : Item) is
   begin
     raise Should_Have_Been_Overridden;
   end Add;
+
+  procedure Remove (S : in out Stack; From : Positive) is
+  begin
+    raise Should_Have_Been_Overridden;
+  end Remove;
+
+  -- Iterators
 
   procedure Initialize (It : in out Stack_Iterator) is
   begin
@@ -97,5 +116,13 @@ package body BC.Containers.Stacks is
     end if;
     return Item_At (It.S.all, It.Index);
   end Current_Item;
+
+  procedure Delete_Item_At (It : Stack_Iterator) is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    Remove (It.S.all, It.Index);
+  end Delete_Item_At;
 
 end BC.Containers.Stacks;

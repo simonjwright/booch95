@@ -19,8 +19,9 @@
 
 generic
   type Value is private;
-  with function "=" (L, R : Item) return Boolean is <>;
 package BC.Containers.Maps is
+
+  pragma Elaborate_Body;
 
   -- A map denotes a collection forming a dictionary of domain/range
   -- pairs. Maps are cached, so that the most recently accessed
@@ -141,5 +142,7 @@ private
   function Current_Item (It : Map_Iterator) return Item;
 
   function Current_Item (It : Map_Iterator) return Item_Ptr;
+
+  procedure Delete_Item_At (It : Map_Iterator);
 
 end BC.Containers.Maps;

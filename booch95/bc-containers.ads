@@ -1,4 +1,5 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller, Steve Doiel
+-- and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -25,10 +26,12 @@ generic
   with function "=" (L, R : Item) return Boolean is <>;
 package BC.Containers is
 
+  pragma Elaborate_Body;
+
   -- This package specifies the common protocol of all Container classes.
   -- This common protocol consists of Iterators.
 
-  type Container is abstract new Ada.Finalization.Controlled with private;
+  type Container is abstract tagged private;
 
   -- Active iteration
 
@@ -38,16 +41,16 @@ package BC.Containers is
     is abstract;
   -- Return a reset Iterator bound to the specific Container.
 
-  procedure Reset (Obj : in out Iterator);
+  procedure Reset (It : in out Iterator);
   -- Reset the Iterator to the beginning.
 
-  procedure Next (Obj : in out Iterator);
+  procedure Next (It : in out Iterator);
   -- Advance the Iterator to the next Item in the Container.
 
-  function Is_Done (Obj : Iterator) return Boolean;
+  function Is_Done (It : Iterator) return Boolean;
   -- Return True if there are no more Items in the Container.
 
-  function Current_Item (Obj : Iterator) return Item;
+  function Current_Item (It : Iterator) return Item;
   -- Return a copy of the current Item.
 
   generic
@@ -55,6 +58,9 @@ package BC.Containers is
     In_The_Iterator : Iterator;
   procedure Access_Current_Item;
   -- Call Apply for the Iterator's current Item.
+
+  procedure Delete_Item_At (It : Iterator);
+  -- Remove the current item.
 
   -- Passive iteration
 
@@ -66,8 +72,52 @@ package BC.Containers is
   -- sets OK to False.
 
   generic
+    type Param_Type is private;
+    with procedure Apply (Elem : in Item;
+                          Param : in Param_Type;
+                          OK : out Boolean);
+  procedure Visit_With_In_Param (Using : in out Iterator;
+                                 Param : in Param_Type);
+  -- Call Apply with a Parameter for each Item in the Container to which the
+  -- iterator Using is bound. The iteration will terminate early if Apply
+  -- sets OK to False.
+
+  generic
+    type Param_Type is private;
+    with procedure Apply (Elem : in Item;
+                          Param : in out Param_Type;
+                          OK : out Boolean);
+  procedure Visit_With_In_Out_Param (Using : in out Iterator;
+                                     Param : in out Param_Type);
+  -- Call Apply with a Parameter for each Item in the Container to which the
+  -- iterator Using is bound. The iteration will terminate early if Apply
+  -- sets OK to False.
+
+  generic
     with procedure Apply (Elem : in out Item; OK : out Boolean);
   procedure Modify (Using : in out Iterator);
+  -- Call Apply with a copy of each Item in the Container to which the
+  -- iterator Using is bound. The iteration will terminate early if Apply
+  -- sets OK to False.
+
+  generic
+    type Param_Type is private;
+    with procedure Apply (Elem : in out Item;
+                          Param : in Param_Type;
+                          OK : out Boolean);
+  procedure Modify_With_In_Param (Using : in out Iterator;
+                                  Param : in Param_Type);
+  -- Call Apply with a Parameter each Item in the Container to which the
+  -- iterator Using is bound. The iteration will terminate early if Apply
+  -- sets OK to False.
+
+  generic
+    type Param_Type is private;
+    with procedure Apply (Elem : in out Item;
+                          Param : in out Param_Type;
+                          OK : out Boolean);
+  procedure Modify_With_In_Out_Param (Using : in out Iterator;
+                                      Param : in out Param_Type);
   -- Call Apply with a copy of each Item in the Container to which the
   -- iterator Using is bound. The iteration will terminate early if Apply
   -- sets OK to False.
@@ -88,9 +138,9 @@ private
 
   function Cardinality (C : Container) return Natural;
 
-  procedure Purge (C : in out Container);
-
   function Item_At (C : Container; Index : Positive) return Item_Ptr;
+
+  procedure Purge (C : in out Container);
 
   -- Actual_Iterators are strongly dependent on the concrete Container
   -- implementation. The externally-visible Iterator is implemented as
@@ -104,19 +154,20 @@ private
 
   type Iterator_P is access Actual_Iterator'Class;
 
-  procedure Reset (Obj : in out Actual_Iterator) is abstract;
+  procedure Reset (It : in out Actual_Iterator) is abstract;
 
-  procedure Next (Obj : in out Actual_Iterator) is abstract;
+  procedure Next (It : in out Actual_Iterator) is abstract;
 
-  function Is_Done (Obj : Actual_Iterator) return Boolean is abstract;
+  function Is_Done (It : Actual_Iterator) return Boolean is abstract;
 
-  function Current_Item (Obj : Actual_Iterator) return Item is abstract;
+  function Current_Item (It : Actual_Iterator) return Item is abstract;
 
-  function Current_Item (Obj : Actual_Iterator) return Item_Ptr is abstract;
+  function Current_Item (It : Actual_Iterator) return Item_Ptr is abstract;
+
+  procedure Delete_Item_At (It : Actual_Iterator) is abstract;
 
   package SP is new BC.Smart (T => Actual_Iterator'Class, P => Iterator_P);
 
   type Iterator is new SP.Pointer;
 
 end BC.Containers;
-

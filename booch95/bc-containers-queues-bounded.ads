@@ -23,35 +23,35 @@ generic
   Maximum_Size : Positive;
 package BC.Containers.Queues.Bounded is
 
+  pragma Elaborate_Body;
+
   type Bounded_Queue is new Queue with private;
 
-  procedure Clear (Obj : in out Bounded_Queue);
+  procedure Clear (Q : in out Bounded_Queue);
   -- Empty the queue of all items.
 
-  procedure Append (Obj : in out Bounded_Queue; Elem : Item);
+  procedure Append (Q : in out Bounded_Queue; Elem : Item);
   -- Add the item to the back of the queue; the item itself is copied.
 
-  procedure Pop (Obj : in out Bounded_Queue);
+  procedure Pop (Q : in out Bounded_Queue);
   -- Remove the item from the front of the queue.
 
-  procedure Remove (Obj : in out Bounded_Queue; From : Natural);
+  procedure Remove (Q : in out Bounded_Queue; From : Positive);
   -- Remove the item at the given index (may be a balking operation).
 
-  function Available (Obj : in Bounded_Queue) return Natural;
+  function Available (Q : in Bounded_Queue) return Natural;
   -- Indicated number of empty "Item slots" left in Queue
 
-  function Length (Obj : in Bounded_Queue) return Natural;
+  function Length (Q : in Bounded_Queue) return Natural;
   -- Remove the item at the given index (may be a balking operation).
 
-  function Is_Empty (Obj : in Bounded_Queue) return Boolean;
+  function Is_Empty (Q : in Bounded_Queue) return Boolean;
   -- Return True if and only if there are no items in the queue.
 
-  function Front (Obj : in Bounded_Queue) return Item;
+  function Front (Q : in Bounded_Queue) return Item;
   -- Return a copy of the item at the front of the queue.
 
-  -- XXX need accessor generic
-
-  function Location (Obj : in Bounded_Queue; Elem : Item) return Natural;
+  function Location (Q : in Bounded_Queue; Elem : Item) return Natural;
   -- Return the first index at which the item is found; return 0 if the
   -- item does not exist in the queue.
 
@@ -64,10 +64,9 @@ package BC.Containers.Queues.Bounded is
 
 private
 
-  function Cardinality (Obj : Bounded_Queue) return Natural;
-  function Item_At (Obj : Bounded_Queue; Index : Positive) return Item_Ptr;
-  procedure Purge (Obj : in out Bounded_Queue);
-  procedure Add (Obj : in out Bounded_Queue; Elem : Item);
+  function Cardinality (Q : Bounded_Queue) return Natural;
+  function Item_At (Q : Bounded_Queue; Index : Positive) return Item_Ptr;
+  procedure Purge (Q : in out Bounded_Queue);
 
   package Bounded_Queue_Nodes
   is new BC.Support.Bounded (Item => Item,
@@ -78,7 +77,7 @@ private
     Rep : Bounded_Queue_Nodes.Bnd_Node_Ref := new Bounded_Queue_Nodes.Bnd_Node;
   end record;
 
-  procedure Adjust (Obj : in out Bounded_Queue);
-  procedure Finalize (Obj : in out Bounded_Queue);
+  procedure Adjust (Q : in out Bounded_Queue);
+  procedure Finalize (Q : in out Bounded_Queue);
 
 end BC.Containers.Queues.Bounded;

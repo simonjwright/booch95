@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -27,39 +27,39 @@ package body BC.Containers.Stacks.Unbounded is
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Clear (Obj : in out Unbounded_Stack) is
+  procedure Clear (S : in out Unbounded_Stack) is
   begin
-    Unbounded_Stack_Nodes.Clear (Obj.Rep.all);
+    Unbounded_Stack_Nodes.Clear (S.Rep.all);
   end Clear;
 
-  procedure Push (Obj : in out Unbounded_Stack; Elem : Item) is
+  procedure Push (S : in out Unbounded_Stack; Elem : Item) is
   begin
-    Unbounded_Stack_Nodes.Insert (Obj.Rep.all, Elem);
+    Unbounded_Stack_Nodes.Insert (S.Rep.all, Elem);
   end Push;
 
-  procedure Pop (Obj : in out Unbounded_Stack) is
+  procedure Pop (S : in out Unbounded_Stack) is
   begin
-    Unbounded_Stack_Nodes.Remove (Obj.Rep.all, 1);
+    Unbounded_Stack_Nodes.Remove (S.Rep.all, 1);
   end Pop;
 
-  function Depth(Obj : Unbounded_Stack) return Natural is
+  function Depth(S : Unbounded_Stack) return Natural is
   begin
-    return Unbounded_Stack_Nodes.Length (Obj.Rep.all);
+    return Unbounded_Stack_Nodes.Length (S.Rep.all);
   end Depth;
 
-  function Is_Empty (Obj : Unbounded_Stack) return Boolean is
+  function Is_Empty (S : Unbounded_Stack) return Boolean is
   begin
-    return Unbounded_Stack_Nodes.Length (Obj.Rep.all) = 0;
+    return Unbounded_Stack_Nodes.Length (S.Rep.all) = 0;
   end Is_Empty;
 
-  function Top (Obj : Unbounded_Stack) return Item is
+  function Top (S : Unbounded_Stack) return Item is
   begin
-    return Unbounded_Stack_Nodes.First (Obj.Rep.all);
+    return Unbounded_Stack_Nodes.First (S.Rep.all);
   end Top;
 
-  function Top (Obj : Unbounded_Stack) return Item_Ptr is
+  function Top (S : Unbounded_Stack) return Item_Ptr is
   begin
-    return Unbounded_Stack_Nodes.First (Obj.Rep.all);
+    return Unbounded_Stack_Nodes.First (S.Rep.all);
   end Top;
 
   package Address_Conversions
@@ -72,39 +72,44 @@ package body BC.Containers.Stacks.Unbounded is
     return Iterator (SP.Create (new Stack_Iterator (P)));
   end New_Iterator;
 
-  procedure Purge (Obj : in out Unbounded_Stack) is
+  function Cardinality (S : Unbounded_Stack) return Natural is
   begin
-    Unbounded_Stack_Nodes.Clear (Obj.Rep.all);
-  end Purge;
-
-  procedure Add (Obj : in out Unbounded_Stack; Elem : Item) is
-  begin
-    Unbounded_Stack_Nodes.Append (Obj.Rep.all, Elem);
-  end Add;
-
-  function Cardinality (Obj : Unbounded_Stack) return Natural is
-  begin
-    return Unbounded_Stack_Nodes.Length (Obj.Rep.all);
+    return Unbounded_Stack_Nodes.Length (S.Rep.all);
   end Cardinality;
 
-  function Item_At (Obj : Unbounded_Stack; Index : Positive) return Item_Ptr is
+  function Item_At (S : Unbounded_Stack; Index : Positive) return Item_Ptr is
   begin
-    return Unbounded_Stack_Nodes.Item_At (Obj.Rep.all, Index);
+    return Unbounded_Stack_Nodes.Item_At (S.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (Obj : in out Unbounded_Stack) is
+  procedure Purge (S : in out Unbounded_Stack) is
+  begin
+    Unbounded_Stack_Nodes.Clear (S.Rep.all);
+  end Purge;
+
+  procedure Add (S : in out Unbounded_Stack; Elem : Item) is
+  begin
+    Unbounded_Stack_Nodes.Append (S.Rep.all, Elem);
+  end Add;
+
+  procedure Remove (S : in out Unbounded_Stack; From : Positive) is
+  begin
+    Unbounded_Stack_Nodes.Remove (S.Rep.all, From);
+  end Remove;
+
+  procedure Initialize (S : in out Unbounded_Stack) is
   begin
     null;
   end Initialize;
 
-  procedure Adjust (Obj : in out Unbounded_Stack) is
+  procedure Adjust (S : in out Unbounded_Stack) is
   begin
-    Obj.Rep := Unbounded_Stack_Nodes.Create (From => Obj.Rep.all);
+    S.Rep := Unbounded_Stack_Nodes.Create (From => S.Rep.all);
   end Adjust;
 
-  procedure Finalize (Obj : in out Unbounded_Stack) is
+  procedure Finalize (S : in out Unbounded_Stack) is
   begin
-    Unbounded_Stack_Nodes.Free (Obj.Rep);
+    Unbounded_Stack_Nodes.Free (S.Rep);
   end Finalize;
 
 end BC.Containers.Stacks.Unbounded;

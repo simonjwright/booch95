@@ -22,6 +22,9 @@ with BC.Containers.Rings;
 -- with BC.Containers.Rings.Bounded;
 -- with BC.Containers.Rings.Dynamic;
 with BC.Containers.Rings.Unbounded;
+with BC.Containers.Rings.Unbounded.Guarded;
+with BC.Containers.Rings.Unbounded.Synchronized;
+with BC.Support.Synchronization;
 with Global_Heap;
 
 package Ring_Test_Support is
@@ -37,5 +40,11 @@ package Ring_Test_Support is
 
   package RU is new Rings.Unbounded (Storage_Manager => Global_Heap.Pool,
                                      Storage => Global_Heap.Storage);
+
+  package RUG is new RU.Guarded
+     (Semaphore => BC.Support.Synchronization.Semaphore);
+
+  package RUS is new RU.Synchronized
+     (Monitor => BC.Support.Synchronization.Single_Monitor);
 
 end Ring_Test_Support;

@@ -30,6 +30,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Support.Dynamic is
 
+  pragma Elaborate_Body;
+
   type Dyn_Node is private;
   -- An optimally-packed dynamic container whose items are stored on the heap
 

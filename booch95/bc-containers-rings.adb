@@ -17,34 +17,15 @@
 
 -- $Id$
 
+with System;
+
 package body BC.Containers.Rings is
-
-  ---------
-  -- Add --
-  ---------
-
-  procedure Add (R : in out Ring; Elem : Item) is
-  begin
-    raise Should_Have_Been_Overridden;
-  end Add;
-
-  ------------
-  -- Adjust --
-  ------------
-
-  procedure Adjust (R : in out Ring) is
-  begin
-    null;
-  end Adjust;
-
-  ---------------
-  -- Are_Equal --
-  ---------------
 
   function Are_Equal (Left, Right : Ring'Class) return Boolean is
   begin
-    -- XXX left out the optimisation which checks whether L, R are
-    -- identical.
+    if System."=" (Left'Address, Right'Address) then
+      return True;
+    end if;
     if Cardinality (Left) /= Cardinality (Right) then
       return False;
     end if;
@@ -64,42 +45,87 @@ package body BC.Containers.Rings is
     end;
   end Are_Equal;
 
-  -------------
-  -- At_Mark --
-  -------------
+  procedure Copy (From : Ring'Class; To : in out Ring'Class) is
+    Iter : Iterator := New_Iterator (From);
+  begin
+    if System."/=" (From'Address, To'Address) then
+      Purge (To);
+      Reset (Iter);
+      while not Is_Done (Iter) loop
+        Add (To, Current_Item (Iter));
+        Next (Iter);
+      end loop;
+      To.Top := From.Top;
+      To.Mark := From.Mark;
+      if Cardinality (To) > 0 then
+        if To.Mark >= To.Top then                 -- XXX huh?
+             To.Mark := To.Mark - To.Top;
+        else
+          To.Mark := To.Mark + To.Top + 1;
+        end if;
+      end if;
+    end if;
+  end Copy;
+
+  procedure Mark (R : in out Ring) is
+  begin
+    R.Mark := R.Top;
+  end Mark;
+
+  procedure Rotate_To_Mark (R : in out Ring) is
+  begin
+    R.Top := R.Mark;
+  end Rotate_To_Mark;
 
   function At_Mark (R : Ring) return Boolean is
   begin
     return R.Mark = R.Top;
   end At_Mark;
 
-  ----------
-  -- Copy --
-  ----------
-
-  procedure Copy (From : Ring'Class; To : in out Ring'Class) is
-    Iter : Iterator := New_Iterator (From);
+  procedure Initialize (R : in out Ring) is
   begin
-    Purge (To);
-    Reset (Iter);
-    while not Is_Done (Iter) loop
-      Add (To, Current_Item (Iter));
-      Next (Iter);
-    end loop;
-    To.Top := From.Top;
-    To.Mark := From.Mark;
-    if Cardinality (To) > 0 then
-      if To.Mark >= To.Top then                 -- XXX huh?
-        To.Mark := To.Mark - To.Top;
-      else
-        To.Mark := To.Mark + To.Top + 1;
-      end if;
-    end if;
-  end Copy;
+    R.Top := 0;
+    R.Mark := 0;
+  end Initialize;
 
-  ------------------
-  -- Current_Item --
-  ------------------
+  procedure Add (R : in out Ring; Elem : Item) is
+  begin
+    raise Should_Have_Been_Overridden;
+  end Add;
+
+  procedure Lock (R : in out Ring) is
+  begin
+    null;
+  end Lock;
+
+  procedure Unlock (R : in out Ring) is
+  begin
+    null;
+  end Unlock;
+
+  procedure Initialize (It : in out Ring_Iterator) is
+  begin
+    Reset (It);
+  end Initialize;
+
+  procedure Reset (It : in out Ring_Iterator) is
+  begin
+    if Cardinality (It.R.all) = 0 then
+      It.Index := 0;
+    else
+      It.Index := 1;
+    end if;
+  end Reset;
+
+  function Is_Done (It : Ring_Iterator) return Boolean is
+  begin
+    return It.Index = 0 or else It.Index > Cardinality (It.R.all);
+  end Is_Done;
+
+  procedure Next (It : in out Ring_Iterator) is
+  begin
+    It.Index := It.Index + 1;
+  end Next;
 
   function Current_Item (It : Ring_Iterator) return Item is
   begin
@@ -118,10 +144,6 @@ package body BC.Containers.Rings is
     end;
   end Current_Item;
 
-  ------------------
-  -- Current_Item --
-  ------------------
-
   function Current_Item (It : Ring_Iterator) return Item_Ptr is
   begin
     if Is_Done (It) then
@@ -137,75 +159,14 @@ package body BC.Containers.Rings is
       end if;
       return Item_At (It.R.all, I);
     end;
---     return Item_At (It.R.all, It.Index);
   end Current_Item;
 
-  ----------------
-  -- Initialize --
-  ----------------
-
-  procedure Initialize (R : in out Ring) is
+  procedure Delete_Item_At (It : Ring_Iterator) is
   begin
-    R.Top := 0;
-    R.Mark := 0;
-  end Initialize;
-
-  ----------------
-  -- Initialize --
-  ----------------
-
-  procedure Initialize (It : in out Ring_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
-  -------------
-  -- Is_Done --
-  -------------
-
-  function Is_Done (It : Ring_Iterator) return Boolean is
-  begin
-    return It.Index = 0 or else It.Index > Cardinality (It.R.all);
-  end Is_Done;
-
-  ----------
-  -- Mark --
-  ----------
-
-  procedure Mark (R : in out Ring) is
-  begin
-    R.Mark := R.Top;
-  end Mark;
-
-  ----------
-  -- Next --
-  ----------
-
-  procedure Next (It : in out Ring_Iterator) is
-  begin
-    It.Index := It.Index + 1;
-  end Next;
-
-  -----------
-  -- Reset --
-  -----------
-
-  procedure Reset (It : in out Ring_Iterator) is
-  begin
-    if Cardinality (It.R.all) = 0 then
-      It.Index := 0;
-    else
-      It.Index := 1;
+    if Is_Done (It) then
+      raise BC.Not_Found;
     end if;
-  end Reset;
-
-  --------------------
-  -- Rotate_To_Mark --
-  --------------------
-
-  procedure Rotate_To_Mark (R : in out Ring) is
-  begin
-    R.Top := R.Mark;
-  end Rotate_To_Mark;
+    raise BC.Not_Yet_Implemented;
+  end Delete_Item_At;
 
 end BC.Containers.Rings;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -20,6 +20,8 @@
 generic
 package BC.Containers.Stacks is
 
+  pragma Elaborate_Body;
+
   type Stack is abstract new Container with private;
 
   -- A sequence in which items may be added from one end and removed from
@@ -29,25 +31,28 @@ package BC.Containers.Stacks is
   -- Operations of equality, inequality, and assignment are "deep" for
   -- all Stack forms
 
-  procedure Clear (Obj : in out Stack) is abstract;
+  procedure Clear (S : in out Stack) is abstract;
   -- Empty the Stack of all items.
 
-  procedure Push (Obj : in out Stack; Elem : Item) is abstract;
+  procedure Push (S : in out Stack; Elem : Item) is abstract;
   -- Add a copy of the item to the top of the Stack.
 
-  procedure Pop (Obj : in out Stack) is abstract;
+  procedure Pop (S : in out Stack) is abstract;
   -- Remove the item from the top of the Stack.
 
-  function Depth (Obj : in Stack) return Natural is abstract;
+  function Depth (S : in Stack) return Natural is abstract;
   -- Returns the number of items in the Stack
 
-  function Is_Empty (Obj : in Stack) return Boolean is abstract;
+  function Is_Empty (S : in Stack) return Boolean is abstract;
   -- Returns True if and only if no items are in the stack
 
-  function Top (Obj : in Stack) return Item is abstract;
+  function Top (S : in Stack) return Item is abstract;
   -- Return a copy of the item at the top of the Stack.
 
-  -- XXX We need a generic accessor here ..
+  generic
+    with procedure Process (Elem : in out Item);
+  procedure Process_Top (S : in out Stack'Class);
+  -- Access the item at the top of the Stack.
 
   function Are_Equal (Left, Right : Stack'Class) return Boolean;
   -- Return True if and only if both stacks have the same depth and the
@@ -61,7 +66,8 @@ private
 
   type Stack is abstract new Container with null record;
 
-  procedure Add (Obj : in out Stack; Elem : Item);
+  procedure Add (S : in out Stack; Elem : Item);
+  procedure Remove (S : in out Stack; From : Positive);
 
   type Stack_Iterator (S : access Stack'Class)
   is new Actual_Iterator (S) with record
@@ -81,5 +87,7 @@ private
   function Current_Item (It : Stack_Iterator) return Item;
 
   function Current_Item (It : Stack_Iterator) return Item_Ptr;
+
+  procedure Delete_Item_At (It : Stack_Iterator);
 
 end BC.Containers.Stacks;

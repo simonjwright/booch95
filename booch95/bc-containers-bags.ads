@@ -20,6 +20,8 @@
 generic
 package BC.Containers.Bags is
 
+  pragma Elaborate_Body;
+
   -- A bag denotes a collection of items, drawn from some well-defined
   -- universe. A bag may contain duplicate items. A bag actually owns only
   -- one copy of each unique item: duplicates are counted, but are not
@@ -153,5 +155,7 @@ private
   function Current_Item (It : Bag_Iterator) return Item;
 
   function Current_Item (It : Bag_Iterator) return Item_Ptr;
+
+  procedure Delete_Item_At (It : Bag_Iterator);
 
 end BC.Containers.Bags;

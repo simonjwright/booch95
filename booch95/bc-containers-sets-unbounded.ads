@@ -29,6 +29,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Sets.Unbounded is
 
+  pragma Elaborate_Body;
+
   -- A set denotes a collection of items, drawn from some well-defined
   -- universe. A set may not contain duplicate items.
 
@@ -76,6 +78,10 @@ private
                                           Storage_Manager => Storage_Manager,
                                           Storage => Storage);
   use IC;
+  package Items is new BC.Support.Hash_Tables.Item_Signature
+     (Item => Item,
+      Item_Container => IC.Unb_Node,
+      Item_Container_Ptr => IC.Unb_Node_Ref);
 
   -- We need a dummy type for the Value component of the hash table.
   type Boolean_Ptr is access all Boolean;
@@ -84,16 +90,16 @@ private
                                           Storage_Manager => Storage_Manager,
                                           Storage => Storage);
   use VC;
-
-  package Tables is new BC.Support.Hash_Tables
-     (Item => Item,
-      Value => Boolean,
+  package Values is new BC.Support.Hash_Tables.Value_Signature
+     (Value => Boolean,
       Value_Ptr => Boolean_Ptr,
-      Buckets => Buckets,
-      Item_Container => IC.Unb_Node,
-      Item_Container_Ptr => IC.Unb_Node_Ref,
       Value_Container => VC.Unb_Node,
       Value_Container_Ptr => VC.Unb_Node_Ref);
+
+  package Tables is new BC.Support.Hash_Tables.Tables
+     (Items => Items,
+      Values => Values,
+      Buckets => Buckets);
 
   type Unbounded_Set is new Set with record
     Rep : Tables.Table;

@@ -281,9 +281,16 @@ procedure Tree_Test is
 
   M_Tree_P1, M_Tree_P2 : TM.Multiway_Tree;
 
-  -- procedure Print_Tree is new TA.Print (Character'Image);
+--   procedure Print_Tree is new TA.Print (Character'Image);
 
   procedure Test_Primitive (T : in out TA.Avl_Tree) is
+    procedure Process (C : Character; Result : out Boolean) is
+    begin
+      Put_Line ("      Item: " & C);
+      Result := True;
+    end Process;
+    procedure Visit is new TA.Visit (Process);
+    T2 : TA.AVL_Tree;
     use TA;
     Result : Boolean;
   begin
@@ -314,16 +321,8 @@ procedure Tree_Test is
     Assertion (Result, "** A15: Tree insertion not correct");
     Insert (T, 'B', Result);
     Assertion (Result, "** A16: Tree insertion not correct");
-    declare
-      procedure Process (C : Character; Result : out Boolean) is
-      begin
-        Put_Line ("      Item: " & C);
-        Result := True;
-      end Process;
-      procedure Visit is new TA.Visit (Process);
-    begin
-      Visit (T);
-    end;
+    Visit (T);
+    T2 := T;
     Delete (T, '3', Result);
     Assertion (Result, "** A17: Tree deletion is not correct");
     Delete (T, 'g', Result);
@@ -361,6 +360,28 @@ procedure Tree_Test is
     Clear (T);
     Assertion (Extent (T) = 0, "** A33: Tree extent is not correct");
     Assertion (Is_Null (T), "** A34: Tree is not null");
+    Assertion (T /= T2, "** A35: Trees are equal");
+    for C in Character'('1') .. Character'('9') loop
+      Insert (T, C, Result);
+    end loop;
+    for C in Character'('a') .. Character'('b') loop
+      Insert (T, C, Result);
+    end loop;
+    Assertion (T /= T2, "** A36: Trees are equal");
+    for C in Character'('A') .. Character'('B') loop
+      Insert (T, C, Result);
+    end loop;
+    Assertion (T /= T2, "** A37: Trees are equal");
+    for C in Character'('a') .. Character'('b') loop
+      Delete (T, C, Result);
+    end loop;
+    Assertion (T = T2, "** A38: Trees are not equal");
+    Delete (T2, 'B', Result);
+    Assertion (T /= T2, "** A39: Trees are equal");
+    Clear (T2);
+    Assertion (T /= T2, "** A40: Trees are equal");
+    Clear (T);
+    Assertion (T = T2, "** A41: Trees are not equal");
   end Test_Primitive;
 
   A_Tree_P1 : TA.Avl_Tree;

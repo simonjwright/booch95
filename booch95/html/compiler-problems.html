@@ -14,6 +14,32 @@
 
 <dl>
 
+<dt><a name="29may1999">29 May 1999</a></dt>
+
+<dd>
+
+A procedure and a protected type entry in the same scope had the
+same name; you can't rely on the fact that only entries can have
+<tt>'Caller</tt> applied.<p>
+
+GNAT 3.11p was (incorrectly) resolving the name; it should be
+qualified with the protected type's name.<p>
+
+See <tt>bc-support-synchronization.adb</tt>
+(<tt>Semaphore_Type.Seize</tt>).<p>
+
+</dd>
+
+<dt><a name="4may1999">4 May 1999</a></dt>
+
+<dd>
+
+Under ObjectAda Special Edition Version 7.1, the current
+implementation of <tt>BC.Support.Synchronization</tt>'s
+<tt>Semaphore</tt> fails.<p>
+
+</dd>
+
 <dt><a name="13mar1999">13 March 1999</a></dt>
 
 <dd>
