@@ -1,4 +1,4 @@
--- Copyright (C) 1999 Simon Wright.
+-- Copyright (C) 1999-2000 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -19,3 +19,4 @@
 
 generic
 procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree);
+pragma Elaborate_Body (BC.Containers.Trees.AVL.Validate);
