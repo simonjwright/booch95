@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -106,18 +106,6 @@ package body BC.Containers is
    end Modify_With_In_Out_Param;
 
    --  Primitive implementations
-
-   procedure Lock (C : in out Container) is
-      pragma Warnings (Off, C);
-   begin
-      null;
-   end Lock;
-
-   procedure Unlock (C : in out Container) is
-      pragma Warnings (Off, C);
-   begin
-      null;
-   end Unlock;
 
    function Item_At (C : Container; Index : Positive) return Item_Ptr is
    begin

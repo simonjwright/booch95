@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -139,14 +139,6 @@ private
    for Item_Ptr'Storage_Size use 0;
 
    type Container is abstract new Ada.Finalization.Controlled with null record;
-
-   --  Support for concurrency protection. The base implementation of
-   --  these procedures does nothing; derived types override as
-   --  required.
-
-   procedure Lock (C : in out Container);
-
-   procedure Unlock (C : in out Container);
 
    --  Private primitive operations of Container.  These should
    --  ideally be abstract; instead, we provide implementations, but

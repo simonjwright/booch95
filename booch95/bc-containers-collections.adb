@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -75,18 +75,6 @@ package body BC.Containers.Collections is
    begin
       return Natural'Last;
    end Available;
-
-   procedure Lock (C : in out Abstract_Collection) is
-      pragma Warnings (Off, C);
-   begin
-      null;
-   end Lock;
-
-   procedure Unlock (C : in out Abstract_Collection) is
-      pragma Warnings (Off, C);
-   begin
-      null;
-   end Unlock;
 
    procedure Reset (It : in out Collection_Iterator) is
       C : Abstract_Collection'Class
