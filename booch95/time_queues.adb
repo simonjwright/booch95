@@ -17,16 +17,20 @@
 
 -- $Id$
 
+-- The  purpose of  this test  procedure is  to check  out  the relative --
+-- performance  of the  various flavours  of Queue,  in case  there's an --
+-- efficiency problem.                                                   --
+
 with Ada.Calendar;
 with Ada.Text_Io;
 with Queues_For_Timing;
+
 procedure Time_Queues is
-  B : aliased Queues_For_Timing.B.Bnd_Queue;
-  D : aliased Queues_For_Timing.D.Dyn_Queue;
-  U : aliased Queues_For_Timing.U.Unb_Queue;
-  B_Iter : aliased Queues_For_Timing.C.Passive_Iterator (B'Access);
-  D_Iter : aliased Queues_For_Timing.C.Passive_Iterator (D'Access);
-  U_Iter : aliased Queues_For_Timing.C.Passive_Iterator (U'Access);
+
+  B : Queues_For_Timing.B.Bounded_Queue;
+  D : Queues_For_Timing.D.Dynamic_Queue;
+  U : Queues_For_Timing.U.Unbounded_Queue;
+
   procedure Iterate is
     Total : Integer;
     procedure Apply (Elem : Integer; Ok : out Boolean) is
@@ -34,44 +38,42 @@ procedure Time_Queues is
       Total := Total + Elem;
       Ok := True;
     end Apply;
-    function Q_Application is new Queues_For_Timing.C.Visit (Apply);
-    Result : Boolean;
+    procedure B_Application is new Queues_For_Timing.C.Visit (Apply, B);
+    procedure D_Application is new Queues_For_Timing.C.Visit (Apply, D);
+    procedure U_Application is new Queues_For_Timing.C.Visit (Apply, U);
     Start : Ada.Calendar.Time;
     Taken : Duration;
     use type Ada.Calendar.Time;
   begin
-
     Total := 0;
     Start := Ada.Calendar.Clock;
-    Result := Q_Application (B_Iter'Access);
+    B_Application;
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
        (".. bounded queue took"
         & Duration'Image (Taken)
         & " sec, sum"
         & Integer'Image (Total));
-
     Total := 0;
     Start := Ada.Calendar.Clock;
-    Result := Q_Application (D_Iter'Access);
+    D_Application;
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
        (".. dynamic queue took"
         & Duration'Image (Taken)
         & " sec, sum"
         & Integer'Image (Total));
-
     Total := 0;
     Start := Ada.Calendar.Clock;
-    Result := Q_Application (U_Iter'Access);
+    U_Application;
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
        (".. unbounded queue took"
         & Duration'Image (Taken)
         & " sec, sum"
         & Integer'Image (Total));
-
   end Iterate;
+
   procedure Time (N : Integer) is
   begin
     Ada.Text_Io.Put_Line
@@ -87,6 +89,7 @@ procedure Time_Queues is
     end loop;
     Iterate;
   end Time;
+
 begin
   Time (1);
   Time (2);
@@ -99,6 +102,7 @@ begin
   Time (256);
   Time (512);
   Time (1024);
+  Time (2048);
 exception
   when others =>
     Ada.Text_Io.Put_Line ("oops");
