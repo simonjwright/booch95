@@ -17,12 +17,15 @@
 
 -- $Id$
 
+with System;
+
 package body BC.Containers.Rings is
 
   function Are_Equal (Left, Right : Ring'Class) return Boolean is
   begin
-    -- XXX left out the optimisation which checks whether L, R are
-    -- identical.
+    if System."=" (Left'Address, Right'Address) then
+      return True;
+    end if;
     if Cardinality (Left) /= Cardinality (Right) then
       return False;
     end if;
@@ -45,19 +48,21 @@ package body BC.Containers.Rings is
   procedure Copy (From : Ring'Class; To : in out Ring'Class) is
     Iter : Iterator := New_Iterator (From);
   begin
-    Purge (To);
-    Reset (Iter);
-    while not Is_Done (Iter) loop
-      Add (To, Current_Item (Iter));
-      Next (Iter);
-    end loop;
-    To.Top := From.Top;
-    To.Mark := From.Mark;
-    if Cardinality (To) > 0 then
-      if To.Mark >= To.Top then                 -- XXX huh?
-        To.Mark := To.Mark - To.Top;
-      else
-        To.Mark := To.Mark + To.Top + 1;
+    if System."/=" (From'Address, To'Address) then
+      Purge (To);
+      Reset (Iter);
+      while not Is_Done (Iter) loop
+        Add (To, Current_Item (Iter));
+        Next (Iter);
+      end loop;
+      To.Top := From.Top;
+      To.Mark := From.Mark;
+      if Cardinality (To) > 0 then
+        if To.Mark >= To.Top then                 -- XXX huh?
+             To.Mark := To.Mark - To.Top;
+        else
+          To.Mark := To.Mark + To.Top + 1;
+        end if;
       end if;
     end if;
   end Copy;
