@@ -19,8 +19,6 @@
 
 with BC.Support.Exceptions;
 
-with Ada.Text_Io;
-
 package body BC.Support.Hash_Tables is
 
 
