@@ -55,6 +55,8 @@ package BC.Containers is
   procedure Access_Current_Item;
   -- Call Apply for the Iterator's current Item.
 
+  -- Passive iteration
+
   generic
     with procedure Apply (Elem : in Item; OK : out Boolean);
     Over_The_Container : Container'Class;
