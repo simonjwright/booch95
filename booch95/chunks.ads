@@ -1,5 +1,5 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,34 +15,34 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
--- Contains test support code.
+--  Contains test support code.
 
 with Ada.Finalization;
 
 package Chunks is
 
-  pragma Elaborate_Body;
+   pragma Elaborate_Body;
 
-  type Chunk is private;
-  type Chunk_Ptr is access all Chunk;
+   type Chunk is private;
+   type Chunk_Ptr is access all Chunk;
 
-  function "=" (L, R : Chunk) return Boolean;
+   function "=" (L, R : Chunk) return Boolean;
 
-  function Priority (C : Chunk) return Natural;
+   function Priority (C : Chunk) return Natural;
 
-  function Image (C : Chunk) return String;
+   function Image (C : Chunk) return String;
 
 private
 
-  type Chunk is new Ada.Finalization.Controlled with record
-    Number : Natural;
-    Count : Natural;
-  end record;
+   type Chunk is new Ada.Finalization.Controlled with record
+      Number : Natural;
+      Count : Natural;
+   end record;
 
-  procedure Initialize (C : in out Chunk);
+   procedure Initialize (C : in out Chunk);
 
-  procedure Adjust (C : in out Chunk);
+   procedure Adjust (C : in out Chunk);
 
 end Chunks;

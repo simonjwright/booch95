@@ -28,7 +28,7 @@ all::
 ########
 # Tests
 
-GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu -gnatwl
+GNATMAKE_FLAGS = -O2 -g -gnata -gnatf -gnatwu -gnatwl -gnaty
 
 ADA_SOURCE = \
 bc.ad[bs] \

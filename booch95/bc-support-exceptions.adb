@@ -1,5 +1,5 @@
--- Copyright (C) 1998 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1998 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,72 +15,77 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 package body BC.Support.Exceptions is
 
 
-  function Reason_Message (For_The_Reason : Reason) return String is
-  begin
-    case For_The_Reason is
-      when No_Reason_Given => return "";
-      when Disjoint => return "objects are members of different structures";
-      when Duplicate => return "object already exists";
-      when Empty => return "object is empty";
-      when Full => return "object is full";
-      when Illegal => return "illegal pattern";
-      when Invalid_Index => return "index is out of range";
-      when Invalid_Number => return "string does not denote a valid number";
-      when Missing => return "object does not exist";
-      when Not_Empty => return "object is not empty";
-      when Not_Root => return "object is not at root of structure";
-      when Is_Null => return "object is null";
-      when Out_Of_Memory => return "storage requested not available";
-      when Referenced => return "object is referenced and cannot be destroyed";
-      when Timing => return "possible race condition";
-      when Too_Large => return "object is too large";
-      when Too_Small => return "object is too small";
-    end case;
-  end Reason_Message;
+   function Reason_Message (For_The_Reason : Reason) return String;
+
+   function Reason_Message (For_The_Reason : Reason) return String is
+   begin
+      case For_The_Reason is
+         when No_Reason_Given => return "";
+         when Disjoint => return "objects are members of different structures";
+         when Duplicate => return "object already exists";
+         when Empty => return "object is empty";
+         when Full => return "object is full";
+         when Illegal => return "illegal pattern";
+         when Invalid_Index => return "index is out of range";
+         when Invalid_Number => return "string does not denote a valid number";
+         when Missing => return "object does not exist";
+         when Not_Empty => return "object is not empty";
+         when Not_Root => return "object is not at root of structure";
+         when Is_Null => return "object is null";
+         when Out_Of_Memory => return "storage requested not available";
+         when Referenced =>
+            return "object is referenced and cannot be destroyed";
+         when Timing => return "possible race condition";
+         when Too_Large => return "object is too large";
+         when Too_Small => return "object is too small";
+      end case;
+   end Reason_Message;
 
 
-  procedure Assert (Condition : Boolean;
-                    Raising_If_False : Ada.Exceptions.Exception_Id;
-                    From_Subprogram : String;
-                    With_Reason : Reason := No_Reason_Given) is
-  begin
-    if not Condition then
-      if With_Reason = No_Reason_Given then
-        Ada.Exceptions.Raise_Exception
-           (Raising_If_False,
-            Module & "." & From_Subprogram);
-      else
-        Ada.Exceptions.Raise_Exception
-           (Raising_If_False,
-            Module & "." & From_Subprogram & ": "
-            & Reason_Message (With_Reason));
+   procedure Assert (Condition : Boolean;
+                     Raising_If_False : Ada.Exceptions.Exception_Id;
+                     From_Subprogram : String;
+                     With_Reason : Reason := No_Reason_Given) is
+   begin
+      if not Condition then
+         if With_Reason = No_Reason_Given then
+            Ada.Exceptions.Raise_Exception
+              (Raising_If_False,
+               Module & "." & From_Subprogram);
+         else
+            Ada.Exceptions.Raise_Exception
+              (Raising_If_False,
+               Module & "." & From_Subprogram & ": "
+               & Reason_Message (With_Reason));
+         end if;
       end if;
-    end if;
-  end Assert;
+   end Assert;
 
 
-  procedure Report (The_Exception : Ada.Exceptions.Exception_Occurrence;
-                    To : Ada.Text_Io.File_Type := Ada.Text_Io.Standard_Output) is
-  begin
-    if Ada.Exceptions.Exception_Message (The_Exception)'Length = 0 then
-      Ada.Text_Io.Put_Line (File => To,
-                            Item => "Exception "
-                            & Ada.Exceptions.Exception_Name (The_Exception)
-                            & " occurred.");
-    else
-      Ada.Text_Io.Put_Line (File => To,
-                            Item => "Exception "
-                            & Ada.Exceptions.Exception_Name (The_Exception)
-                            & " ("
-                            & Ada.Exceptions.Exception_Message (The_Exception)
-                            & ") occurred.");
-    end if;
-  end Report;
+   procedure Report
+     (The_Exception : Ada.Exceptions.Exception_Occurrence;
+      To : Ada.Text_IO.File_Type := Ada.Text_IO.Standard_Output) is
+      use Ada.Text_IO;
+   begin
+      if Ada.Exceptions.Exception_Message (The_Exception)'Length = 0 then
+         Put_Line (File => To,
+                   Item => "Exception "
+                     & Ada.Exceptions.Exception_Name (The_Exception)
+                     & " occurred.");
+      else
+         Put_Line (File => To,
+                   Item => "Exception "
+                     & Ada.Exceptions.Exception_Name (The_Exception)
+                     & " ("
+                     & Ada.Exceptions.Exception_Message (The_Exception)
+                     & ") occurred.");
+      end if;
+   end Report;
 
 
 end BC.Support.Exceptions;

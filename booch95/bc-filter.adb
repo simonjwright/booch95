@@ -1,5 +1,5 @@
--- Copyright (C) 2001 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,21 +15,21 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 procedure BC.Filter (Input : From; Output : in out To) is
-  procedure Ins (I : Item; OK : out Boolean);
-  pragma Inline (Ins);
-  procedure Filt is new Source.Visit (Ins);
-  procedure Ins (I : Item; OK : out Boolean) is
-  begin
-    if Pass (I) then
-      Add (Output, I);
-    end if;
-    OK := True;
-  end Ins;
-  It : Source.Iterator'Class := New_Iterator (Input);
+   procedure Ins (I : Item; OK : out Boolean);
+   pragma Inline (Ins);
+   procedure Filt is new Source.Visit (Ins);
+   procedure Ins (I : Item; OK : out Boolean) is
+   begin
+      if Pass (I) then
+         Add (Output, I);
+      end if;
+      OK := True;
+   end Ins;
+   It : Source.Iterator'Class := New_Iterator (Input);
 begin
-  Clear (Output);
-  Filt (It);
+   Clear (Output);
+   Filt (It);
 end BC.Filter;

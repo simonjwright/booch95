@@ -1,5 +1,5 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,6 +15,6 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
-package BC.Support is end;
+package BC.Support is end BC.Support;

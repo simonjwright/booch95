@@ -1,5 +1,5 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,41 +15,41 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 package body Chunks is
 
-  Magic_Number : Natural := 0;
+   Magic_Number : Natural := 0;
 
-  function "=" (L, R : Chunk) return Boolean is
-  begin
-    return L.Number = R.Number and then L.Count = R.Count;
-  end "=";
+   function "=" (L, R : Chunk) return Boolean is
+   begin
+      return L.Number = R.Number and then L.Count = R.Count;
+   end "=";
 
-  function Priority (C : Chunk) return Natural is
-  begin
-    return C.Number;
-  end Priority;
-  
-  function Image (C : Chunk) return String is
-  begin
-    return "[ID:"
-       & Integer'Image (C.Number)
-       & ","
-       & Integer'Image (C.Count)
-       & "]";
-  end Image;
-  
-  procedure Initialize (C : in out Chunk) is
-  begin
-    Magic_Number := Magic_Number + 1;
-    C.Number := Magic_Number;
-    C.Count := 0;
-  end Initialize;
+   function Priority (C : Chunk) return Natural is
+   begin
+      return C.Number;
+   end Priority;
 
-  procedure Adjust (C : in out Chunk) is
-  begin
-    C.Count := C.Count + 1;
-  end Adjust;
+   function Image (C : Chunk) return String is
+   begin
+      return "[ID:"
+        & Integer'Image (C.Number)
+        & ","
+        & Integer'Image (C.Count)
+        & "]";
+   end Image;
+
+   procedure Initialize (C : in out Chunk) is
+   begin
+      Magic_Number := Magic_Number + 1;
+      C.Number := Magic_Number;
+      C.Count := 0;
+   end Initialize;
+
+   procedure Adjust (C : in out Chunk) is
+   begin
+      C.Count := C.Count + 1;
+   end Adjust;
 
 end Chunks;

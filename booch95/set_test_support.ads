@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,7 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Containers;
 with BC.Containers.Sets;
@@ -26,24 +26,24 @@ with Global_Heap;
 
 package Set_Test_Support is
 
-  package Containers is new BC.Containers (Item => Character);
+   package Containers is new BC.Containers (Item => Character);
 
-  package Sets is new Containers.Sets;
+   package Sets is new Containers.Sets;
 
-  function Char_Hash (C : Character) return Natural;
+   function Char_Hash (C : Character) return Natural;
 
-  package SB is new Sets.Bounded (Hash => Char_Hash,
-                                  Buckets => 3,
-                                  Maximum_Size => 100);
+   package SB is new Sets.Bounded (Hash => Char_Hash,
+                                   Buckets => 3,
+                                   Maximum_Size => 100);
 
-  package SD is new Sets.Dynamic (Hash => Char_Hash,
-                                  Buckets => 3,
-                                  Storage_Manager => Global_Heap.Pool,
-                                  Storage => Global_Heap.Storage);
+   package SD is new Sets.Dynamic (Hash => Char_Hash,
+                                   Buckets => 3,
+                                   Storage_Manager => Global_Heap.Pool,
+                                   Storage => Global_Heap.Storage);
 
-  package SU is new Sets.Unbounded (Hash => Char_Hash,
-                                    Buckets => 3,
-                                    Storage_Manager => Global_Heap.Pool,
-                                    Storage => Global_Heap.Storage);
+   package SU is new Sets.Unbounded (Hash => Char_Hash,
+                                     Buckets => 3,
+                                     Storage_Manager => Global_Heap.Pool,
+                                     Storage => Global_Heap.Storage);
 
 end Set_Test_Support;

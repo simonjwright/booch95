@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,7 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Containers;
 with BC.Containers.Collections;
@@ -26,16 +26,19 @@ with Global_Heap;
 
 package Collection_Test_Support is
 
-  package Containers is new BC.Containers (Item => Character);
+   package Containers is new BC.Containers (Item => Character);
 
-  package Collections is new Containers.Collections;
+   package Collections is new Containers.Collections;
 
-  package CB is new Collections.Bounded (Maximum_Size => 100);
+   package CB is new Collections.Bounded
+     (Maximum_Size => 100);
 
-  package CD is new Collections.Dynamic (Storage_Manager => Global_Heap.Pool,
-                                         Storage => Global_Heap.Storage);
+   package CD is new Collections.Dynamic
+     (Storage_Manager => Global_Heap.Pool,
+      Storage => Global_Heap.Storage);
 
-  package CU is new Collections.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                           Storage => Global_Heap.Storage);
+   package CU is new Collections.Unbounded
+     (Storage_Manager => Global_Heap.Pool,
+      Storage => Global_Heap.Storage);
 
 end Collection_Test_Support;
