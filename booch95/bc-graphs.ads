@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with Ada.Finalization;
 with System.Storage_Pools;
@@ -299,7 +302,7 @@ private
    procedure Finalize (A : in out Arc_Node);
 
    type Abstract_Graph
-      is abstract new Ada.Finalization.Limited_Controlled with record
+   is abstract new Ada.Finalization.Limited_Controlled with record
       Rep : Vertex_Node_Ptr;
    end record;
    procedure Finalize (G : in out Abstract_Graph);
