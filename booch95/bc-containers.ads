@@ -18,46 +18,78 @@
 -- $Id$
 
 with Ada.Finalization;
+with BC.Smart;
 
 generic
   type Item is private;
-  type Item_Ptr is access all Item;
 package BC.Containers is
+
+  -- This package specifies the common protocol of all Container classes.
+  -- This common protocol consists of Iterators.
 
   type Container is abstract new Ada.Finalization.Controlled with private;
 
-  type Iterator (C : access Container'Class) is limited private;
+  -- Active iteration
+
+  type Iterator is private;
+
+  function New_Iterator (For_The_Container : Container) return Iterator
+    is abstract;
+  -- Return a reset Iterator bound to the specific Container.
 
   procedure Reset (Obj : in out Iterator);
-  procedure Next (Obj : in out Iterator);
-  function Is_Done (Obj : Iterator) return Boolean;
-  function Current_Item (Obj : Iterator) return Item;
-  function Current_Item (Obj : Iterator) return Item_Ptr;
+  -- Reset the Iterator to the beginning.
 
-  type Passive_Iterator (C : access Container'Class) is limited private;
+  procedure Next (Obj : in out Iterator);
+  -- Advance the Iterator to the next Item in the Container.
+
+  function Is_Done (Obj : Iterator) return Boolean;
+  -- Return True if there are no more Items in the Container.
+
+  function Current_Item (Obj : Iterator) return Item;
+  -- Return a copy of the current Item.
 
   generic
     with procedure Apply (Elem : in Item; OK : out Boolean);
-  function Visit (Obj : access Passive_Iterator) return Boolean;
+    Over_The_Container : Container'Class;
+  procedure Visit;
+  -- Call Apply with a copy of each Item in the Container. The iteration
+  -- will terminate early if Apply sets OK to False.
 
   generic
-    with procedure Apply (Elem_Ref : in Item_Ptr; OK : out Boolean);
-  function Modify (Obj : access Passive_Iterator) return Boolean;
+    with procedure Apply (Elem : in out Item; OK : out Boolean);
+    Over_The_Container : Container'Class;
+  procedure Modify;
+  -- Call Apply for each Item in the Container. The iteration will terminate
+  -- early if Apply sets OK to False.
 
 private
 
   type Container is abstract new Ada.Finalization.Controlled with null record;
 
-  function Item_At (Obj : Container; Index : Natural) return Item_Ptr;
-  function Cardinality (Obj : Container) return Integer;
+  -- Actual_Iterators are strongly dependent on the concrete Container
+  -- implementation. The externally-visible Iterator is implemented as
+  -- a (smart) pointer to the specific Container's Actual_Iterator.
+  --
+  -- All the primitive subprograms of Iterator are implemented in terms
+  -- of matching subprograms of Actual_Iterator.
 
-  type Iterator (C : access Container'Class) is limited record
-    Index : Integer := 1;
-  end record;
+  type Actual_Iterator (For_The_Container : access Container'Class)
+  is abstract new Ada.Finalization.Limited_Controlled with null record;
 
-  type Passive_Iterator (C : access Container'Class) is limited record
-    Success : Boolean := False;
-  end record;
+  type Iterator_P is access Actual_Iterator'Class;
+
+  procedure Reset (Obj : in out Actual_Iterator) is abstract;
+
+  procedure Next (Obj : in out Actual_Iterator) is abstract;
+
+  function Is_Done (Obj : Actual_Iterator) return Boolean is abstract;
+
+  function Current_Item (Obj : Actual_Iterator) return Item is abstract;
+
+  package SP is new BC.Smart (T => Actual_Iterator'Class, P => Iterator_P);
+
+  type Iterator is new SP.Pointer;
 
 end BC.Containers;
 
