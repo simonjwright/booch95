@@ -1,6 +1,6 @@
--- The Ada 95 Booch Components (Version 1.0 beta 1)
--- Copyright (C)1994-1997 Grady Booch and David Weller.  All Rights Reserved.
--- 
+-- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- All Rights Reserved.
+--
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
 --      License which comes with this Library.
@@ -11,10 +11,11 @@
 --      PURPOSE. See the Ada Community License for more details.
 --      You should have received a copy of the Ada Community
 --      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library 
+--      License" or "ACL". If not, contact the author of this library
 --      for a copy.
 --
--- This file tests all forms of the Stack classes
+
+-- $Id$
 
 with Text_Io;
 with Root_Container;
@@ -53,7 +54,7 @@ procedure Stack_Test is
       Ok := True;
    end Process;
 
-   function mod_op is new Modify(Apply=> Process);
+   function Mod_Op is new Modify(Apply=> Process);
 
    procedure Assertion ( Cond : Boolean; Message : String) is
    begin
@@ -69,7 +70,7 @@ procedure Stack_Test is
        Temp : Char_Ptr;
     begin
        while not Is_Done(Iter) loop
-	  Temp := Current_Item(Iter);
+          Temp := Current_Item(Iter);
           Process(Temp, Success);
           Next(Iter);
        end loop;
@@ -79,13 +80,13 @@ procedure Stack_Test is
        PIter : aliased Passive_Iterator(L);
        Success : Boolean;
     begin
-       Success := Mod_op(PIter'access); -- just discard Success for now..
+       Success := Mod_Op(PIter'access); -- just discard Success for now..
     end Test_Passive_Iterator;
 
    procedure Test_Primitive(S1, S2 : in out Stack'Class) is
    begin
-      for I in Character('a')..Character('z') loop 
-	 Push(S1, I);
+      for I in Character('a')..Character('z') loop
+         Push(S1, I);
       end loop;
       Clear(S1);
       Assertion(Is_Empty(S1), "** P01: Stack is not initially empty");
@@ -128,14 +129,14 @@ procedure Stack_Test is
       Assertion(not (Is_Empty(S2)), "** P22: Stack is empty");
       Assertion((Depth(S2) = 1), "** P23: Stack depth is not correct");
       Assertion((Top(S2) = '7'), "** P24: Stack top is not correct");
-      Assertion((s1 = s2), "** P25: Stacks are not equal");
+      Assertion((S1 = S2), "** P25: Stacks are not equal");
       Clear(S2);
       Assertion( ( not(Is_Empty(S1)) ) , "** P26: Stack is empty");
       Assertion(Is_Empty(S2), "** P29: Stack is not empty");
       Assertion((Depth(S1) = 1), "** P27: Stack depth is not correct");
       Assertion((Top(S1) = '7'), "** P28: Stack top is not correct");
       Assertion((Depth(S2) = 0), "** P30: Stack depth is not correct");
-      Assertion((s1 /= s2), "** P31: Stacks not equal");
+      Assertion((S1 /= S2), "** P31: Stacks not equal");
    end Test_Primitive;
 
 --    procedure Test_User_Defined(S1, S2 : in out Stack'Class) is
@@ -190,57 +191,58 @@ procedure Stack_Test is
 --       Assertion((s1 /= s2), "** P31: Stacks not equal");
 --    end Test_User_Defined;
 
-   Stack_b_p1, Stack_b_P2 : aliased Root_Bounded_Stacks.Bnd_Stack;
-   Stack_d_p1, Stack_d_P2 : aliased Root_Dynamic_Stacks.Dyn_Stack;
-   Stack_u_p1, Stack_U_P2 : aliased Root_Unbounded_Stacks.Unb_Stack;
+   Stack_B_P1, Stack_B_P2 : aliased Root_Bounded_Stacks.Bnd_Stack;
+   Stack_D_P1, Stack_D_P2 : aliased Root_Dynamic_Stacks.Dyn_Stack;
+   Stack_U_P1, Stack_U_P2 : aliased Root_Unbounded_Stacks.Unb_Stack;
 --    Stack_b_u1, Stack_b_u2 : aliased User_Bound_Stacks.Bnd_Stack;
 --    Stack_d_u1, Stack_d_u2 : aliased User_Dynamic_Stacks.Dyn_Stack;
 --    Stack_u_u1, Stack_U_u2 : aliased User_Unbounded_Stacks.Unb_Stack;
 
 begin
+
   Put_Line("Starting Stack tests");
 
   Put_Line("...Bounded Stack");
-  test_primitive(Stack_b_p1, Stack_b_p2);
+  Test_Primitive(Stack_B_P1, Stack_B_P2);
 --  Test_User_defined(Stack_b_u1, Stack_b_u2);
 
   Put_Line("...Dynamic Stack");
   Preallocate(Stack_D_P1, 50);
-  test_primitive(Stack_d_p1, Stack_d_p2);
+  Test_Primitive(Stack_D_P1, Stack_D_P2);
 --  Test_User_defined(Stack_d_u1, Stack_d_u2);
 
   Put_Line("...Unbounded Stack");
-  test_primitive(Stack_u_p1, Stack_u_p2);
+  Test_Primitive(Stack_U_P1, Stack_U_P2);
 --  Test_User_defined(Stack_u_u1, Stack_u_u2);
 
    Put_Line("...Stack Active Iterator");
    Put_Line("   Bounded:");
-   test_active_iterator(Stack_b_P1'access);
+   Test_Active_Iterator(Stack_B_P1'access);
    Put_Line("   Dynamic:");
-   test_active_iterator(Stack_d_P1'access);
+   Test_Active_Iterator(Stack_D_P1'access);
    Put_Line("   Unbounded:");
-   test_active_iterator(Stack_u_P1'access);
+   Test_Active_Iterator(Stack_U_P1'access);
 
    Put_Line("...Stack Passive Iterator");
    Put_Line("   Bounded:");
-   test_passive_iterator(Stack_b_P1'Access);
+   Test_Passive_Iterator(Stack_B_P1'access);
    Put_Line("   Dynamic:");
-   test_passive_iterator(Stack_d_P1'Access);
+   Test_Passive_Iterator(Stack_D_P1'access);
    Put_Line("   Unbounded:");
-   test_passive_iterator(Stack_u_P1'Access);
+   Test_Passive_Iterator(Stack_U_P1'access);
 
-  Assertion((Top(Stack_b_p1) = '7'), "** M01: Stack top is not correct");
-  Assertion((Depth(Stack_b_p2) = 0), "** M02: Stack depth is not correct");
+  Assertion((Top(Stack_B_P1) = '7'), "** M01: Stack top is not correct");
+  Assertion((Depth(Stack_B_P2) = 0), "** M02: Stack depth is not correct");
 --  Assertion((Top(Stack_b_u1) = Global_Items(7)), "** M03: Stack top is not correct");
 --  Assertion((Depth(Stack_b_u2) = 0), "** M04: Stack depth is not correct");
 
-  Assertion((Top(Stack_d_p1) = '7'), "** M05: Stack top is not correct");
-  Assertion((Depth(Stack_d_p2) = 0), "** M06: Stack depth is not correct");
+  Assertion((Top(Stack_D_P1) = '7'), "** M05: Stack top is not correct");
+  Assertion((Depth(Stack_D_P2) = 0), "** M06: Stack depth is not correct");
 --  Assertion((Top(Stack_d_u1) = Global_Items(7)), "** M07: Stack top is not correct");
 --  Assertion((Depth(Stack_d_u2) = 0), "** M08: Stack depth is not correct");
 
-  Assertion((Top(Stack_u_p1) = '7'), "** M09: Stack top is not correct");
-  Assertion((Depth(Stack_u_p2) = 0), "** M10: Stack depth is not correct");
+  Assertion((Top(Stack_U_P1) = '7'), "** M09: Stack top is not correct");
+  Assertion((Depth(Stack_U_P2) = 0), "** M10: Stack depth is not correct");
 --  Assertion((Top(Stack_u_u1) = Global_Items(7)), "** M11: Stack top is not correct");
 --  Assertion((Depth(Stack_u_u2) = 0), "** M12: Stack depth is not correct");
 
