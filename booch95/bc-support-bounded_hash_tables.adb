@@ -175,6 +175,19 @@ package body BC.Support.Bounded_Hash_Tables is
       end Extent;
 
 
+      function Bucket_Extent
+        (T : Table; Bucket : Bucket_Index) return Natural is
+         Current : Index := T.Buckets (Bucket);
+         Result : Natural := 0;
+      begin
+         while Current /= 0 loop
+            Result := Result + 1;
+            Current := T.Contents (Current).Next;
+         end loop;
+         return Result;
+      end Bucket_Extent;
+
+
       function Is_Bound (T : Table; I : Items.Item) return Boolean is
          Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
       begin

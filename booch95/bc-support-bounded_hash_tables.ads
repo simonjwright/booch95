@@ -118,6 +118,10 @@ package BC.Support.Bounded_Hash_Tables is
       function Extent (T : Table) return Natural;
       --  Return the number of item/value pairs in the hash table.
 
+      function Bucket_Extent
+        (T : Table; Bucket : Bucket_Index) return Natural;
+      --  Return the number of item/value pairs in the selected bucket.
+
       function Is_Bound (T : Table; I : Items.Item) return Boolean;
       --  Return True if the item has a binding in the hash table;
       --  otherwise, return False.
