@@ -23,7 +23,7 @@ package body Lists_For_Traversal is
 
   procedure Finalize (The_T : in out T) is
   begin
-    Ada.Text_Io.Put_Line ("finalizing" & The_T.V'Img);
+    Ada.Text_Io.Put_Line ("finalizing" & Integer'Image (The_T.V));
   end Finalize;
 
 end Lists_For_Traversal;
