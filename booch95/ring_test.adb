@@ -128,8 +128,8 @@ procedure Ring_Test is
     Assertion (At_Mark (R2), "** P40: Ring at mark");
   end Test_Primitive;
 
---   Ring_B_P1, Ring_B_P2 : RB.Bounded_Ring;
---   Ring_D_P1, Ring_D_P2 : RD.Dynamic_Ring;
+  Ring_B_P1, Ring_B_P2 : Bounded_Ring;
+  Ring_D_P1, Ring_D_P2 : Dynamic_Ring;
   Ring_U_P1, Ring_U_P2 : Unbounded_Ring;
   Ring_UG_P1, Ring_UG_P2 : Guarded_Unbounded_Ring;
   Ring_US_P1, Ring_US_P2 : Synchronized_Unbounded_Ring;
@@ -138,12 +138,12 @@ begin
 
   Put_Line ("Starting Ring tests");
 
---   Put_Line ("...Bounded Ring");
---   Test_Primitive (Ring_B_P1, Ring_B_P2);
+  Put_Line ("...Bounded Ring");
+  Test_Primitive (Ring_B_P1, Ring_B_P2);
 
---   Put_Line ("...Dynamic Ring");
---   Preallocate (Ring_D_P1, 50);
---   Test_Primitive (Ring_D_P1, Ring_D_P2);
+  Put_Line ("...Dynamic Ring");
+  RD.Preallocate (Ring_D_P1, 50);
+  Test_Primitive (Ring_D_P1, Ring_D_P2);
 
   Put_Line ("...Unbounded Ring");
   Test_Primitive (Ring_U_P1, Ring_U_P2);
@@ -153,10 +153,10 @@ begin
   Test_Primitive (Ring_US_P1, Ring_US_P2);
 
   Put_Line ("...Ring Active Iterator");
---   Put_Line ("   Bounded:");
---   Test_Active_Iterator (Ring_B_P1);
---   Put_Line ("   Dynamic:");
---   Test_Active_Iterator (Ring_D_P1);
+  Put_Line ("   Bounded:");
+  Test_Active_Iterator (Ring_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Active_Iterator (Ring_D_P1);
   Put_Line ("   Unbounded:");
   Test_Active_Iterator (Ring_U_P1);
   Put_Line ("   Unbounded Guarded:");
@@ -165,16 +165,27 @@ begin
   Test_Active_Iterator (Ring_US_P1);
 
   Put_Line ("...Ring Passive Iterator");
---   Put_Line ("   Bounded:");
---   Test_Passive_Iterator (Ring_B_P1);
---   Put_Line ("   Dynamic:");
---   Test_Passive_Iterator (Ring_D_P1);
+  Put_Line ("   Bounded:");
+  Test_Passive_Iterator (Ring_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Passive_Iterator (Ring_D_P1);
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Ring_U_P1);
   Put_Line ("   Unbounded Guarded:");
   Test_Passive_Iterator (Ring_UG_P1);
   Put_Line ("   Unbounded Synchronized:");
   Test_Passive_Iterator (Ring_US_P1);
+
+  Assertion (RB.Top (Ring_B_P1) = '9', "** M01: Ring top is not correct");
+  Assertion (RB.Extent (Ring_B_P2) = 2, "** M02: Ring depth is not correct");
+  Assertion (RD.Top (Ring_D_P1) = '9', "** M05: Ring top is not correct");
+  Assertion (RD.Extent (Ring_D_P2) = 2, "** M06: Ring depth is not correct");
+  Assertion (RU.Top (Ring_U_P1) = '9', "** M09: Ring top is not correct");
+  Assertion (RU.Extent (Ring_U_P2) = 2, "** M10: Ring depth is not correct");
+  Assertion (RB.Available (Ring_B_P1) = 97,
+             "** M13: Available space is not correct");
+  Assertion (RB.Available (Ring_B_P2) = 98,
+             "** M14: Available space is not correct");
 
   Put_Line ("Completed Ring tests");
 
