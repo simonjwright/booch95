@@ -21,7 +21,6 @@
 --  $Author$
 
 with Ada.Finalization;
-with BC.Support.Nodes;
 with System.Storage_Pools;
 
 generic
@@ -85,10 +84,20 @@ package BC.Containers.Trees.AVL is
 
 private
 
-   package Nodes is new BC.Support.Nodes (Item, Storage);
+   type AVL_Node;
+   type AVL_Node_Ref is access AVL_Node;
+   for AVL_Node_Ref'Storage_Pool use Storage;
+
+   type Node_Balance is (Left, Middle, Right);
+
+   type AVL_Node is record
+      Element : Item;
+      Left, Right : AVL_Node_Ref;
+      Balance : Node_Balance := Middle;
+   end record;
 
    type AVL_Tree is new Ada.Finalization.Controlled with record
-      Rep : Nodes.AVL_Node_Ref;
+      Rep : AVL_Node_Ref;
       Size : Natural := 0;
    end record;
 

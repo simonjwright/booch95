@@ -20,78 +20,80 @@
 --  $Date$
 --  $Author$
 
+with Ada.Unchecked_Deallocation;
+
 package body BC.Containers.Trees.AVL is
 
+   procedure Delete is
+      new Ada.Unchecked_Deallocation (AVL_Node, AVL_Node_Ref);
+
    --  Supporting subprograms
-   procedure Purge (Node : in out Nodes.AVL_Node_Ref);
+   procedure Purge (Node : in out AVL_Node_Ref);
 
    procedure Search_Insert (T : in out AVL_Tree;
                             Element : Item;
-                            Node : in out Nodes.AVL_Node_Ref;
+                            Node : in out AVL_Node_Ref;
                             Increased : in out Boolean;
                             Inserted : out Boolean);
 
    procedure Search_Delete (T : in out AVL_Tree;
                             Element : Item;
-                            Node : in out Nodes.AVL_Node_Ref;
+                            Node : in out AVL_Node_Ref;
                             Decreased : in out Boolean;
                             Deleted : out Boolean);
 
-   procedure Balance_Left (Node : in out Nodes.AVL_Node_Ref;
+   procedure Balance_Left (Node : in out AVL_Node_Ref;
                            Decreased : in out Boolean);
 
-   procedure Balance_Right (Node : in out Nodes.AVL_Node_Ref;
+   procedure Balance_Right (Node : in out AVL_Node_Ref;
                             Decreased : in out Boolean);
 
    procedure Delete
-     (To_Be_Deleted, Candidate_Replacement : in out Nodes.AVL_Node_Ref;
+     (To_Be_Deleted, Candidate_Replacement : in out AVL_Node_Ref;
       Decreased : in out Boolean);
 
    function Search (T : AVL_Tree;
                     Element : Item;
-                    Node : Nodes.AVL_Node_Ref) return Boolean;
+                    Node : AVL_Node_Ref) return Boolean;
 
-   procedure Purge (Node : in out Nodes.AVL_Node_Ref) is
-      use type Nodes.AVL_Node_Ref;
+   procedure Purge (Node : in out AVL_Node_Ref) is
    begin
       if Node /= null then
          Purge (Node.Left);
          Purge (Node.Right);
-         Nodes.Delete (Node);
+         Delete (Node);
       end if;
    end Purge;
 
    procedure Search_Insert (T : in out AVL_Tree;
                             Element : Item;
-                            Node : in out Nodes.AVL_Node_Ref;
+                            Node : in out AVL_Node_Ref;
                             Increased : in out Boolean;
                             Inserted : out Boolean) is
-      P1, P2 : Nodes.AVL_Node_Ref;
-      use type Nodes.AVL_Node_Ref;
-      use type Nodes.Node_Balance;
+      P1, P2 : AVL_Node_Ref;
    begin
       Inserted := True;
       if Node = null then
-         Node := new Nodes.AVL_Node'(Element => Element,
+         Node := new AVL_Node'(Element => Element,
                                      Left => null,
                                      Right => null,
-                                     Balance => Nodes.Middle);
+                                     Balance => Middle);
          Increased := True;
       elsif Element < Node.Element then
          Search_Insert (T, Element, Node.Left, Increased, Inserted);
          if Increased then
             case Node.Balance is
-               when Nodes.Right =>
-                  Node.Balance := Nodes.Middle;
+               when Right =>
+                  Node.Balance := Middle;
                   Increased := False;
-               when Nodes.Middle =>
-                  Node.Balance := Nodes.Left;
-               when Nodes.Left =>
+               when Middle =>
+                  Node.Balance := Left;
+               when Left =>
                   P1 := Node.Left;
-                  if P1.Balance = Nodes.Left then
+                  if P1.Balance = Left then
                      Node.Left := P1.Right;
                      P1.Right := Node;
-                     Node.Balance := Nodes.Middle;
+                     Node.Balance := Middle;
                      Node := P1;
                   else
                      P2 := P1.Right;
@@ -99,19 +101,19 @@ package body BC.Containers.Trees.AVL is
                      P2.Left := P1;
                      Node.Left := P2.Right;
                      P2.Right := Node;
-                     if P2.Balance = Nodes.Left then
-                        Node.Balance := Nodes.Right;
+                     if P2.Balance = Left then
+                        Node.Balance := Right;
                      else
-                        Node.Balance := Nodes.Middle;
+                        Node.Balance := Middle;
                      end if;
-                     if P2.Balance = Nodes.Right then
-                        P1.Balance := Nodes.Left;
+                     if P2.Balance = Right then
+                        P1.Balance := Left;
                      else
-                        P1.Balance := Nodes.Middle;
+                        P1.Balance := Middle;
                      end if;
                      Node := P2;
                   end if;
-                  Node.Balance := Nodes.Middle;
+                  Node.Balance := Middle;
                   Increased := False;
             end case;
          end if;
@@ -119,17 +121,17 @@ package body BC.Containers.Trees.AVL is
          Search_Insert (T, Element, Node.Right, Increased, Inserted);
          if Increased then
             case Node.Balance is
-               when Nodes.Left =>
-                  Node.Balance := Nodes.Middle;
+               when Left =>
+                  Node.Balance := Middle;
                   Increased := False;
-               when Nodes.Middle =>
-                  Node.Balance := Nodes.Right;
-               when Nodes.Right =>
+               when Middle =>
+                  Node.Balance := Right;
+               when Right =>
                   P1 := Node.Right;
-                  if P1.Balance = Nodes.Right then
+                  if P1.Balance = Right then
                      Node.Right := P1.Left;
                      P1.Left := Node;
-                     Node.Balance := Nodes.Middle;
+                     Node.Balance := Middle;
                      Node := P1;
                   else
                      P2 := P1.Left;
@@ -137,19 +139,19 @@ package body BC.Containers.Trees.AVL is
                      P2.Right := P1;
                      Node.Right := P2.Left;
                      P2.Left := Node;
-                     if P2.Balance = Nodes.Right then
-                        Node.Balance := Nodes.Left;
+                     if P2.Balance = Right then
+                        Node.Balance := Left;
                      else
-                        Node.Balance := Nodes.Middle;
+                        Node.Balance := Middle;
                      end if;
-                     if P2.Balance = Nodes.Left then
-                        P1.Balance := Nodes.Right;
+                     if P2.Balance = Left then
+                        P1.Balance := Right;
                      else
-                        P1.Balance := Nodes.Middle;
+                        P1.Balance := Middle;
                      end if;
                      Node := P2;
                   end if;
-                  Node.Balance := Nodes.Middle;
+                  Node.Balance := Middle;
                   Increased := False;
             end case;
          end if;
@@ -161,31 +163,30 @@ package body BC.Containers.Trees.AVL is
       end if;
    end Search_Insert;
 
-   procedure Balance_Left (Node : in out Nodes.AVL_Node_Ref;
+   procedure Balance_Left (Node : in out AVL_Node_Ref;
                            Decreased : in out Boolean) is
-      P1, P2 : Nodes.AVL_Node_Ref;
-      Balance1, Balance2 : Nodes.Node_Balance;
-      use type Nodes.Node_Balance;
+      P1, P2 : AVL_Node_Ref;
+      Balance1, Balance2 : Node_Balance;
    begin
       case Node.Balance is
-         when Nodes.Left =>
-            Node.Balance := Nodes.Middle;
-         when Nodes.Middle =>
-            Node.Balance := Nodes.Right;
+         when Left =>
+            Node.Balance := Middle;
+         when Middle =>
+            Node.Balance := Right;
             Decreased := False;
-         when Nodes.Right =>
+         when Right =>
             P1 := Node.Right;
             Balance1 := P1.Balance;
-            if Balance1 >= Nodes.Middle then
+            if Balance1 >= Middle then
                Node.Right := P1.Left;
                P1.Left := Node;
-               if Balance1 = Nodes.Middle then
-                  Node.Balance := Nodes.Right;
-                  P1.Balance := Nodes.Left;
+               if Balance1 = Middle then
+                  Node.Balance := Right;
+                  P1.Balance := Left;
                   Decreased := False;
                else
-                  Node.Balance := Nodes.Middle;
-                  P1.Balance := Nodes.Middle;
+                  Node.Balance := Middle;
+                  P1.Balance := Middle;
                end if;
                Node := P1;
             else
@@ -195,47 +196,46 @@ package body BC.Containers.Trees.AVL is
                P2.Right := P1;
                Node.Right := P2.Left;
                P2.Left := Node;
-               if Balance2 = Nodes.Right then
-                  Node.Balance := Nodes.Left;
+               if Balance2 = Right then
+                  Node.Balance := Left;
                else
-                  Node.Balance := Nodes.Middle;
+                  Node.Balance := Middle;
                end if;
-               if Balance2 = Nodes.Left then
-                  P1.Balance := Nodes.Right;
+               if Balance2 = Left then
+                  P1.Balance := Right;
                else
-                  P1.Balance := Nodes.Middle;
+                  P1.Balance := Middle;
                end if;
                Node := P2;
-               P2.Balance := Nodes.Middle;
+               P2.Balance := Middle;
             end if;
       end case;
    end Balance_Left;
 
-   procedure Balance_Right (Node : in out Nodes.AVL_Node_Ref;
+   procedure Balance_Right (Node : in out AVL_Node_Ref;
                             Decreased : in out Boolean)  is
-      P1, P2 : Nodes.AVL_Node_Ref;
-      Balance1, Balance2 : Nodes.Node_Balance;
-      use type Nodes.Node_Balance;
+      P1, P2 : AVL_Node_Ref;
+      Balance1, Balance2 : Node_Balance;
    begin
       case Node.Balance is
-         when Nodes.Right =>
-            Node.Balance := Nodes.Middle;
-         when Nodes.Middle =>
-            Node.Balance := Nodes.Left;
+         when Right =>
+            Node.Balance := Middle;
+         when Middle =>
+            Node.Balance := Left;
             Decreased := False;
-         when Nodes.Left =>
+         when Left =>
             P1 := Node.Left;
             Balance1 := P1.Balance;
-            if Balance1 <= Nodes.Middle then
+            if Balance1 <= Middle then
                Node.Left := P1.Right;
                P1.Right := Node;
-               if Balance1 = Nodes.Middle then
-                  Node.Balance := Nodes.Left;
-                  P1.Balance := Nodes.Right;
+               if Balance1 = Middle then
+                  Node.Balance := Left;
+                  P1.Balance := Right;
                   Decreased := False;
                else
-                  Node.Balance := Nodes.Middle;
-                  P1.Balance := Nodes.Middle;
+                  Node.Balance := Middle;
+                  P1.Balance := Middle;
                end if;
                Node := P1;
             else
@@ -245,18 +245,18 @@ package body BC.Containers.Trees.AVL is
                P2.Left := P1;
                Node.Left := P2.Right;
                P2.Right := Node;
-               if Balance2 = Nodes.Left then
-                  Node.Balance := Nodes.Right;
+               if Balance2 = Left then
+                  Node.Balance := Right;
                else
-                  Node.Balance := Nodes.Middle;
+                  Node.Balance := Middle;
                end if;
-               if Balance2 = Nodes.Right then
-                  P1.Balance := Nodes.Left;
+               if Balance2 = Right then
+                  P1.Balance := Left;
                else
-                  P1.Balance := Nodes.Middle;
+                  P1.Balance := Middle;
                end if;
                Node := P2;
-               P2.Balance := Nodes.Middle;
+               P2.Balance := Middle;
             end if;
       end case;
    end Balance_Right;
@@ -274,16 +274,15 @@ package body BC.Containers.Trees.AVL is
    --
    --  The tree is rebalanced as the recursion unwinds.
    procedure Delete
-     (To_Be_Deleted, Candidate_Replacement : in out Nodes.AVL_Node_Ref;
+     (To_Be_Deleted, Candidate_Replacement : in out AVL_Node_Ref;
       Decreased : in out Boolean) is
-      use type Nodes.AVL_Node_Ref;
    begin
       if Candidate_Replacement.Right /= null then
          --  Recurse down the right branch
          Delete (To_Be_Deleted, Candidate_Replacement.Right, Decreased);
          if Candidate_Replacement.Left = null
            and then Candidate_Replacement.Right = null then
-            Candidate_Replacement.Balance := Nodes.Middle;
+            Candidate_Replacement.Balance := Middle;
          elsif Decreased then
             Balance_Right (Candidate_Replacement, Decreased);
          end if;
@@ -309,11 +308,10 @@ package body BC.Containers.Trees.AVL is
 
    procedure Search_Delete (T : in out AVL_Tree;
                             Element : Item;
-                            Node : in out Nodes.AVL_Node_Ref;
+                            Node : in out AVL_Node_Ref;
                             Decreased : in out Boolean;
                             Deleted : out Boolean) is
-      Q : Nodes.AVL_Node_Ref;
-      use type Nodes.AVL_Node_Ref;
+      Q : AVL_Node_Ref;
    begin
       Deleted := False;
       if Node /= null then
@@ -342,15 +340,14 @@ package body BC.Containers.Trees.AVL is
                   Balance_Left (Node, Decreased);
                end if;
             end if;
-            Nodes.Delete (Q);
+            Delete (Q);
          end if;
       end if;
    end Search_Delete;
 
    function Search (T : AVL_Tree;
                     Element : Item;
-                    Node : Nodes.AVL_Node_Ref) return Boolean is
-      use type Nodes.AVL_Node_Ref;
+                    Node : AVL_Node_Ref) return Boolean is
    begin
       if Node /= null then
          if Node.Element = Element then
@@ -430,7 +427,6 @@ package body BC.Containers.Trees.AVL is
    end Extent;
 
    function Is_Null (T : in AVL_Tree) return Boolean is
-      use type Nodes.AVL_Node_Ref;
    begin
       return T.Rep = null;
    end Is_Null;
@@ -440,29 +436,11 @@ package body BC.Containers.Trees.AVL is
       return Search (T, Element, T.Rep);
    end Is_Member;
 
-   --    function Item_Of (Node : AVL_Node_Ref;
-   --                      Element : Item) return Item_Ptr is
-   --      use type Nodes.AVL_Node_Ref;
-   --    begin
-   --      if Node /= null then
-   --        if Node.Element = Element then
-   --          return Node.Element'access;
-   --        elsif Less (Element, Node.Element) then
-   --          return ItemOf (Node.Left, Element, Less);
-   --        else
-   --          return ItemOf (Node.Right, Element ,Less);
-   --        end if;
-   --      else
-   --        return null;
-   --      end if;
-   --    end ItemOf;
-
    procedure Access_Actual_Item (In_The_Tree : AVL_Tree;
                                  Elem : Item;
                                  Found : out Boolean) is
-      procedure Access_Actual_Item (Node : Nodes.AVL_Node_Ref);
-      procedure Access_Actual_Item (Node : Nodes.AVL_Node_Ref) is
-         use type Nodes.AVL_Node_Ref;
+      procedure Access_Actual_Item (Node : AVL_Node_Ref);
+      procedure Access_Actual_Item (Node : AVL_Node_Ref) is
       begin
          if Node /= null then
             if Node.Element = Elem then
@@ -502,10 +480,8 @@ package body BC.Containers.Trees.AVL is
 
    procedure Visit (Over_The_Tree : AVL_Tree) is
       Continue : Boolean := True;
-      use type Nodes.AVL_Node_Ref;
-      procedure Visit (Node : Nodes.AVL_Node_Ref);
-      procedure Visit (Node : Nodes.AVL_Node_Ref) is
-         use type Nodes.AVL_Node_Ref;
+      procedure Visit (Node : AVL_Node_Ref);
+      procedure Visit (Node : AVL_Node_Ref) is
       begin
          if Node /= null then
             Visit (Node.Left);
@@ -525,10 +501,8 @@ package body BC.Containers.Trees.AVL is
 
    procedure Modify (Over_The_Tree : AVL_Tree) is
       Continue : Boolean := True;
-      use type Nodes.AVL_Node_Ref;
-      procedure Modify (Node : Nodes.AVL_Node_Ref);
-      procedure Modify (Node : Nodes.AVL_Node_Ref) is
-         use type Nodes.AVL_Node_Ref;
+      procedure Modify (Node : AVL_Node_Ref);
+      procedure Modify (Node : AVL_Node_Ref) is
       begin
          if Node /= null then
             Modify (Node.Left);
