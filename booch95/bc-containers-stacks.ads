@@ -18,7 +18,7 @@
 -- $Id$
 
 generic
-package Bc.Containers.Stacks is
+package BC.Containers.Stacks is
 
   type Stack is abstract new Container with private;
 
@@ -47,14 +47,13 @@ package Bc.Containers.Stacks is
   function Top (Obj : in Stack) return Item is abstract;
   -- Return a copy of the item at the top of the Stack.
 
-  function Top (Obj : in Stack) return Item_Ptr is abstract;
-  -- Return a pointer to the item at the top of the Stack.
+  -- XXX We need a generic accessor here ..
 
-  function "=" (Left, Right : access Stack'Class) return Boolean;
+  function Are_Equal (Left, Right : Stack'Class) return Boolean;
   -- Return True if and only if both stacks have the same depth and the
   -- same items in the same order; return False otherwise.
 
-  procedure Copy (From : access Stack'Class; To : access Stack'Class);
+  procedure Copy (From : Stack'Class; To : in out Stack'Class);
   -- This operation MUST be called for dissimilar Stacks in place of
   -- assignment.
 
@@ -62,7 +61,25 @@ private
 
   type Stack is abstract new Container with null record;
 
-  procedure Purge (Obj : in out Stack);
-  procedure Add (Obj : in out Stack; Elem : in out Item);
+  procedure Add (Obj : in out Stack; Elem : Item);
 
-end Bc.Containers.Stacks;
+  type Stack_Iterator (S : access Stack'Class)
+  is new Actual_Iterator (S) with record
+    Index : Natural;
+  end record;
+
+  -- Overriding primitive supbrograms of the concrete actual Iterator.
+
+  procedure Initialize (It : in out Stack_Iterator);
+
+  procedure Reset (It : in out Stack_Iterator);
+
+  procedure Next (It : in out Stack_Iterator);
+
+  function Is_Done (It : Stack_Iterator) return Boolean;
+
+  function Current_Item (It : Stack_Iterator) return Item;
+
+  function Current_Item (It : Stack_Iterator) return Item_Ptr;
+
+end BC.Containers.Stacks;

@@ -1,4 +1,4 @@
--- Copyright (C) 1998 Grady Booch, Pat Rogers and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, Pat Rogers and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -17,7 +17,6 @@
 
 -- $Id$
 
-with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
 with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;

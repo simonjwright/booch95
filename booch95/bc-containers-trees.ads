@@ -76,4 +76,4 @@ generic package BC.Containers.Trees is
   -- Arity. The AVL tree has a completely different protocol, with a much
   -- more limited set of operations.
 
-end;
+end BC.Containers.Trees;

@@ -205,6 +205,14 @@ package body BC.Containers.Trees.Binary is
     end if;
   end Left_Child;
 
+  function Left_Child (Obj : Binary_Tree) return Binary_Tree is
+    Result : Binary_Tree;
+  begin
+    Result := Obj;
+    Left_Child (Result);
+    return Result;
+  end Left_Child;
+
   procedure Right_Child (Obj : in out Binary_Tree) is
     Curr : Nodes.Binary_Node_Ref;
   begin
@@ -228,6 +236,14 @@ package body BC.Containers.Trees.Binary is
       end if;
       Nodes.Delete (Curr);
     end if;
+  end Right_Child;
+
+  function Right_Child (Obj : Binary_Tree) return Binary_Tree is
+    Result : Binary_Tree;
+  begin
+    Result := Obj;
+    Right_Child (Result);
+    return Result;
   end Right_Child;
 
   procedure Parent (Obj : in out Binary_Tree) is

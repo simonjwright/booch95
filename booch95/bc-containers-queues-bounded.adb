@@ -17,91 +17,98 @@
 
 -- $Id$
 
+with System.Address_To_Access_Conversions;
+
 package body BC.Containers.Queues.Bounded is
 
-  use Bnd_Queue_Nodes;
+  use Bounded_Queue_Nodes;
 
-  procedure Clear (Obj : in out Bnd_Queue) is
+  procedure Clear (Obj : in out Bounded_Queue) is
   begin
-    Bnd_Queue_Nodes.Clear (Obj.Rep.all);
+    Bounded_Queue_Nodes.Clear (Obj.Rep.all);
   end Clear;
 
-  procedure Append (Obj : in out Bnd_Queue; Elem : Item) is
+  procedure Append (Obj : in out Bounded_Queue; Elem : Item) is
   begin
-    Bnd_Queue_Nodes.Append (Obj.Rep.all, Elem);
+    Bounded_Queue_Nodes.Append (Obj.Rep.all, Elem);
   end Append;
 
-  procedure Pop (Obj : in out Bnd_Queue) is
+  procedure Pop (Obj : in out Bounded_Queue) is
   begin
-    Bnd_Queue_Nodes.Remove (Obj.Rep.all, 1);
+    Bounded_Queue_Nodes.Remove (Obj.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Obj : in out Bnd_Queue; From : Natural) is
+  procedure Remove (Obj : in out Bounded_Queue; From : Natural) is
   begin
-    Bnd_Queue_Nodes.Remove (Obj.Rep.all, From);
+    Bounded_Queue_Nodes.Remove (Obj.Rep.all, From);
   end Remove;
 
-  function Available (Obj: in Bnd_Queue) return Natural is
+  function Available (Obj: in Bounded_Queue) return Natural is
   begin
-    return Bnd_Queue_Nodes.Available (Obj.Rep.all);
+    return Bounded_Queue_Nodes.Available (Obj.Rep.all);
   end Available;
 
-  function Length  (Obj : Bnd_Queue) return Natural is
+  function Length  (Obj : Bounded_Queue) return Natural is
   begin
-    return Bnd_Queue_Nodes.Length (Obj.Rep.all);
+    return Bounded_Queue_Nodes.Length (Obj.Rep.all);
   end Length;
 
-  function Is_Empty (Obj : Bnd_Queue) return Boolean is
+  function Is_Empty (Obj : Bounded_Queue) return Boolean is
   begin
-    return Bnd_Queue_Nodes.Length (Obj.Rep.all) = 0;
+    return Bounded_Queue_Nodes.Length (Obj.Rep.all) = 0;
   end Is_Empty;
 
-  function Front (Obj : Bnd_Queue) return Item is
+  function Front (Obj : Bounded_Queue) return Item is
   begin
-    return Bnd_Queue_Nodes.First (Obj.Rep.all);
+    return Bounded_Queue_Nodes.First (Obj.Rep.all);
   end Front;
 
-  function Front (Obj : in Bnd_Queue) return Item_Ptr is
+  function Location (Obj : in Bounded_Queue; Elem : Item) return Natural is
   begin
-    return Bnd_Queue_Nodes.First (Obj.Rep.all);
-  end Front;
-
-  function Location (Obj : in Bnd_Queue; Elem : Item) return Natural is
-  begin
-    return Bnd_Queue_Nodes.Location (Obj.Rep.all, Elem);
+    return Bounded_Queue_Nodes.Location (Obj.Rep.all, Elem);
   end Location;
 
-  function "=" (Left, Right : Bnd_Queue) return Boolean is
+  function "=" (Left, Right : Bounded_Queue) return Boolean is
   begin
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  function Item_At (Obj : in Bnd_Queue; Index : in Natural) return Item_Ptr is
+  package Address_Conversions
+  is new System.Address_To_Access_Conversions (Bounded_Queue);
+
+  function New_Iterator (For_The_Queue : Bounded_Queue) return Iterator is
+    P : Address_Conversions.Object_Pointer
+       := Address_Conversions.To_Pointer (For_The_Queue'Address);
   begin
-    return Bnd_Queue_Nodes.Item_At (Obj.Rep.all, Index);
+    return Iterator (SP.Create (new Queue_Iterator (P)));
+  end New_Iterator;
+
+  function Item_At (Obj : Bounded_Queue; Index : Positive) return Item_Ptr is
+  begin
+    return Bounded_Queue_Nodes.Item_At (Obj.Rep.all, Index);
   end Item_at;
 
-  function Cardinality (Obj : Bnd_Queue) return Integer is
+  function Cardinality (Obj : Bounded_Queue) return Natural is
   begin
-    return Bnd_Queue_Nodes.Length (Obj.Rep.all);
+    return Bounded_Queue_Nodes.Length (Obj.Rep.all);
   end Cardinality;
 
-  procedure Purge (Obj : in out Bnd_Queue) is
+  procedure Purge (Obj : in out Bounded_Queue) is
   begin
-    Bnd_Queue_Nodes.Clear (Obj.Rep.all);
+    Bounded_Queue_Nodes.Clear (Obj.Rep.all);
   end Purge;
 
-  procedure Add (Obj : in out Bnd_Queue; Elem : in out Item) is
+  procedure Add (Obj : in out Bounded_Queue; Elem : Item) is
   begin
-    Bnd_Queue_Nodes.Append (Obj.Rep.all, Elem);
+    Bounded_Queue_Nodes.Append (Obj.Rep.all, Elem);
   end Add;
 
-  procedure Adjust (Obj : in out Bnd_Queue) is
+  procedure Adjust (Obj : in out Bounded_Queue) is
   begin
-    Obj.Rep := Bnd_Queue_Nodes.Create (Obj.Rep.all);
+    Obj.Rep := Bounded_Queue_Nodes.Create (Obj.Rep.all);
   end Adjust;
 
-  procedure Finalize (Obj : in out Bnd_Queue) is
+  procedure Finalize (Obj : in out Bounded_Queue) is
   begin
     Free (Obj.Rep);
   end Finalize;

@@ -1,4 +1,4 @@
--- Copyright (C) 1998 Grady Booch and Pat Rogers.
+-- Copyright (C) 1994-1999 Grady Booch, Pat Rogers and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -17,43 +17,25 @@
 
 -- $Id$
 
-with Text_Io;
-with Root_Container;
-with Root_Queues;
-with Root_Bounded_Queues;
-with Root_Dynamic_Queues;
-with Root_Unbounded_Queues;
--- with User_Container;
--- with User_Queues;
--- with User_Bounded_Queues;
--- with User_Dynamic_Queues;
--- with User_Unbounded_Queues;
--- with User_Defined;
-with Character_References;
+with Ada.Text_IO;
+with Queue_Test_Support;
+
 procedure Queue_Test is
-  use Text_IO;
-  use ROot_Container;
-  use Root_Queues;
-  use Root_Bounded_Queues;
-  use Root_Dynamic_Queues;
-  use Root_Unbounded_Queues;
-  use Character_References;
-  --    use User_Container;
-  --    use User_Queues;
-  --    use User_Bounded_Queues;
-  --    use User_Dynamic_Queues;
-  --    use User_Unbounded_Queues;
-  --    use User_Defined;
+  use Ada.Text_IO;
+  use Queue_Test_Support;
+  use Containers;
+  use Queues;
+  use QB;
+  use QD;
+  use QU;
 
   --    Global_Items : array (1..10) of aliased Chunk;
 
-  procedure Process (C : in Char_Ptr; OK : out Boolean) is
+  procedure Process (C : Character; OK : out Boolean) is
   begin
-    Put_Line ("Item: " & C.all );
+    Put_Line ("Item: " & C);
     Ok := True;
   end Process;
-
-  function Mod_Op is new Modify (Apply => Process);
 
   procedure Assertion (Cond : Boolean; Message : String) is
   begin
@@ -61,12 +43,11 @@ procedure Queue_Test is
       Put_Line (Message);
     end if;
   end Assertion;
-  pragma Inline (Assertion);
 
-  procedure Test_Active_Iterator (L : access Container'Class) is
-    Iter : Iterator(L);
+  procedure Test_Active_Iterator (L : Container'Class) is
+    Iter : Iterator := New_Iterator (L);
     Success : Boolean;
-    Temp : Char_Ptr;
+    Temp : Character;
   begin
     while not Is_Done (Iter) loop
       Temp := Current_Item (Iter);
@@ -215,16 +196,16 @@ procedure Queue_Test is
   --       Assertion ((Length (Q2) = 0), "** P37: Queue length is not correct");
   --    end Test_User_Defined;
 
-  procedure Test_Passive_Iterator (L : access Container'Class) is
-    PIter : aliased Passive_Iterator (L);
-    Success : Boolean;
+  procedure Test_Passive_Iterator (Q : Container'Class) is
+    procedure Iterate is new Visit (Apply => Process);
+    Iter : Iterator := New_Iterator (Q);
   begin
-    Success := Mod_Op (PIter'access); -- just discard Success for now..
+    Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
-  Queue_B_P1, Queue_B_P2 : aliased Root_Bounded_Queues.Bnd_Queue;
-  Queue_D_P1, Queue_D_P2 : aliased Root_Dynamic_Queues.Dyn_Queue;
-  Queue_U_P1, Queue_U_P2 : aliased Root_Unbounded_Queues.Unb_Queue;
+  Queue_B_P1, Queue_B_P2 : QB.Bounded_Queue;
+  Queue_D_P1, Queue_D_P2 : QD.Dynamic_Queue;
+  Queue_U_P1, Queue_U_P2 : QU.Unbounded_Queue;
   --    queue_b_u1, Queue_b_u2 : aliased User_Bound_Queues.Bnd_Queue;
   --    queue_d_u1, Queue_d_u2 : aliased User_Dynamic_Queues.Dyn_Queue;
   --    queue_u_u1, Queue_U_u2 : aliased User_Unbounded_Queues.Unb_Queue;
@@ -246,19 +227,19 @@ begin
 
   Put_Line ("...Queue Active Iterator");
   Put_Line ("   Bounded:");
-  Test_Active_Iterator (Queue_B_P1'access);
+  Test_Active_Iterator (Queue_B_P1);
   Put_Line ("   Dynamic:");
-  Test_Active_Iterator (Queue_D_P1'access);
+  Test_Active_Iterator (Queue_D_P1);
   Put_Line ("   Unbounded:");
-  Test_Active_Iterator (Queue_U_P1'access);
+  Test_Active_Iterator (Queue_U_P1);
 
   Put_Line ("...Queue Passive Iterator");
   Put_Line ("   Bounded:");
-  Test_Passive_Iterator (Queue_B_P1'access);
+  Test_Passive_Iterator (Queue_B_P1);
   Put_Line ("   Dynamic:");
-  Test_Passive_Iterator (Queue_D_P1'access);
+  Test_Passive_Iterator (Queue_D_P1);
   Put_Line ("   Unbounded:");
-  Test_Passive_Iterator (Queue_U_P1'access);
+  Test_Passive_Iterator (Queue_U_P1);
 
   Assertion ((Front (Queue_B_P1) = '9'), "** M01: Queue front is not correct");
   Assertion ((Length (Queue_B_P2) = 0), "** M02: Queue length is not correct");

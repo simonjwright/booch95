@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -26,65 +26,71 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Stacks.Dynamic is
 
-  type Dyn_Stack is new Stack with private;
+  type Dynamic_Stack is new Stack with private;
   -- A dynamic Stack exhibits similar performance to a Bounded_Stack,
   -- except its size is limited only to available memory.  It dynamically
   -- grows in a linear fashion (based on Chunk_Size).  There is currently
   -- no support for linear collapsing of the Stack.
 
-  function Create (Size : Positive) return Dyn_Stack;
+  function Create (Size : Positive) return Dynamic_Stack;
   -- Creates a new Dynamic Stack that is preallocated for 'Size' elements
 
-  function "=" (Left, Right : Dyn_Stack) return Boolean;
+  function "=" (Left, Right : Dynamic_Stack) return Boolean;
   -- Return True if and only if both stacks have the same depth and the
   -- same items in the same order; return False otherwise.
 
-  procedure Clear (Obj : in out Dyn_Stack);
+  procedure Clear (Obj : in out Dynamic_Stack);
   -- Empty the Stack of all items.
 
-  procedure Push (Obj : in out Dyn_Stack; Elem : Item);
+  procedure Push (Obj : in out Dynamic_Stack; Elem : Item);
   -- Add a copy of the item to the top of the Stack.
 
-  procedure Pop (Obj : in out Dyn_Stack);
+  procedure Pop (Obj : in out Dynamic_Stack);
   -- Remove the item from the top of the Stack.
 
-  function Depth (Obj : in Dyn_Stack) return Natural;
+  function Depth (Obj : in Dynamic_Stack) return Natural;
   -- Returns the number of items in the Stack
 
-  function Is_Empty (Obj : in Dyn_Stack) return Boolean;
+  function Is_Empty (Obj : in Dynamic_Stack) return Boolean;
   -- Returns True if and only if no items are in the stack
 
-  function Top (Obj : in Dyn_Stack) return Item;
+  function Top (Obj : in Dynamic_Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
 
-  function Top (Obj : in Dyn_Stack) return Item_Ptr;
-  -- Return a pointer to the item at the top of the Stack.
+  -- XXX need accessor generic
 
-  procedure Preallocate (Obj : in out Dyn_Stack; Size : Natural);
+  procedure Preallocate (Obj : in out Dynamic_Stack; Size : Natural);
   -- Allocates 'Size' additional storage elements for the Stack
 
-  procedure Set_Chunk_Size (Obj : in out Dyn_Stack; Size : Natural);
+  procedure Set_Chunk_Size (Obj : in out Dynamic_Stack; Size : Natural);
   -- Establishes the Size the Stack will grow if the Stack exhausts its
   -- current size.
 
-  function Chunk_Size (Obj : Dyn_Stack) return Natural;
+  function Chunk_Size (Obj : Dynamic_Stack) return Natural;
   -- Returns the Chunk_Size
 
+  function New_Iterator (For_The_Stack : Dynamic_Stack) return Iterator;
+  -- Return a reset Iterator bound to the specific Stack.
+
 private
-  function Item_At (Obj : in Dyn_Stack; Index : in Natural) return Item_Ptr;
-  procedure Purge (Obj : in out Dyn_Stack);
-  procedure Add (Obj : in out Dyn_Stack; Elem : in out Item);
-  function Cardinality (Obj : Dyn_Stack) return Integer;
 
-  package Dyn_Stack_Nodes
-  is new BC.Support.Dynamic (Item, Item_Ptr, Storage_Manager, Storage);
+  function Item_At (Obj : Dynamic_Stack; Index : Positive) return Item_Ptr;
+  procedure Purge (Obj : in out Dynamic_Stack);
+  procedure Add (Obj : in out Dynamic_Stack; Elem : Item);
+  function Cardinality (Obj : Dynamic_Stack) return Natural;
 
-  type Dyn_Stack is new Stack with record
-    Rep : Dyn_Stack_Nodes.Dyn_Node_Ref;
+  package Dynamic_Stack_Nodes
+  is new BC.Support.Dynamic (Item => Item,
+                             Item_Ptr => Item_Ptr,
+                             Storage_Manager => Storage_Manager,
+                             Storage => Storage);
+
+  type Dynamic_Stack is new Stack with record
+    Rep : Dynamic_Stack_Nodes.Dyn_Node_Ref;
   end record;
 
-  procedure Initialize (Obj : in out Dyn_Stack);
-  procedure Adjust (Obj : in out Dyn_Stack);
-  procedure Finalize (Obj : in out Dyn_Stack);
+  procedure Initialize (Obj : in out Dynamic_Stack);
+  procedure Adjust (Obj : in out Dynamic_Stack);
+  procedure Finalize (Obj : in out Dynamic_Stack);
 
 end BC.Containers.Stacks.Dynamic;

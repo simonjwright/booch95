@@ -18,7 +18,7 @@
 -- $Id$
 
 with Ada.Finalization;
-with Bc.Support.Nodes;
+with BC.Support.Nodes;
 with System.Storage_Pools;
 
 generic
@@ -85,10 +85,16 @@ package BC.Containers.Trees.Binary is
   -- (which may be null) and reclaim the storage associated with any
   -- unreachable items.
 
+  function Left_Child (Obj : Binary_Tree) return Binary_Tree;
+  -- The tree must not be null. Return the left child (which may be null).
+
   procedure Right_Child (Obj : in out Binary_Tree);
   -- The tree must not be null. Set the tree to now denote the right child
   -- (which may be null) and reclaim the storage associated with any
   -- unreachable items.
+
+  function Right_Child (Obj : Binary_Tree) return Binary_Tree;
+  -- The tree must not be null. Return the right child (which may be null).
 
   procedure Parent (Obj : in out Binary_Tree);
   -- Set the tree to now denote its parent (if any).
@@ -113,7 +119,7 @@ package BC.Containers.Trees.Binary is
 
 private
 
-  package Nodes is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
+  package Nodes is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
   procedure Purge (Node : in out Nodes.Binary_Node_Ref);
 

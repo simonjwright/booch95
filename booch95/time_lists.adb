@@ -17,14 +17,19 @@
 
 -- $Id$
 
+-- The  purpose of  this test  procedure is  to check  out  the relative --
+-- performance  of the  various flavours  of  List, in  case there's  an --
+-- efficiency problem.                                                   --
+
 with Ada.Calendar;
 with Ada.Text_Io;
 with Lists_For_Timing;
+
 procedure Time_Lists is
-  S : aliased Lists_For_Timing.S.Single_List;
-  D : aliased Lists_For_Timing.D.Double_List;
-  S_Iter : aliased Lists_For_Timing.C.Passive_Iterator (S'Access);
-  D_Iter : aliased Lists_For_Timing.C.Passive_Iterator (D'Access);
+
+  S : Lists_For_Timing.S.Single_List;
+  D : Lists_For_Timing.D.Double_List;
+
   procedure Iterate is
     Total : Integer;
     procedure Apply (Elem : Integer; Ok : out Boolean) is
@@ -32,16 +37,18 @@ procedure Time_Lists is
       Total := Total + Elem;
       Ok := True;
     end Apply;
-    function L_Application is new Lists_For_Timing.C.Visit (Apply);
-    Result : Boolean;
+    procedure S_Application is new Lists_For_Timing.C.Visit (Apply);
+    procedure D_Application is new Lists_For_Timing.C.Visit (Apply);
     Start : Ada.Calendar.Time;
     Taken : Duration;
+    It : Lists_For_Timing.C.Iterator;
     use type Ada.Calendar.Time;
   begin
-
     Total := 0;
+    It := Lists_For_Timing.C.New_Iterator
+       (Lists_For_Timing.C.Container'Class (S));
     Start := Ada.Calendar.Clock;
-    Result := L_Application (S_Iter'Access);
+    S_Application (It);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
        (".. single list took"
@@ -50,16 +57,18 @@ procedure Time_Lists is
         & Integer'Image (Total));
 
     Total := 0;
+    It := Lists_For_Timing.C.New_Iterator
+       (Lists_For_Timing.C.Container'Class (D));
     Start := Ada.Calendar.Clock;
-    Result := L_Application (D_Iter'Access);
+    D_Application (It);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
        (".. double list took"
         & Duration'Image (Taken)
         & " sec, sum"
         & Integer'Image (Total));
-
   end Iterate;
+
   procedure Time (N : Integer) is
   begin
     Ada.Text_Io.Put_Line
@@ -72,6 +81,7 @@ procedure Time_Lists is
     end loop;
     Iterate;
   end Time;
+
 begin
   Time (1);
   Time (2);
@@ -85,6 +95,7 @@ begin
   Time (512);
   Time (1024);
   Time (2048);
+  Time (4096);
 exception
   when others =>
     Ada.Text_Io.Put_Line ("oops");

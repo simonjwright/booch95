@@ -32,19 +32,22 @@ package body BC.Support.Dynamic is
      new Ada.Unchecked_Deallocation (Dyn_Node, Dyn_Node_Ref);
 
   function Create (From : Dyn_Node) return Dyn_Node_Ref is
-    Arr : Dyn_Arr_Ref := new Dyn_Arr (1 .. From.Size + From.Chunk_Size);
-    New_Node: Dyn_Node_Ref := new Dyn_Node;
+    New_Node: Dyn_Node_Ref :=
+        new Dyn_Node'(Ada.Finalization.Controlled with
+                      Ref => new Dyn_Arr (1 .. From.Size + From.Chunk_Size),
+                      Size => From.Size,
+                      Chunk_Size => From.Chunk_Size);
   begin
-    Arr (1..From.Size) := From.Ref (1..From.Size);
-    New_Node.all := From;
-    New_Node.Ref := Arr;
+    New_Node.Ref (1 .. New_Node.Size) := From.Ref (1 .. From.Size);
     return New_Node;
   end Create;
 
   function Create (Size : Positive := 10) return Dyn_Node_Ref is
-    Arr : Dyn_Arr_Ref := new Dyn_Arr (1..Size);
   begin
-    return new Dyn_Node'(Ref => Arr, Size => 0, Chunk_Size => Size);
+    return new Dyn_Node'(Ada.Finalization.Controlled with
+                         Ref => new Dyn_Arr (1 .. Size),
+                         Size => 0,
+                         Chunk_Size => Size);
   end Create;
 
   function "=" (Left, Right : Dyn_Node) return Boolean is
@@ -141,7 +144,7 @@ package body BC.Support.Dynamic is
     if Obj.Size = 1 then
       Clear (Obj);
     else
-      Obj.Ref (From .. Obj.Size-1) := Obj.Ref (From + 1 .. Obj.Size);
+      Obj.Ref (From .. Obj.Size - 1) := Obj.Ref (From + 1 .. Obj.Size);
       Obj.Size := Obj.Size - 1;
     end if;
   end Remove;
@@ -217,6 +220,12 @@ package body BC.Support.Dynamic is
   function Location (Obj : Dyn_Node; Elem : Item; Start : Positive := 1)
                      return Natural is
   begin
+    -- XXX the C++ (which indexes from 0) nevertheless checks "start <= count"
+    -- We have to special-case the empty Node; the C++ indexes from 0, so
+    -- it can legally start with index 0 when the Node is empty.
+    if Obj.Size = 0 then
+      return 0;
+    end if;
     Assert (Start <= Obj.Size,
             BC.Range_Error'Identity,
             "Location",
@@ -233,6 +242,8 @@ package body BC.Support.Dynamic is
     Temp : Dyn_Arr_Ref;
     Last : Natural;
   begin
+    -- XXX I don't think this algorithm is very clever! we really shouldn't
+    -- have to allocate a temporary and then delete it ..
     if Obj.Ref /= null then
       Temp := new Dyn_Arr (1 .. Obj.Ref'Last);
       Temp (1 .. Obj.Ref'Last) := Obj.Ref.all;
@@ -244,6 +255,7 @@ package body BC.Support.Dynamic is
     Obj.Ref := new Dyn_Arr (1 .. Last + New_Length);
     if Last /= 0 then -- something was in the array already
       Obj.Ref (1 .. Obj.Size) := Temp (1 .. Obj.Size);
+      Delete_Arr (Temp);
     end if;
   end Preallocate;
 
@@ -259,10 +271,29 @@ package body BC.Support.Dynamic is
 
   procedure Free (Obj : in out Dyn_Node_Ref) is
   begin
-    if Obj.Ref /= null then
-      Delete_Arr (Obj.Ref);
-    end if;
     Delete_Node (Obj);
   end Free;
+
+  procedure Initialize (D : in out Dyn_Node) is
+  begin
+    D.Ref := new Dyn_Arr (1 .. 10);
+    D.Size := 0;
+    D.Chunk_Size := 10;
+  end Initialize;
+
+  procedure Adjust (D : in out Dyn_Node) is
+    Tmp : Dyn_Arr_Ref := new Dyn_Arr (1 .. D.Ref'Last);
+  begin
+    Tmp (1 .. D.Size) := D.Ref (1 .. D.Size);
+    D.Ref := Tmp;
+  end Adjust;
+
+  procedure Finalize (D : in out Dyn_Node) is
+  begin
+    if D.Ref /= null then
+      Delete_Arr (D.Ref);
+      D.Ref := null;
+    end if;
+  end Finalize;
 
 end BC.Support.Dynamic;

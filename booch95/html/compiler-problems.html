@@ -14,6 +14,76 @@
 
 <dl>
 
+<dt><a name="13mar1999">13 March 1999</a></dt>
+
+<dd>
+<a href="mailto:woodruff1@llnl.gov">John P. Woodruff</a> reports
+problems building the last few releases of the Components with the
+Rational Apex compiler.<p>
+
+He reported the compiler defect to Rational, and they have issued a patch.
+As patched, Apex 3.0.0b now does compile the entire suite correctly.<p>
+
+The Apex version needed has the following version mark:<p>
+
+<pre>
+Apex/Summit PATCH: 199903042-1  Installed by ratadmin on Mar 9 08:45
+    This patch contains fixes for the following defects, for
+    additional information on the fixes refer to the file
+    $APEX_HOME/install/patches/Solaris_Desc_990304
+</pre>
+
+</dd>
+
+<dt><a name="29jan1999">29 January 1999</a></dt>
+
+<dd>
+<dl>
+
+<dt><b>Iterators</b></dt>
+
+<dd>The new Iterators work correctly under GNAT 3.11p and ObjectAda
+Special Edition Version 7.1.
+</dd>
+
+<dt><b>ObjectAda Special Edition Version 7.1</b></dt>
+
+<dd>
+There are special versions of the Map, Queue and Stack test drivers
+which avoid using the Dynamic forms:
+
+<pre>
+map_test_aonix.adb
+queue_test_aonix.adb
+stack_test_aonix.adb
+</pre>
+
+Don't use the test driver <t>storage.adb</t>.
+</dd>
+
+</dl>
+</dd>
+
+<p>
+<dt><a name="23jan1999">23 January 1999</a></dt>
+
+<dd>
+<dl>
+
+<dt><b>Iterators</b></dt>
+
+<dd>The new Iterators break GNAT 3.10p. 3.11b is OK, so with any luck
+the forthcoming 3.11p will be too!
+</dd>
+
+<dt><b>ObjectAda Special Edition Version 7.1</b> and Dynamic forms</dt>
+
+<dd>These are still broken.</dd>
+
+</dl>
+</dd>
+
+<p>
 <dt><a name="20oct1998">20 October 1998</a></dt>
 
 <dd>
@@ -51,6 +121,7 @@ Graph_Test. However, the demo program Ada_Units works as intended.
 </dl>
 </dd>
 
+<p>
 <dt><a name="6oct1998">6 October 1998</a></dt>
 
 <dd>When <a href="mailto:pat@classwide.com">Pat Rogers</a> added Storage
@@ -93,7 +164,12 @@ though, please feel free!)
 
 <P><A HREF="index.html">[index]</A></p>
 
-<p><i>Last update: 20.x.98</i></p>
+<p><i>
+<script>
+document.write("Last update: ");
+document.write(document.lastModified);
+</script>
+</i></p>
 
 </BODY>
 </HTML>
