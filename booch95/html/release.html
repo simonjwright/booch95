@@ -14,6 +14,61 @@
 
 <dl>
 
+<dt dd mmm yyyy
+
+<dd>
+
+<h3>Interface changes</h3>
+
+<p>For Bags, Maps and Sets in each form, and in all Bounded forms, the
+basic container is now unconstrained with a constrained subtype: for
+Unbounded Bags, for instance, the declarations are
+
+<pre>
+   generic
+      with function Hash (V : Item) return Natural is <>;
+      Buckets : Positive;
+      Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
+   package BC.Containers.Bags.Unbounded is
+      ...
+      type Unconstrained_Bag
+	(Number_Of_Buckets : Positive) is new Abstract_Bag with private;
+
+      subtype Bag is Unconstrained_Bag (Number_Of_Buckets => Buckets);
+</pre>
+
+<p>whereas for bounded bags the declarations are
+   generic
+      with function Hash (V : Item) return Natural is <>;
+      Buckets : Positive;
+      Maximum_Size : Positive;
+   package BC.Containers.Bags.Bounded is
+      ...
+      type Unconstrained_Bag
+	(Number_Of_Buckets : Positive;
+	 Maximum_Size : Positive) is new Abstract_Bag with private;
+
+      subtype Bag is Unconstrained_Bag (Number_Of_Buckets => Buckets,
+					Maximum_Size => Maximum_Size);
+<pre>
+
+<p>The intention is that users shouldn't need to change their source.
+
+</pre>
+
+<h3>Documentation changes</h3>
+
+<p>None.
+
+<h3>Implementation changes</h3>
+
+<p>None.
+
+<h3>New contributions</h3>
+
+<p>None.
+
+
 <dt>2 June 2002</dt>
 
 <dd>
