@@ -49,3 +49,4 @@ generic
    --  A procedure to add an Item to the destination Container.
 
 procedure BC.Filter (Input : From; Output : in out To);
+pragma Elaborate_Body (BC.Filter);
