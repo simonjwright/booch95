@@ -35,7 +35,7 @@ package body BC.Support.Exceptions is
       when Not_Empty => return "object is not empty";
       when Not_Root => return "object is not at root of structure";
       when Is_Null => return "object is null";
-      when Out_Of_Memory => return "free storage exhausted";
+      when Out_Of_Memory => return "storage requested not available";
       when Referenced => return "object is referenced and cannot be destroyed";
       when Timing => return "possible race condition";
       when Too_Large => return "object is too large";
