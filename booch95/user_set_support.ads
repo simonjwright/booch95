@@ -17,7 +17,7 @@
 
 -- $Id$
 
--- This backage defines sets of characters where equality is
+-- This package defines sets of characters where equality is
 -- case-independent.
 
 with BC.Containers;
