@@ -2,10 +2,11 @@ This is the Release directory of the Ada 95 Booch Components.
 
 The Components are available in three forms:
 
-bc-{date}.tar.gz, normally for UNIX systems
+bc-{date}.tgz, normally for UNIX systems
 
-  tar zxvf bc-{date}.tar.gz
-  zcat bc-{date}.tar.gz | tar xvf -
+  tar zxvf bc-{date}.tgz
+  zcat bc-{date}.tgz | tar xvf -
+  gunzip < bc-19980924.tgz | tar xvf -
 
 bc-{date}.zip,    normally for Windows 95 (long file names)
 
