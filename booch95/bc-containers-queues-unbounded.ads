@@ -26,6 +26,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Queues.Unbounded is
 
+  pragma Elaborate_Body;
+
   type Unbounded_Queue is new Queue with private;
   -- This Queue exhibits unlimited growth and collapsing, limited only by
   -- available memory.  Assignment is "deep".
@@ -51,7 +53,6 @@ package BC.Containers.Queues.Unbounded is
   function Front (Q : in Unbounded_Queue) return Item;
   -- Return a copy of the item at the front of the queue.
 
-  -- XXX need accessor generic
   function Location (Q : in Unbounded_Queue; Elem : Item) return Natural;
   -- Return the first index at which the item is found; return 0 if the
   -- item does not exist in the queue.
