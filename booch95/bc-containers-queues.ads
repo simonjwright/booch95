@@ -34,7 +34,7 @@ package BC.Containers.Queues is
   procedure Pop (Obj : in out Queue) is abstract;
   -- Remove the item from the front of the queue.
 
-  procedure Remove (Obj : in out Queue; From : Natural) is abstract;
+  procedure Remove (Obj : in out Queue; From : Positive) is abstract;
   -- Remove the item at the given index (may be a balking operation).
 
   function Length (Obj : in Queue) return Natural is abstract;

@@ -49,7 +49,7 @@ package body BC.Containers.Queues.Dynamic is
     Dynamic_Queue_Nodes.Remove (Obj.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Obj : in out Dynamic_Queue; From : Natural) is
+  procedure Remove (Obj : in out Dynamic_Queue; From : Positive) is
   begin
     Dynamic_Queue_Nodes.Remove (Obj.Rep.all, From);
   end Remove;

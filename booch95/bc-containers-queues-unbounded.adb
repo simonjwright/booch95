@@ -36,7 +36,7 @@ package body BC.Containers.Queues.Unbounded is
     Unbounded_Queue_Nodes.Remove (Obj.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Obj : in out Unbounded_Queue; From : Natural) is
+  procedure Remove (Obj : in out Unbounded_Queue; From : Positive) is
   begin
     Unbounded_Queue_Nodes.Remove (Obj.Rep.all, From);
   end Remove;

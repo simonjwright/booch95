@@ -39,7 +39,7 @@ package BC.Containers.Queues.Unbounded is
   procedure Pop (Obj : in out Unbounded_Queue);
   -- Remove the item from the front of the queue.
 
-  procedure Remove (Obj : in out Unbounded_Queue; From : Natural);
+  procedure Remove (Obj : in out Unbounded_Queue; From : Positive);
   -- Remove the item at the given index.
 
   function Length (Obj : in Unbounded_Queue) return Natural;

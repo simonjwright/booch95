@@ -38,7 +38,7 @@ package body BC.Containers.Queues.Bounded is
     Bounded_Queue_Nodes.Remove (Obj.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Obj : in out Bounded_Queue; From : Natural) is
+  procedure Remove (Obj : in out Bounded_Queue; From : Positive) is
   begin
     Bounded_Queue_Nodes.Remove (Obj.Rep.all, From);
   end Remove;
