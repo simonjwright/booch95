@@ -20,7 +20,6 @@
 with Ada.Strings.Unbounded;
 with BC.Graphs;
 with BC.Graphs.Directed;
-with BC.Support.Managed_Storage;
 with Global_Heap;
 
 package Ada_Unit_Support is
@@ -51,7 +50,7 @@ private
   package Dependencies_Base is new BC.Graphs
      (Vertex_Item => Unit_P,
       Arc_Item => Dependency,
-      Storage_Manager => BC.Support.Managed_Storage.Pool,
+      Storage_Manager => Global_Heap.Pool,
       Storage => Global_Heap.Storage);
   package Dependencies is new Dependencies_Base.Directed;
 
