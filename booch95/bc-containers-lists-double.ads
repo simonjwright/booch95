@@ -187,6 +187,6 @@ private
 
   function Current_Item_Ptr (It : List_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : List_Iterator);
+  procedure Delete_Item_At (It : in out List_Iterator);
 
 end BC.Containers.Lists.Double;
