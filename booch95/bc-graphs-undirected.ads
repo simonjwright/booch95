@@ -20,117 +20,132 @@
 generic
 package BC.Graphs.Undirected is
 
-  type Graph is new Graphs.Graph with private;
-  type Vertex is new Graphs.Vertex with private;
-  type Arc is new Graphs.Arc with private;
+  type Undirected_Graph is new Graph with private;
+  type Undirected_Vertex is new Vertex with private;
+  type Undirected_Arc is new Arc with private;
 
-  ----------------------
-  -- Graph operations --
-  ----------------------
+  ---------------------------------
+  -- Undirected_Graph operations --
+  ---------------------------------
 
-  procedure Create_Arc (G : in out Graph;
-                        A : in out Arc'Class;
+  procedure Create_Arc (G : in out Undirected_Graph;
+                        A : in out Undirected_Arc'Class;
                         I : Arc_Item;
-                        First : in out Vertex'Class;
-                        Second : in out Vertex'Class);
+                        First : in out Undirected_Vertex'Class;
+                        Second : in out Undirected_Vertex'Class);
   -- Create a new arc between the given vertices and add it to the graph,
   -- setting the second argument of this function as an alias to this new
   -- arc.
 
-  -----------------------
-  -- Vertex operations --
-  -----------------------
+  ----------------------------------
+  -- Undirected_Vertex operations --
+  ----------------------------------
 
-  function Arity (V : Vertex) return Natural;
+  function Arity (V : Undirected_Vertex) return Natural;
   -- Return the number of arcs connected to the vertex; self-arcs are
   -- counted only once.
 
-  --------------------
-  -- Arc operations --
-  --------------------
+  -------------------------------
+  -- Undirected_Arc operations --
+  -------------------------------
 
-  procedure Set_First_Vertex (A : in out Arc; V : access Vertex'Class);
+  procedure Set_First_Vertex (A : in out Undirected_Arc;
+			      V : access Undirected_Vertex'Class);
   -- Change the first vertex of the arc to the given vertex. This change
   -- requires that the arc be removed from the collection of arcs in the
   -- original vertex and added to the collection of arcs in the given
   -- vertex.
 
-  procedure Set_Second_Vertex (A : in out Arc; V : access Vertex'Class);
+  procedure Set_Second_Vertex (A : in out Undirected_Arc;
+			       V : access Undirected_Vertex'Class);
   -- Change the second vertex of the arc to the given vertex. This change
   -- requires that the arc be removed from the collection of arcs in the
   -- original vertex and added to the collection of arcs in the given
   -- vertex.
 
-  procedure First_Vertex (A : Arc; V : in out Vertex'Class);
+  procedure First_Vertex (A : Undirected_Arc;
+			  V : in out Undirected_Vertex'Class);
   -- Return the first vertex associated with the arc.
 
-  procedure Second_Vertex (A : Arc; V : in out Vertex'Class);
+  procedure Second_Vertex (A : Undirected_Arc;
+			   V : in out Undirected_Vertex'Class);
   -- Return the second vertex associated with the arc.
 
-  ---------------------
-  -- Graph iterators --
-  ---------------------
+  --------------------------------
+  -- Undirected_Graph iterators --
+  --------------------------------
 
-  type Graph_Iterator (G : access Graph) is limited private;
+  type Undirected_Graph_Iterator (G : access Undirected_Graph)
+  is limited private;
 
-  procedure Reset (It : in out Graph_Iterator);
+  procedure Reset (It : in out Undirected_Graph_Iterator);
 
-  procedure Next (It : in out Graph_Iterator);
+  procedure Next (It : in out Undirected_Graph_Iterator);
 
-  function Is_Done (It : Graph_Iterator) return Boolean;
+  function Is_Done (It : Undirected_Graph_Iterator) return Boolean;
 
-  procedure Current_Item (It : Graph_Iterator; V : in out Vertex);
-
-
-  type Passive_Graph_Iterator (G : access Graph) is limited private;
-
-  generic
-    with procedure Apply (V : Vertex; OK : out Boolean);
-  function Visit_Vertices (It : access Passive_Graph_Iterator) return Boolean;
-
-  ---------------------
-  -- Vertex iterators --
-  ---------------------
-
-  type Vertex_Iterator (V : access Vertex'Class) is limited private;
-
-  procedure Reset (It : in out Vertex_Iterator);
-
-  procedure Next (It : in out Vertex_Iterator);
-
-  function Is_Done (It : Vertex_Iterator) return Boolean;
-
-  procedure Current_Item (It : Vertex_Iterator; A : in out Arc'Class);
+  procedure Current_Item (It : Undirected_Graph_Iterator;
+			  V : in out Undirected_Vertex);
 
 
-  type Passive_Vertex_Iterator (V : access Vertex) is limited private;
+  type Passive_Undirected_Graph_Iterator (G : access Undirected_Graph)
+  is limited private;
 
   generic
-    with procedure Apply (A : Arc; OK : out Boolean);
-  function Visit_Arcs (It : access Passive_Vertex_Iterator) return Boolean;
+    with procedure Apply (V : Undirected_Vertex; OK : out Boolean);
+  function Visit_Vertices
+     (It : access Passive_Undirected_Graph_Iterator) return Boolean;
+
+  ---------------------------------
+  -- Undirected_Vertex iterators --
+  ---------------------------------
+
+  type Undirected_Vertex_Iterator (V : access Undirected_Vertex'Class)
+  is limited private;
+
+  procedure Reset (It : in out Undirected_Vertex_Iterator);
+
+  procedure Next (It : in out Undirected_Vertex_Iterator);
+
+  function Is_Done (It : Undirected_Vertex_Iterator) return Boolean;
+
+  procedure Current_Item (It : Undirected_Vertex_Iterator;
+			  A : in out Undirected_Arc'Class);
+
+
+  type Passive_Undirected_Vertex_Iterator (V : access Undirected_Vertex)
+  is limited private;
+
+  generic
+    with procedure Apply (A : Undirected_Arc; OK : out Boolean);
+  function Visit_Arcs
+     (It : access Passive_Undirected_Vertex_Iterator) return Boolean;
 
 private
 
-  type Graph is new Graphs.Graph with null record;
-  type Vertex is new Graphs.Vertex with null record;
-  type Arc is new Graphs.Arc with null record;
+  type Undirected_Graph is new Graph with null record;
+  type Undirected_Vertex is new Vertex with null record;
+  type Undirected_Arc is new Arc with null record;
 
-  type Graph_Iterator (G : access Graph) is limited record
+  type Undirected_Graph_Iterator (G : access Undirected_Graph)
+  is limited record
     Index : Vertex_Node_Ptr := G.Rep;
   end record;
 
-  type Passive_Graph_Iterator (G : access Graph) is limited record
+  type Passive_Undirected_Graph_Iterator (G : access Undirected_Graph)
+  is limited record
     Success : Boolean := False;
   end record;
 
-  type Vertex_Iterator (V : access Vertex'Class)
+  type Undirected_Vertex_Iterator (V : access Undirected_Vertex'Class)
   is new Ada.Finalization.Limited_Controlled with record
     Index : Arc_Node_Ptr;
     First : Boolean;
   end record;
-  procedure Initialize (It : in out Vertex_Iterator);
+  procedure Initialize (It : in out Undirected_Vertex_Iterator);
 
-  type Passive_Vertex_Iterator (V : access Vertex) is limited record
+  type Passive_Undirected_Vertex_Iterator (V : access Undirected_Vertex)
+  is limited record
     Success : Boolean := False;
   end record;
 
