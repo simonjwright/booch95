@@ -122,6 +122,7 @@ procedure Ordered_Queue_Test is
     Assertion ((Front (Q2) = '2'), "** P36: Queue front is not correct");
     Remove(Q2, 1);
     Assertion ((Length (Q2) = 0), "** P37: Queue length is not correct");
+    Append (Q1, 'z');
   end Test_Primitive;
 
   procedure Test_Passive_Iterator (Q : Container'Class) is
@@ -176,7 +177,7 @@ procedure Ordered_Queue_Test is
   Queue_U_P1, Queue_U_P2 : QU.Unbounded_Ordered_Queue;
 
 begin
-  Put_Line ("Starting queue tests");
+  Put_Line ("Starting ordered queue tests");
 
 --   Put_Line ("...Bounded Queue");
 --   Test_Primitive (Queue_B_P1, Queue_B_P2);
@@ -184,18 +185,18 @@ begin
 --   Put_Line ("...Dynamic Queue");
 --   Test_Primitive (Queue_D_P1, Queue_D_P2);
 
-  Put_Line ("...Unbounded Queue");
+  Put_Line ("...Unbounded Ordered Queue");
   Test_Primitive (Queue_U_P1, Queue_U_P2);
 
-  Put_Line ("...Queue Active Iterator");
+  Put_Line ("... Ordered Queue Active Iterator");
 --   Put_Line ("   Bounded:");
 --   Test_Active_Iterator (Queue_B_P1);
 --   Put_Line ("   Dynamic:");
 --   Test_Active_Iterator (Queue_D_P1);
-  Put_Line ("   Unbounded:");
+  Put_Line ("   Ordered:");
   Test_Active_Iterator (Queue_U_P1);
 
-  Put_Line ("...Queue Passive Iterator");
+  Put_Line ("... Ordered Queue Passive Iterator");
 --   Put_Line ("   Bounded:");
 --   Test_Passive_Iterator (Queue_B_P1);
 --   Put_Line ("   Dynamic:");

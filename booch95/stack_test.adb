@@ -134,6 +134,7 @@ procedure Stack_Test is
     Push (S2, '7');
     Assertion (S1 = S2, "** P35: Stacks are not equal");
     Clear (S2);
+    Push (S1, 'z');
   end Test_Primitive;
 
   procedure Test_Iterator_Deletion (S : in out Stack'Class) is
@@ -210,17 +211,17 @@ begin
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Stack_U_P1);
 
-  Assertion ((Top (Stack_B_P1) = '7'), "** M01: Stack top is not correct");
+  Assertion ((Top (Stack_B_P1) = 'z'), "** M01: Stack top is not correct");
   Assertion ((Depth (Stack_B_P2) = 0), "** M02: Stack depth is not correct");
 
-  Assertion ((Top (Stack_D_P1) = '7'), "** M05: Stack top is not correct");
+  Assertion ((Top (Stack_D_P1) = 'z'), "** M05: Stack top is not correct");
   Assertion ((Depth (Stack_D_P2) = 0), "** M06: Stack depth is not correct");
 
-  Assertion ((Top (Stack_U_P1) = '7'), "** M09: Stack top is not correct");
+  Assertion ((Top (Stack_U_P1) = 'z'), "** M09: Stack top is not correct");
   Assertion ((Depth (Stack_U_P2) = 0), "** M10: Stack depth is not correct");
 
   Assertion
-     (Available (Stack_B_P1) = 99 , "** M13: Available space not correct");
+     (Available (Stack_B_P1) = 98 , "** M13: Available space not correct");
   Assertion
      (Available (Stack_B_P2) = 100 , "** M14: Available space not correct");
 

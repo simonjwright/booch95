@@ -150,6 +150,7 @@ procedure Deque_Test is
     Assertion (Front (D2) = 'A', "** P42: Deque front is not correct");
     Assertion (Back (D2) = 'Z', "** P43: Deque front is not correct");
     Clear (D2);
+    Append (D1, 'z');
   end Test_Primitive;
 
   procedure Test_Passive_Iterator (D : Container'Class) is
