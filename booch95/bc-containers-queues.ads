@@ -90,6 +90,6 @@ private
 
   function Current_Item_Ptr (It : Queue_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : Queue_Iterator);
+  procedure Delete_Item_At (It : in out Queue_Iterator);
 
 end BC.Containers.Queues;
