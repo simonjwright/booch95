@@ -89,8 +89,8 @@ package BC.Containers.Collections.Dynamic is
   -- Allocates 'Size' additional storage elements for the Collection
 
   procedure Set_Chunk_Size (C : in out Dynamic_Collection; Size : Natural);
-  -- Establishes the Size the Collection will grow if the Collection exhausts its
-  -- current size.
+  -- Establishes the Size the Collection will grow if the Collection
+  -- exhausts its current size.
 
   function Chunk_Size (C : Dynamic_Collection) return Natural;
   -- Returns the Chunk_Size
