@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -111,6 +111,8 @@ private
    procedure Initialize (D : in out Dyn_Node);
    procedure Adjust (D : in out Dyn_Node);
    procedure Finalize (D : in out Dyn_Node);
+
+   procedure Extend (Obj : in out Dyn_Node);
 
    procedure Write_Dyn_Node
      (Stream : access Ada.Streams.Root_Stream_Type'Class;
