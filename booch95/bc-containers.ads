@@ -32,6 +32,8 @@ package BC.Containers is
 
   type Container is abstract tagged private;
 
+  function Null_Container return Container is abstract;
+
   -- Active iteration
 
   type Iterator (<>) is abstract tagged private;
