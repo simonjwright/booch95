@@ -26,7 +26,7 @@
 
 with Ada.Numerics.Generic_Elementary_Functions;
 
-package body BC.Support.Standard_Deviations is
+package body BC.Support.Statistics is
 
    package Math
    is new Ada.Numerics.Generic_Elementary_Functions (Long_Float);
@@ -105,4 +105,4 @@ package body BC.Support.Standard_Deviations is
       return Of_Instance.Max;
    end Max;
 
-end BC.Support.Standard_Deviations;
+end BC.Support.Statistics;

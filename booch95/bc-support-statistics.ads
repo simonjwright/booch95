@@ -24,7 +24,7 @@
 --  $Date$
 --  $Author$
 
-package BC.Support.Standard_Deviations is
+package BC.Support.Statistics is
 
    type Instance is private;
 
@@ -54,4 +54,4 @@ private
       Summed_Squared_Data : Positive_Long_Float := 0.0;
    end record;
 
-end BC.Support.Standard_Deviations;
+end BC.Support.Statistics;
