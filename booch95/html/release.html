@@ -30,6 +30,20 @@
 
 <dl>
 
+<dt>31st October 1999</dt>
+
+<dd>
+
+Added Unbounded Ordered Queues.<p>
+
+AVL Trees are no longer limited.<p>
+
+Corrected ordering problem with Unbounded Ordered Collections when
+keys are equal. <tt>Insert</tt> now adds from the front of the
+Collection, <tt>Append</tt> from the rear.<p>
+
+</dd>
+
 <dt>21st June 1999</dt>
 
 <dd>
@@ -106,7 +120,7 @@ Added Sets.<p>
 Reworked Iteration; passive iteration now obtains the Container over
 which to iterate via an Iterator bound to the container. This allows
 different styles of iteration with one interface.<p>
- 
+
 Graphs have three Vertex iterators: incoming only, outgoing only, both
 ways.<p>
 
