@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -66,16 +66,19 @@ package body BC.Containers.Collections is
    end Copy;
 
    function Available (C : Abstract_Collection) return Natural is
+      pragma Warnings (Off, C);
    begin
       return Natural'Last;
    end Available;
 
    procedure Lock (C : in out Abstract_Collection) is
+      pragma Warnings (Off, C);
    begin
       null;
    end Lock;
 
    procedure Unlock (C : in out Abstract_Collection) is
+      pragma Warnings (Off, C);
    begin
       null;
    end Unlock;
