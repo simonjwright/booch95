@@ -19,17 +19,20 @@
 
 with BC.Graphs;
 with BC.Graphs.Directed;
+with BC.Graphs.Undirected;
 with Character_References;
 
 package Graph_Test_Support is
 
   type Char_Ptr is access all Character;
 
-  package G is new BC.Graphs (Vertex_Item => Character,
+  package AG is new BC.Graphs (Vertex_Item => Character,
                                Vertex_Item_Ptr => Char_Ptr,
                                Arc_Item => Character,
                                Arc_Item_Ptr => Char_Ptr);
 
-  package DG is new G.Directed;
+  package DG is new AG.Directed;
+
+  package UG is new AG.Undirected;
 
 end Graph_Test_Support;
