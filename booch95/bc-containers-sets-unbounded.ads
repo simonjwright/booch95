@@ -114,7 +114,7 @@ private
    type Unconstrained_Set
      (Number_Of_Buckets : Positive)
    is new Abstract_Set with record
-      Rep : Tables.Table (Number_Of_Buckets => Buckets);
+      Rep : Tables.Table (Number_Of_Buckets => Number_Of_Buckets);
    end record;
 
    procedure Attach (S : in out Unconstrained_Set; I : Item);
