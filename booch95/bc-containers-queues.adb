@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,121 +15,126 @@
 --      for a copy.
 --
 
--- $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with System;
 
 package body BC.Containers.Queues is
 
-  procedure Pop_Value (Q : in out Abstract_Queue; Elem : out Item) is
-    -- This primitive is implemented in terms of other primitives that
-    -- are (at this level) abstract; so the calls must be dispatching;
-    -- so we need a classwide value.
-    procedure Actual_Pop_Value (Q : in out Abstract_Queue'Class;
-                                Elem : out Item) is
-    begin
-      Elem := Front (Q);
-      Pop (Q);
-    end Actual_Pop_Value;
-  begin
-    Actual_Pop_Value (Q, Elem);
-  end Pop_Value;
+   procedure Pop_Value (Q : in out Abstract_Queue; Elem : out Item) is
+      --  This primitive is implemented in terms of other primitives
+      --  that are (at this level) abstract; so the calls must be
+      --  dispatching; so we need a classwide value.
+      procedure Actual_Pop_Value (Q : in out Abstract_Queue'Class;
+                                  Elem : out Item);
+      procedure Actual_Pop_Value (Q : in out Abstract_Queue'Class;
+                                  Elem : out Item) is
+      begin
+         Elem := Front (Q);
+         Pop (Q);
+      end Actual_Pop_Value;
+   begin
+      Actual_Pop_Value (Q, Elem);
+   end Pop_Value;
 
-  procedure Process_Front (Q : in out Abstract_Queue'Class) is
-  begin
-    Process (Item_At (Q, 1).all);
-  end Process_Front;
+   procedure Process_Front (Q : in out Abstract_Queue'Class) is
+   begin
+      Process (Item_At (Q, 1).all);
+   end Process_Front;
 
-  procedure Copy (From : Abstract_Queue'Class;
-                  To : in out Abstract_Queue'Class) is
-    Iter : Iterator'Class := New_Iterator (From);
-  begin
-    if System."/=" (From'Address, To'Address) then
-      Clear (To);
-      Reset (Iter);
-      while not Is_Done (Iter) loop
-        Append (To, Current_Item (Iter));
-        Next (Iter);
-      end loop;
-    end if;
-  end Copy;
+   procedure Copy (From : Abstract_Queue'Class;
+                   To : in out Abstract_Queue'Class) is
+      Iter : Iterator'Class := New_Iterator (From);
+   begin
+      if System."/=" (From'Address, To'Address) then
+         Clear (To);
+         Reset (Iter);
+         while not Is_Done (Iter) loop
+            Append (To, Current_Item (Iter));
+            Next (Iter);
+         end loop;
+      end if;
+   end Copy;
 
-  function Are_Equal (Left, Right : Abstract_Queue'Class) return Boolean is
-  begin
-    if System."=" (Left'Address, Right'Address) then
-      return True;
-    end if;
-    if Length (Left) /= Length (Right) then
-      return False;
-    end if;
-    declare
-      Left_Iter : Iterator'Class := New_Iterator (Left);
-      Right_Iter : Iterator'Class := New_Iterator (Right);
-    begin
-      while not Is_Done (Left_Iter) and then
-         not Is_Done (Right_Iter) loop
-        if Current_Item (Left_Iter) /= Current_Item (Right_Iter) then
-          return False;
-        end if;
-        Next (Left_Iter);
-        Next (Right_Iter);
-      end loop;
-      return True;
-    end;
-  end Are_Equal;
+   function Are_Equal (Left, Right : Abstract_Queue'Class) return Boolean is
+   begin
+      if System."=" (Left'Address, Right'Address) then
+         return True;
+      end if;
+      if Length (Left) /= Length (Right) then
+         return False;
+      end if;
+      declare
+         Left_Iter : Iterator'Class := New_Iterator (Left);
+         Right_Iter : Iterator'Class := New_Iterator (Right);
+      begin
+         while not Is_Done (Left_Iter) and then
+           not Is_Done (Right_Iter) loop
+            if Current_Item (Left_Iter) /= Current_Item (Right_Iter) then
+               return False;
+            end if;
+            Next (Left_Iter);
+            Next (Right_Iter);
+         end loop;
+         return True;
+      end;
+   end Are_Equal;
 
-  procedure Reset (It : in out Queue_Iterator) is
-    Q : Abstract_Queue'Class
-       renames Abstract_Queue'Class (It.For_The_Container.all);
-  begin
-    if Length (Q) = 0 then
-      It.Index := 0;
-    else
-      It.Index := 1;
-    end if;
-  end Reset;
+   procedure Reset (It : in out Queue_Iterator) is
+      Q : Abstract_Queue'Class
+        renames Abstract_Queue'Class (It.For_The_Container.all);
+   begin
+      if Length (Q) = 0 then
+         It.Index := 0;
+      else
+         It.Index := 1;
+      end if;
+   end Reset;
 
-  function Available (Q : in Abstract_Queue) return Natural is
-  begin
-    return Natural'Last;
-  end Available;
+   function Available (Q : in Abstract_Queue) return Natural is
+   begin
+      return Natural'Last;
+   end Available;
 
-  procedure Next (It : in out Queue_Iterator) is
-  begin
-    It.Index := It.Index + 1;
-  end Next;
+   procedure Next (It : in out Queue_Iterator) is
+   begin
+      It.Index := It.Index + 1;
+   end Next;
 
-  function Is_Done (It : Queue_Iterator) return Boolean is
-    Q : Abstract_Queue'Class
-    renames Abstract_Queue'Class (It.For_The_Container.all);
-  begin
-    return It.Index = 0 or else It.Index > Length (Q);
-  end Is_Done;
+   function Is_Done (It : Queue_Iterator) return Boolean is
+      Q : Abstract_Queue'Class
+     renames Abstract_Queue'Class (It.For_The_Container.all);
+   begin
+      return It.Index = 0 or else It.Index > Length (Q);
+   end Is_Done;
 
-  function Current_Item (It : Queue_Iterator) return Item is
-  begin
-    if Is_Done (It) then
-      raise BC.Not_Found;
-    end if;
-    return Item_At (It.For_The_Container.all, It.Index).all;
-  end Current_Item;
+   function Current_Item (It : Queue_Iterator) return Item is
+   begin
+      if Is_Done (It) then
+         raise BC.Not_Found;
+      end if;
+      return Item_At (It.For_The_Container.all, It.Index).all;
+   end Current_Item;
 
-  function Current_Item_Ptr (It : Queue_Iterator) return Item_Ptr is
-  begin
-    if Is_Done (It) then
-      raise BC.Not_Found;
-    end if;
-    return Item_At (It.For_The_Container.all, It.Index);
-  end Current_Item_Ptr;
+   function Current_Item_Ptr (It : Queue_Iterator) return Item_Ptr is
+   begin
+      if Is_Done (It) then
+         raise BC.Not_Found;
+      end if;
+      return Item_At (It.For_The_Container.all, It.Index);
+   end Current_Item_Ptr;
 
-  procedure Delete_Item_At (It : in out Queue_Iterator) is
-    Q : Abstract_Queue'Class
-       renames Abstract_Queue'Class (It.For_The_Container.all);
-  begin
-    if Is_Done (It) then
-      raise BC.Not_Found;
-    end if;
-    Remove (Q, It.Index);
-  end Delete_Item_At;
+   procedure Delete_Item_At (It : in out Queue_Iterator) is
+      Q : Abstract_Queue'Class
+        renames Abstract_Queue'Class (It.For_The_Container.all);
+   begin
+      if Is_Done (It) then
+         raise BC.Not_Found;
+      end if;
+      Remove (Q, It.Index);
+   end Delete_Item_At;
 
 end BC.Containers.Queues;

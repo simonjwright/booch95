@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
--- $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with BC.Containers;
 with BC.Containers.Queues;
@@ -27,18 +30,18 @@ with Global_Heap;
 
 package Ordered_Queue_Test_Support is
 
-  package Containers is new BC.Containers (Item => Character);
+   package Containers is new BC.Containers (Item => Character);
 
-  package Base_Queues is new Containers.Queues;
+   package Base_Queues is new Containers.Queues;
 
-  package Queues is new Base_Queues.Ordered;
+   package Queues is new Base_Queues.Ordered;
 
-  package QB is new Queues.Bounded (Maximum_Size => 100);
+   package QB is new Queues.Bounded (Maximum_Size => 100);
 
-  package QD is new Queues.Dynamic (Storage_Manager => Global_Heap.Pool,
-                                    Storage => Global_Heap.Storage);
+   package QD is new Queues.Dynamic (Storage_Manager => Global_Heap.Pool,
+                                     Storage => Global_Heap.Storage);
 
-  package QU is new Queues.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                      Storage => Global_Heap.Storage);
+   package QU is new Queues.Unbounded (Storage_Manager => Global_Heap.Pool,
+                                       Storage => Global_Heap.Storage);
 
 end Ordered_Queue_Test_Support;
