@@ -266,6 +266,12 @@ package BC.Graphs is
 
 private
 
+
+   --  Suppress "unreferenced" warnings here (GNAT 5.02). Can't use
+   --  pragma Unreferenced, because then we get warnings in child
+   --  packages.
+   pragma Warnings (Off, "=");
+
    type Vertex_Node;
    type Vertex_Node_Ptr is access Vertex_Node;
    for Vertex_Node_Ptr'Storage_Pool use Storage;

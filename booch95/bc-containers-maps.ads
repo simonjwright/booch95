@@ -113,6 +113,11 @@ package BC.Containers.Maps is
 
 private
 
+   --  Suppress "unreferenced" warnings here (GNAT 5.02). Can't use
+   --  pragma Unreferenced, because then we get warnings in child
+   --  packages.
+   pragma Warnings (Off, "=");
+
    type Abstract_Map is abstract new Container with null record;
 
    type Key_Ptr is access all Key;
