@@ -1,18 +1,16 @@
-# Copyright (C) 1998-2002 Simon Wright. All Rights Reserved.
-#
-#      This program is free software; you can redistribute it
-#      and/or modify it under the terms of the Ada Community
-#      License which comes with this Library.
-#
-#      This program is distributed in the hope that it will be
-#      useful, but WITHOUT ANY WARRANTY; without even the implied
-#      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-#      PURPOSE. See the Ada Community License for more details.
-#      You should have received a copy of the Ada Community
-#      License with this library, in the file named "Ada Community
-#      License" or "ACL". If not, contact the author of this library
-#      for a copy.
-#
+# Copyright 1998-2002 Simon Wright <simon@pushface.org>
+
+# This package is free software; you can redistribute it and/or
+# modify it under terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2, or
+# (at your option) any later version. This package is distributed in
+# the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU General Public License for more
+# details. You should have received a copy of the GNU General Public
+# License distributed with this package; see file COPYING.  If not,
+# write to the Free Software Foundation, 59 Temple Place - Suite
+# 330, Boston, MA 02111-1307, USA.
 
 # $Id$
 
@@ -280,7 +278,7 @@ bc-$(DATE).tgz \
 bc-$(DATE).zip \
 bc-$(DATE).src \
 bc-html-$(DATE).zip \
-ACL
+COPYING
 
 dist: $(DISTRIBUTION_FILES)
 	-@rm -rf distribution
@@ -292,10 +290,10 @@ dist: $(DISTRIBUTION_FILES)
 	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
 	cp -p README distribution/download/
 	cp -p WAVEFRONT-README distribution/wavefront/README
-	cp -p ACL html/*.html html/x.ada html/*.gif html/*.jpg \
+	cp -p COPYING html/*.html html/x.ada html/*.gif html/*.jpg \
 	  html/coldframe-hash.{tgz,zip} distribution/
 
-SOURCE = makefile ACL README $(ADA_SOURCE)
+SOURCE = makefile COPYING README $(ADA_SOURCE)
 
 bc-$(DATE): force
 	-rm -rf $@
