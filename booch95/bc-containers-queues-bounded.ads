@@ -67,7 +67,6 @@ private
   function Cardinality (Obj : Bounded_Queue) return Natural;
   function Item_At (Obj : Bounded_Queue; Index : Positive) return Item_Ptr;
   procedure Purge (Obj : in out Bounded_Queue);
-  procedure Add (Obj : in out Bounded_Queue; Elem : Item);
 
   package Bounded_Queue_Nodes
   is new BC.Support.Bounded (Item => Item,

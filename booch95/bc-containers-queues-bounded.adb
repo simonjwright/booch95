@@ -98,11 +98,6 @@ package body BC.Containers.Queues.Bounded is
     Bounded_Queue_Nodes.Clear (Obj.Rep.all);
   end Purge;
 
-  procedure Add (Obj : in out Bounded_Queue; Elem : Item) is
-  begin
-    Bounded_Queue_Nodes.Append (Obj.Rep.all, Elem);
-  end Add;
-
   procedure Adjust (Obj : in out Bounded_Queue) is
   begin
     Obj.Rep := Bounded_Queue_Nodes.Create (Obj.Rep.all);

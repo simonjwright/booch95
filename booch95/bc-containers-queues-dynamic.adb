@@ -104,11 +104,6 @@ package body BC.Containers.Queues.Dynamic is
     Dynamic_Queue_Nodes.Clear (Obj.Rep.all);
   end Purge;
 
-  procedure Add (Obj : in out Dynamic_Queue; Elem : Item) is
-  begin
-    Dynamic_Queue_Nodes.Append (Obj.Rep.all, Elem);
-  end Add;
-
   function Cardinality (Obj : Dynamic_Queue) return Natural is
   begin
     return Dynamic_Queue_Nodes.Length (Obj.Rep.all);

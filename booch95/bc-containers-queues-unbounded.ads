@@ -79,7 +79,6 @@ private
   function Item_At (Obj : Unbounded_Queue; Index : Positive) return Item_Ptr;
   function Cardinality (Obj : Unbounded_Queue) return Natural;
   procedure Purge (Obj : in out Unbounded_Queue);
-  procedure Add (Obj : in out Unbounded_Queue; Elem : Item);
 
   procedure Initialize (Obj : in out Unbounded_Queue);
   procedure Adjust (Obj : in out Unbounded_Queue);

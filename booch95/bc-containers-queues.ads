@@ -65,8 +65,6 @@ private
 
   type Queue is abstract new Container with null record;
 
-  procedure Add (Obj : in out Queue; Elem : Item);
-
   type Queue_Iterator (Q : access Queue'Class)
   is new Actual_Iterator (Q) with record
     Index : Natural;

@@ -53,11 +53,6 @@ package body BC.Containers.Queues is
     end loop;
   end Copy;
 
-  procedure Add (Obj : in out Queue; Elem : Item) is
-  begin
-    raise Should_Have_Been_Overridden;
-  end Add;
-
   procedure Initialize (It : in out Queue_Iterator) is
   begin
     Reset (It);
