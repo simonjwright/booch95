@@ -170,7 +170,7 @@ ordering_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
 test_synchronization: force
-	gnatmake $(GNATMAKE_FLAGS) $@ -largs -rdynamic
+	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
 
 time_lists: force
 	gnatmake $(GNATMAKE_FLAGS) $@
