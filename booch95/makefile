@@ -19,13 +19,15 @@
 
 all::
 
+MEMORY_CHECK = -largs ~/lib/ccmalloc.o -ldl
+
 test:: $(TESTABLE)
 	for t in $(TESTABLE); do \
-	  gnatmake -g -gnata $$t; \
+	  gnatmake -g -gnata $$t $(MEMORY_CHECK); \
 	done
 	for t in $(TESTABLE); do \
 	  echo running $$t; \
-	  $$t; \
+	  $$t 2>$$t.log; \
 	done
 
 TESTABLE += list_test
