@@ -47,37 +47,43 @@ package BC.Containers.Sets.Unbounded is
    --  uniformly across the number of buckets. The quality of the hash
    --  function has a significant impact upon performance.
 
-   type Set is new Abstract_Set with private;
+   type Unconstrained_Set
+     (Number_Of_Buckets : Positive) is new Abstract_Set with private;
 
-   function Null_Container return Set;
+   subtype Set is Unconstrained_Set (Number_Of_Buckets => Buckets);
 
-   procedure Clear (S : in out Set);
+   function Null_Container return Unconstrained_Set;
+   --  Note, this function has to be provided but the object returned
+   --  is in fact a Set (ie, it is constrained).
+
+   procedure Clear (S : in out Unconstrained_Set);
    --  Empty the set of all items.
 
-   procedure Add (S : in out Set; I : Item; Added : out Boolean);
+   procedure Add (S : in out Unconstrained_Set; I : Item; Added : out Boolean);
    --  Add the item to the set. If the item is not already a distinct
    --  member of the set, copy the item and add it to the set and set
    --  Added to True. If the item already exists, then set Added to
    --  False.
 
-   procedure Add (S : in out Set; I : Item);
+   procedure Add (S : in out Unconstrained_Set; I : Item);
    --  Add the item to the set. If the item is not already a distinct
    --  member of the set, copy the item and add it to the set.
 
-   procedure Remove (S : in out Set; I : Item);
+   procedure Remove (S : in out Unconstrained_Set; I : Item);
    --  If the item is not a member of the set, raise
    --  BC.Not_Found. Otherwise, remove the item from the set.
 
-   function Extent (S : Set) return Natural;
+   function Extent (S : Unconstrained_Set) return Natural;
    --  Return the number of items in the set.
 
-   function Is_Empty (S : Set) return Boolean;
+   function Is_Empty (S : Unconstrained_Set) return Boolean;
    --  Return True if and only if there are no items in the set.
 
-   function Is_Member (S : Set; I : Item) return Boolean;
+   function Is_Member (S : Unconstrained_Set; I : Item) return Boolean;
    --  Return True if and only if the item exists in the set.
 
-   function New_Iterator (For_The_Set : Set) return Iterator'Class;
+   function New_Iterator
+     (For_The_Set : Unconstrained_Set) return Iterator'Class;
    --  Return a reset Iterator bound to the specific Set.
 
 private
@@ -105,18 +111,21 @@ private
      (Items => Items,
       Values => Values);
 
-   type Set is new Abstract_Set with record
+   type Unconstrained_Set
+     (Number_Of_Buckets : Positive)
+   is new Abstract_Set with record
       Rep : Tables.Table (Number_Of_Buckets => Buckets);
    end record;
 
-   procedure Attach (S : in out Set; I : Item);
+   procedure Attach (S : in out Unconstrained_Set; I : Item);
 
-   procedure Detach (S : in out Set; I : Item);
+   procedure Detach (S : in out Unconstrained_Set; I : Item);
 
-   function Number_Of_Buckets (S : Set) return Natural;
+   function Number_Of_Buckets (S : Unconstrained_Set) return Natural;
 
-   function Length (S : Set; Bucket : Positive) return Natural;
+   function Length (S : Unconstrained_Set; Bucket : Positive) return Natural;
 
-   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr;
+   function Item_At (S : Unconstrained_Set;
+                     Bucket, Index : Positive) return Item_Ptr;
 
 end BC.Containers.Sets.Unbounded;
