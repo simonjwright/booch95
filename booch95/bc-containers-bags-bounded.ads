@@ -46,6 +46,8 @@ package BC.Containers.Bags.Bounded is
 
   type Bounded_Bag is new Bag with private;
 
+  function Null_Container return Bounded_Bag;
+
   procedure Clear (B : in out Bounded_Bag);
   -- Empty the bag of all items.
 
@@ -78,7 +80,7 @@ package BC.Containers.Bags.Bounded is
   function Is_Member (B : Bounded_Bag; I : Item) return Boolean;
   -- Return True if and only if the item exists in the bag.
 
-  function New_Iterator (For_The_Bag : Bounded_Bag) return Iterator;
+  function New_Iterator (For_The_Bag : Bounded_Bag) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Bag.
 
 private
@@ -127,8 +129,5 @@ private
 
   function Value_At
      (B : Bounded_Bag; Bucket, Index : Positive) return Positive;
-
-  type Bounded_Bag_Iterator (U : access Bounded_Bag'Class)
-  is new Bag_Iterator (U) with null record;
 
 end BC.Containers.Bags.Bounded;

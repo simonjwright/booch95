@@ -93,11 +93,14 @@ package body BC.Containers.Bags.Bounded is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Bounded_Bag);
 
-  function New_Iterator (For_The_Bag : Bounded_Bag) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Bag'Address);
+  function New_Iterator
+     (For_The_Bag : Bounded_Bag) return Iterator'Class is
+    Result : Bag_Iterator;
   begin
-    return Iterator (SP.Create (new Bounded_Bag_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Bag'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   -- Private implementations
@@ -138,5 +141,12 @@ package body BC.Containers.Bags.Bounded is
   begin
     return VC.Item_At (Tables.Value_Bucket (B.Rep, Bucket).all, Index);
   end Value_At;
+
+  Empty_Container : Bounded_Bag;
+
+  function Null_Container return Bounded_Bag is
+  begin
+    return Empty_Container;
+  end Null_Container;
 
 end BC.Containers.Bags.Bounded;

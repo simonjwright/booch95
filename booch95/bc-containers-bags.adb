@@ -27,7 +27,7 @@ package body BC.Containers.Bags is
   is new BSE.Assert ("BC.Containers.Bags");
 
   function Are_Equal (L, R : Bag'Class) return Boolean is
-    It : Iterator := New_Iterator (L);
+    It : Iterator'Class := New_Iterator (L);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -53,7 +53,7 @@ package body BC.Containers.Bags is
   end Add;
 
   procedure Union (B : in out Bag'Class; O : Bag'Class) is
-    It : Iterator := New_Iterator (O);
+    It : Iterator'Class := New_Iterator (O);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -73,7 +73,7 @@ package body BC.Containers.Bags is
   end Union;
 
   procedure Intersection (B : in out Bag'Class; O : Bag'Class) is
-    It : Iterator := New_Iterator (B);
+    It : Iterator'Class := New_Iterator (B);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -84,6 +84,7 @@ package body BC.Containers.Bags is
       begin
         if not Is_Member (O, This_Item) then
           Detach (B, This_Item);
+--           Delete_Item_At (It);
         else
           declare
             O_Count : Positive := Count (O, This_Item);
@@ -99,7 +100,7 @@ package body BC.Containers.Bags is
   end Intersection;
 
   procedure Difference (B : in out Bag'Class; O : Bag'Class) is
-    It : Iterator := New_Iterator (O);
+    It : Iterator'Class := New_Iterator (O);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -125,7 +126,7 @@ package body BC.Containers.Bags is
   end Difference;
 
   function Total_Size (B : Bag'Class) return Natural is
-    It : Iterator := New_Iterator (B);
+    It : Iterator'Class := New_Iterator (B);
     Result : Natural := 0;
   begin
     while not Is_Done (It) loop
@@ -136,7 +137,7 @@ package body BC.Containers.Bags is
   end Total_Size;
 
   function Is_Subset (B : Bag'Class; O : Bag'Class) return Boolean is
-    It : Iterator := New_Iterator (B);
+    It : Iterator'Class := New_Iterator (B);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -169,7 +170,7 @@ package body BC.Containers.Bags is
   end Is_Subset;
 
   function Is_Proper_Subset (B : Bag'Class; O : Bag'Class) return Boolean is
-    It : Iterator := New_Iterator (B);
+    It : Iterator'Class := New_Iterator (B);
     Is_Proper : Boolean := False;
   begin
     -- XXX left out the optimisation which checks whether L, R are
@@ -219,7 +220,7 @@ package body BC.Containers.Bags is
   end Set_Value;
 
   function Multiplicity (B : Bag'Class) return Natural is
-    It : Iterator := New_Iterator (B);
+    It : Iterator'Class := New_Iterator (B);
     Result : Natural := 0;
   begin
     while not Is_Done (It) loop
@@ -241,18 +242,6 @@ package body BC.Containers.Bags is
     return 0;
   end Length;
 
-  function Exists (B : Bag; I : Item) return Boolean is
-  begin
-    raise Should_Have_Been_Overridden;
-    return False;
-  end Exists;
-
-  function Value_Of (B : Bag; I : Item) return Positive is
-  begin
-    raise Should_Have_Been_Overridden;
-    return 1;
-  end Value_Of;
-
   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
   begin
     raise Should_Have_Been_Overridden;
@@ -267,32 +256,16 @@ package body BC.Containers.Bags is
 
   -- Iterators
 
-  procedure Initialize (It : in out Bag_Iterator) is
-  begin
-    It.Index := 0;
-    if Extent (It.B.all) = 0 then
-      It.Bucket_Index := 0;
-    else
-      It.Bucket_Index := 1;
-      while It.Bucket_Index <= Number_Of_Buckets (It.B.all) loop
-        if Length (It.B.all, It.Bucket_Index) > 0 then
-          It.Index := 1;
-          exit;
-        end if;
-        It.Bucket_Index := It.Bucket_Index + 1;
-      end loop;
-    end if;
-  end Initialize;
-
   procedure Reset (It : in out Bag_Iterator) is
+    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
   begin
     It.Index := 0;
-    if Extent (It.B.all) = 0 then
+    if Extent (B) = 0 then
       It.Bucket_Index := 0;
     else
       It.Bucket_Index := 1;
-      while It.Bucket_Index <= Number_Of_Buckets (It.B.all) loop
-        if Length (It.B.all, It.Bucket_Index) > 0 then
+      while It.Bucket_Index <= Number_Of_Buckets (B) loop
+        if Length (B, It.Bucket_Index) > 0 then
           It.Index := 1;
           exit;
         end if;
@@ -302,15 +275,16 @@ package body BC.Containers.Bags is
   end Reset;
 
   procedure Next (It : in out Bag_Iterator) is
+    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
   begin
-    if It.Bucket_Index <= Number_Of_Buckets (It.B.all) then
-      if It.Index < Length (It.B.all, It.Bucket_Index) then
+    if It.Bucket_Index <= Number_Of_Buckets (B) then
+      if It.Index < Length (B, It.Bucket_Index) then
         It.Index := It.Index + 1;
       else
         It.Bucket_Index := It.Bucket_Index + 1;
         It.Index := 0;
-        while It.Bucket_Index <= Number_Of_Buckets (It.B.all) loop
-          if Length (It.B.all, It.Bucket_Index) > 0 then
+        while It.Bucket_Index <= Number_Of_Buckets (B) loop
+          if Length (B, It.Bucket_Index) > 0 then
             It.Index := 1;
             exit;
           end if;
@@ -321,48 +295,59 @@ package body BC.Containers.Bags is
   end Next;
 
   function Is_Done (It : Bag_Iterator) return Boolean is
+    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
   begin
     if It.Bucket_Index = 0
-       or else It.Bucket_Index > Number_Of_Buckets (It.B.all) then
+       or else It.Bucket_Index > Number_Of_Buckets (B)
+    then
       return True;
     end if;
-    if It.Index <= Length (It.B.all, It.Bucket_Index) then
+    if It.Index <= Length (B, It.Bucket_Index) then
       return False;
     end if;
+    -- At the point where we call Is_Done, it's possible that the
+    -- Iterator may not be completely synchronised (for example, see
+    -- Intersection, where we've either called Next or Detach).
+    --
+    -- This means we may need to write to the Iterator; but it's an in
+    -- parameter.
     declare
       package Conversions is new System.Address_To_Access_Conversions
          (Bag_Iterator'Class);
-      P : Conversions.Object_Pointer := Conversions.To_Pointer (It'Address);
+      It_W : Bag_Iterator'Class renames Conversions.To_Pointer (It'Address).all;
     begin
-      P.Bucket_Index := P.Bucket_Index + 1;
-      P.Index := 0;
-      while P.Bucket_Index <= Number_Of_Buckets (P.B.all) loop
-        if Length (P.B.all, P.Bucket_Index) > 0 then
-          P.Index := 1;
+      It_W.Bucket_Index := It_W.Bucket_Index + 1;
+      It_W.Index := 0;
+      while It_W.Bucket_Index <= Number_Of_Buckets (B)
+      loop
+        if Length (B, It_W.Bucket_Index) > 0 then
+          It_W.Index := 1;
           return False;
         end if;
-        P.Bucket_Index := P.Bucket_Index + 1;
+        It_W.Bucket_Index := It_W.Bucket_Index + 1;
       end loop;
     end;
     return True;
   end Is_Done;
 
   function Current_Item (It : Bag_Iterator) return Item is
+    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.B.all, It.Bucket_Index, It.Index).all;
+    return Item_At (B, It.Bucket_Index, It.Index).all;
   end Current_Item;
 
-  function Current_Item (It : Bag_Iterator) return Item_Ptr is
+  function Current_Item_Ptr (It : Bag_Iterator) return Item_Ptr is
     -- XXX this should probably not be permitted!
+    B : Bag'Class renames Bag'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.B.all, It.Bucket_Index, It.Index);
-  end Current_Item;
+    return Item_At (B, It.Bucket_Index, It.Index);
+  end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Bag_Iterator) is
   begin

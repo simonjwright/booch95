@@ -19,7 +19,6 @@
 -- $Id$
 
 with Ada.Finalization;
-with BC.Smart;
 
 generic
   type Item is private;
@@ -33,40 +32,41 @@ package BC.Containers is
 
   type Container is abstract tagged private;
 
+  function Null_Container return Container is abstract;
+
   -- Active iteration
 
-  type Iterator is private;
+  type Iterator (<>) is abstract tagged private;
 
-  function New_Iterator (For_The_Container : Container) return Iterator
+  function New_Iterator (For_The_Container : Container) return Iterator'Class
     is abstract;
   -- Return a reset Iterator bound to the specific Container.
 
-  procedure Reset (It : in out Iterator);
+  procedure Reset (It : in out Iterator) is abstract;
   -- Reset the Iterator to the beginning.
 
-  procedure Next (It : in out Iterator);
+  procedure Next (It : in out Iterator) is abstract;
   -- Advance the Iterator to the next Item in the Container.
 
-  function Is_Done (It : Iterator) return Boolean;
+  function Is_Done (It : Iterator) return Boolean is abstract;
   -- Return True if there are no more Items in the Container.
 
-  function Current_Item (It : Iterator) return Item;
+  function Current_Item (It : Iterator) return Item is abstract;
   -- Return a copy of the current Item.
 
   generic
     with procedure Apply (Elem : in out Item);
-    In_The_Iterator : Iterator;
-  procedure Access_Current_Item;
+  procedure Access_Current_Item (In_The_Iterator : Iterator'Class);
   -- Call Apply for the Iterator's current Item.
 
-  procedure Delete_Item_At (It : Iterator);
+  procedure Delete_Item_At (It : Iterator) is abstract;
   -- Remove the current item.
 
   -- Passive iteration
 
   generic
     with procedure Apply (Elem : in Item; OK : out Boolean);
-  procedure Visit (Using : in out Iterator);
+  procedure Visit (Using : in out Iterator'Class);
   -- Call Apply with a copy of each Item in the Container to which the
   -- iterator Using is bound. The iteration will terminate early if Apply
   -- sets OK to False.
@@ -76,7 +76,7 @@ package BC.Containers is
     with procedure Apply (Elem : in Item;
                           Param : in Param_Type;
                           OK : out Boolean);
-  procedure Visit_With_In_Param (Using : in out Iterator;
+  procedure Visit_With_In_Param (Using : in out Iterator'Class;
                                  Param : in Param_Type);
   -- Call Apply with a Parameter for each Item in the Container to which the
   -- iterator Using is bound. The iteration will terminate early if Apply
@@ -87,7 +87,7 @@ package BC.Containers is
     with procedure Apply (Elem : in Item;
                           Param : in out Param_Type;
                           OK : out Boolean);
-  procedure Visit_With_In_Out_Param (Using : in out Iterator;
+  procedure Visit_With_In_Out_Param (Using : in out Iterator'Class;
                                      Param : in out Param_Type);
   -- Call Apply with a Parameter for each Item in the Container to which the
   -- iterator Using is bound. The iteration will terminate early if Apply
@@ -95,7 +95,7 @@ package BC.Containers is
 
   generic
     with procedure Apply (Elem : in out Item; OK : out Boolean);
-  procedure Modify (Using : in out Iterator);
+  procedure Modify (Using : in out Iterator'Class);
   -- Call Apply with a copy of each Item in the Container to which the
   -- iterator Using is bound. The iteration will terminate early if Apply
   -- sets OK to False.
@@ -105,7 +105,7 @@ package BC.Containers is
     with procedure Apply (Elem : in out Item;
                           Param : in Param_Type;
                           OK : out Boolean);
-  procedure Modify_With_In_Param (Using : in out Iterator;
+  procedure Modify_With_In_Param (Using : in out Iterator'Class;
                                   Param : in Param_Type);
   -- Call Apply with a Parameter each Item in the Container to which the
   -- iterator Using is bound. The iteration will terminate early if Apply
@@ -116,7 +116,7 @@ package BC.Containers is
     with procedure Apply (Elem : in out Item;
                           Param : in out Param_Type;
                           OK : out Boolean);
-  procedure Modify_With_In_Out_Param (Using : in out Iterator;
+  procedure Modify_With_In_Out_Param (Using : in out Iterator'Class;
                                       Param : in out Param_Type);
   -- Call Apply with a copy of each Item in the Container to which the
   -- iterator Using is bound. The iteration will terminate early if Apply
@@ -132,38 +132,31 @@ private
 
   type Container is abstract new Ada.Finalization.Controlled with null record;
 
-  -- Private primitive operations.
+  -- Support for concurrency protection. The base implementation of
+  -- these procedures does nothing; derived types override as
+  -- required.
+
+  procedure Lock (C : in out Container);
+
+  procedure Unlock (C : in out Container);
+
+  -- Private primitive operations of Container.
   -- These should ideally be abstract; instead, we provide implementations,
   -- but they raise Should_Have_Been_Overridden.
 
   function Item_At (C : Container; Index : Positive) return Item_Ptr;
 
-  -- Actual_Iterators are strongly dependent on the concrete Container
-  -- implementation. The externally-visible Iterator is implemented as
-  -- a (smart) pointer to the specific Container's Actual_Iterator.
-  --
-  -- All the primitive subprograms of Iterator are implemented in terms
-  -- of matching subprograms of Actual_Iterator.
+  -- Iteration
 
-  type Actual_Iterator (For_The_Container : access Container'Class)
-  is abstract new Ada.Finalization.Limited_Controlled with null record;
+  type Container_Ptr is access all Container'Class;
 
-  type Iterator_P is access Actual_Iterator'Class;
+  type Iterator is abstract tagged record
+    For_The_Container : Container_Ptr;
+  end record;
 
-  procedure Reset (It : in out Actual_Iterator) is abstract;
-
-  procedure Next (It : in out Actual_Iterator) is abstract;
-
-  function Is_Done (It : Actual_Iterator) return Boolean is abstract;
-
-  function Current_Item (It : Actual_Iterator) return Item is abstract;
-
-  function Current_Item (It : Actual_Iterator) return Item_Ptr is abstract;
-
-  procedure Delete_Item_At (It : Actual_Iterator) is abstract;
-
-  package SP is new BC.Smart (T => Actual_Iterator'Class, P => Iterator_P);
-
-  type Iterator is new SP.Pointer;
+  -- Private primitive operations of Iterator.
+  -- These should ideally be abstract; instead, we provide implementations,
+  -- but they raise Should_Have_Been_Overridden.
+  function Current_Item_Ptr (It : Iterator) return Item_Ptr;
 
 end BC.Containers;

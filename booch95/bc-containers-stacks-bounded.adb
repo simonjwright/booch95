@@ -64,11 +64,14 @@ package body BC.Containers.Stacks.Bounded is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Bounded_Stack);
 
-  function New_Iterator (For_The_Stack : Bounded_Stack) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Stack'Address);
+  function New_Iterator
+     (For_The_Stack : Bounded_Stack) return Iterator'Class is
+    Result : Stack_Iterator;
   begin
-    return Iterator (SP.Create (new Stack_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Stack'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   function Item_At
@@ -96,5 +99,12 @@ package body BC.Containers.Stacks.Bounded is
   begin
     Free (S.Rep);
   end Finalize;
+
+  Empty_Container : Bounded_Stack;
+
+  function Null_Container return Bounded_Stack is
+  begin
+    return Empty_Container;
+  end Null_Container;
 
 end BC.Containers.Stacks.Bounded;

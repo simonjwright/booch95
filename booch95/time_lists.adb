@@ -1,4 +1,4 @@
--- Copyright (C) 1998 Simon Wright.
+-- Copyright (C) 1998,2000 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -41,12 +41,12 @@ procedure Time_Lists is
     procedure D_Application is new Lists_For_Timing.C.Visit (Apply);
     Start : Ada.Calendar.Time;
     Taken : Duration;
-    It : Lists_For_Timing.C.Iterator;
+    It : Lists_For_Timing.C.Iterator'Class
+       := Lists_For_Timing.C.New_Iterator
+             (Lists_For_Timing.C.Container'Class (S));
     use type Ada.Calendar.Time;
   begin
     Total := 0;
-    It := Lists_For_Timing.C.New_Iterator
-       (Lists_For_Timing.C.Container'Class (S));
     Start := Ada.Calendar.Clock;
     S_Application (It);
     Taken := Ada.Calendar.Clock - Start;
@@ -57,8 +57,6 @@ procedure Time_Lists is
         & Integer'Image (Total));
 
     Total := 0;
-    It := Lists_For_Timing.C.New_Iterator
-       (Lists_For_Timing.C.Container'Class (D));
     Start := Ada.Calendar.Clock;
     D_Application (It);
     Taken := Ada.Calendar.Clock - Start;

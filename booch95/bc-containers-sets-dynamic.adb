@@ -99,11 +99,13 @@ package body BC.Containers.Sets.Dynamic is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Dynamic_Set);
 
-  function New_Iterator (For_The_Set : Dynamic_Set) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Set'Address);
+  function New_Iterator (For_The_Set : Dynamic_Set) return Iterator'Class is
+    Result : Set_Iterator;
   begin
-    return Iterator (SP.Create (new Dynamic_Set_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Set'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   -- Private implementations
@@ -133,5 +135,12 @@ package body BC.Containers.Sets.Dynamic is
   begin
     return IC.Item_At (Tables.Item_Bucket (S.Rep, Bucket).all, Index);
   end Item_At;
+
+  Empty_Container : Dynamic_Set;
+
+  function Null_Container return Dynamic_Set is
+  begin
+    return Empty_Container;
+  end Null_Container;
 
 end BC.Containers.Sets.Dynamic;

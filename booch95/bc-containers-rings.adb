@@ -30,8 +30,8 @@ package body BC.Containers.Rings is
       return False;
     end if;
     declare
-      Left_Iter : Iterator := New_Iterator (Left);
-      Right_Iter : Iterator := New_Iterator (Right);
+      Left_Iter : Iterator'Class := New_Iterator (Left);
+      Right_Iter : Iterator'Class := New_Iterator (Right);
     begin
       while not Is_Done (Left_Iter) and then
          not Is_Done (Right_Iter) loop
@@ -46,7 +46,7 @@ package body BC.Containers.Rings is
   end Are_Equal;
 
   procedure Copy (From : Ring'Class; To : in out Ring'Class) is
-    Iter : Iterator := New_Iterator (From);
+    Iter : Iterator'Class := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
       Clear (To);
@@ -93,24 +93,15 @@ package body BC.Containers.Rings is
     raise Should_Have_Been_Overridden;
   end Add;
 
-  procedure Lock (R : in out Ring) is
-  begin
-    null;
-  end Lock;
-
-  procedure Unlock (R : in out Ring) is
-  begin
-    null;
-  end Unlock;
-
   procedure Initialize (It : in out Ring_Iterator) is
   begin
     Reset (It);
   end Initialize;
 
   procedure Reset (It : in out Ring_Iterator) is
+    R : Ring'Class renames Ring'Class (It.For_The_Container.all);
   begin
-    if Extent (It.R.all) = 0 then
+    if Extent (R) = 0 then
       It.Index := 0;
     else
       It.Index := 1;
@@ -118,8 +109,9 @@ package body BC.Containers.Rings is
   end Reset;
 
   function Is_Done (It : Ring_Iterator) return Boolean is
+    R : Ring'Class renames Ring'Class (It.For_The_Container.all);
   begin
-    return It.Index = 0 or else It.Index > Extent (It.R.all);
+    return It.Index = 0 or else It.Index > Extent (R);
   end Is_Done;
 
   procedure Next (It : in out Ring_Iterator) is
@@ -128,38 +120,40 @@ package body BC.Containers.Rings is
   end Next;
 
   function Current_Item (It : Ring_Iterator) return Item is
+    R : Ring'Class renames Ring'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
     declare
-      Size : constant Positive := Extent (It.R.all);
+      Size : constant Positive := Extent (R);
       I : Positive;
     begin
-      I := It.Index + It.R.Top - 1;
+      I := It.Index + R.Top - 1;
       if I > Size then
         I := I - Size;
       end if;
-      return Item_At (It.R.all, I).all;
+      return Item_At (R, I).all;
     end;
   end Current_Item;
 
-  function Current_Item (It : Ring_Iterator) return Item_Ptr is
+  function Current_Item_Ptr (It : Ring_Iterator) return Item_Ptr is
+    R : Ring'Class renames Ring'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
     declare
-      Size : constant Positive := Extent (It.R.all);
+      Size : constant Positive := Extent (R);
       I : Positive;
     begin
-      I := It.Index + It.R.Top - 1;
+      I := It.Index + R.Top - 1;
       if I > Size then
         I := I - Size;
       end if;
-      return Item_At (It.R.all, I);
+      return Item_At (R, I);
     end;
-  end Current_Item;
+  end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Ring_Iterator) is
   begin

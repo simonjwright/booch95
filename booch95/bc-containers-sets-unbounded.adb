@@ -68,11 +68,13 @@ package body BC.Containers.Sets.Unbounded is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Unbounded_Set);
 
-  function New_Iterator (For_The_Set : Unbounded_Set) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Set'Address);
+  function New_Iterator (For_The_Set : Unbounded_Set) return Iterator'Class is
+    Result : Set_Iterator;
   begin
-    return Iterator (SP.Create (new Unbounded_Set_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Set'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   -- Private implementations
@@ -102,5 +104,12 @@ package body BC.Containers.Sets.Unbounded is
   begin
     return IC.Item_At (Tables.Item_Bucket (S.Rep, Bucket).all, Index);
   end Item_At;
+
+  Empty_Container : Unbounded_Set;
+
+  function Null_Container return Unbounded_Set is
+  begin
+    return Empty_Container;
+  end Null_Container;
 
 end BC.Containers.Sets.Unbounded;

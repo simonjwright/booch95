@@ -26,8 +26,8 @@ procedure Ordered_Queue_Test is
   use Ordered_Queue_Test_Support;
   use Containers;
   use Queues;
---   use QB;
---   use QD;
+  use QB;
+  use QD;
   use QU;
 
   procedure Process (C : Character; OK : out Boolean) is
@@ -44,7 +44,7 @@ procedure Ordered_Queue_Test is
   end Assertion;
 
   procedure Test_Active_Iterator (L : Container'Class) is
-    Iter : Iterator := New_Iterator (L);
+    Iter : Iterator'Class := New_Iterator (L);
     Success : Boolean;
     Temp : Character;
   begin
@@ -122,17 +122,18 @@ procedure Ordered_Queue_Test is
     Assertion ((Front (Q2) = '2'), "** P36: Queue front is not correct");
     Remove(Q2, 1);
     Assertion ((Length (Q2) = 0), "** P37: Queue length is not correct");
+    Append (Q1, 'z');
   end Test_Primitive;
 
   procedure Test_Passive_Iterator (Q : Container'Class) is
     procedure Iterate is new Visit (Apply => Process);
-    Iter : Iterator := New_Iterator (Q);
+    Iter : Iterator'Class := New_Iterator (Q);
   begin
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
   procedure Test_Iterator_Deletion (Q : in out Ordered_Queue'Class) is
-    Iter : Iterator := New_Iterator (Q);
+    Iter : Iterator'Class := New_Iterator (Q);
     Delete : Boolean;
   begin
     Clear (Q);
@@ -171,58 +172,59 @@ procedure Ordered_Queue_Test is
     Assertion (Length (Q) = 0, "** I07: Queue length is not zero");
   end Test_Iterator_Deletion;
 
---   Queue_B_P1, Queue_B_P2 : QB.Bounded_Queue;
---   Queue_D_P1, Queue_D_P2 : QD.Dynamic_Queue;
+  Queue_B_P1, Queue_B_P2 : QB.Bounded_Ordered_Queue;
+  Queue_D_P1, Queue_D_P2 : QD.Dynamic_Ordered_Queue;
   Queue_U_P1, Queue_U_P2 : QU.Unbounded_Ordered_Queue;
 
 begin
-  Put_Line ("Starting queue tests");
+  Put_Line ("Starting ordered queue tests");
 
---   Put_Line ("...Bounded Queue");
---   Test_Primitive (Queue_B_P1, Queue_B_P2);
+  Put_Line ("...Bounded Ordered Queue");
+  Test_Primitive (Queue_B_P1, Queue_B_P2);
 
---   Put_Line ("...Dynamic Queue");
---   Test_Primitive (Queue_D_P1, Queue_D_P2);
+  Put_Line ("...Dynamic Ordered Queue");
+  QD.Preallocate (Queue_D_P1, 50);
+  Test_Primitive (Queue_D_P1, Queue_D_P2);
 
-  Put_Line ("...Unbounded Queue");
+  Put_Line ("...Unbounded Ordered Queue");
   Test_Primitive (Queue_U_P1, Queue_U_P2);
 
-  Put_Line ("...Queue Active Iterator");
---   Put_Line ("   Bounded:");
---   Test_Active_Iterator (Queue_B_P1);
---   Put_Line ("   Dynamic:");
---   Test_Active_Iterator (Queue_D_P1);
-  Put_Line ("   Unbounded:");
+  Put_Line ("... Ordered Queue Active Iterator");
+  Put_Line ("   Bounded:");
+  Test_Active_Iterator (Queue_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Active_Iterator (Queue_D_P1);
+  Put_Line ("   Ordered:");
   Test_Active_Iterator (Queue_U_P1);
 
-  Put_Line ("...Queue Passive Iterator");
---   Put_Line ("   Bounded:");
---   Test_Passive_Iterator (Queue_B_P1);
---   Put_Line ("   Dynamic:");
---   Test_Passive_Iterator (Queue_D_P1);
+  Put_Line ("... Ordered Queue Passive Iterator");
+  Put_Line ("   Bounded:");
+  Test_Passive_Iterator (Queue_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Passive_Iterator (Queue_D_P1);
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Queue_U_P1);
 
---   Assertion ((Front (Queue_B_P1) = '9'), "** M01: Queue front is not correct");
---   Assertion ((Length (Queue_B_P2) = 0), "** M02: Queue length is not correct");
---   Assertion ((Front (Queue_D_P1) = '9'), "** M05: Queue front is not correct");
---   Assertion ((Length (Queue_D_P2) = 0), "** M06: Queue length is not correct");
+  Assertion ((Front (Queue_B_P1) = '9'), "** M01: Queue front is not correct");
+  Assertion ((Length (Queue_B_P2) = 0), "** M02: Queue length is not correct");
+  Assertion ((Front (Queue_D_P1) = '9'), "** M05: Queue front is not correct");
+  Assertion ((Length (Queue_D_P2) = 0), "** M06: Queue length is not correct");
   Assertion ((Front (Queue_U_P1) = '9'), "** M09: Queue front is not correct");
   Assertion ((Length (Queue_U_P2) = 0), "** M10: Queue length is not correct");
 
---   Assertion (Available (Queue_B_P1) = 99,
---           "** M13: Available space not correct");
---   Assertion (Available (Queue_B_P2) = 100,
---           "** M14: Available space not correct");
+  Assertion (Available (Queue_B_P1) = 98,
+          "** M13: Available space not correct");
+  Assertion (Available (Queue_B_P2) = 100,
+          "** M14: Available space not correct");
 
   Put_Line ("...Ordered Queue Iterator Deletion");
---   Put_Line ("   Bounded:");
---   Test_Iterator_Deletion (Queue_B_P1);
---   Put_Line ("   Dynamic:");
---   Test_Iterator_Deletion (Queue_D_P1);
+  Put_Line ("   Bounded:");
+  Test_Iterator_Deletion (Queue_B_P1);
+  Put_Line ("   Dynamic:");
+  Test_Iterator_Deletion (Queue_D_P1);
   Put_Line ("   Unbounded:");
   Test_Iterator_Deletion (Queue_U_P1);
 
-  Put_Line ("Completed queue tests");
+  Put_Line ("Completed ordered queue tests");
 
 end Ordered_Queue_Test;

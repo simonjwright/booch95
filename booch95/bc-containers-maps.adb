@@ -27,7 +27,7 @@ package body BC.Containers.Maps is
   is new BSE.Assert ("BC.Containers.Maps");
 
   function Are_Equal (L, R : Map'Class) return Boolean is
-    It : Iterator := New_Iterator (L);
+    It : Iterator'Class := New_Iterator (L);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -44,32 +44,16 @@ package body BC.Containers.Maps is
     return True;
   end Are_Equal;
 
-  procedure Initialize (It : in out Map_Iterator) is
-  begin
-    It.Index := 0;
-    if Extent (It.M.all) = 0 then
-      It.Bucket_Index := 0;
-    else
-      It.Bucket_Index := 1;
-      while It.Bucket_Index <= Number_Of_Buckets (It.M.all) loop
-        if Length (It.M.all, It.Bucket_Index) > 0 then
-          It.Index := 1;
-          exit;
-        end if;
-        It.Bucket_Index := It.Bucket_Index + 1;
-      end loop;
-    end if;
-  end Initialize;
-
   procedure Reset (It : in out Map_Iterator) is
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
   begin
     It.Index := 0;
-    if Extent (It.M.all) = 0 then
+    if Extent (M) = 0 then
       It.Bucket_Index := 0;
     else
       It.Bucket_Index := 1;
-      while It.Bucket_Index <= Number_Of_Buckets (It.M.all) loop
-        if Length (It.M.all, It.Bucket_Index) > 0 then
+      while It.Bucket_Index <= Number_Of_Buckets (M) loop
+        if Length (M, It.Bucket_Index) > 0 then
           It.Index := 1;
           exit;
         end if;
@@ -79,15 +63,16 @@ package body BC.Containers.Maps is
   end Reset;
 
   procedure Next (It : in out Map_Iterator) is
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
   begin
-    if It.Bucket_Index <= Number_Of_Buckets (It.M.all) then
-      if It.Index < Length (It.M.all, It.Bucket_Index) then
+    if It.Bucket_Index <= Number_Of_Buckets (M) then
+      if It.Index < Length (M, It.Bucket_Index) then
         It.Index := It.Index + 1;
       else
         It.Bucket_Index := It.Bucket_Index + 1;
         It.Index := 0;
-        while It.Bucket_Index <= Number_Of_Buckets (It.M.all) loop
-          if Length (It.M.all, It.Bucket_Index) > 0 then
+        while It.Bucket_Index <= Number_Of_Buckets (M) loop
+          if Length (M, It.Bucket_Index) > 0 then
             It.Index := 1;
             exit;
           end if;
@@ -98,12 +83,13 @@ package body BC.Containers.Maps is
   end Next;
 
   function Is_Done (It : Map_Iterator) return Boolean is
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
   begin
     if It.Bucket_Index = 0
-       or else It.Bucket_Index > Number_Of_Buckets (It.M.all) then
+       or else It.Bucket_Index > Number_Of_Buckets (M) then
       return True;
     end if;
-    if It.Index <= Length (It.M.all, It.Bucket_Index) then
+    if It.Index <= Length (M, It.Bucket_Index) then
       return False;
     end if;
     declare
@@ -113,8 +99,8 @@ package body BC.Containers.Maps is
     begin
       P.Bucket_Index := P.Bucket_Index + 1;
       P.Index := 0;
-      while P.Bucket_Index <= Number_Of_Buckets (P.M.all) loop
-        if Length (P.M.all, P.Bucket_Index) > 0 then
+      while P.Bucket_Index <= Number_Of_Buckets (M) loop
+        if Length (M, P.Bucket_Index) > 0 then
           P.Index := 1;
           return False;
         end if;
@@ -125,20 +111,22 @@ package body BC.Containers.Maps is
   end Is_Done;
 
   function Current_Item (It : Map_Iterator) return Item is
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.M.all, It.Bucket_Index, It.Index).all;
+    return Item_At (M, It.Bucket_Index, It.Index).all;
   end Current_Item;
 
   function Current_Item (It : Map_Iterator) return Item_Ptr is
     -- XXX this should probably not be permitted!
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.M.all, It.Bucket_Index, It.Index);
+    return Item_At (M, It.Bucket_Index, It.Index);
   end Current_Item;
 
   procedure Delete_Item_At (It : Map_Iterator) is
@@ -149,50 +137,47 @@ package body BC.Containers.Maps is
     raise BC.Not_Yet_Implemented;
   end Delete_Item_At;
 
-  function Current_Value (It : Iterator) return Value is
-    Map_Iter : Map_Iterator
-       renames Map_Iterator (SP.Value (SP.Pointer (It)).all);
+  function Current_Value (It : Map_Iterator) return Value is
+    M : Map'Class renames Map'Class (It.For_The_Container.all);
   begin
-    if Is_Done (Map_Iter) then
+    if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Value_At (Map_Iter.M.all,
-                     Map_Iter.Bucket_Index,
-                     Map_Iter.Index).all;
+    return Value_At (M,
+                     It.Bucket_Index,
+                     It.Index).all;
   end Current_Value;
 
-  procedure Visit (Using : in out Iterator) is
-    Map_Iter : Map_Iterator
-       renames Map_Iterator (SP.Value (SP.Pointer (Using)).all);
+  procedure Visit (Using : in out Map_Iterator'Class) is
+    M : Map'Class renames Map'Class (Using.For_The_Container.all);
     Status : Boolean;
   begin
     Reset (Using);
     while not Is_Done (Using) loop
-      Apply (Item_At (Map_Iter.M.all,
-                      Map_Iter.Bucket_Index,
-                      Map_Iter.Index).all,
-             Value_At (Map_Iter.M.all,
-                       Map_Iter.Bucket_Index,
-                       Map_Iter.Index).all,
+      Apply (Item_At (M,
+                      Using.Bucket_Index,
+                      Using.Index).all,
+             Value_At (M,
+                       Using.Bucket_Index,
+                       Using.Index).all,
              Status);
       exit when not Status;
       Next (Using);
     end loop;
   end Visit;
 
-  procedure Modify (Using : in out Iterator) is
-    Map_Iter : Map_Iterator
-       renames Map_Iterator (SP.Value (SP.Pointer (Using)).all);
+  procedure Modify (Using : in out Map_Iterator'Class) is
+    M : Map'Class renames Map'Class (Using.For_The_Container.all);
     Status : Boolean;
   begin
     Reset (Using);
     while not Is_Done (Using) loop
-      Apply (Item_At (Map_Iter.M.all,
-                      Map_Iter.Bucket_Index,
-                      Map_Iter.Index).all,
-             Value_At (Map_Iter.M.all,
-                       Map_Iter.Bucket_Index,
-                       Map_Iter.Index).all,
+      Apply (Item_At (M,
+                      Using.Bucket_Index,
+                      Using.Index).all,
+             Value_At (M,
+                       Using.Bucket_Index,
+                       Using.Index).all,
              Status);
       exit when not Status;
       Next (Using);

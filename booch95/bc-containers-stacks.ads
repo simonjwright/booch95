@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -69,14 +69,11 @@ private
   procedure Add (S : in out Stack; Elem : Item);
   procedure Remove (S : in out Stack; From : Positive);
 
-  type Stack_Iterator (S : access Stack'Class)
-  is new Actual_Iterator (S) with record
+  type Stack_Iterator is new Iterator with record
     Index : Natural;
   end record;
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
-
-  procedure Initialize (It : in out Stack_Iterator);
 
   procedure Reset (It : in out Stack_Iterator);
 
@@ -86,7 +83,7 @@ private
 
   function Current_Item (It : Stack_Iterator) return Item;
 
-  function Current_Item (It : Stack_Iterator) return Item_Ptr;
+  function Current_Item_Ptr (It : Stack_Iterator) return Item_Ptr;
 
   procedure Delete_Item_At (It : Stack_Iterator);
 

@@ -32,6 +32,8 @@ package BC.Containers.Queues.Ordered.Unbounded is
   -- This Queue exhibits unlimited growth and collapsing, limited only by
   -- available memory.
 
+  function Null_Container return Unbounded_Ordered_Queue;
+
   procedure Clear (Q : in out Unbounded_Ordered_Queue);
   -- Empty the queue of all items.
 
@@ -63,7 +65,7 @@ package BC.Containers.Queues.Ordered.Unbounded is
   -- items; return False otherwise.
 
   function New_Iterator
-     (For_The_Queue : Unbounded_Ordered_Queue) return Iterator;
+     (For_The_Queue : Unbounded_Ordered_Queue) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Queue.
 
 private

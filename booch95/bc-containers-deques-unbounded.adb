@@ -26,9 +26,9 @@ package body BC.Containers.Deques.Unbounded is
     Unbounded_Deque_Nodes.Clear (D.Rep.all);
   end Clear;
 
-  procedure Append (D : in out Unbounded_Deque; 
-		    Elem : Item;
-		    Location : Deque_End := Back) is
+  procedure Append (D : in out Unbounded_Deque;
+                    Elem : Item;
+                    Location : Deque_End := Back) is
   begin
     if Location = Back then
       Unbounded_Deque_Nodes.Append (D.Rep.all, Elem);
@@ -43,7 +43,7 @@ package body BC.Containers.Deques.Unbounded is
       Unbounded_Deque_Nodes.Remove (D.Rep.all, 1);
     else
       Unbounded_Deque_Nodes.Remove (D.Rep.all,
-				    Unbounded_Deque_Nodes.Length (D.Rep.all));
+                                    Unbounded_Deque_Nodes.Length (D.Rep.all));
     end if;
   end Pop;
 
@@ -86,11 +86,14 @@ package body BC.Containers.Deques.Unbounded is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Unbounded_Deque);
 
-  function New_Iterator (For_The_Deque : Unbounded_Deque) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Deque'Address);
+  function New_Iterator
+     (For_The_Deque : Unbounded_Deque) return Iterator'Class is
+    Result : Deque_Iterator;
   begin
-    return Iterator (SP.Create (new Deque_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Deque'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   function Item_At (D : Unbounded_Deque; Index : Positive) return Item_Ptr is
@@ -112,5 +115,12 @@ package body BC.Containers.Deques.Unbounded is
   begin
     Unbounded_Deque_Nodes.Free (D.Rep); -- does a Clear()
   end Finalize;
+
+  Empty_Container : Unbounded_Deque;
+
+  function Null_Container return Unbounded_Deque is
+  begin
+    return Empty_Container;
+  end Null_Container;
 
 end BC.Containers.Deques.Unbounded;

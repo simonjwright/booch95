@@ -49,6 +49,8 @@ package BC.Containers.Bags.Dynamic is
 
   type Dynamic_Bag is new Bag with private;
 
+  function Null_Container return Dynamic_Bag;
+
   function Create (Size : Positive) return Dynamic_Bag;
   -- Creates a new Dynamic Bag each of whose buckets is preallocated for
   -- 'Size' elements
@@ -91,7 +93,7 @@ package BC.Containers.Bags.Dynamic is
   function Chunk_Size (B : Dynamic_Bag) return Positive;
   -- Returns the Chunk_Size.
 
-  function New_Iterator (For_The_Bag : Dynamic_Bag) return Iterator;
+  function New_Iterator (For_The_Bag : Dynamic_Bag) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Bag.
 
 private
@@ -142,8 +144,5 @@ private
 
   function Value_At
      (B : Dynamic_Bag; Bucket, Index : Positive) return Positive;
-
-  type Dynamic_Bag_Iterator (U : access Dynamic_Bag'Class)
-  is new Bag_Iterator (U) with null record;
 
 end BC.Containers.Bags.Dynamic;

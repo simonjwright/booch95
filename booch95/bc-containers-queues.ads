@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -70,14 +70,11 @@ private
 
   type Queue is abstract new Container with null record;
 
-  type Queue_Iterator (Q : access Queue'Class)
-  is new Actual_Iterator (Q) with record
+  type Queue_Iterator is new Iterator with record
     Index : Natural;
   end record;
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
-
-  procedure Initialize (It : in out Queue_Iterator);
 
   procedure Reset (It : in out Queue_Iterator);
 
@@ -87,7 +84,7 @@ private
 
   function Current_Item (It : Queue_Iterator) return Item;
 
-  function Current_Item (It : Queue_Iterator) return Item_Ptr;
+  function Current_Item_Ptr (It : Queue_Iterator) return Item_Ptr;
 
   procedure Delete_Item_At (It : Queue_Iterator);
 

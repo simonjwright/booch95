@@ -34,6 +34,8 @@ package BC.Containers.Queues.Dynamic is
   -- grows in a linear fashion (based on Chunk_Size).  There is currently
   -- no support for linear collapsing of the Queue.
 
+  function Null_Container return Dynamic_Queue;
+
   function Create (Size : Positive) return Dynamic_Queue;
   -- Creates a new Dynamic Queue that is preallocated for 'Size' elements
 
@@ -76,7 +78,7 @@ package BC.Containers.Queues.Dynamic is
   function Chunk_Size (Q : Dynamic_Queue) return Natural;
   -- Returns the Chunk_Size
 
-  function New_Iterator (For_The_Queue : Dynamic_Queue) return Iterator;
+  function New_Iterator (For_The_Queue : Dynamic_Queue) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Queue.
 
 private

@@ -45,6 +45,8 @@ package BC.Containers.Maps.Bounded is
 
   type Bounded_Map is new Map with private;
 
+  function Null_Container return Bounded_Map;
+
   procedure Clear (M : in out Bounded_Map);
   -- Empty the map of all item/value pairs. The cached item/value pair is
   -- cleared.
@@ -87,7 +89,7 @@ package BC.Containers.Maps.Bounded is
   -- cached item/value pair is used to accelerate the search; if there is a
   -- cache hit, the time complexity of this operation is O(1).
 
-  function New_Iterator (For_The_Map : Bounded_Map) return Iterator;
+  function New_Iterator (For_The_Map : Bounded_Map) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Map.
 
 private
@@ -131,8 +133,5 @@ private
 
   function Value_At
      (M : Bounded_Map; Bucket, Index : Positive) return Value_Ptr;
-
-  type Bounded_Map_Iterator (B : access Bounded_Map'Class)
-  is new Map_Iterator (B) with null record;
 
 end BC.Containers.Maps.Bounded;
