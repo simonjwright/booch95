@@ -25,7 +25,7 @@ package body BC.Support.Unbounded is
 
   package BSE renames BC.Support.Exceptions;
   procedure Assert
-  is new BSE.Assert ("BC.Support.Dynamic");
+  is new BSE.Assert ("BC.Support.Unbounded");
 
   -- We can't take 'Access of components of constant (in parameter)
   -- objects; but we need to be able to do this so that we can update the
@@ -40,8 +40,8 @@ package body BC.Support.Unbounded is
   procedure Delete_Unb_Node is new
      Ada.Unchecked_Deallocation (Unb_Node, Unb_Node_Ref);
 
-  function Create (From : Unb_Node) return Unb_Node is
-    Obj : Unb_Node := From;
+  function Create (From : Unb_Node) return Unb_Node_Ref is
+    Obj : Unb_Node_Ref := new Unb_Node'(From);
     Tmp : Nodes.Node_Ref := Obj.Last;
   begin
     if Tmp /= null then
@@ -333,6 +333,12 @@ package body BC.Support.Unbounded is
     Ptr : Nodes.Node_Ref := Obj.Rep;
     U : Allow_Access.Object_Pointer := Allow_Access.To_Pointer (Obj'Address);
   begin
+    -- XXX the C++ (which indexes from 0) nevertheless checks "start <= count"
+    -- We have to special-case the empty Node; the C++ indexes from 0, so
+    -- it can legally start with index 0 when the Node is empty.
+    if Obj.Size = 0 then
+      return 0;
+    end if;
     Assert (Start <= Obj.Size,
             BC.Range_Error'Identity,
             "Location",
@@ -340,7 +346,7 @@ package body BC.Support.Unbounded is
     if (Start = Obj.Cache_Index) and then (Elem = Obj.Cache.Element) then
       return Obj.Cache_Index;
     end if;
-    for I in 1..Start-1 loop
+    for I in 1 .. Start - 1 loop
       Ptr := Ptr.Next; -- advance to Start point
     end loop;
     for I in Start..Obj.Size loop
