@@ -44,20 +44,26 @@ procedure Time_Lists is
     Result := L_Application (S_Iter'Access);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
-       (".. single list took" & Taken'Img & " sec, sum" & Total'Img);
+       (".. single list took"
+        & Duration'Image (Taken)
+        & " sec, sum"
+        & Integer'Image (Total));
 
     Total := 0;
     Start := Ada.Calendar.Clock;
     Result := L_Application (D_Iter'Access);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
-       (".. double list took" & Taken'Img & " sec, sum" & Total'Img);
+       (".. double list took"
+        & Duration'Image (Taken)
+        & " sec, sum"
+        & Integer'Image (Total));
 
   end Iterate;
   procedure Time (N : Integer) is
   begin
     Ada.Text_Io.Put_Line
-       ("timing iteration over containers of length" & N'Img);
+       ("timing iteration over containers of length" & Integer'Image (N));
     Lists_For_Timing.S.Clear (S);
     Lists_For_Timing.D.Clear (D);
     for I in 1 .. N loop
