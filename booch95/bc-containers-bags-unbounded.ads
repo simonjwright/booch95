@@ -76,7 +76,7 @@ package BC.Containers.Bags.Unbounded is
   function Is_Member (B : Unbounded_Bag; I : Item) return Boolean;
   -- Return True if and only if the item exists in the bag.
 
-  function New_Iterator (For_The_Bag : Unbounded_Bag) return Iterator;
+  function New_Iterator (For_The_Bag : Unbounded_Bag) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Bag.
 
 private
@@ -127,8 +127,5 @@ private
 
   function Value_At
      (B : Unbounded_Bag; Bucket, Index : Positive) return Positive;
-
-  type Unbounded_Bag_Iterator (U : access Unbounded_Bag'Class)
-  is new Bag_Iterator (U) with null record;
 
 end BC.Containers.Bags.Unbounded;
