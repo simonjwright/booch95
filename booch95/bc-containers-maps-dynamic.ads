@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -114,22 +114,39 @@ private
                                          Item_Ptr => Key_Ptr,
                                          Storage => Storage,
                                          Initial_Size => Initial_Size);
-   use KC;
    package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
       Item_Ptr => Key_Ptr,
-      "=" => Maps."=",
-      Item_Container => KC.Dyn_Node);
+      Hash => Hash,
+      Item_Container => KC.Dyn_Node,
+      Clear => KC.Clear,
+      Insert => KC.Insert,
+      Append => KC.Append,
+      Remove => KC.Remove,
+      Replace => KC.Replace,
+      Length => KC.Length,
+      Item_At => KC.Item_At,
+      Access_Item_At => KC.Item_At,
+      Location => KC.Location);
 
    package IC is new BC.Support.Dynamic (Item => Item,
                                          Item_Ptr => Item_Ptr,
                                          Storage => Storage,
                                          Initial_Size => Initial_Size);
-   use IC;
    package Items is new BC.Support.Hash_Tables.Value_Signature
      (Value => Item,
       Value_Ptr => Item_Ptr,
-      Value_Container => IC.Dyn_Node);
+      Eq => Containers."=",
+      Value_Container => IC.Dyn_Node,
+      Clear => IC.Clear,
+      Insert => IC.Insert,
+      Append => IC.Append,
+      Remove => IC.Remove,
+      Replace => IC.Replace,
+      Length => IC.Length,
+      Item_At => IC.Item_At,
+      Access_Item_At => IC.Item_At,
+      Location => IC.Location);
 
    package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Keys,
