@@ -104,8 +104,8 @@ package BC.Graphs is
 
    procedure Destroy_Arc (G : in out Abstract_Graph;
                           A : in out Abstract_Arc'Class);
-   --  Destroy the given arc and any associated vertices. If the arc
-   --  has no other aliases, eliminate it from the graph.
+   --  Destroy the given arc. If the arc has no other aliases,
+   --  eliminate it from the graph.
 
    function Number_Of_Vertices (G : Abstract_Graph) return Natural;
    --  Return the number of vertices in the graph.
