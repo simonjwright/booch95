@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,7 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Containers;
 with BC.Containers.Queues;
@@ -26,17 +26,17 @@ with Global_Heap;
 
 package Queue_Test_Support is
 
-  package Containers is new BC.Containers (Item => Character);
+   package Containers is new BC.Containers (Item => Character);
 
-  package Queues is new Containers.Queues;
+   package Queues is new Containers.Queues;
 
-  package QB is new Queues.Bounded (Maximum_Size => 100);
+   package QB is new Queues.Bounded (Maximum_Size => 100);
 
-  package QD is new Queues.Dynamic (Initial_Size => 10,
-                                    Storage_Manager => Global_Heap.Pool,
-                                    Storage => Global_Heap.Storage);
+   package QD is new Queues.Dynamic (Initial_Size => 10,
+                                     Storage_Manager => Global_Heap.Pool,
+                                     Storage => Global_Heap.Storage);
 
-  package QU is new Queues.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                      Storage => Global_Heap.Storage);
+   package QU is new Queues.Unbounded (Storage_Manager => Global_Heap.Pool,
+                                       Storage => Global_Heap.Storage);
 
 end Queue_Test_Support;
