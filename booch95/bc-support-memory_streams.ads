@@ -1,4 +1,4 @@
---  Copyright 2002-2003 Simon Wright <simon@pushface.org>
+--  Copyright 2002-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -42,22 +42,28 @@ package BC.Support.Memory_Streams is
 
    procedure Write_Contents (To : access Ada.Streams.Root_Stream_Type'Class;
                              Stream : Stream_Type);
-   --  Writes the contents of Stream directly to the stream To, so
-   --  that it can be read by a 'Input operation on To.
+   --  Writes the contents of Stream directly to the stream To.
+   --
+   --  If To is itself a memory Stream_Type, this will effectively
+   --  concatenate Stream to To.
 
    procedure Read_Contents (From : access Ada.Streams.Root_Stream_Type'Class;
                             Stream : in out Stream_Type);
-   --  Reads the contents of Stream directly from the stream From, so
-   --  that it can be read by a 'Input operation on Stream.
+   --  Fills Stream directly from the stream From.
+   --
+   --  Reads the lesser of the Capacity of Stream and the "length" of
+   --  From.
+   --
    --  The previous contents of Stream are lost.
 
    procedure Set_Contents (From : Ada.Streams.Stream_Element_Array;
                            Stream : in out Stream_Type);
-   --  Sets the contents of Stream to be the contents of array From,
-   --  so that values can be read by a 'Input operation on
-   --  Stream. Raises Ada.IO_Exceptions.End_Error if Stream is not
-   --  large enough to contain From. The previous contents of Stream
-   --  are lost.
+   --  Sets the contents of Stream to be the contents of array From.
+   --
+   --  Raises Ada.IO_Exceptions.End_Error if Stream is not
+   --  large enough to contain From.
+   --
+   --  The previous contents of Stream are lost.
    --
    --  Aimed at use with datagram sockets, where you have to take the
    --  contents in one bite and can't know in advance how long the
