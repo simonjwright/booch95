@@ -52,10 +52,10 @@ package BC.Containers.Trees.Binary is
   procedure Parent (Obj : in out Binary_Tree);
   procedure Set_Item (Obj : in out Binary_Tree; Elem : in Item);
 
-  function Has_Children (Obj : in Binary_Tree) return boolean;
-  function Is_Null (Obj : in Binary_Tree) return boolean;
-  function Is_Shared (Obj : in Binary_Tree) return boolean;
-  function Is_Root (Obj : in Binary_Tree) return boolean;
+  function Has_Children (Obj : in Binary_Tree) return Boolean;
+  function Is_Null (Obj : in Binary_Tree) return Boolean;
+  function Is_Shared (Obj : in Binary_Tree) return Boolean;
+  function Is_Root (Obj : in Binary_Tree) return Boolean;
   function Item_At (Obj : in Binary_Tree) return Item;
 
 private
