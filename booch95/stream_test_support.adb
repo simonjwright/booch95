@@ -20,6 +20,18 @@
 package body Stream_Test_Support is
 
 
+   function Image (B : Base_Class_P) return String is
+   begin
+      return Image (B.all);
+   end Image;
+
+
+   function Eq (L, R : Base_Class_P) return Boolean is
+   begin
+      return L.all = R.all;
+   end Eq;
+
+
    procedure Write_Base_Class_P
      (Stream : access Ada.Streams.Root_Stream_Type'Class;
       Obj : Base_Class_P) is
@@ -35,6 +47,18 @@ package body Stream_Test_Support is
    begin
       Obj := new Base'Class'(Result);
    end Read_Base_Class_P;
+
+
+   function Image (B : Brother) return String is
+   begin
+      return "Brother'(" & Integer'Image (B.I) & ")";
+   end Image;
+
+
+   function Image (S : Sister) return String is
+   begin
+      return "Sister'(" & Boolean'Image (S.B) & ")";
+   end Image;
 
 
 end Stream_Test_Support;
