@@ -18,10 +18,13 @@
 -- $Id$
 
 with BC.Support.Nodes;
+with System.Storage_Pools;
 
 generic
   type Item is private;
   type Item_Ptr is access all Item;
+  type Storage_Manager(<>) is new System.Storage_Pools.Root_Storage_Pool with private;
+  Storage : in out Storage_Manager;
 package BC.Support.Dynamic is
 
   type Dyn_Node is private;
@@ -96,10 +99,11 @@ private
   type Dyn_Arr is array (Positive range <>) of aliased Item;
 
   type Dyn_Arr_Ref is access all Dyn_Arr;
+  for Dyn_Arr_Ref'Storage_Pool use Storage;
 
   type Dyn_Node is record
-    Ref : Dyn_Arr_Ref;
-    Size : Natural := 0;
+    Ref        : Dyn_Arr_Ref;
+    Size       : Natural := 0;
     Chunk_Size : Natural := 10;
   end record;
 
