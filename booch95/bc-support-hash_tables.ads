@@ -17,8 +17,6 @@
 
 -- $Id$
 
-with Ada.Finalization;
-
 package BC.Support.Hash_Tables is
 
   pragma Elaborate_Body;
@@ -43,12 +41,10 @@ package BC.Support.Hash_Tables is
     with function Hash (V : Item) return Natural is <>;
 
     type Item_Container is private;
-    type Item_Container_Ptr is access all Item_Container;
 
     -- The <> subprograms for Items are provided by one of
     -- BC.Support.Bounded, Dynamic or Unbounded as appropriate.
 
-    with function Create (From : Item_Container) return Item_Container_Ptr is <>;
     with procedure Clear (C : in out Item_Container) is <>;
     with procedure Insert (C : in out Item_Container; I : Item) is <>;
     with procedure Append (C : in out Item_Container; I : Item) is <>;
@@ -60,7 +56,6 @@ package BC.Support.Hash_Tables is
        (C : Item_Container; Index : Positive) return Item is <>;
     with function Location
        (C : Item_Container; I : Item; Start : Positive) return Natural is <>;
-    with procedure Free (C : in out Item_Container_Ptr) is <>;
 
   package Item_Signature is end Item_Signature;
 
@@ -72,13 +67,10 @@ package BC.Support.Hash_Tables is
     with function "=" (L, R : Value) return Boolean is <>;
 
     type Value_Container is private;
-    type Value_Container_Ptr is access all Value_Container;
 
     -- The <> subprograms for Values are provided by one of
     -- BC.Support.Bounded, Dynamic or Unbounded as appropriate.
 
-    with function Create
-       (From : Value_Container) return Value_Container_Ptr is <>;
     with procedure Clear (C : in out Value_Container) is <>;
     with procedure Insert (C : in out Value_Container; V : Value) is <>;
     with procedure Append (C : in out Value_Container; V : Value) is <>;
@@ -92,7 +84,6 @@ package BC.Support.Hash_Tables is
        (C : Value_Container; Index : Positive) return Value_Ptr is <>;
     with function Location
        (C : Value_Container; V : Value; Start : Positive) return Natural is <>;
-    with procedure Free (C : in out Value_Container_Ptr) is <>;
 
   package Value_Signature is end Value_Signature;
 
@@ -120,7 +111,14 @@ package BC.Support.Hash_Tables is
     -- The parameter Buckets signifies the static number of buckets in the
     -- hash table.
 
-    type Table is new Ada.Finalization.Controlled with private;
+    type Item_Array is array (1 .. Buckets) of Items.Item_Container;
+    type Value_Array is array (1 .. Buckets) of Values.Value_Container;
+
+    type Table is record
+      Items : Item_Array;
+      Values : Value_Array;
+      Size : Natural := 0;
+    end record;
 
     function "=" (L, R : Table) return Boolean;
 
@@ -158,27 +156,6 @@ package BC.Support.Hash_Tables is
     -- If the item does not have a binding in the hash table, raise
     -- BC.Not_Found; otherwise, return a pointer to the value corresponding
     -- to this item.
-
-    function Item_Bucket
-       (T : Table; Bucket : Positive) return Items.Item_Container_Ptr;
-
-    function Value_Bucket
-       (T : Table; Bucket : Positive) return Values.Value_Container_Ptr;
-
-  private
-
-    type Item_Array is array (1 .. Buckets) of Items.Item_Container_Ptr;
-    type Value_Array is array (1 .. Buckets) of Values.Value_Container_Ptr;
-
-    type Table is new Ada.Finalization.Controlled with record
-      Items : Item_Array;
-      Values : Value_Array;
-      Size : Natural := 0;
-    end record;
-
-    procedure Initialize (T : in out Table);
-    procedure Adjust (T : in out Table);
-    procedure Finalize (T : in out Table);
 
   end Tables;
 
