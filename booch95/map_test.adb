@@ -42,6 +42,7 @@ procedure Map_Test is
    procedure Test_Passive_Iterator (M : in out Abstract_Map'Class);
    procedure Test_Passive_Modifying_Iterator (M : in out Abstract_Map'Class);
    procedure Test_Simple_Active_Iterator (M : in out Abstract_Map'Class);
+   procedure Test_Iterator_Deletion (M : in out Abstract_Map'Class);
 
    package Iteration_Check is
       type Result is record
@@ -280,6 +281,43 @@ procedure Map_Test is
                              "I04: passive modifying map iterator");
    end Test_Passive_Modifying_Iterator;
 
+   procedure Test_Iterator_Deletion (M : in out Abstract_Map'Class) is
+      Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
+   begin
+      Iteration_Check.Reset;
+      Clear (M);
+      Maps.Bind (M, '1', Gitems (1)'Access);
+      Maps.Bind (M, '2', Gitems (2)'Access);
+      Maps.Bind (M, '3', Gitems (3)'Access);
+      Maps.Bind (M, '4', Gitems (4)'Access);
+      Maps.Bind (M, '5', Gitems (5)'Access);
+      Maps.Bind (M, '6', Gitems (6)'Access);
+      Maps.Bind (M, '7', Gitems (7)'Access);
+      Reset (Iter);
+      while not Is_Done (Iter) loop
+         case Maps.Current_Key (Iter) is
+            when '1' | '3' | '5' | '7' =>
+               Next (Iter);
+            when others =>
+               Delete_Item_At (Iter);
+         end case;
+      end loop;
+      begin
+         Delete_Item_At (Iter);
+         Assertion (False, "** IS01: Deletion succeeded");
+      exception
+         when BC.Not_Found => null;
+         when others =>
+            Assertion (False, "** IS02: Unexpected exception");
+      end;
+      Assertion (Maps.Extent (M) = 4,
+                 "IS03: incorrect length" & Integer'Image (Maps.Extent (M)));
+      Assertion (Maps.Is_Bound (M, '1'), "IS04a : incorrect membership");
+      Assertion (Maps.Is_Bound (M, '3'), "IS04b : incorrect membership");
+      Assertion (Maps.Is_Bound (M, '5'), "IS04c : incorrect membership");
+      Assertion (Maps.Is_Bound (M, '7'), "IS04d : incorrect membership");
+   end Test_Iterator_Deletion;
+
    type B is record
       Map_B_Pu1 : MB.Map;
       Map_B_Pu2 : MB.Map;
@@ -335,6 +373,26 @@ begin
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (The_U.Map_U_Pu1);
    Test_Passive_Modifying_Iterator (The_U.Map_U_Pu1);
+
+   Put_Line ("...Map Iterator Deletion");
+   Put_Line ("   Bounded:");
+   declare
+      M : MB.Map;
+   begin
+      Test_Iterator_Deletion (M);
+   end;
+   Put_Line ("   Dynamic:");
+   declare
+      M : MD.Map;
+   begin
+      Test_Iterator_Deletion (M);
+   end;
+   Put_Line ("   Unbounded:");
+   declare
+      M : MU.Map;
+   begin
+      Test_Iterator_Deletion (M);
+   end;
 
    Assertion (MB.Is_Bound (The_B.Map_B_Pu1, '6'),
               "** M01: Map binding is not correct");
