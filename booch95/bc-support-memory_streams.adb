@@ -93,6 +93,18 @@ package body BC.Support.Memory_Streams is
    end Write_Contents;
 
 
+   procedure Read_Contents (From : access Ada.Streams.Root_Stream_Type'Class;
+                            Stream : in out Stream_Type) is
+      subtype This_Array is
+        Ada.Streams.Stream_Element_Array (Stream.Buffer'Range);
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      This_Array'Read (From, Stream.Buffer);
+      Stream.Next_Write := Stream.Buffer'Last + 1;
+      Stream.Next_Read := 1;
+   end Read_Contents;
+
+
    procedure Reset (Stream : out Stream_Type) is
    begin
       Stream.Next_Write := 1;
