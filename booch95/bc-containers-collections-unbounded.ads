@@ -30,6 +30,8 @@ package BC.Containers.Collections.Unbounded is
 
   type Unbounded_Collection is new Collection with private;
 
+  function Null_Container return Unbounded_Collection;
+
   function "=" (Left, Right : in Unbounded_Collection) return Boolean;
 
   procedure Clear (C : in out Unbounded_Collection);

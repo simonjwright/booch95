@@ -105,4 +105,11 @@ package body BC.Containers.Stacks.Unbounded is
     Unbounded_Stack_Nodes.Free (S.Rep);
   end Finalize;
 
+  Empty_Container : Unbounded_Stack;
+
+  function Null_Container return Unbounded_Stack is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Stacks.Unbounded;

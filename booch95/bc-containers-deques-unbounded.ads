@@ -32,6 +32,8 @@ package BC.Containers.Deques.Unbounded is
   -- This Deque exhibits unlimited growth and collapsing, limited only by
   -- available memory.  Assignment is "deep".
 
+  function Null_Container return Unbounded_Deque;
+
   procedure Clear (D : in out Unbounded_Deque);
   -- Empty the deque of all items.
 

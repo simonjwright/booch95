@@ -135,4 +135,11 @@ package body BC.Containers.Maps.Dynamic is
     return VC.Item_At (Tables.Value_Bucket (M.Rep, Bucket).all, Index);
   end Value_At;
 
+  Empty_Container : Dynamic_Map;
+
+  function Null_Container return Dynamic_Map is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Maps.Dynamic;

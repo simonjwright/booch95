@@ -164,4 +164,11 @@ package body BC.Containers.Bags.Dynamic is
     return VC.Item_At (Tables.Value_Bucket (B.Rep, Bucket).all, Index);
   end Value_At;
 
+  Empty_Container : Dynamic_Bag;
+
+  function Null_Container return Dynamic_Bag is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Bags.Dynamic;

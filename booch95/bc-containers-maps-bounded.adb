@@ -113,4 +113,11 @@ package body BC.Containers.Maps.Bounded is
     return VC.Item_At (Tables.Value_Bucket (M.Rep, Bucket).all, Index);
   end Value_At;
 
+  Empty_Container : Bounded_Map;
+
+  function Null_Container return Bounded_Map is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Maps.Bounded;

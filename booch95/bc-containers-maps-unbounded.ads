@@ -48,6 +48,8 @@ package BC.Containers.Maps.Unbounded is
 
   type Unbounded_Map is new Map with private;
 
+  function Null_Container return Unbounded_Map;
+
   function "=" (L, R : Unbounded_Map) return Boolean;
   -- Return True if the two Maps contain the same items bound to the
   -- same values.

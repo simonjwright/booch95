@@ -116,4 +116,11 @@ package body BC.Containers.Deques.Unbounded is
     Unbounded_Deque_Nodes.Free (D.Rep); -- does a Clear()
   end Finalize;
 
+  Empty_Container : Unbounded_Deque;
+
+  function Null_Container return Unbounded_Deque is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Deques.Unbounded;

@@ -32,6 +32,8 @@ package BC.Containers.Lists.Double is
 
   type Double_List is new Container with private;
 
+  function Null_Container return Double_List;
+
   function "=" (L, R : Double_List) return Boolean;
   -- Return True if and only if both lists are null or structurally share
   -- the same list.

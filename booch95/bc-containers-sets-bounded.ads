@@ -44,6 +44,8 @@ package BC.Containers.Sets.Bounded is
 
   type Bounded_Set is new Set with private;
 
+  function Null_Container return Bounded_Set;
+
   procedure Clear (S : in out Bounded_Set);
   -- Empty the set of all items.
 

@@ -45,6 +45,8 @@ package BC.Containers.Maps.Bounded is
 
   type Bounded_Map is new Map with private;
 
+  function Null_Container return Bounded_Map;
+
   procedure Clear (M : in out Bounded_Map);
   -- Empty the map of all item/value pairs. The cached item/value pair is
   -- cleared.

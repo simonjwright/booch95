@@ -27,6 +27,8 @@ package BC.Containers.Queues.Bounded is
 
   type Bounded_Queue is new Queue with private;
 
+  function Null_Container return Bounded_Queue;
+
   procedure Clear (Q : in out Bounded_Queue);
   -- Empty the queue of all items.
 

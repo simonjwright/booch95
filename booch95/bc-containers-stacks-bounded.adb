@@ -100,4 +100,11 @@ package body BC.Containers.Stacks.Bounded is
     Free (S.Rep);
   end Finalize;
 
+  Empty_Container : Bounded_Stack;
+
+  function Null_Container return Bounded_Stack is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Stacks.Bounded;

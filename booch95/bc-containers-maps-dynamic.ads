@@ -48,6 +48,8 @@ package BC.Containers.Maps.Dynamic is
 
   type Dynamic_Map is new Map with private;
 
+  function Null_Container return Dynamic_Map;
+
   function Create (Size : Positive) return Dynamic_Map;
   -- Creates a new Dynamic Map each of whose buckets is preallocated for
   -- 'Size' elements

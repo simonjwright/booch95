@@ -167,4 +167,11 @@ package body BC.Containers.Collections.Ordered.Unbounded is
     Unbounded_Ordered_Collection_Nodes.Free (C.Rep);
   end Finalize;
 
+  Empty_Container : Unbounded_Ordered_Collection;
+
+  function Null_Container return Unbounded_Ordered_Collection is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Collections.Ordered.Unbounded;
