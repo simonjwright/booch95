@@ -20,7 +20,7 @@
 with Ada.Finalization;
 
 package BC.Support.Hash_Tables is
-  
+
   pragma Elaborate_Body;
 
 
@@ -35,19 +35,19 @@ package BC.Support.Hash_Tables is
   -- instantiations of the bounded, dynamic, and unbounded support
   -- packages defined for this library.
 
-  
+
   generic
 
     type Item is private;
     with function "=" (L, R : Item) return Boolean is <>;
     with function Hash (V : Item) return Positive is <>;
-    
+
     type Item_Container is private;
     type Item_Container_Ptr is access all Item_Container;
-    
+
     -- The <> subprograms for Items are provided by one of
     -- BC.Support.Bounded, Dynamic or Unbounded as appropriate.
-    
+
     with function Create (From : Item_Container) return Item_Container_Ptr is <>;
     with procedure Clear (C : in out Item_Container) is <>;
     with procedure Insert (C : in out Item_Container; I : Item) is <>;
@@ -63,8 +63,8 @@ package BC.Support.Hash_Tables is
     with procedure Free (C : in out Item_Container_Ptr) is <>;
 
   package Item_Signature is end Item_Signature;
-  
-  
+
+
   generic
 
     type Value is private;
@@ -76,7 +76,7 @@ package BC.Support.Hash_Tables is
 
     -- The <> subprograms for Values are provided by one of
     -- BC.Support.Bounded, Dynamic or Unbounded as appropriate.
-    
+
     with function Create
        (From : Value_Container) return Value_Container_Ptr is <>;
     with procedure Clear (C : in out Value_Container) is <>;
@@ -98,11 +98,11 @@ package BC.Support.Hash_Tables is
 
 
   generic
-    
+
     with package Items is new Item_Signature (<>);
     with package Values is new Value_Signature (<>);
     Buckets : Natural;
-    
+
   package Tables is
 
     -- The type Table represents an open hash table whose buckets may be
@@ -112,69 +112,70 @@ package BC.Support.Hash_Tables is
     -- first generates a hash value upon the item to select a specific
     -- bucket, and then the given operation is performed upon the selected
     -- container.
-    
+
     -- This is a low-level abstraction that specifies no policies for the
     -- order in which items may be added and removed from the container. This
     -- class is not intended to be subclassed.
-    
+
     -- The parameter Buckets signifies the static number of buckets in the
     -- hash table.
-    
+
     type Table is new Ada.Finalization.Controlled with private;
 
     function "=" (L, R : Table) return Boolean;
-    
+
     procedure Clear (T : in out Table);
     -- Empty the hash table of all item/value pairs.
-    
+
     procedure Bind (T : in out Table; I : Items.Item; V : Values.Value);
     -- Generate a hash value for the item to select a bucket. If the item
     -- already exists in that bucket, raise BC.Duplicate; otherwise, insert
     -- the Item/value pair in the selected container.
-    
+
     procedure Rebind (T : in out Table; I : Items.Item; V : Values.Value);
     -- Generate a hash value for the item to select a bucket. If the item
     -- already exists in that bucket, change the item's corresponding value;
     -- otherwise, raise BC.Not_Found.
-    
+
     procedure Unbind (T : in out Table; I : Items.Item);
     -- Generate a hash value for the item to select a bucket. If the item
     -- already exists in that bucket, remove the item/value pair; otherwise,
     -- BC.Not_Found.
-    
+
     function Extent (T : Table) return Natural;
     -- Return the number of item/value pairs in the hash table.
-    
+
     function Is_Bound (T : Table; I : Items.Item) return Boolean;
     -- Return True if the item has a binding in the hash table; otherwise,
     -- return False.
-    
+
     function Value_Of (T : Table; I : Items.Item) return Values.Value;
     -- If the item does not have a binding in the hash table, raise
     -- BC.Not_Found; otherwise, return the value corresponding to this item.
 
-    function Value_Of (T : Table; I : Items.Item) return Values.Value_Ptr;
+    function Access_Value_Of (T : Table;
+                              I : Items.Item) return Values.Value_Ptr;
     -- If the item does not have a binding in the hash table, raise
     -- BC.Not_Found; otherwise, return a pointer to the value corresponding
     -- to this item.
-    
+
     function Item_Bucket
        (T : Table; Bucket : Positive) return Items.Item_Container_Ptr;
-    
+
     function Value_Bucket
        (T : Table; Bucket : Positive) return Values.Value_Container_Ptr;
-    
+
   private
-    
+
     type Item_Array is array (1 .. Buckets) of Items.Item_Container_Ptr;
     type Value_Array is array (1 .. Buckets) of Values.Value_Container_Ptr;
-    
+
     type Table is new Ada.Finalization.Controlled with record
       Items : Item_Array;
       Values : Value_Array;
       Size : Natural := 0;
     end record;
-    
+
     procedure Initialize (T : in out Table);
     procedure Adjust (T : in out Table);
     procedure Finalize (T : in out Table);
