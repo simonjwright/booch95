@@ -80,7 +80,8 @@ package body BC.Support.High_Resolution_Time is
            "movl %%edx, %1",
          Outputs => (Interfaces.Unsigned_32'Asm_Output ("=g", Lower),
                      Interfaces.Unsigned_32'Asm_Output ("=g", Upper)),
-         Clobber => "eax, edx");
+         Clobber => "eax, edx",
+         Volatile => True);
       Results := (Low => Lower, High => Upper);
       return Result;
    end Clock;
