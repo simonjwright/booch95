@@ -61,6 +61,10 @@ TESTABLE += stack_test
 stack_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+TESTABLE += set_test
+set_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
 TESTABLE += tree_test
 tree_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
