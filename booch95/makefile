@@ -70,6 +70,7 @@ ADA_SOURCE += \
 bc-containers-bags-bounded.ad[bs] \
 bc-containers-bags-dynamic.ad[bs] \
 bc-containers-bags-unbounded.ad[bs] \
+bc-containers-bags-unmanaged.ad[bs] \
 bc-containers-bags.ad[bs]
 TESTABLE += bag_test
 TEST_SRC += bag_test.ad[bs] bag_test_support.ad[bs]
