@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -29,8 +29,12 @@ with Ada.Exceptions;
 
 package body BC.Support.Hash_Tables is
 
-
    package body Tables is
+
+
+      function "=" (L, R : Items.Item) return Boolean is abstract;
+      pragma Warnings (Off, "=");
+      --  Make sure we don't use any old equality.
 
 
       function "=" (L, R : Table) return Boolean is
@@ -42,17 +46,11 @@ package body BC.Support.Hash_Tables is
                   declare
                      This_Item : Items.Item renames
                        Items.Item_At (L.Items (B), Index);
-                     function "=" (L, R : Values.Value) return Boolean
-                       renames Values."=";
-                     --  There seems to be a problem wrt the 'function "="
-                     --  (L, R : Values.Value) return Boolean"'. This version
-                     --  works with GNAT 3.12, OA & APEX. Other versions (eg,
-                     --  'use type Values.Value', 'Values."="') cause
-                     --  problems with one or the other.
                   begin
                      if not Is_Bound (R, This_Item)
-                       or else not (Values.Item_At (L.Values (B), Index)
-                                    = Value_Of (R, This_Item)) then
+                       or else not Values.Eq
+                                    (Values.Item_At (L.Values (B), Index),
+                                     Value_Of (R, This_Item)) then
                         return False;
                      end if;
                   end;
@@ -180,7 +178,7 @@ package body BC.Support.Hash_Tables is
          if Bucket > T.Number_Of_Buckets then
             raise BC.Not_Found;
          end if;
-         return Items.Item_At (T.Items (Bucket), Index);
+         return Items.Access_Item_At (T.Items (Bucket), Index);
       end Current_Item_Ptr;
 
 
@@ -191,7 +189,7 @@ package body BC.Support.Hash_Tables is
          if Bucket > T.Number_Of_Buckets then
             raise BC.Not_Found;
          end if;
-         return Values.Item_At (T.Values (Bucket), Index);
+         return Values.Access_Item_At (T.Values (Bucket), Index);
       end Current_Value_Ptr;
 
 

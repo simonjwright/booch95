@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -36,6 +36,10 @@ package BC.Support.Hash_Tables is
    --  Values may be either primitive types or user-defined
    --  non-limited types.
 
+   --  The function Eq is used for equality instead of the more normal
+   --  "=" because (in Bounded_Hash_Tables) ObjectAda 7.2 and 7.2.1
+   --  get confused otherwise.
+
    --  Item_Container and Value_Container provide the concrete
    --  container for each bucket. These types will normally be
    --  provided by instantiations of the bounded, dynamic, and
@@ -46,27 +50,26 @@ package BC.Support.Hash_Tables is
 
       type Item is private;
       type Item_Ptr is access all Item;
-      with function "=" (L, R : Item) return Boolean is <>;
-      with function Hash (V : Item) return Natural is <>;
+      with function Hash (V : Item) return Natural;
 
       type Item_Container is private;
 
       --  The <> subprograms for Items are provided by one of
       --  BC.Support.Bounded, Dynamic or Unbounded as appropriate.
 
-      with procedure Clear (C : in out Item_Container) is <>;
-      with procedure Insert (C : in out Item_Container; I : Item) is <>;
-      with procedure Append (C : in out Item_Container; I : Item) is <>;
-      with procedure Remove (C : in out Item_Container; From : Positive) is <>;
+      with procedure Clear (C : in out Item_Container);
+      with procedure Insert (C : in out Item_Container; I : Item);
+      with procedure Append (C : in out Item_Container; I : Item);
+      with procedure Remove (C : in out Item_Container; From : Positive);
       with procedure Replace
-        (C : in out Item_Container; Index : Positive; I : Item) is <>;
-      with function Length (C : Item_Container) return Natural is <>;
+        (C : in out Item_Container; Index : Positive; I : Item);
+      with function Length (C : Item_Container) return Natural;
       with function Item_At
-        (C : Item_Container; Index : Positive) return Item is <>;
-      with function Item_At
-        (C : Item_Container; Index : Positive) return Item_Ptr is <>;
+        (C : Item_Container; Index : Positive) return Item;
+      with function Access_Item_At
+        (C : Item_Container; Index : Positive) return Item_Ptr;
       with function Location
-        (C : Item_Container; I : Item; Start : Positive) return Natural is <>;
+        (C : Item_Container; I : Item; Start : Positive) return Natural;
 
    package Item_Signature is end Item_Signature;
 
@@ -75,29 +78,29 @@ package BC.Support.Hash_Tables is
 
       type Value is private;
       type Value_Ptr is access all Value;
-      with function "=" (L, R : Value) return Boolean is <>;
+      with function Eq (L, R : Value) return Boolean;
 
       type Value_Container is private;
 
       --  The <> subprograms for Values are provided by one of
       --  BC.Support.Bounded, Dynamic or Unbounded as appropriate.
 
-      with procedure Clear (C : in out Value_Container) is <>;
-      with procedure Insert (C : in out Value_Container; V : Value) is <>;
-      with procedure Append (C : in out Value_Container; V : Value) is <>;
+      with procedure Clear (C : in out Value_Container);
+      with procedure Insert (C : in out Value_Container; V : Value);
+      with procedure Append (C : in out Value_Container; V : Value);
       with procedure Remove
-        (C : in out Value_Container; From : Positive) is <>;
+        (C : in out Value_Container; From : Positive);
       with procedure Replace
-        (C : in out Value_Container; Index : Positive; V : Value) is <>;
-      with function Length (C : Value_Container) return Natural is <>;
+        (C : in out Value_Container; Index : Positive; V : Value);
+      with function Length (C : Value_Container) return Natural;
       with function Item_At
-        (C : Value_Container; Index : Positive) return Value is <>;
-      with function Item_At
-        (C : Value_Container; Index : Positive) return Value_Ptr is <>;
+        (C : Value_Container; Index : Positive) return Value;
+      with function Access_Item_At
+        (C : Value_Container; Index : Positive) return Value_Ptr;
       with function Location
         (C : Value_Container;
          V : Value;
-         Start : Positive) return Natural is <>;
+         Start : Positive) return Natural;
 
    package Value_Signature is end Value_Signature;
 

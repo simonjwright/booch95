@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -96,22 +96,41 @@ private
    package IC is new BC.Support.Unbounded (Item => Item,
                                            Item_Ptr => Item_Ptr,
                                            Storage => Storage);
-   use IC;
    package Items is new BC.Support.Hash_Tables.Item_Signature
      (Item => Item,
       Item_Ptr => Item_Ptr,
-      Item_Container => IC.Unb_Node);
+      Hash => Hash,
+      Item_Container => IC.Unb_Node,
+      Clear => IC.Clear,
+      Insert => IC.Insert,
+      Append => IC.Append,
+      Remove => IC.Remove,
+      Replace => IC.Replace,
+      Length => IC.Length,
+      Item_At => IC.Item_At,
+      Access_Item_At => IC.Item_At,
+      Location => IC.Location);
 
    --  We need a dummy type for the Value component of the hash table.
-   type Boolean_Ptr is access all Boolean;
-   package VC is new BC.Support.Unbounded (Item => Boolean,
-                                           Item_Ptr => Boolean_Ptr,
+   type Dummy is null record;
+   type Dummy_Ptr is access all Dummy;
+   package VC is new BC.Support.Unbounded (Item => Dummy,
+                                           Item_Ptr => Dummy_Ptr,
                                            Storage => Storage);
-   use VC;
    package Values is new BC.Support.Hash_Tables.Value_Signature
-     (Value => Boolean,
-      Value_Ptr => Boolean_Ptr,
-      Value_Container => VC.Unb_Node);
+     (Value => Dummy,
+      Value_Ptr => Dummy_Ptr,
+      Eq => "=",
+      Value_Container => VC.Unb_Node,
+      Clear => VC.Clear,
+      Insert => VC.Insert,
+      Append => VC.Append,
+      Remove => VC.Remove,
+      Replace => VC.Replace,
+      Length => VC.Length,
+      Item_At => VC.Item_At,
+      Access_Item_At => VC.Item_At,
+      Location => VC.Location);
 
    package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Items,
