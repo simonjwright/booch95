@@ -46,12 +46,12 @@ package BC.Support.Unbounded is
   procedure Replace (Obj : in out Unb_Node; Index : Positive; Elem : Item);
   function Length (Obj : Unb_Node) return Natural;
   function First (Obj : Unb_Node) return Item;
-  function First (Obj : access Unb_Node) return Item_Ptr;
+  function First (Obj : Unb_Node) return Item_Ptr;
   function Last (Obj : Unb_Node) return Item;
-  function Last (Obj : access Unb_Node) return Item_Ptr;
-  function Item_At (Obj : access Unb_Node; Index : Positive) return Item;
-  function Item_At (Obj : access Unb_Node; Index : Positive) return Item_Ptr;
-  function Location (Obj : access Unb_Node; Elem : Item; Start : Positive := 1)
+  function Last (Obj : Unb_Node) return Item_Ptr;
+  function Item_At (Obj : Unb_Node; Index : Positive) return Item;
+  function Item_At (Obj : Unb_Node; Index : Positive) return Item_Ptr;
+  function Location (Obj : Unb_Node; Elem : Item; Start : Positive := 1)
                      return Natural;
 
   procedure Free (Obj : in out Unb_Node_Ref);
@@ -61,12 +61,14 @@ private
 
   package Nodes is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
 
-  type Unb_Node is record
+  type Unb_Node is tagged record
     Rep : Nodes.Node_Ref;
     Last : Nodes.Node_Ref;
     Size : Natural := 0;
     Cache : Nodes.Node_Ref;
     Cache_Index : Natural := 0;
   end record;
+  -- We make this type tagged solely so that it's a "by-reference" type (we
+  -- don't want a copy to be passed, we want the actual node).
 
 end BC.Support.Unbounded;
