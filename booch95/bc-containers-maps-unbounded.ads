@@ -112,18 +112,9 @@ private
       Values => Items,
       Buckets => Buckets);
 
-  type Table_P is access Tables.Table;
-  for Table_P'Storage_Pool use Storage;
-
   type Map is new Abstract_Map with record
-    Rep : Table_P;
+    Rep : Tables.Table;
   end record;
-
-  procedure Initialize (M : in out Map);
-
-  procedure Adjust (M : in out Map);
-
-  procedure Finalize (M : in out Map);
 
   procedure Attach (M : in out Map; K : Key; I : Item);
 
