@@ -48,6 +48,7 @@ bc-support-memory_streams.ad[bs] \
 bc-support-standard_storage.ads \
 bc-support-synchronization.ad[bs] \
 bc-support-unbounded.ad[bs] \
+bc-support-unmanaged.ad[bs] \
 bc-support-unmanaged_storage.ad[bs] \
 bc-support.ad[bs]
 
@@ -78,6 +79,7 @@ ADA_SOURCE += \
 bc-containers-collections-bounded.ad[bs] \
 bc-containers-collections-dynamic.ad[bs] \
 bc-containers-collections-unbounded.ad[bs] \
+bc-containers-collections-unmanaged.ad[bs] \
 bc-containers-collections.ad[bs]
 TESTABLE += collection_test
 TEST_SRC += collection_test.ad[bs] collection_test_support.ad[bs]
@@ -122,6 +124,7 @@ ADA_SOURCE += \
 bc-containers-collections-ordered-bounded.ad[bs] \
 bc-containers-collections-ordered-dynamic.ad[bs] \
 bc-containers-collections-ordered-unbounded.ad[bs] \
+bc-containers-collections-ordered-unmanaged.ad[bs] \
 bc-containers-collections-ordered.ad[bs]
 TESTABLE += ordered_collection_test
 TEST_SRC += ordered_collection_test.ad[bs] ordered_collection_test_support.ad[bs]
