@@ -84,7 +84,6 @@ private
   function Item_At (Obj : Dynamic_Queue; Index : Positive) return Item_Ptr;
   function Cardinality (Obj : Dynamic_Queue) return Natural;
   procedure Purge (Obj : in out Dynamic_Queue);
-  procedure Add (Obj : in out Dynamic_Queue; Elem : Item);
 
   package Dynamic_Queue_Nodes
   is new BC.Support.Dynamic (Item => Item,

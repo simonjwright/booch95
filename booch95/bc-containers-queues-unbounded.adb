@@ -82,11 +82,6 @@ package body BC.Containers.Queues.Unbounded is
     Unbounded_Queue_Nodes.Clear (Obj.Rep.all);
   end Purge;
 
-  procedure Add (Obj : in out Unbounded_Queue; Elem : Item) is
-  begin
-    Unbounded_Queue_Nodes.Append (Obj.Rep.all, Elem);
-  end Add;
-
   function Cardinality (Obj : Unbounded_Queue) return Natural is
   begin
     return Unbounded_Queue_Nodes.Length (Obj.Rep.all);
