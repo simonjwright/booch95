@@ -31,9 +31,9 @@ package BC.Support.Unbounded is
 
   type Unb_Node is private;
 
-  type Unb_Node_Ref is access Unb_Node;
+  type Unb_Node_Ref is access all Unb_Node;
 
-  function Create (From : Unb_Node) return Unb_Node;
+  function Create (From : Unb_Node) return Unb_Node_Ref;
 
   function "=" (Left, Right : Unb_Node) return Boolean;
 
