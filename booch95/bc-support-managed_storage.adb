@@ -242,8 +242,6 @@ package body BC.Support.Managed_Storage is
     return Base.all'Address <= Target and Target < Base.all'Address + Offset;
   end Within_Range;
 
-  pragma Inline( Within_Range );
-
 
   procedure Reclaim_Unused_Chunks( This : in out Pool ) is
     Ptr               : Chunk_Pointer;
