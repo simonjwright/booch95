@@ -20,6 +20,8 @@
 generic
 package BC.Containers.Stacks is
 
+  pragma Elaborate_Body;
+
   type Stack is abstract new Container with private;
 
   -- A sequence in which items may be added from one end and removed from
@@ -47,7 +49,10 @@ package BC.Containers.Stacks is
   function Top (S : in Stack) return Item is abstract;
   -- Return a copy of the item at the top of the Stack.
 
-  -- XXX We need a generic accessor here ..
+  generic
+    with procedure Process (Elem : in out Item);
+  procedure Process_Top (S : in out Stack'Class);
+  -- Access the item at the top of the Stack.
 
   function Are_Equal (Left, Right : Stack'Class) return Boolean;
   -- Return True if and only if both stacks have the same depth and the
