@@ -44,6 +44,38 @@ begin
    end;
 
    declare
+      function F return Collection_Test_Support.CD.Collection;
+      function F return Collection_Test_Support.CD.Collection is
+         Result : Collection_Test_Support.CD.Collection;
+      begin
+         return Result;
+      end F;
+      C : Collection_Test_Support.CD.Collection;
+   begin
+      Start := BC.Support.High_Resolution_Time.Clock;
+      C := F;
+      Finish := BC.Support.High_Resolution_Time.Clock;
+      Took := Finish - Start;
+      Put_Line ("dynamic   : took" & Duration'Image (Took));
+   end;
+
+   declare
+      function F return Collection_Test_Support.CU.Collection;
+      function F return Collection_Test_Support.CU.Collection is
+         Result : Collection_Test_Support.CU.Collection;
+      begin
+         return Result;
+      end F;
+      C : Collection_Test_Support.CU.Collection;
+   begin
+      Start := BC.Support.High_Resolution_Time.Clock;
+      C := F;
+      Finish := BC.Support.High_Resolution_Time.Clock;
+      Took := Finish - Start;
+      Put_Line ("unbounded : took" & Duration'Image (Took));
+   end;
+
+   declare
       function F return Collection_Test_Support.CUM.Collection;
       function F return Collection_Test_Support.CUM.Collection is
          Result : Collection_Test_Support.CUM.Collection;
