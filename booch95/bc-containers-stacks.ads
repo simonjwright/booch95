@@ -30,28 +30,29 @@ package Bc.Containers.Stacks is
   -- all Stack forms
 
   procedure Clear (Obj : in out Stack) is abstract;
-  -- Empty the Stack of all items
+  -- Empty the Stack of all items.
 
   procedure Push (Obj : in out Stack; Elem : Item) is abstract;
-  -- Add the item to the front of the Stack; the Item itself is copied
+  -- Add a copy of the item to the top of the Stack.
 
   procedure Pop (Obj : in out Stack) is abstract;
-  -- Remove the Item from the front of the Stack
+  -- Remove the item from the top of the Stack.
 
   function Depth (Obj : in Stack) return Natural is abstract;
-  -- Returns total items in the Stack
+  -- Returns the number of items in the Stack
 
   function Is_Empty (Obj : in Stack) return Boolean is abstract;
-  -- Returns true iff no items are in the stack
+  -- Returns True if and only if no items are in the stack
 
   function Top (Obj : in Stack) return Item is abstract;
-  -- Return the item at the front of the Stack; the Item is _not_ removed
+  -- Return a copy of the item at the top of the Stack.
 
   function Top (Obj : in Stack) return Item_Ptr is abstract;
-  -- Return reference to item at the front of the Stack;
-  -- the Item is _not_ removed
+  -- Return a pointer to the item at the top of the Stack.
 
   function "=" (Left, Right : access Stack'Class) return Boolean;
+  -- Return True if and only if both stacks have the same depth and the
+  -- same items in the same order; return False otherwise.
 
   procedure Copy (From : access Stack'Class; To : access Stack'Class);
   -- This operation MUST be called for dissimilar Stacks in place of
