@@ -80,7 +80,7 @@ package body BC.Graphs.Undirected is
     Curr := V.Rep.Outgoing;
     while Curr /= null loop
       if Curr.From /= Curr.To then
-	Count := Count + 1;
+        Count := Count + 1;
       end if;
       Curr := Curr.Next_Outgoing;
     end loop;
@@ -182,6 +182,112 @@ package body BC.Graphs.Undirected is
       V.Rep.Count := V.Rep.Count + 1;
     end if;
   end Second_Vertex;
+
+
+  ---------------------
+  -- Graph iterators --
+  ---------------------
+
+  function Visit_Vertices
+     (It : access Passive_Graph_Iterator) return Boolean is
+    Iter : Graph_Iterator (It.G);
+    V : Vertex;
+    Result : Boolean := True;
+  begin
+    while not Is_Done (Iter) loop
+      Current_Item (Iter, V);
+      Apply (V, Result);
+      exit when not Result;
+      Next (Iter);
+    end loop;
+    return Result;
+  end Visit_Vertices;
+
+
+  ---------------------
+  -- Vertex iterators --
+  ---------------------
+
+  procedure Reset (It : in out Vertex_Iterator) is
+  begin
+    It.First := True;
+    if It.V.Rep /= null then
+      It.Index := It.V.Rep.Outgoing;
+      if It.Index = null then
+        It.First := False;
+        It.Index := It.V.Rep.Incoming;
+        while It.Index /= null and then (It.Index.From = It.Index.To) loop
+          It.Index := It.Index.Next_Incoming;
+        end loop;
+      end if;
+    else
+      It.Index := null;
+    end if;
+  end Reset;
+
+
+  procedure Next (It : in out Vertex_Iterator) is
+  begin
+    -- XXX I think we ought to check here that there is an Index!
+    if It.First then
+      It.Index := It.Index.Next_Outgoing;
+      if It.Index = null then
+        It.First := False;
+        It.Index := It.V.Rep.Incoming;
+        while It.Index /= null and then (It.Index.From = It.Index.To) loop
+          It.Index := It.Index.Next_Incoming;
+        end loop;
+      end if;
+    elsif It.Index /= null then
+      It.Index := It.Index.Next_Incoming;
+      while It.Index /= null and then (It.Index.From = It.Index.To) loop
+        It.Index := It.Index.Next_Incoming;
+      end loop;
+    end if;
+  end Next;
+
+
+  function Is_Done (It : Vertex_Iterator) return Boolean is
+  begin
+    return It.Index = null;
+  end Is_Done;
+
+
+  procedure Current_Item (It : Vertex_Iterator; A : in out Arc'Class) is
+  begin
+    Assert (It.Index /= null,
+            BC.Is_Null'Identity,
+            "Current_Item(Vertex_Iterator)",
+            BSE.Is_Null);
+    Clear (A);
+    A.Rep := It.Index;
+    A.Rep.Count := A.Rep.Count + 1;
+  end Current_Item;
+
+
+  function Visit_Arcs (It : access Passive_Vertex_Iterator) return Boolean is
+    Iter : Vertex_Iterator (It.V);
+    A : Arc;
+    Result : Boolean := True;
+  begin
+    while not Is_Done (Iter) loop
+      Current_Item (Iter, A);
+      Apply (A, Result);
+      exit when not Result;
+      Next (Iter);
+    end loop;
+    return Result;
+  end Visit_Arcs;
+
+
+  ----------------------------------------------
+  -- Utilities, controlled storage management --
+  ----------------------------------------------
+
+  procedure Initialize (It : in out Vertex_Iterator) is
+  begin
+    Reset (It);
+  end Initialize;
 
 
 end BC.Graphs.Undirected;
