@@ -18,6 +18,7 @@
 -- $Id$
 
 with Ada.Finalization;
+with BC.Smart;
 with System.Storage_Pools;
 
 generic
@@ -57,14 +58,18 @@ package BC.Graphs is
   -- strategy whereby every graph is given a unique identity, and each
   -- vertex and arc is created only in the context of a particular graph.
 
+  -- Note that objects of type Vertex, Arc are handles or references to the
+  -- actual Graph components.
+
+  -- Note that Containers contain just one sort of Item; Graphs aren't
+  -- therefore Containers.
+
   type Graph is abstract new Ada.Finalization.Limited_Controlled with private;
   type Graph_Ptr is access all Graph'Class;
 
   type Vertex is abstract new Ada.Finalization.Controlled with private;
-  type Vertex_Ptr is access all Vertex'Class;
 
   type Arc is abstract new Ada.Finalization.Controlled with private;
-  type Arc_Ptr is access all Arc'Class;
 
   ----------------------
   -- Graph operations --
@@ -171,7 +176,69 @@ package BC.Graphs is
   function Enclosing_Graph (A : Arc) return Graph_Ptr;
   -- Return the graph enclosing the arc.
 
-  -- For Iterators, see concrete derivations.
+  --------------------------------------------
+  -- Iteration over the Vertices in a Graph --
+  --------------------------------------------
+
+  -- Active iteration
+
+  type Graph_Iterator is private;
+
+  function New_Graph_Iterator (For_The_Graph : Graph) return Graph_Iterator
+    is abstract;
+  -- Return a reset Graph_Iterator bound to the specific Graph.
+
+  procedure Reset (Obj : in out Graph_Iterator);
+  -- Reset the Graph_Iterator to the beginning.
+
+  procedure Next (Obj : in out Graph_Iterator);
+  -- Advance the Graph_Iterator to the next Vertex in the Graph.
+
+  function Is_Done (Obj : Graph_Iterator) return Boolean;
+  -- Return True if there are no more Vertices in the Graph.
+
+  function Current_Vertex (Obj : Graph_Iterator) return Vertex'Class;
+  -- Return a handle on the current Vertex.
+
+  -- Passive iteration
+
+  generic
+    with procedure Apply (Elem : in Vertex'Class; OK : out Boolean);
+  procedure Visit_Vertices (Over_The_Graph : Graph'Class);
+  -- Call Apply with a handle on each Vertex in the Graph. The iteration
+  -- will terminate early if Apply sets OK to False.
+
+  ---------------------------------------------------
+  -- Iteration over the Arcs connected to a Vertex --
+  ---------------------------------------------------
+
+  -- Active iteration
+
+  type Vertex_Iterator is private;
+
+  function New_Vertex_Iterator (For_The_Vertex : Vertex) return Vertex_Iterator
+    is abstract;
+  -- Return a reset Vertex_Iterator bound to the specific Vertex.
+
+  procedure Reset (Obj : in out Vertex_Iterator);
+  -- Reset the Vertex_Iterator to the beginning.
+
+  procedure Next (Obj : in out Vertex_Iterator);
+  -- Advance the Vertex_Iterator to the next Arc in the Vertex.
+
+  function Is_Done (Obj : Vertex_Iterator) return Boolean;
+  -- Return True if there are no more Arcs in the Vertex.
+
+  function Current_Arc (Obj : Vertex_Iterator) return Arc'Class;
+  -- Return a handle on the current Arc.
+
+  -- Passive iteration
+
+  generic
+    with procedure Apply (Elem : in Arc'Class; OK : out Boolean);
+  procedure Visit_Arcs (Over_The_Vertex : Vertex'Class);
+  -- Call Apply with a handle on each Arc in the Vertex. The iteration
+  -- will terminate early if Apply sets OK to False.
 
 private
 
@@ -230,5 +297,61 @@ private
   procedure Adjust (A : in out Arc);
   procedure Finalize (A : in out Arc);
 
-end BC.Graphs;
+  -- Actual_Graph_Iterators are strongly dependent on the concrete Graph
+  -- implementation. The externally-visible Graph_Iterator is implemented as
+  -- a (smart) pointer to the specific Graph's Actual_Graph_Iterator.
+  --
+  -- All the primitive subprograms of Graph_Iterator are implemented in terms
+  -- of matching subprograms of Actual_Graph_Iterator.
 
+  type Actual_Graph_Iterator (For_The_Graph : access Graph'Class)
+  is abstract new Ada.Finalization.Limited_Controlled with null record;
+
+  type Graph_Iterator_P is access Actual_Graph_Iterator'Class;
+
+  type Vertex_Ptr is access Vertex'Class;
+
+  procedure Reset (Obj : in out Actual_Graph_Iterator) is abstract;
+
+  procedure Next (Obj : in out Actual_Graph_Iterator) is abstract;
+
+  function Is_Done (Obj : Actual_Graph_Iterator) return Boolean is abstract;
+
+  function Current_Vertex (Obj : Actual_Graph_Iterator) return Vertex'Class
+    is abstract;
+
+  package GSP is new BC.Smart (T => Actual_Graph_Iterator'Class,
+                               P => Graph_Iterator_P);
+
+  type Graph_Iterator is new GSP.Pointer;
+
+  -- Actual_Vertex_Iterators are strongly dependent on the concrete Vertex
+  -- implementation. The externally-visible Vertex_Iterator is implemented as
+  -- a (smart) pointer to the specific Vertex's Actual_Vertex_Iterator.
+  --
+  -- All the primitive subprograms of Vertex_Iterator are implemented in terms
+  -- of matching subprograms of Actual_Vertex_Iterator.
+
+  type Actual_Vertex_Iterator (For_The_Vertex : access Vertex'Class)
+  is abstract new Ada.Finalization.Limited_Controlled with null record;
+
+  type Vertex_Iterator_P is access Actual_Vertex_Iterator'Class;
+
+  type Arc_Ptr is access Arc'Class;
+
+  procedure Reset (Obj : in out Actual_Vertex_Iterator) is abstract;
+
+  procedure Next (Obj : in out Actual_Vertex_Iterator) is abstract;
+
+  function Is_Done (Obj : Actual_Vertex_Iterator) return Boolean is abstract;
+
+  function Current_Arc (Obj : Actual_Vertex_Iterator) return Arc'Class
+    is abstract;
+
+  package VSP is new BC.Smart (T => Actual_Vertex_Iterator'Class,
+                               P => Vertex_Iterator_P);
+
+  type Vertex_Iterator is new VSP.Pointer;
+
+
+end BC.Graphs;
