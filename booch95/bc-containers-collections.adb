@@ -26,7 +26,7 @@ package body BC.Containers.Collections is
     if System."=" (Left'Address, Right'Address) then
       return True;
     end if;
-    if Cardinality (Left) /= Cardinality (Right) then
+    if Length (Left) /= Length (Right) then
       return False;
     end if;
     declare
@@ -49,10 +49,12 @@ package body BC.Containers.Collections is
     Iter : Iterator := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
-      Purge (To);
+      Clear (To);
       Reset (Iter);
       while not Is_Done (Iter) loop
-        Add (To, Current_Item (Iter));
+        -- doing Append will preserve ordering of equal-key items in
+        -- Ordered Collections.
+        Append (To, Current_Item (Iter));
         Next (Iter);
       end loop;
    end if;
@@ -80,7 +82,7 @@ package body BC.Containers.Collections is
 
   procedure Reset (It : in out Collection_Iterator) is
   begin
-    if Cardinality (It.C.all) = 0 then
+    if Length (It.C.all) = 0 then
       It.Index := 0;
     else
       It.Index := 1;
@@ -89,7 +91,7 @@ package body BC.Containers.Collections is
 
   function Is_Done (It : Collection_Iterator) return Boolean is
   begin
-    return It.Index = 0 or else It.Index > Cardinality (It.C.all);
+    return It.Index = 0 or else It.Index > Length (It.C.all);
   end Is_Done;
 
   procedure Next (It : in out Collection_Iterator) is
