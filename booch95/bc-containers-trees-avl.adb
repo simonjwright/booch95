@@ -124,6 +124,9 @@ package body BC.Containers.Trees.AVL is
         end case;
       end if;
     else
+      -- We need to cope with the case where elements _compare_ equal
+      -- but their non-key data content has changed.
+      Node.Element := Element;
       Inserted := False;
     end if;
   end Search_Insert;
