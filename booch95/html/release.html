@@ -30,6 +30,25 @@
 
 <dl>
 
+<dt>21st June 1999</dt>
+
+<dd>
+
+Added Unbounded Collections and Unbounded Ordered Collections.<p>
+
+<tt>BC.Support.Bounded</tt>, <tt>BC.Support.Unbounded</tt> subprogram
+specs were confused about whether indexing was from 0 (as in the C++)
+or 1 (in the Ada). <tt>BC.Support.Unbounded.Append(2)</tt> had an
+error when appending after the first element.<p>
+
+Corrected a GNAT <a href="compiler-problems.html#29may1999">compiler
+problem</a> (GNAT was too permissive).<p>
+
+Added ObjectAda-special versions of the Bag test driver (avoiding <a
+href="compiler-problems.html#29jan1999">compiler problems</a>).<p>
+
+</dd>
+
 <dt>7th May 1999</dt>
 
 <dd>
