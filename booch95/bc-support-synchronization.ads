@@ -23,46 +23,49 @@ with Ada.Task_Identification;
 package BC.Support.Synchronization is
 
 
+  type Semaphore_Base is abstract new Ada.Finalization.Controlled with private;
+  procedure Seize (The_Semaphore : in out Semaphore_Base) is abstract;
+  procedure Release (The_Semaphore : in out Semaphore_Base) is abstract;
+  function None_Pending (On_The_Semaphore : Semaphore_Base) return Boolean
+    is abstract;
+
+  type Semaphore_P is access all Semaphore_Base'Class;
+  procedure Delete (The_Semaphore : in out Semaphore_P);
+
+
   -- A Semaphore is like a POSIX recursive mutex; once Seized by a
   -- task, that task can Seize again; other tasks are blocked until
   -- the owning task has Released the semaphore as many times as it
   -- Seized it.
-  protected type Semaphore is
-    entry Seize;
-    procedure Release;
-    function None_Pending return Boolean;
-  private
-    entry Waiting;
-    Owner : Ada.Task_Identification.Task_Id;
-    Count : Natural := 0;
-  end Semaphore;
-
-  type Semaphore_P is access all Semaphore;
-  procedure Delete (The_Semaphore : in out Semaphore_P);
+  type Semaphore is new Semaphore_Base with private;
+  procedure Seize (The_Semaphore : in out Semaphore);
+  procedure Release (The_Semaphore : in out Semaphore);
+  function None_Pending (On_The_Semaphore : Semaphore) return Boolean;
 
 
-  type Monitor is abstract tagged limited private;
-  procedure Seize_For_Reading (The_Monitor : in out Monitor)
+
+  type Monitor_Base is abstract tagged limited private;
+  procedure Seize_For_Reading (The_Monitor : in out Monitor_Base)
     is abstract;
-  procedure Seize_For_Writing (The_Monitor : in out Monitor)
+  procedure Seize_For_Writing (The_Monitor : in out Monitor_Base)
     is abstract;
-  procedure Release_From_Reading (The_Monitor : in out Monitor)
+  procedure Release_From_Reading (The_Monitor : in out Monitor_Base)
     is abstract;
-  procedure Release_From_Writing (The_Monitor : in out Monitor)
+  procedure Release_From_Writing (The_Monitor : in out Monitor_Base)
     is abstract;
 
-  type Monitor_P is access all Monitor'Class;
+  type Monitor_P is access all Monitor_Base'Class;
   procedure Delete (The_Monitor : in out Monitor_P);
 
 
-  type Single_Monitor is new Monitor with private;
+  type Single_Monitor is new Monitor_Base with private;
   procedure Seize_For_Reading (The_Monitor : in out Single_Monitor);
   procedure Seize_For_Writing (The_Monitor : in out Single_Monitor);
   procedure Release_From_Reading (The_Monitor : in out Single_Monitor);
   procedure Release_From_Writing (The_Monitor : in out Single_Monitor);
 
 
-  type Multiple_Monitor is new Monitor with private;
+  type Multiple_Monitor is new Monitor_Base with private;
   procedure Seize_For_Reading (The_Monitor : in out Multiple_Monitor);
   procedure Seize_For_Writing (The_Monitor : in out Multiple_Monitor);
   procedure Release_From_Reading (The_Monitor : in out Multiple_Monitor);
@@ -75,13 +78,13 @@ package BC.Support.Synchronization is
   procedure Finalize (The_Lock : in out Lock);
 
 
-  type Read_Lock (Using : access Monitor'Class)
+  type Read_Lock (Using : access Monitor_Base'Class)
   is new Ada.Finalization.Limited_Controlled with private;
   procedure Initialize (The_Lock : in out Read_Lock);
   procedure Finalize (The_Lock : in out Read_Lock);
 
 
-  type Write_Lock (Using : access Monitor'Class)
+  type Write_Lock (Using : access Monitor_Base'Class)
   is new Ada.Finalization.Limited_Controlled with private;
   procedure Initialize (The_Lock : in out Write_Lock);
   procedure Finalize (The_Lock : in out Write_Lock);
@@ -89,9 +92,30 @@ package BC.Support.Synchronization is
 
 private
 
-  type Monitor is abstract tagged limited null record;
+  type Semaphore_Base
+    is abstract new Ada.Finalization.Controlled with null record;
 
-  type Single_Monitor is new Monitor with record
+  protected type Semaphore_Type is
+    entry Seize;
+    procedure Release;
+    function None_Pending return Boolean;
+  private
+    entry Waiting;
+    Owner : Ada.Task_Identification.Task_Id;
+    Count : Natural := 0;
+  end Semaphore_Type;
+
+  type Semaphore_Type_P is access all Semaphore_Type;
+
+  type Semaphore is new Semaphore_Base with record
+    S : Semaphore_Type_P;
+  end record;
+  procedure Initialize (The_Semaphore : in out Semaphore);
+  procedure Finalize (The_Semaphore : in out Semaphore);
+
+  type Monitor_Base is abstract tagged limited null record;
+
+  type Single_Monitor is new Monitor_Base with record
     The_Semaphore : Semaphore;
   end record;
 
@@ -110,17 +134,17 @@ private
     Writing : Boolean := False;
   end Monitor_Type;
 
-  type Multiple_Monitor is new Monitor with record
+  type Multiple_Monitor is new Monitor_Base with record
     M : Monitor_Type;
   end record;
 
   type Lock (Using : access Semaphore)
   is new Ada.Finalization.Limited_Controlled with null record;
 
-  type Read_Lock (Using : access Monitor'Class)
+  type Read_Lock (Using : access Monitor_Base'Class)
   is new Ada.Finalization.Limited_Controlled with null record;
 
-  type Write_Lock (Using : access Monitor'Class)
+  type Write_Lock (Using : access Monitor_Base'Class)
   is new Ada.Finalization.Limited_Controlled with null record;
 
 end BC.Support.Synchronization;
