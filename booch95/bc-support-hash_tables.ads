@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -98,7 +98,6 @@ package BC.Support.Hash_Tables is
 
       with package Items is new Item_Signature (<>);
       with package Values is new Value_Signature (<>);
-      Buckets : Natural;
 
    package Tables is
 
@@ -115,15 +114,12 @@ package BC.Support.Hash_Tables is
       --  for the order in which items may be added and removed from
       --  the container. This class is not intended to be subclassed.
 
-      --  The parameter Buckets signifies the static number of buckets
-      --  in the hash table.
+      type Item_Array is array (Positive range <>) of Items.Item_Container;
+      type Value_Array is array (Positive range <>) of Values.Value_Container;
 
-      type Item_Array is array (1 .. Buckets) of Items.Item_Container;
-      type Value_Array is array (1 .. Buckets) of Values.Value_Container;
-
-      type Table is record
-         Items : Item_Array;
-         Values : Value_Array;
+      type Table (Number_Of_Buckets : Positive) is record
+         Items : Item_Array (1 .. Number_Of_Buckets);
+         Values : Value_Array (1 .. Number_Of_Buckets);
          Size : Natural := 0;
       end record;
 

@@ -37,7 +37,7 @@ package body BC.Support.Hash_Tables is
       begin
          --  optimisation if L, R are the same Table?
          if L.Size = R.Size then
-            for B in 1 .. Buckets loop
+            for B in 1 .. L.Number_Of_Buckets loop
                for Index in 1 .. Items.Length (L.Items (B)) loop
                   declare
                      This_Item : Items.Item renames
@@ -67,7 +67,7 @@ package body BC.Support.Hash_Tables is
 
       procedure Clear (T : in out Table) is
       begin
-         for B in 1 .. Buckets loop
+         for B in 1 .. T.Number_Of_Buckets loop
             Items.Clear (T.Items (B));
             Values.Clear (T.Values (B));
             T.Size := 0;
@@ -76,7 +76,8 @@ package body BC.Support.Hash_Tables is
 
 
       procedure Bind (T : in out Table; I : Items.Item; V : Values.Value) is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
       begin
          Assert (Items.Location (T.Items (Bucket), I, 1) = 0,
                  BC.Duplicate'Identity,
@@ -89,7 +90,8 @@ package body BC.Support.Hash_Tables is
 
 
       procedure Rebind (T : in out Table; I : Items.Item; V : Values.Value) is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          Index : constant Natural := Items.Location (T.Items (Bucket), I, 1);
       begin
          Assert (Index /= 0,
@@ -101,7 +103,8 @@ package body BC.Support.Hash_Tables is
 
 
       procedure Unbind (T : in out Table; I : Items.Item) is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          Index : constant Natural := Items.Location (T.Items (Bucket), I, 1);
       begin
          Assert (Index /= 0,
@@ -121,14 +124,16 @@ package body BC.Support.Hash_Tables is
 
 
       function Is_Bound (T : Table; I : Items.Item) return Boolean is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
       begin
          return Items.Location (T.Items (Bucket), I, 1) /= 0;
       end Is_Bound;
 
 
       function Value_Of (T : Table; I : Items.Item) return Values.Value is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          Index : constant Natural := Items.Location (T.Items (Bucket), I, 1);
       begin
          Assert (Index /= 0,
