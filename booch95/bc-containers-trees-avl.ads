@@ -23,7 +23,6 @@ with System.Storage_Pools;
 
 generic
   with function "<" (L, R : Item) return Boolean is <>;
-  with function "=" (L, R : Item) return Boolean is <>;
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;

@@ -19,7 +19,6 @@
 
 generic
   type Value is private;
-  with function "=" (L, R : Item) return Boolean is <>;
 package BC.Containers.Maps is
 
   -- A map denotes a collection forming a dictionary of domain/range
