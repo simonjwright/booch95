@@ -20,118 +20,129 @@
 generic
 package BC.Graphs.Directed is
 
-  type Graph is new Graphs.Graph with private;
-  type Vertex is new Graphs.Vertex with private;
-  type Arc is new Graphs.Arc with private;
+  type Directed_Graph is new Graph with private;
+  type Directed_Vertex is new Vertex with private;
+  type Directed_Arc is new Arc with private;
 
-  ----------------------
-  -- Graph operations --
-  ----------------------
+  -------------------------------
+  -- Directed_Graph operations --
+  -------------------------------
 
-  procedure Create_Arc (G : in out Graph;
-                        A : in out Arc'Class;
-                        I : Arc_Item;
-                        From : in out Vertex'Class;
-                        To : in out Vertex'Class);
+  procedure Create_Arc (G : in out Directed_Graph;
+			A : in out Directed_Arc'Class;
+			I : Arc_Item;
+			From : in out Directed_Vertex'Class;
+			To : in out Directed_Vertex'Class);
   -- Create a new arc between the given vertices and add it to the graph,
   -- setting the second argument of this function as an alias to this new
   -- arc.
+  
+  --------------------------------
+  -- Directed_Vertex operations --
+  --------------------------------
 
-  -----------------------
-  -- Vertex operations --
-  -----------------------
-
-  function Number_Of_Incoming_Arcs (V : Vertex) return Natural;
+  function Number_Of_Incoming_Arcs (V : Directed_Vertex) return Natural;
   -- Return the number of arcs directed to the vertex.
 
-  function Number_Of_Outgoing_Arcs (V : Vertex) return Natural;
+  function Number_Of_Outgoing_Arcs (V : Directed_Vertex) return Natural;
   -- Return the number of arcs emerging from the vertex.
 
-  --------------------
-  -- Arc operations --
-  --------------------
+  -----------------------------
+  -- Directed_Arc operations --
+  -----------------------------
 
-  procedure Set_From_Vertex (A : in out Arc; V : access Vertex'Class);
+  procedure Set_From_Vertex (A : in out Directed_Arc;
+			     V : access Directed_Vertex'Class);
   -- Change the source of the arc to the given vertex. This change requires
   -- that the arc be removed from the collection of outgoing arcs in the
   -- original source vertex and added to the collection of outgoing arcs in
   -- the given source vertex.
 
-  procedure Set_To_Vertex (A : in out Arc; V : access Vertex'Class);
+  procedure Set_To_Vertex (A : in out Directed_Arc;
+			   V : access Directed_Vertex'Class);
   -- Change the destination of the arc to the given vertex. This change
   -- requires that the arc be removed from the collection of incoming arcs
   -- in the original destination vertex and added to the collection of
   -- incoming arcs in the given destination vertex.
 
-  procedure From_Vertex (A : Arc; V : in out Vertex'Class);
+  procedure From_Vertex (A : Directed_Arc; V : in out Directed_Vertex'Class);
   -- Return the source vertex of the arc.
 
-  procedure To_Vertex (A : Arc; V : in out Vertex'Class);
+  procedure To_Vertex (A : Directed_Arc; V : in out Directed_Vertex'Class);
   -- Return the destination vertex of the arc.
 
-  ---------------------
-  -- Graph iterators --
-  ---------------------
+  ------------------------------
+  -- Directed_Graph iterators --
+  ------------------------------
 
-  type Graph_Iterator (G : access Graph) is limited private;
+  type Directed_Graph_Iterator (G : access Directed_Graph) is limited private;
 
-  procedure Reset (It : in out Graph_Iterator);
+  procedure Reset (It : in out Directed_Graph_Iterator);
 
-  procedure Next (It : in out Graph_Iterator);
+  procedure Next (It : in out Directed_Graph_Iterator);
 
-  function Is_Done (It : Graph_Iterator) return Boolean;
+  function Is_Done (It : Directed_Graph_Iterator) return Boolean;
 
-  procedure Current_Item (It : Graph_Iterator; V : in out Vertex);
-
-
-  type Passive_Graph_Iterator (G : access Graph) is limited private;
-
-  generic
-    with procedure Apply (V : Vertex; OK : out Boolean);
-  function Visit_Vertices (It : access Passive_Graph_Iterator) return Boolean;
-
-  ---------------------
-  -- Vertex iterators --
-  ---------------------
-
-  type Vertex_Iterator (V : access Vertex'Class) is limited private;
-
-  procedure Reset (It : in out Vertex_Iterator);
-
-  procedure Next (It : in out Vertex_Iterator);
-
-  function Is_Done (It : Vertex_Iterator) return Boolean;
-
-  procedure Current_Item (It : Vertex_Iterator; A : in out Arc'Class);
+  procedure Current_Item (It : Directed_Graph_Iterator;
+			  V : in out Directed_Vertex);
 
 
-  type Passive_Vertex_Iterator (V : access Vertex) is limited private;
+  type Passive_Directed_Graph_Iterator (G : access Directed_Graph)
+  is limited private;
 
   generic
-    with procedure Apply (A : Arc; OK : out Boolean);
-  function Visit_Arcs (It : access Passive_Vertex_Iterator) return Boolean;
+    with procedure Apply (V : Directed_Vertex; OK : out Boolean);
+  function Visit_Vertices
+     (It : access Passive_Directed_Graph_Iterator) return Boolean;
+
+  -------------------------------
+  -- Directed_Vertex iterators --
+  -------------------------------
+
+  type Directed_Vertex_Iterator (V : access Directed_Vertex'Class)
+  is limited private;
+
+  procedure Reset (It : in out Directed_Vertex_Iterator);
+
+  procedure Next (It : in out Directed_Vertex_Iterator);
+
+  function Is_Done (It : Directed_Vertex_Iterator) return Boolean;
+
+  procedure Current_Item (It : Directed_Vertex_Iterator;
+			  A : in out Directed_Arc'Class);
+
+
+  type Passive_Directed_Vertex_Iterator (V : access Directed_Vertex)
+  is limited private;
+
+  generic
+    with procedure Apply (A : Directed_Arc; OK : out Boolean);
+  function Visit_Arcs
+     (It : access Passive_Directed_Vertex_Iterator) return Boolean;
 
 private
 
-  type Graph is new Graphs.Graph with null record;
-  type Vertex is new Graphs.Vertex with null record;
-  type Arc is new Graphs.Arc with null record;
+  type Directed_Graph is new Graph with null record;
+  type Directed_Vertex is new Vertex with null record;
+  type Directed_Arc is new Arc with null record;
 
-  type Graph_Iterator (G : access Graph) is limited record
+  type Directed_Graph_Iterator (G : access Directed_Graph) is limited record
     Index : Vertex_Node_Ptr := G.Rep;
   end record;
 
-  type Passive_Graph_Iterator (G : access Graph) is limited record
+  type Passive_Directed_Graph_Iterator (G : access Directed_Graph)
+  is limited record
     Success : Boolean := False;
   end record;
 
-  type Vertex_Iterator (V : access Vertex'Class)
+  type Directed_Vertex_Iterator (V : access Directed_Vertex'Class)
   is new Ada.Finalization.Limited_Controlled with record
     Index : Arc_Node_Ptr;
   end record;
-  procedure Initialize (It : in out Vertex_Iterator);
+  procedure Initialize (It : in out Directed_Vertex_Iterator);
 
-  type Passive_Vertex_Iterator (V : access Vertex) is limited record
+  type Passive_Directed_Vertex_Iterator (V : access Directed_Vertex)
+  is limited record
     Success : Boolean := False;
   end record;
 
