@@ -56,8 +56,7 @@ package BC.Containers is
 
   generic
     with procedure Apply (Elem : in out Item);
-    In_The_Iterator : Iterator'Class;
-  procedure Access_Current_Item;
+  procedure Access_Current_Item (In_The_Iterator : Iterator'Class);
   -- Call Apply for the Iterator's current Item.
 
   procedure Delete_Item_At (It : Iterator) is abstract;
