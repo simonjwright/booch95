@@ -41,7 +41,7 @@ package body BC.Containers.Sets.Bounded is
       if Tables.Is_Bound (S.Rep, I) then
          Added := False;
       else
-         Tables.Bind (S.Rep, I, Dummy'(null record));
+         Tables.Bind (S.Rep, I, (null record));
          Added := True;
       end if;
    end Add;
@@ -49,7 +49,7 @@ package body BC.Containers.Sets.Bounded is
    procedure Add (S : in out Unconstrained_Set; I : Item) is
    begin
       if not Tables.Is_Bound (S.Rep, I) then
-         Tables.Bind (S.Rep, I, Dummy'(null record));
+         Tables.Bind (S.Rep, I, (null record));
       end if;
    end Add;
 
