@@ -20,15 +20,35 @@
 
 <h3>Interface changes</h3>
 
+<p>The closed generic iterators that take an additional <tt>Param</tt>
+now accept limited indefinite types.
+
+<h3>Implementation changes</h3>
+
+<p><tt>BC.Support.Statistics</tt> allows you to accumulate data with
+negative values.
+
+<h3>Documentation changes</h3>
+
+<p>None.
+
+<h3>New contributions</h3>
+
+<p>None.
+
+
+<p><dt>23 November 2003
+
+<dd>
+
+<h3>Interface changes</h3>
+
 <p>Added <tt>BC.Support.High_Resolution_Time</tt>, which supports
 sub-microsecond interval timing. This version is for GNAT on Linux or
 Windows on x86 processors.
 
 <p>Added <tt>BC.Support.Statistics</tt>, which supports collecting running
 mean, variance, minimum and maximum of sequences of values.
-
-<p>The closed generic iterators that take an additional <tt>Param</tt>
-now accept limited indefinite types.
 
 <h3>Implementation changes</h3>
 
@@ -127,7 +147,7 @@ Unbounded Bags, for instance, the declarations are
    package BC.Containers.Bags.Unbounded is
       ...
       type Unconstrained_Bag
-	(Number_Of_Buckets : Positive) is new Abstract_Bag with private;
+        (Number_Of_Buckets : Positive) is new Abstract_Bag with private;
 
       subtype Bag is Unconstrained_Bag (Number_Of_Buckets => Buckets);
 </pre>
@@ -141,11 +161,11 @@ Unbounded Bags, for instance, the declarations are
    package BC.Containers.Bags.Bounded is
       ...
       type Unconstrained_Bag
-	(Number_Of_Buckets : Positive;
-	 Maximum_Size : Positive) is new Abstract_Bag with private;
+        (Number_Of_Buckets : Positive;
+         Maximum_Size : Positive) is new Abstract_Bag with private;
 
       subtype Bag is Unconstrained_Bag (Number_Of_Buckets => Buckets,
-					Maximum_Size => Maximum_Size);
+                                        Maximum_Size => Maximum_Size);
 </pre>
 
 <p>The intention is that users shouldn't need to change their source.
@@ -428,7 +448,7 @@ Bags, Sets ..
 <h3>Implementation changes</h3>
 
 
-<p>Added noisy exception handlers to all the test programs .. 
+<p>Added noisy exception handlers to all the test programs ..
 
 
 <p>.. because an assertion in the Bounded Container support package
