@@ -430,9 +430,9 @@ begin
    end;
 
    declare
-      C1, C2 : TCU.Collection;
+      C1, C2, C3 : TCU.Collection;
       use TCU;
-      Str1 : aliased BC.Support.Memory_Streams.Stream_Type (78);
+      Str1, Str3 : aliased BC.Support.Memory_Streams.Stream_Type (78);
       Str2 : aliased BC.Support.Memory_Streams.Stream_Type (1024);
    begin
 
@@ -443,11 +443,18 @@ begin
       Append (C1, new Sister'(B => True));
       Append (C2, new Brother'(I => 16#5555#));
       Append (C2, new Sister'(B => False));
+      C3 := C2;
       Assertion (C1 /= C2, "TCUM1: Collections are equal");
       Collection'Output (Str1'Access, C1);
       BC.Support.Memory_Streams.Write_Contents (Str2'Access, Str1);
       C2 := Collection'Input (Str2'Access);
       Assertion (C1 = C2, "TCUM2: Collections are unequal");
+      Assertion (C1 /= C3, "TCUM3: Collections are equal");
+      BC.Support.Memory_Streams.Reset (Str2);
+      BC.Support.Memory_Streams.Write_Contents (Str2'Access, Str1);
+      BC.Support.Memory_Streams.Read_Contents (Str2'Access, Str3);
+      C3 := Collection'Input (Str3'Access);
+      Assertion (C1 = C3, "TCUM4: Collections are unequal");
       Put_Line ("first buffer length is" &
                   Integer'Image (BC.Support.Memory_Streams.Length (Str1)));
       Put_Line ("second buffer length is" &
