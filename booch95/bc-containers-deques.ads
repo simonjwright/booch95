@@ -23,7 +23,7 @@ package BC.Containers.Deques is
   pragma Elaborate_Body;
 
   type Deque_End is (Front, Back);
-  
+
   type Deque is abstract new Container with private;
 
   -- A deque denotes a sequence of items, in which items may be added
@@ -33,8 +33,8 @@ package BC.Containers.Deques is
   -- Empty the deque of all items.
 
   procedure Append (D : in out Deque;
-		    Elem : Item;
-		    Location : Deque_End := Back) is abstract;
+                    Elem : Item;
+                    Location : Deque_End := Back) is abstract;
   -- Add the item to the deque at the given location; the item itself
   -- is copied.
 
@@ -83,14 +83,11 @@ private
 
   type Deque is abstract new Container with null record;
 
-  type Deque_Iterator (D : access Deque'Class)
-  is new Actual_Iterator (D) with record
+  type Deque_Iterator is new Iterator with record
     Index : Natural;
   end record;
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
-
-  procedure Initialize (It : in out Deque_Iterator);
 
   procedure Reset (It : in out Deque_Iterator);
 
@@ -100,7 +97,7 @@ private
 
   function Current_Item (It : Deque_Iterator) return Item;
 
-  function Current_Item (It : Deque_Iterator) return Item_Ptr;
+  function Current_Item_Ptr (It : Deque_Iterator) return Item_Ptr;
 
   procedure Delete_Item_At (It : Deque_Iterator);
 

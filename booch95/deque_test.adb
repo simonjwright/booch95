@@ -44,7 +44,7 @@ procedure Deque_Test is
   end Assertion;
 
   procedure Test_Active_Iterator (D : Container'Class) is
-    Iter : Iterator := New_Iterator (D);
+    Iter : Iterator'Class := New_Iterator (D);
     Success : Boolean;
     Temp : Character;
   begin
@@ -154,13 +154,13 @@ procedure Deque_Test is
 
   procedure Test_Passive_Iterator (D : Container'Class) is
     procedure Iterate is new Visit (Apply => Process);
-    Iter : Iterator := New_Iterator (D);
+    Iter : Iterator'Class := New_Iterator (D);
   begin
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
   procedure Test_Iterator_Deletion (D : in out Deque'Class) is
-    Iter : Iterator := New_Iterator (D);
+    Iter : Iterator'Class := New_Iterator (D);
     Delete : Boolean;
   begin
     Clear (D);
