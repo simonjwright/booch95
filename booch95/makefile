@@ -27,7 +27,7 @@ test:: $(TESTABLE)
 	done
 	for t in $(TESTABLE); do \
 	  echo running $$t; \
-	  $$t 2>$$t.log; \
+	  ./$$t 2>$$t.log; \
 	done
 
 TESTABLE += list_test
