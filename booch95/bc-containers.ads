@@ -56,7 +56,7 @@ private
   end record;
 
   type Passive_Iterator (C : access Container'Class) is limited record
-    Success : Boolean;
+    Success : Boolean := False;
   end record;
 
 end BC.Containers;
