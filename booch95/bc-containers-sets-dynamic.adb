@@ -49,7 +49,7 @@ package body BC.Containers.Sets.Dynamic is
       if Tables.Is_Bound (S.Rep, I) then
          Added := False;
       else
-         Tables.Bind (S.Rep, I, True);
+         Tables.Bind (S.Rep, I, (null record));
          Added := True;
       end if;
    end Add;
@@ -57,7 +57,7 @@ package body BC.Containers.Sets.Dynamic is
    procedure Add (S : in out Set; I : Item) is
    begin
       if not Tables.Is_Bound (S.Rep, I) then
-         Tables.Bind (S.Rep, I, True);
+         Tables.Bind (S.Rep, I, (null record));
       end if;
    end Add;
 
