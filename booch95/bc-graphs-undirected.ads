@@ -89,7 +89,7 @@ private
   type Undirected_Vertex is new Vertex with null record;
   type Undirected_Arc is new Arc with null record;
 
-  type Undirected_Graph_Iterator (U : access Undirected_Graph)
+  type Undirected_Graph_Iterator (U : access Undirected_Graph'Class)
      is new Actual_Graph_Iterator (U) with record
     Index : Vertex_Node_Ptr := U.Rep;
   end record;
@@ -104,7 +104,7 @@ private
 
   function Current_Vertex (It : Undirected_Graph_Iterator) return Vertex'Class;
 
-  type Undirected_Vertex_Iterator (U : access Undirected_Vertex)
+  type Undirected_Vertex_Iterator (U : access Undirected_Vertex'Class)
      is new Actual_Vertex_Iterator (U) with record
     Index : Arc_Node_Ptr;
     First : Boolean;

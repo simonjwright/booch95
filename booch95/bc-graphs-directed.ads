@@ -89,7 +89,7 @@ private
   type Directed_Vertex is new Vertex with null record;
   type Directed_Arc is new Arc with null record;
 
-  type Directed_Graph_Iterator (D : access Directed_Graph)
+  type Directed_Graph_Iterator (D : access Directed_Graph'Class)
      is new Actual_Graph_Iterator (D) with record
     Index : Vertex_Node_Ptr := D.Rep;
   end record;
@@ -104,7 +104,7 @@ private
 
   function Current_Vertex (It : Directed_Graph_Iterator) return Vertex'Class;
 
-  type Directed_Vertex_Iterator (D : access Directed_Vertex)
+  type Directed_Vertex_Iterator (D : access Directed_Vertex'Class)
      is new Actual_Vertex_Iterator (D) with record
     Index : Arc_Node_Ptr;
   end record;
