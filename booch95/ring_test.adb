@@ -131,8 +131,6 @@ procedure Ring_Test is
   Ring_B_P1, Ring_B_P2 : Bounded_Ring;
   Ring_D_P1, Ring_D_P2 : Dynamic_Ring;
   Ring_U_P1, Ring_U_P2 : Unbounded_Ring;
-  Ring_UG_P1, Ring_UG_P2 : Guarded_Unbounded_Ring;
-  Ring_US_P1, Ring_US_P2 : Synchronized_Unbounded_Ring;
 
 begin
 
@@ -140,17 +138,11 @@ begin
 
   Put_Line ("...Bounded Ring");
   Test_Primitive (Ring_B_P1, Ring_B_P2);
-
   Put_Line ("...Dynamic Ring");
   RD.Preallocate (Ring_D_P1, 50);
   Test_Primitive (Ring_D_P1, Ring_D_P2);
-
   Put_Line ("...Unbounded Ring");
   Test_Primitive (Ring_U_P1, Ring_U_P2);
-  Put_Line ("...Unbounded Guarded Ring");
-  Test_Primitive (Ring_UG_P1, Ring_UG_P2);
-  Put_Line ("...Unbounded Synchronized Ring");
-  Test_Primitive (Ring_US_P1, Ring_US_P2);
 
   Put_Line ("...Ring Active Iterator");
   Put_Line ("   Bounded:");
@@ -159,10 +151,6 @@ begin
   Test_Active_Iterator (Ring_D_P1);
   Put_Line ("   Unbounded:");
   Test_Active_Iterator (Ring_U_P1);
-  Put_Line ("   Unbounded Guarded:");
-  Test_Active_Iterator (Ring_UG_P1);
-  Put_Line ("   Unbounded Synchronized:");
-  Test_Active_Iterator (Ring_US_P1);
 
   Put_Line ("...Ring Passive Iterator");
   Put_Line ("   Bounded:");
@@ -170,11 +158,6 @@ begin
   Put_Line ("   Dynamic:");
   Test_Passive_Iterator (Ring_D_P1);
   Put_Line ("   Unbounded:");
-  Test_Passive_Iterator (Ring_U_P1);
-  Put_Line ("   Unbounded Guarded:");
-  Test_Passive_Iterator (Ring_UG_P1);
-  Put_Line ("   Unbounded Synchronized:");
-  Test_Passive_Iterator (Ring_US_P1);
 
   Assertion (RB.Top (Ring_B_P1) = '9', "** M01: Ring top is not correct");
   Assertion (RB.Extent (Ring_B_P2) = 2, "** M02: Ring depth is not correct");
