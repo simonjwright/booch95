@@ -34,7 +34,7 @@ package body BC.Containers is
 
   -- Iteration support
 
-  procedure Access_Current_Item is
+  procedure Access_Current_Item (In_The_Iterator : Iterator'Class) is
   begin
     Apply (Current_Item_Ptr (In_The_Iterator).all);
   end Access_Current_Item;
@@ -80,11 +80,11 @@ package body BC.Containers is
     begin
       Apply (I, Success);
     end Caller;
-    procedure Call_Apply is new Access_Current_Item (Caller, Using);
+    procedure Call_Apply is new Access_Current_Item (Caller);
   begin
     Reset (Using);
     while not Is_Done (Using) loop
-      Call_Apply;
+      Call_Apply (Using);
       exit when not Success;
       Next (Using);
     end loop;
@@ -97,11 +97,11 @@ package body BC.Containers is
     begin
       Apply (I, Param, Success);
     end Caller;
-    procedure Call_Apply is new Access_Current_Item (Caller, Using);
+    procedure Call_Apply is new Access_Current_Item (Caller);
   begin
     Reset (Using);
     while not Is_Done (Using) loop
-      Call_Apply;
+      Call_Apply (Using);
       exit when not Success;
       Next (Using);
     end loop;
@@ -114,11 +114,11 @@ package body BC.Containers is
     begin
       Apply (I, Param, Success);
     end Caller;
-    procedure Call_Apply is new Access_Current_Item (Caller, Using);
+    procedure Call_Apply is new Access_Current_Item (Caller);
   begin
     Reset (Using);
     while not Is_Done (Using) loop
-      Call_Apply;
+      Call_Apply (Using);
       exit when not Success;
       Next (Using);
     end loop;
