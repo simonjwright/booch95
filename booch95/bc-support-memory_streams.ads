@@ -59,7 +59,12 @@ package BC.Support.Memory_Streams is
    procedure Write_Contents (To : access Ada.Streams.Root_Stream_Type'Class;
                              Stream : Stream_Type);
    --  Writes the contents of Stream directly to the stream To, so
-   --  that it can be read by a 'Input operation.
+   --  that it can be read by a 'Input operation on To.
+
+   procedure Read_Contents (From : access Ada.Streams.Root_Stream_Type'Class;
+                            Stream : in out Stream_Type);
+   --  Reads the contents of Stream directly from the stream From, so
+   --  that it can be read by a 'Input operation on Stream.
 
    --  A possible use of these features might be where an external
    --  datagram 'stream' requires the length of the data to be written
@@ -73,6 +78,15 @@ package BC.Support.Memory_Streams is
    --        Integer'Write (To, BC.Support.Memory_Streams.Length (M));
    --        BC.Support.Memory_Streams.Write_Contents (To, M);
    --     end Write;
+   --
+   --     procedure Read (From : access Ada.Streams.Root_Stream_Type'Class;
+   --              V : out Some_Type) is
+   --        Size : Natural := Integer'Read (From);
+   --        M : aliased BC.Support.Memory_Streams.Stream_Type (Size);
+   --     begin
+   --        BC.Support.Memory_Streams.Read_Contents (From, M);
+   --        V := Some_Type'Input (M);
+   --     end Read;
 
    procedure Reset (Stream : out Stream_Type);
    --  Clears Stream.
