@@ -73,6 +73,9 @@ package BC.Containers.Rings is
   procedure Rotate_To_Mark (R : in out Abstract_Ring);
   -- Rotate the ring so that the ring's mark is at the top.
 
+  function Available (R : in Abstract_Ring) return Natural;
+  -- Indicates number of empty "Item slots" left in Ring
+
   function Extent (R : Abstract_Ring) return Natural is abstract;
   -- Return the number of items in the ring.
 

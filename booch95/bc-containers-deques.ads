@@ -45,6 +45,9 @@ package BC.Containers.Deques is
   procedure Remove (D : in out Abstract_Deque; From : Positive) is abstract;
   -- Remove the item at the given index (may be a balking operation).
 
+  function Available (D : in Abstract_Deque) return Natural;
+  -- Indicates number of empty "Item slots" left in Deque
+
   function Length (D : in Abstract_Deque) return Natural is abstract;
   -- Return the number of items in the deque.
 

@@ -206,6 +206,12 @@ package body BC.Containers.Bags is
     return Is_Proper or else Extent (B) < Extent (O);
   end Is_Proper_Subset;
 
+  function Available (B : Abstract_Bag) return Natural is
+  begin
+    return Natural'Last;
+  end Available;
+
+
   -- Subprograms to be overridden
 
   procedure Attach (B : in out Abstract_Bag; I : Item; C : Positive) is

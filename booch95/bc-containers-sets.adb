@@ -139,6 +139,11 @@ package body BC.Containers.Sets is
     return True;
   end Is_Proper_Subset;
 
+  function Available (S : in Abstract_Set) return Natural is
+  begin
+    return Natural'Last;
+  end Available;
+
   procedure Reset (It : in out Set_Iterator) is
     S : Abstract_Set'Class
        renames Abstract_Set'Class (It.For_The_Container.all);

@@ -64,6 +64,11 @@ package body BC.Containers.Stacks is
     end if;
   end Copy;
 
+  function Available (S : in Abstract_Stack) return Natural is
+  begin
+    return Natural'Last;
+  end Available;
+
   -- Subprograms to be overridden
 
   procedure Add (S : in out Abstract_Stack; Elem : Item) is

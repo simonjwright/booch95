@@ -44,6 +44,11 @@ package body BC.Containers.Maps is
     return True;
   end Are_Equal;
 
+  function Available (M : Abstract_Map) return Natural is
+  begin
+    return Natural'Last;
+  end Available;
+
   procedure Reset (It : in out Map_Iterator) is
     M : Abstract_Map'Class
        renames Abstract_Map'Class (It.For_The_Container.all);

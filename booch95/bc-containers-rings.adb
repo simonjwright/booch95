@@ -78,6 +78,11 @@ package body BC.Containers.Rings is
     R.Top := R.Mark;
   end Rotate_To_Mark;
 
+  function Available (R : in Abstract_Ring) return Natural is
+  begin
+    return Natural'Last;
+  end Available;
+
   function At_Mark (R : Abstract_Ring) return Boolean is
   begin
     return R.Mark = R.Top;

@@ -76,6 +76,9 @@ package BC.Containers.Sets is
   -- already a distinct member of the set S, do nothing. If the item
   -- is a member, remove the item from the set S.
 
+  function Available (S : Abstract_Set) return Natural;
+  -- Return the number of unused slots in the set.
+
   function Extent (S : Abstract_Set) return Natural is abstract;
   -- Return the number of distinct items in the set.
 
