@@ -41,9 +41,10 @@ package body BC.Support.Unbounded is
      Ada.Unchecked_Deallocation (Unb_Node, Unb_Node_Ref);
 
   function Create (From : Unb_Node) return Unb_Node_Ref is
-    Obj : Unb_Node_Ref := new Unb_Node'(From);
-    Tmp : Nodes.Node_Ref := Obj.Last;
+    Obj : Unb_Node_Ref := new Unb_Node;
+    Tmp : Nodes.Node_Ref := From.Last;
   begin
+    Obj.Size := From.Size;
     if Tmp /= null then
       Obj.Last := Nodes.Create (Tmp.Element, Previous => null, Next => null);
       Obj.Rep := Obj.Last;
