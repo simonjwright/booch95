@@ -61,12 +61,12 @@ TESTABLE += smart_test
 smart_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
-TESTABLE += stack_test
-stack_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
-
 TESTABLE += set_test
 set_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+TESTABLE += stack_test
+stack_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += tree_test
@@ -74,6 +74,33 @@ tree_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 testable: $(TESTABLE)
+
+# Aonix special tests (included here so we check they will at least compile
+# under Linux)
+
+aonix_test: aonix_testable
+	for t in $(AONIX_TESTABLE); do \
+	  echo running $$t; \
+	  ./$$t 2>$$t.log; \
+	done
+
+AONIX_TESTABLE += map_test_aonix
+map_test_aonix: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+AONIX_TESTABLE += queue_test_aonix
+queue_test_aonix: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+AONIX_TESTABLE += set_test_aonix
+set_test_aonix: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+AONIX_TESTABLE += stack_test_aonix
+stack_test_aonix: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+aonix_testable: $(AONIX_TESTABLE)
 
 ########
 # Demos
