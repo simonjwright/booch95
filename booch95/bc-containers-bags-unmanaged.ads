@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2003 Simon Wright <simon@pushface.org>
+--  Copyright 2003-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -96,20 +96,39 @@ private
 
    package IC is new BC.Support.Unmanaged (Item => Item,
                                            Item_Ptr => Item_Ptr);
-   use IC;
    package Items is new BC.Support.Hash_Tables.Item_Signature
      (Item => Item,
       Item_Ptr => Item_Ptr,
-      Item_Container => IC.Unm_Node);
+      Hash => Hash,
+      Item_Container => IC.Unm_Node,
+      Clear => IC.Clear,
+      Insert => IC.Insert,
+      Append => IC.Append,
+      Remove => IC.Remove,
+      Replace => IC.Replace,
+      Length => IC.Length,
+      Item_At => IC.Item_At,
+      Access_Item_At => IC.Item_At,
+      Location => IC.Location);
 
    type Positive_Ptr is access all Positive;
+   for Positive_Ptr'Storage_Size use 0;
    package VC is new BC.Support.Unmanaged (Item => Positive,
                                            Item_Ptr => Positive_Ptr);
-   use VC;
    package Values is new BC.Support.Hash_Tables.Value_Signature
      (Value => Positive,
       Value_Ptr => Positive_Ptr,
-      Value_Container => VC.Unm_Node);
+      Eq => Standard."=",
+      Value_Container => VC.Unm_Node,
+      Clear => VC.Clear,
+      Insert => VC.Insert,
+      Append => VC.Append,
+      Remove => VC.Remove,
+      Replace => VC.Replace,
+      Length => VC.Length,
+      Item_At => VC.Item_At,
+      Access_Item_At => VC.Item_At,
+      Location => VC.Location);
 
    package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Items,
