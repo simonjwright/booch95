@@ -1,4 +1,4 @@
--- Copyright (C) 1999-2000 Simon Wright.
+-- Copyright (C) 1999-2001 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -46,7 +46,8 @@ package body BC.Support.Synchronization is
 
     function None_Pending return Boolean is
     begin
-      return Seize'Count = 0;
+      -- See LRM 4.1.4(14).
+      return Semaphore_Type.Seize'Count = 0;
     end None_Pending;
 
   end Semaphore_Type;
