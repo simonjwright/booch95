@@ -80,11 +80,9 @@ private
                              Maximum_Size => Maximum_Size);
 
   type Ring is new Abstract_Ring with record
-    Rep : Ring_Nodes.Bnd_Node_Ref := new Ring_Nodes.Bnd_Node;
+    Rep : Ring_Nodes.Bnd_Node;
   end record;
 
   procedure Initialize (R : in out Ring);
-  procedure Adjust (R : in out Ring);
-  procedure Finalize (R : in out Ring);
 
 end BC.Containers.Rings.Bounded;

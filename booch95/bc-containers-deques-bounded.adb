@@ -23,7 +23,7 @@ package body BC.Containers.Deques.Bounded is
 
   procedure Clear (D : in out Deque) is
   begin
-    Deque_Nodes.Clear (D.Rep.all);
+    Deque_Nodes.Clear (D.Rep);
   end Clear;
 
   procedure Append (D : in out Deque;
@@ -31,61 +31,61 @@ package body BC.Containers.Deques.Bounded is
                     Location : Deque_End := Back) is
   begin
     if Location = Back then
-      Deque_Nodes.Append (D.Rep.all, Elem);
+      Deque_Nodes.Append (D.Rep, Elem);
     else
-      Deque_Nodes.Insert (D.Rep.all, Elem);
+      Deque_Nodes.Insert (D.Rep, Elem);
     end if;
   end Append;
 
   procedure Pop (D : in out Deque; Location : Deque_End := Front) is
   begin
     if Location = Front then
-      Deque_Nodes.Remove (D.Rep.all, 1);
+      Deque_Nodes.Remove (D.Rep, 1);
     else
-      Deque_Nodes.Remove (D.Rep.all,
-                          Deque_Nodes.Length (D.Rep.all));
+      Deque_Nodes.Remove (D.Rep,
+                          Deque_Nodes.Length (D.Rep));
     end if;
   end Pop;
 
   procedure Remove (D : in out Deque; From : Positive) is
   begin
-    Deque_Nodes.Remove (D.Rep.all, From);
+    Deque_Nodes.Remove (D.Rep, From);
   end Remove;
 
   function Available (D: in Deque) return Natural is
   begin
-    return Deque_Nodes.Available (D.Rep.all);
+    return Deque_Nodes.Available (D.Rep);
   end Available;
 
   function Length (D : Deque) return Natural is
   begin
-    return Deque_Nodes.Length (D.Rep.all);
+    return Deque_Nodes.Length (D.Rep);
   end Length;
 
   function Is_Empty (D : Deque) return Boolean is
   begin
-    return Deque_Nodes.Length (D.Rep.all) = 0;
+    return Deque_Nodes.Length (D.Rep) = 0;
   end Is_Empty;
 
   function Front (D : Deque) return Item is
   begin
-    return Deque_Nodes.First (D.Rep.all);
+    return Deque_Nodes.First (D.Rep);
   end Front;
 
   function Back (D : Deque) return Item is
   begin
-    return Deque_Nodes.Last (D.Rep.all);
+    return Deque_Nodes.Last (D.Rep);
   end Back;
 
   function Location (D : Deque; Elem : Item) return Natural is
   begin
-    return Deque_Nodes.Location (D.Rep.all, Elem);
+    return Deque_Nodes.Location (D.Rep, Elem);
   end Location;
 
   function "=" (Left, Right : Deque) return Boolean is
     use Deque_Nodes;
   begin
-    return Left.Rep.all = Right.Rep.all;
+    return Left.Rep = Right.Rep;
   end "=";
 
   package Address_Conversions
@@ -103,20 +103,11 @@ package body BC.Containers.Deques.Bounded is
 
   function Item_At (D : Deque; Index : Positive) return Item_Ptr is
   begin
-    return Deque_Nodes.Item_At (D.Rep.all, Index);
+    return Deque_Nodes.Item_At (D.Rep, Index);
   end Item_At;
 
-  procedure Adjust (D : in out Deque) is
-  begin
-    D.Rep := Deque_Nodes.Create (From => D.Rep.all);
-  end Adjust;
-
-  procedure Finalize (D : in out Deque) is
-  begin
-    Deque_Nodes.Free (D.Rep); -- does a Clear()
-  end Finalize;
-
   Empty_Container : Deque;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Deque is
   begin
