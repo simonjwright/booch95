@@ -31,8 +31,7 @@ generic package BC.Containers.Trees is
   -- Binary and multiway trees are polylithic structures, and hence the
   -- semantics of copying, assignment, and equality involve structural
   -- sharing. Care must be taken in manipulating the same tree named by
-  -- more than one alias. AVL trees are monolithic, although they prohibit
-  -- any copying, assignment, or test for equality.
+  -- more than one alias. AVL trees are monolithic.
 
   -- These classes are not intended to be subclassed, and so provide no
   -- virtual members.
