@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -25,14 +25,9 @@
 --  $Date$
 --  $Author$
 
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Bags.Unbounded is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Containers.Bags.Unbounded");
 
    procedure Clear (B : in out Unconstrained_Bag) is
    begin
@@ -55,10 +50,6 @@ package body BC.Containers.Bags.Unbounded is
    procedure Remove (B : in out Unconstrained_Bag; I : Item) is
       Count : Positive;
    begin
-      Assert (Tables.Is_Bound (B.Rep, I),
-              BC.Not_Found'Identity,
-              "Remove",
-              BSE.Missing);
       Count := Tables.Value_Of (B.Rep, I);
       if Count = 1 then
          Tables.Unbind (B.Rep, I);
