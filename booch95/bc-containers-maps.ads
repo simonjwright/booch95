@@ -93,16 +93,18 @@ package BC.Containers.Maps is
 
   generic
     with procedure Apply (I : Item; V : Value; OK : out Boolean);
-  procedure Visit (Over_The_Container : Map'Class);
-  -- Call Apply with a copy of each Item/Value pair in the Container. The
-  -- iteration will terminate early if Apply sets OK to False.
+  procedure Visit (Using : in out Iterator);
+  -- Call Apply with a copy of each Item/Value pair in the Container
+  -- to which the iterator Using is bound. The iteration will
+  -- terminate early if Apply sets OK to False.
 
   generic
     with procedure Apply (I : Item; V : in out Value; OK : out Boolean);
-  procedure Modify (Over_The_Container : Map'Class);
-  -- Call Apply for each Item/Value pair in the Container. The Item is a
-  -- copy, the Value is the actual content. The iteration will terminate
-  -- early if Apply sets OK to False.
+  procedure Modify (Using : in out Iterator);
+  -- Call Apply for each Item/Value pair in the Container to which the
+  -- iterator Using is bound. The Item is a copy, the Value is the
+  -- actual content. The iteration will terminate early if Apply sets
+  -- OK to False.
 
 private
 
@@ -116,8 +118,6 @@ private
   function Number_Of_Buckets (M : Map) return Natural;
 
   function Length (M : Map; Bucket : Positive) return Natural;
-
---   function Exists (M : Map; I : Item) return Boolean;
 
   function Item_At (M : Map; Bucket, Index : Positive) return Item_Ptr;
 
