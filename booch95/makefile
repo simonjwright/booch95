@@ -52,13 +52,13 @@ bc-support.ad[bs]
 test: testable
 	for t in $(TESTABLE); do \
 	  echo running $$t; \
-	  ./$$t 2>$$t.log; \
+	  ./$$t 2>&1; \
 	done
 
 concurrent_test: concurrent_testable
 	for t in $(CONCURRENT_TESTABLE); do \
 	  echo running $$t; \
-	  ./$$t 2>&1 \
+	  ./$$t 2>&1; \
 	done
 
 TEST_SRC = global_heap.ad[bs]
@@ -177,6 +177,13 @@ bc-smart.ad[bs]
 TESTABLE += smart_test
 TEST_SRC += smart_test.ad[bs] smart_test_support.ad[bs]
 smart_test: force
+
+ADA_SOURCE += \
+bc-containers-quicksort.ad[bs] \
+bc-containers-shellsort.ad[bs]
+TESTABLE += sort_test
+TEST_SRC += sort_test.adb
+sort_test: force
 
 ADA_SOURCE += \
 bc-containers-stacks-bounded.ad[bs] \
