@@ -207,7 +207,7 @@ package body BC.Support.Synchronization is
         when For_Reading =>
           Reader_Count := Reader_Count + 1;
         when For_Writing =>
-          requeue Waiting_To_Write;
+          requeue Waiting_To_Write with abort;
       end case;
     end Seize;
 
