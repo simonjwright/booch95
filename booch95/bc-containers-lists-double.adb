@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -25,6 +25,12 @@ package body BC.Containers.Lists.Double is
   package BSE renames BC.Support.Exceptions;
   procedure Assert
   is new BSE.Assert ("BC.Containers.Lists.Double");
+
+  -- We can't take 'Access of non-aliased components. But if we alias
+  -- discriminated objects they become constrained - even if the
+  -- discriminant has a default.
+  package Allow_Element_Access
+  is new System.Address_To_Access_Conversions (Item);
 
   use type Double_Nodes.Double_Node_Ref;
 
@@ -613,7 +619,8 @@ package body BC.Containers.Lists.Double is
             BC.Range_Error'Identity,
             "Item_At",
             BSE.Invalid_Index);
-    return Curr.Element'access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (Curr.Element'Address));
   end Item_At;
 
   procedure Initialize (L : in out Double_List) is
@@ -668,7 +675,8 @@ package body BC.Containers.Lists.Double is
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return It.Index.Element'Access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (It.Index.Element'Address));
   end Current_Item;
 
   procedure Delete_Item_At (It : Double_List_Iterator) is

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -33,6 +33,13 @@ package body BC.Support.Unbounded is
   -- restriction). This technique is due to Matthew Heaney.
   package Allow_Access
   is new System.Address_To_Access_Conversions (Unb_Node);
+
+  -- We can't take 'Access of non-aliased components. But if we alias
+  -- discriminated objects they become constrained - even if the
+  -- discriminant has a default.
+  package Allow_Element_Access
+  is new System.Address_To_Access_Conversions (Item);
+
   use type Nodes.Node_Ref;
 
   procedure Delete_Node is new
@@ -288,7 +295,8 @@ package body BC.Support.Unbounded is
             BC.Underflow'Identity,
             "First",
             BSE.Empty);
-    return Obj.Rep.Element'access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (Obj.Rep.Element'Address));
   end First;
 
   function Last (Obj : Unb_Node) return Item is
@@ -306,7 +314,8 @@ package body BC.Support.Unbounded is
             BC.Underflow'Identity,
             "Last",
             BSE.Empty);
-    return  Obj.Last.Element'access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (Obj.Last.Element'Address));
   end ;
 
   function Item_At (Obj : Unb_Node; Index : Positive) return Item is
@@ -332,7 +341,8 @@ package body BC.Support.Unbounded is
             "Item_At",
             BSE.Invalid_Index);
     Update_Cache (U.all, Index);
-    return U.Cache.Element'Access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (U.Cache.Element'Address));
   end Item_At;
 
   function Location (Obj : Unb_Node; Elem : Item; Start : Positive := 1)

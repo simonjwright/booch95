@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller, Pat Rogers and
+-- Copyright (C) 1994-2000 Grady Booch, David Weller, Pat Rogers and
 -- Simon Wright.
 -- All Rights Reserved.
 --
@@ -102,7 +102,7 @@ package BC.Support.Dynamic is
 
 private
 
-  type Dyn_Arr is array (Positive range <>) of aliased Item;
+  type Dyn_Arr is array (Positive range <>) of Item;
 
   type Dyn_Arr_Ref is access all Dyn_Arr;
   for Dyn_Arr_Ref'Storage_Pool use Storage;
