@@ -128,8 +128,6 @@ package body Bc.Containers.Lists.Single is
       while Curr.Next /= null loop
         Curr := Curr.Next;
       end loop;
-    end if;
-    if Curr /= null then
       Curr.Next := Single_Nodes.Create (Elem, Next => null);
     else
       Obj.Rep := Single_Nodes.Create (Elem, Next => null);
