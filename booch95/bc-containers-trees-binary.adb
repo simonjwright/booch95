@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -27,13 +27,8 @@
 --  $Author$
 
 with Ada.Unchecked_Deallocation;
-with BC.Support.Exceptions;
 
 package body BC.Containers.Trees.Binary is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Containers.Trees.Binary");
 
    function Create
      (I : Item; Parent, Left, Right : Binary_Node_Ref)
@@ -85,10 +80,9 @@ package body BC.Containers.Trees.Binary is
                      Elem : in Item;
                      Child : in Child_Branch) is
    begin
-      Assert (T.Rep = null or else T.Rep.Parent = null,
-              BC.Not_Root'Identity,
-              "Insert",
-              BSE.Not_Root);
+      if T.Rep /= null and then T.Rep.Parent /= null then
+         raise BC.Not_Root;
+      end if;
       if Child = Left then
          T.Rep := Create (Elem,
                           Parent => null,
@@ -143,10 +137,9 @@ package body BC.Containers.Trees.Binary is
 
    procedure Remove (T : in out Binary_Tree; Child : in Child_Branch) is
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Remove",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       if Child = Left then
          Purge (T.Rep.Left);
          T.Rep.Left := null;
@@ -161,10 +154,9 @@ package body BC.Containers.Trees.Binary is
                     Child : in Child_Branch) is
       Temp : Binary_Node_Ref :=  Share_With.Rep;
    begin
-      Assert (Share_With.Rep /= null,
-              BC.Is_Null'Identity,
-              "Share",
-              BSE.Is_Null);
+      if Share_With.Rep = null then
+         raise BC.Is_Null;
+      end if;
       if Child = Left then
          Temp := Share_With.Rep.Left;
       else
@@ -180,14 +172,12 @@ package body BC.Containers.Trees.Binary is
                          Child : in Child_Branch) is
       Curr : Binary_Node_Ref;
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Swap_Child",
-              BSE.Is_Null);
-      Assert (Swap_With.Rep = null or else Swap_With.Rep.Parent = null,
-              BC.Not_Root'Identity,
-              "Swap_Child",
-              BSE.Not_Root);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
+      if Swap_With.Rep /= null and then Swap_With.Rep.Parent /= null then
+         raise BC.Not_Root;
+      end if;
       if Child = Left then
          Curr := T.Rep.Left;
          T.Rep.Left := Swap_With.Rep;
@@ -216,10 +206,9 @@ package body BC.Containers.Trees.Binary is
    procedure Left_Child (T : in out Binary_Tree) is
       Curr : Binary_Node_Ref;
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Left_Child",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       Curr := T.Rep;
       T.Rep := T.Rep.Left;
       if Curr.Count > 1 then
@@ -249,10 +238,9 @@ package body BC.Containers.Trees.Binary is
    procedure Right_Child (T : in out Binary_Tree) is
       Curr : Binary_Node_Ref;
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Right_Child",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       Curr := T.Rep;
       T.Rep := T.Rep.Right;
       if Curr.Count > 1 then
@@ -281,10 +269,9 @@ package body BC.Containers.Trees.Binary is
 
    procedure Parent (T : in out Binary_Tree) is
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Parent",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       if T.Rep.Parent = null then
          Clear (T);
       else
@@ -298,10 +285,9 @@ package body BC.Containers.Trees.Binary is
 
    procedure Set_Item (T : in out Binary_Tree; Elem : in Item) is
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Set_Item",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       T.Rep.Element := Elem;
    end Set_Item;
 
@@ -328,10 +314,9 @@ package body BC.Containers.Trees.Binary is
 
    function Item_At (T : in Binary_Tree) return Item is
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Item_At",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       return T.Rep.Element;
    end Item_At;
 
