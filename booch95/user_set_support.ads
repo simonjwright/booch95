@@ -40,7 +40,7 @@ package User_Set_Support is
 
   package SB is new Sets.Bounded (Hash => User_Char_Hash,
                                   Buckets => 3,
-                                  Size => 100);
+                                  Maximum_Size => 100);
 
   package SD is new Sets.Dynamic (Hash => User_Char_Hash,
                                   Buckets => 3,
