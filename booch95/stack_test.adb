@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -43,7 +43,7 @@ procedure Stack_Test is
   end Assertion;
 
   procedure Test_Active_Iterator (L : Container'Class) is
-    Iter : Iterator := New_Iterator (L);
+    Iter : Iterator'Class := New_Iterator (L);
     Success : Boolean;
     Temp : Character;
   begin
@@ -56,7 +56,7 @@ procedure Stack_Test is
 
   procedure Test_Passive_Iterator (S : Container'Class) is
     procedure Iterate is new Visit (Apply => Process);
-    Iter : Iterator := New_Iterator (S);
+    Iter : Iterator'Class := New_Iterator (S);
   begin
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
@@ -137,7 +137,7 @@ procedure Stack_Test is
   end Test_Primitive;
 
   procedure Test_Iterator_Deletion (S : in out Stack'Class) is
-    Iter : Iterator := New_Iterator (S);
+    Iter : Iterator'Class := New_Iterator (S);
     Delete : Boolean;
   begin
     Clear (S);
