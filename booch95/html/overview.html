@@ -49,15 +49,10 @@ web site</a>).
 
 <p> The Components are issued under the <a href="ACL">Ada Community
 License</a>. You can read <a
-href=mailto="dgweller@despammed.com">David Weller</a>'s <a
+href="mailto:dgweller@despammed.com">David Weller</a>'s <a
 href="acl_faq.html">FAQ</a> on the ACL.</p>
 
 <H2><a name="schedule">Schedule</a></H2>
-
-<p>(Please note, the Components are likely to change fairly
-dramatically between releases over the next few iterations. You'll
-probably need to change your source at each issue; you'll certainly
-need to recompile).</p>
 
 <p>The current version has the following components available (the <font
 color=red>red</font> parts, if any, are new since the last
@@ -172,24 +167,6 @@ That said, I've tried to use a common style throughout.<p>
 
 </dd>
 
-<dt>Synchronization</dt>
-
-<dd>
-
-As discussed <a href="documentation.html#synchronization">elsewhere</a>,
-there are two forms of support for concurrency:
-
-<dl>
-<dt>guarded<dd>where objects must be locked by the client, and
-<dt>synchronized<dd>where each operation provides its own internal locking
-</dl>
-
-Some <em>synchronized</em> objects additionally provide a form of
-queuing control; an attempt to read from an empty Container will
-result in blocking until an entry is added to the Container.<p>
-
-</dd>
-
 <dt>Compilers</dt>
 
 <dd>
@@ -198,12 +175,8 @@ The new Aonix ObjectAda 7.2 demo compiler handles the stock Components
 without change, so the old "Aonix-only" versions of the test programs,
 which omitted Dynamic forms, are no longer needed.
 
-<p>However, none of GNAT 3.12p, Apex (3.0.2B for NT) or OA7.2 <a
-href="compiler-problems.html#13aug2000">handles the idiom I've
-adopted</a> for adding concurrency. It's such a pleasant idiom, too,
-and saves <em>so</em> much work!
-
-<p>GNAT 3.13p works well.
+<p>The Components work well (for me) with GCC-3.2 and prerelease 3.3
+compilers.
 
 </dd>
 
