@@ -26,15 +26,15 @@ package body BC.Graphs.Undirected is
   is new BSE.Assert ("BC.Graphs.Undirected");
 
 
-  ----------------------
-  -- Graph operations --
-  ----------------------
+  ---------------------------------
+  -- Undirected_Graph operations --
+  ---------------------------------
 
-  procedure Create_Arc (G : in out Graph;
-                        A : in out Arc'Class;
+  procedure Create_Arc (G : in out Undirected_Graph;
+                        A : in out Undirected_Arc'Class;
                         I : Arc_Item;
-                        First : in out Vertex'Class;
-                        Second : in out Vertex'Class) is
+                        First : in out Undirected_Vertex'Class;
+                        Second : in out Undirected_Vertex'Class) is
   begin
     Clear (A);
     A.Rep := new Arc_Node'(Ada.Finalization.Controlled with
@@ -60,11 +60,11 @@ package body BC.Graphs.Undirected is
   end Create_Arc;
 
 
-  -----------------------
-  -- Vertex operations --
-  -----------------------
+  ----------------------------------
+  -- Undirected_Vertex operations --
+  ----------------------------------
 
-  function Arity (V : Vertex) return Natural is
+  function Arity (V : Undirected_Vertex) return Natural is
     Count : Natural := 0;
     Curr : Arc_Node_Ptr;
   begin
@@ -88,11 +88,12 @@ package body BC.Graphs.Undirected is
   end Arity;
 
 
-  --------------------
-  -- Arc operations --
-  --------------------
+  -------------------------------
+  -- Undirected_Arc operations --
+  -------------------------------
 
-  procedure Set_First_Vertex (A : in out Arc; V : access Vertex'Class) is
+  procedure Set_First_Vertex (A : in out Undirected_Arc;
+			      V : access Undirected_Vertex'Class) is
     Prev, Curr : Arc_Node_Ptr;
   begin
     Assert (A.Rep /= null,
@@ -124,7 +125,8 @@ package body BC.Graphs.Undirected is
   end Set_First_Vertex;
 
 
-  procedure Set_Second_Vertex (A : in out Arc; V : access Vertex'Class) is
+  procedure Set_Second_Vertex (A : in out Undirected_Arc;
+			       V : access Undirected_Vertex'Class) is
     Prev, Curr : Arc_Node_Ptr;
   begin
     Assert (A.Rep /= null,
@@ -156,7 +158,8 @@ package body BC.Graphs.Undirected is
   end Set_Second_Vertex;
 
 
-  procedure First_Vertex (A : Arc; V : in out Vertex'Class) is
+  procedure First_Vertex (A : Undirected_Arc;
+			  V : in out Undirected_Vertex'Class) is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
@@ -170,7 +173,8 @@ package body BC.Graphs.Undirected is
   end First_Vertex;
 
 
-  procedure Second_Vertex (A : Arc; V : in out Vertex'Class) is
+  procedure Second_Vertex (A : Undirected_Arc;
+			   V : in out Undirected_Vertex'Class) is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
@@ -184,17 +188,17 @@ package body BC.Graphs.Undirected is
   end Second_Vertex;
 
 
-  ---------------------
-  -- Graph iterators --
-  ---------------------
+  --------------------------------
+  -- Undirected_Graph iterators --
+  --------------------------------
 
-  procedure Reset (It : in out Graph_Iterator) is
+  procedure Reset (It : in out Undirected_Graph_Iterator) is
   begin
     It.Index := It.G.Rep;
   end Reset;
 
 
-  procedure Next (It : in out Graph_Iterator) is
+  procedure Next (It : in out Undirected_Graph_Iterator) is
   begin
     if It.Index /= null then
       It.Index := It.Index.Next;
@@ -202,17 +206,18 @@ package body BC.Graphs.Undirected is
   end Next;
 
 
-  function Is_Done (It : Graph_Iterator) return Boolean is
+  function Is_Done (It : Undirected_Graph_Iterator) return Boolean is
   begin
     return It.Index = null;
   end Is_Done;
 
 
-  procedure Current_Item (It : Graph_Iterator; V : in out Vertex) is
+  procedure Current_Item (It : Undirected_Graph_Iterator;
+			  V : in out Undirected_Vertex) is
   begin
     Assert (It.Index /= null,
             BC.Is_Null'Identity,
-            "Current_Item(Graph_Iterator)",
+            "Current_Item(Undirected_Graph_Iterator)",
             BSE.Is_Null);
     Clear (V);
     V.Rep := It.Index;
@@ -221,9 +226,9 @@ package body BC.Graphs.Undirected is
 
 
   function Visit_Vertices
-     (It : access Passive_Graph_Iterator) return Boolean is
-    Iter : Graph_Iterator (It.G);
-    V : Vertex;
+     (It : access Passive_Undirected_Graph_Iterator) return Boolean is
+    Iter : Undirected_Graph_Iterator (It.G);
+    V : Undirected_Vertex;
     Result : Boolean := True;
   begin
     while not Is_Done (Iter) loop
@@ -236,11 +241,11 @@ package body BC.Graphs.Undirected is
   end Visit_Vertices;
 
 
-  ---------------------
-  -- Vertex iterators --
-  ---------------------
+  ---------------------------------
+  -- Undirected_Vertex iterators --
+  ---------------------------------
 
-  procedure Reset (It : in out Vertex_Iterator) is
+  procedure Reset (It : in out Undirected_Vertex_Iterator) is
   begin
     It.First := True;
     if It.V.Rep /= null then
@@ -258,7 +263,7 @@ package body BC.Graphs.Undirected is
   end Reset;
 
 
-  procedure Next (It : in out Vertex_Iterator) is
+  procedure Next (It : in out Undirected_Vertex_Iterator) is
   begin
     -- XXX I think we ought to check here that there is an Index!
     if It.First then
@@ -279,17 +284,18 @@ package body BC.Graphs.Undirected is
   end Next;
 
 
-  function Is_Done (It : Vertex_Iterator) return Boolean is
+  function Is_Done (It : Undirected_Vertex_Iterator) return Boolean is
   begin
     return It.Index = null;
   end Is_Done;
 
 
-  procedure Current_Item (It : Vertex_Iterator; A : in out Arc'Class) is
+  procedure Current_Item (It : Undirected_Vertex_Iterator;
+			  A : in out Undirected_Arc'Class) is
   begin
     Assert (It.Index /= null,
             BC.Is_Null'Identity,
-            "Current_Item(Vertex_Iterator)",
+            "Current_Item(Undirected_Vertex_Iterator)",
             BSE.Is_Null);
     Clear (A);
     A.Rep := It.Index;
@@ -297,9 +303,10 @@ package body BC.Graphs.Undirected is
   end Current_Item;
 
 
-  function Visit_Arcs (It : access Passive_Vertex_Iterator) return Boolean is
-    Iter : Vertex_Iterator (It.V);
-    A : Arc;
+  function Visit_Arcs
+     (It : access Passive_Undirected_Vertex_Iterator) return Boolean is
+    Iter : Undirected_Vertex_Iterator (It.V);
+    A : Undirected_Arc;
     Result : Boolean := True;
   begin
     while not Is_Done (Iter) loop
@@ -316,7 +323,7 @@ package body BC.Graphs.Undirected is
   -- Utilities, controlled storage management --
   ----------------------------------------------
 
-  procedure Initialize (It : in out Vertex_Iterator) is
+  procedure Initialize (It : in out Undirected_Vertex_Iterator) is
   begin
     Reset (It);
   end Initialize;
