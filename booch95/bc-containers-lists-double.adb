@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -635,21 +635,19 @@ package body BC.Containers.Lists.Double is
 
   procedure Reset (It : in out Double_List_Iterator) is
   begin
-    if Cardinality (It.L.all) = 0 then
-      It.Index := 0;
-    else
-      It.Index := 1;
-    end if;
+    It.Index := It.L.Rep;
   end Reset;
 
   procedure Next (It : in out Double_List_Iterator) is
   begin
-    It.Index := It.Index + 1;
+    if It.Index /= null then
+      It.Index := It.Index.Next;
+    end if;
   end Next;
 
   function Is_Done (It : Double_List_Iterator) return Boolean is
   begin
-    return It.Index = 0 or else It.Index > Cardinality (It.L.all);
+    return It.Index = null;
   end Is_Done;
 
   function Current_Item (It : Double_List_Iterator) return Item is
@@ -657,7 +655,7 @@ package body BC.Containers.Lists.Double is
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.L.all, It.Index).all;
+    return It.Index.Element;
   end Current_Item;
 
   function Current_Item (It : Double_List_Iterator) return Item_Ptr is
@@ -665,7 +663,7 @@ package body BC.Containers.Lists.Double is
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.L.all, It.Index);
+    return It.Index.Element'Access;
   end Current_Item;
 
 end BC.Containers.Lists.Double;
