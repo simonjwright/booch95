@@ -230,18 +230,6 @@ package body BC.Support.Bounded is
       return Obj.Elems (Obj.Start);
    end First;
 
-   function First (Obj : Bnd_Node) return Item_Ptr is
-      E : Allow_Access.Object_Pointer
-        := Allow_Access.To_Pointer (Obj.Elems'Address);
-   begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "First",
-              BSE.Empty);
-      return Item_Ptr
-        (Allow_Element_Access.To_Pointer (E (Obj.Start)'Address));
-   end First;
-
    function Last (Obj : Bnd_Node) return Item is
    begin
       Assert (Obj.Size > 0,
@@ -249,19 +237,6 @@ package body BC.Support.Bounded is
               "Last",
               BSE.Empty);
       return Obj.Elems ((Obj.Start + Obj.Size - 1) mod Max_Size);
-   end Last;
-
-   function Last (Obj : Bnd_Node) return Item_Ptr is
-      E : Allow_Access.Object_Pointer
-        := Allow_Access.To_Pointer (Obj.Elems'Address);
-   begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "Last",
-              BSE.Empty);
-      return Item_Ptr
-        (Allow_Element_Access.To_Pointer
-         (E ((Obj.Start + Obj.Size - 1) mod Max_Size)'Address));
    end Last;
 
    function Item_At (Obj : Bnd_Node; Index : Positive) return Item is
