@@ -1,4 +1,4 @@
---  Copyright 2000-2002 Simon Wright <simon@pushface.org>
+--  Copyright 2000-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -26,51 +26,53 @@
 
 package BC.Support.Synchronization.Debug is
 
-  pragma Elaborate_Body;
+   pragma Elaborate_Body;
 
-  -- Use these types when you need logging of activity.  Each
-  -- operation reports itself (using the address of the Semaphore or
-  -- Monitor) before calling its parent operation.
-
-
-  type Debug_Semaphore is new Semaphore with private;
-  procedure Initialize (The_Semaphore : in out Debug_Semaphore);
-  procedure Adjust (The_Semaphore : in out Debug_Semaphore);
-  procedure Finalize (The_Semaphore : in out Debug_Semaphore);
-  procedure Seize (The_Semaphore : in out Debug_Semaphore);
-  procedure Release (The_Semaphore : in out Debug_Semaphore);
+   --  Use these types when you need logging of activity.  Each
+   --  operation reports itself (using the address of the Semaphore or
+   --  Monitor) before calling its parent operation.
 
 
-  type Debug_Recursive_Semaphore is new Recursive_Semaphore with private;
-  procedure Initialize (The_Semaphore : in out Debug_Recursive_Semaphore);
-  procedure Adjust (The_Semaphore : in out Debug_Recursive_Semaphore);
-  procedure Finalize (The_Semaphore : in out Debug_Recursive_Semaphore);
-  procedure Seize (The_Semaphore : in out Debug_Recursive_Semaphore);
-  procedure Release (The_Semaphore : in out Debug_Recursive_Semaphore);
+   type Debug_Semaphore is new Semaphore with private;
+   procedure Seize (The_Semaphore : in out Debug_Semaphore);
+   procedure Release (The_Semaphore : in out Debug_Semaphore);
 
 
-  type Debug_Single_Monitor is new Single_Monitor with private;
-  procedure Seize_For_Reading (The_Monitor : in out Debug_Single_Monitor);
-  procedure Seize_For_Writing (The_Monitor : in out Debug_Single_Monitor);
-  procedure Release_From_Reading (The_Monitor : in out Debug_Single_Monitor);
-  procedure Release_From_Writing (The_Monitor : in out Debug_Single_Monitor);
+   type Debug_Recursive_Semaphore is new Recursive_Semaphore with private;
+   procedure Seize (The_Semaphore : in out Debug_Recursive_Semaphore);
+   procedure Release (The_Semaphore : in out Debug_Recursive_Semaphore);
 
 
-  type Debug_Multiple_Monitor is new Multiple_Monitor with private;
-  procedure Seize_For_Reading (The_Monitor : in out Debug_Multiple_Monitor);
-  procedure Seize_For_Writing (The_Monitor : in out Debug_Multiple_Monitor);
-  procedure Release_From_Reading (The_Monitor : in out Debug_Multiple_Monitor);
-  procedure Release_From_Writing (The_Monitor : in out Debug_Multiple_Monitor);
+   type Debug_Single_Monitor is new Single_Monitor with private;
+   procedure Seize_For_Reading
+     (The_Monitor : in out Debug_Single_Monitor);
+   procedure Seize_For_Writing
+     (The_Monitor : in out Debug_Single_Monitor);
+   procedure Release_From_Reading
+     (The_Monitor : in out Debug_Single_Monitor);
+   procedure Release_From_Writing
+     (The_Monitor : in out Debug_Single_Monitor);
+
+
+   type Debug_Multiple_Monitor is new Multiple_Monitor with private;
+   procedure Seize_For_Reading
+     (The_Monitor : in out Debug_Multiple_Monitor);
+   procedure Seize_For_Writing
+     (The_Monitor : in out Debug_Multiple_Monitor);
+   procedure Release_From_Reading
+     (The_Monitor : in out Debug_Multiple_Monitor);
+   procedure Release_From_Writing
+     (The_Monitor : in out Debug_Multiple_Monitor);
 
 
 private
 
-  type Debug_Semaphore is new Semaphore with null record;
+   type Debug_Semaphore is new Semaphore with null record;
 
-  type Debug_Recursive_Semaphore is new Recursive_Semaphore with null record;
+   type Debug_Recursive_Semaphore is new Recursive_Semaphore with null record;
 
-  type Debug_Single_Monitor is new Single_Monitor with null record;
+   type Debug_Single_Monitor is new Single_Monitor with null record;
 
-  type Debug_Multiple_Monitor is new Multiple_Monitor with null record;
+   type Debug_Multiple_Monitor is new Multiple_Monitor with null record;
 
 end BC.Support.Synchronization.Debug;
