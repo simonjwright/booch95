@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1999-2000 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -77,11 +77,18 @@ package body BC.Support.Synchronization is
     The_Semaphore.S := new Semaphore_Type;
   end Initialize;
 
+  procedure Adjust (The_Semaphore : in out Semaphore) is
+  begin
+    The_Semaphore.S := new Semaphore_Type;
+  end Adjust;
+
   procedure Finalize (The_Semaphore : in out Semaphore) is
     procedure Free is new Ada.Unchecked_Deallocation
        (Semaphore_Type, Semaphore_Type_P);
   begin
-    Free (The_Semaphore.S);
+    if The_Semaphore.S /= null then
+      Free (The_Semaphore.S);
+    end if;
   end Finalize;
 
   procedure Seize (The_Semaphore : in out Semaphore) is
@@ -145,12 +152,12 @@ package body BC.Support.Synchronization is
       end case;
     end Seize;
 
-    procedure Release_For_Reading is
+    procedure Release_From_Reading is
     begin
       Reader_Count := Reader_Count - 1;
     end;
 
-    procedure Release_For_Writing is
+    procedure Release_From_Writing is
     begin
       Writing := False;
     end;
@@ -174,13 +181,22 @@ package body BC.Support.Synchronization is
 
   procedure Release_From_Reading (The_Monitor : in out Multiple_Monitor) is
   begin
-    The_Monitor.M.Release_For_Reading;
+    The_Monitor.M.Release_From_Reading;
   end ;
 
   procedure Release_From_Writing (The_Monitor : in out Multiple_Monitor) is
   begin
-    The_Monitor.M.Release_For_Writing;
+    The_Monitor.M.Release_From_Writing;
   end ;
+
+  -- Lock_Base --
+
+  procedure Delete (The_Lock : in out lock_P) is
+    procedure Free is new Ada.Unchecked_Deallocation
+       (Lock_Base'Class, Lock_P);
+  begin
+    Free (The_Lock);
+  end Delete;
 
   -- Lock --
 
