@@ -242,14 +242,14 @@ procedure Bag_Test is
     Modifier (Iter);
   end Test_Passive_Modifying_Iterator;
 
---    Bag_B_P1, Bag_B_P2 : BB.Bounded_Bag;
+  Bag_B_P1, Bag_B_P2 : BB.Bounded_Bag;
   Bag_D_P1, Bag_D_P2 : BD.Dynamic_Bag;
   Bag_U_P1, Bag_U_P2 : BU.Unbounded_Bag;
 
 begin
   Put_Line ("Starting bag tests");
---    Put_Line ("...Bounded Bag");
---    Test (Bag_B_P1, Bag_B_P2);
+  Put_Line ("...Bounded Bag");
+  Test (Bag_B_P1, Bag_B_P2);
   Put_Line ("...Dynamic Bag");
   BD.Preallocate (Bag_D_P1, 50);
   Test (Bag_D_P1, Bag_D_P2);
@@ -257,16 +257,16 @@ begin
   Test (Bag_U_P1, Bag_U_P2);
 
   Put_Line ("...Bag Active Iterator");
---    Put_Line ("   Bounded:");
---    Test_Active_Iterator (Bag_B_P1);
+  Put_Line ("   Bounded:");
+  Test_Active_Iterator (Bag_B_P1);
   Put_Line ("   Dynamic:");
   Test_Active_Iterator (Bag_D_P1);
   Put_Line ("   Unbounded:");
   Test_Active_Iterator (Bag_U_P1);
   Put_Line ("...Bag Passive Iterator");
---    Put_Line ("   Bounded:");
---    Test_Passive_Iterator (Bag_B_P1);
---    Test_Passive_Modifying_Iterator (Bag_B_P1);
+  Put_Line ("   Bounded:");
+  Test_Passive_Iterator (Bag_B_P1);
+  Test_Passive_Modifying_Iterator (Bag_B_P1);
   Put_Line ("   Dynamic:");
   Test_Passive_Iterator (Bag_D_P1);
   Test_Passive_Modifying_Iterator (Bag_D_P1);
@@ -276,9 +276,9 @@ begin
 
   Assertion (Bags.Total_Size (Bag_D_P1) = 1,
              "** M05: Bag TotalSize is not correct");
---   Assertion (BD.Count (Bag_D_P2. '8') = 2,
---              "** M06: Bag Count is not correct");
--- the statement above triggers a bug box in GANT 3.11b2
+--    Assertion (BD.Count (Bag_D_P2. '8') = 2,
+--               "** M06: Bag Count is not correct");
+-- the statement above triggers a bug box in GNAT 3.11b2 and 3.11p
   Assertion (Bags.Total_Size (Bag_U_P1) = 1,
              "** M07: Bag Total_Size is not correct");
   Assertion (BU.Count (Bag_U_P2, '8') = 2,

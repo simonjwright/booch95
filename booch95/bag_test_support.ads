@@ -19,8 +19,8 @@
 
 with BC.Containers;
 with BC.Containers.Bags;
---  with BC.Containers.Bags.Bounded;
- with BC.Containers.Bags.Dynamic;
+with BC.Containers.Bags.Bounded;
+with BC.Containers.Bags.Dynamic;
 with BC.Containers.Bags.Unbounded;
 with Global_Heap;
 
@@ -32,9 +32,9 @@ package Bag_Test_Support is
 
   function Char_Hash (C : Character) return Positive;
 
---    package BB is new Bags.Bounded (Hash => Char_Hash,
---                                    Buckets => 3,
---                                    Size => 100);
+  package BB is new Bags.Bounded (Hash => Char_Hash,
+                                  Buckets => 3,
+                                  Size => 100);
 
   package BD is new Bags.Dynamic (Hash => Char_Hash,
                                   Buckets => 3,
