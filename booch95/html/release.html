@@ -51,6 +51,8 @@ rather than a class-wide one.
 <p><tt>BC.Containers.Maps.Hash_Statistics</tt> didn't work for Bounded
 Maps.
 
+<p>You couldn't override equality for a <tt>Map</tt>'s <tt>Key</tt>.
+
 
 <h3>Documentation changes</h3>
 
@@ -143,7 +145,7 @@ Containers no longer allocated their representation from the heap;
 fixed.
 
 
-<p>Synchronized Maps didn't override <tt>"="</tt>.
+<p>Synchronized Maps didn't allow you to override <tt>"="</tt>.
 
 
 <p>The GNAT <a href="compiler-problems.html#29may1999">compiler
