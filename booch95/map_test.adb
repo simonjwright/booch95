@@ -37,164 +37,91 @@ procedure Map_Test is
 
   procedure Test (M1, M2 : in out Maps.Map'Class) is
   begin
---| void test(BC_TMap<Char, CPtr>& m1, BC_TMap<Char, CPtr>& m2)
---| {
---|   m1.SetHashFunction(CharHash);
---|   m2.SetHashFunction(CharHash);
---|   assertion(m1.IsEmpty(), "** P01: Map is not initially empty");
     Assertion (Maps.Is_Empty (M1),
                "** P01: Map is not initially empty");
---|   assertion((m1.Extent() == 0), "** P02: Map Extent is not initially zero");
     Assertion (Maps.Extent (M1) = 0,
                "** P02: Map Extent is not initially zero");
---|   m1.Bind('1', &gItems[1]);
     Maps.Bind (M1, '1', Gitems (1)'Access);
---|   m1.Bind('2', &gItems[2]);
     Maps.Bind (M1, '2', Gitems (2)'Access);
---|   m1.Bind('3', &gItems[3]);
     Maps.Bind (M1, '3', Gitems (3)'Access);
---|   m1.Bind('4', &gItems[4]);
     Maps.Bind (M1, '4', Gitems (4)'Access);
---|   m1.Bind('5', &gItems[5]);
     Maps.Bind (M1, '5', Gitems (5)'Access);
---|   m1.Bind('6', &gItems[6]);
     Maps.Bind (M1, '6', Gitems (6)'Access);
---|   m1.Bind('7', &gItems[7]);
     Maps.Bind (M1, '7', Gitems (7)'Access);
---|   assertion(!(m1.IsEmpty()), "** P03: Map is empty");
     Assertion (not Maps.Is_Empty (M1), "** P03: Map is empty");
---|   assertion((m1.Extent() == 7), "** P04: Map Extent is not correct");
     Assertion (Maps.Extent (M1) = 7, "** P04: Map Extent is not correct");
---|   assertion(m1.IsBound('3'), "** P05: Map binding is not correct");
     Assertion (Maps.Is_Bound (M1, '3'), "** P05: Map binding is not correct");
---|   m1.Clear();
     Maps.Clear (M1);
---|   assertion(m1.IsEmpty(), "** P06: Map is not empty");
     Assertion (Maps.Is_Empty (M1), "** P06: Map is not empty");
---|   assertion((m1.Extent() == 0), "** P07: Map Extent is not zero");
     Assertion (Maps.Extent (M1) = 0, "** P07: Map Extent is not zero");
---|   m1.Bind('1', &gItems[1]);
     Maps.Bind (M1, '1', Gitems (1)'Access);
---|   m1.Bind('2', &gItems[2]);
     Maps.Bind (M1, '2', Gitems (2)'Access);
---|   m1.Bind('3', &gItems[3]);
     Maps.Bind (M1, '3', Gitems (3)'Access);
---|   m1.Bind('4', &gItems[4]);
     Maps.Bind (M1, '4', Gitems (4)'Access);
---|   assertion(!(m1.IsEmpty()), "** P08: Map is empty");
     Assertion (not Maps.Is_Empty (M1), "** P08: Map is empty");
---|   assertion((m1.Extent() == 4), "** P09: Map Extent is not correct");
     Assertion (Maps.Extent (M1) = 4, "** P09: Map Extent is not correct");
---|   assertion(m1.IsBound('4'), "** P10: Map binding is not correct");
     Assertion (Maps.Is_Bound (M1, '4'), "** P10: Map binding is not correct");
---|   m1.Unbind('1');
     Maps.Unbind (M1, '1');
---|   m1.Unbind('3');
     Maps.Unbind (M1, '3');
---|   assertion(!(m1.IsEmpty()), "** P11: Map is empty");
     Assertion (not Maps.Is_Empty (M1), "** P11: Map is empty");
---|   assertion((m1.Extent() == 2), "** P12: Map Extent is not correct");
     Assertion (Maps.Extent (M1) = 2, "** P12: Map Extent is not correct");
---|   assertion(m1.IsBound('2'), "** P13: Map binding is not correct");
     Assertion (Maps.Is_Bound (M1, '2'), "** P13: Map binding is not correct");
---|   m1.Unbind('4');
     Maps.Unbind (M1, '4');
---|   m1.Unbind('2');
     Maps.Unbind (M1, '2');
---|   assertion(m1.IsEmpty(), "** P14: Map is not empty");
     Assertion (Maps.Is_Empty (M1), "** P14: Map is not empty");
---|   assertion((m1.Extent() == 0), "** P15: Map Extent is not zero");
     Assertion (Maps.Extent (M1) = 0, "** P15: Map Extent is not zero");
---|   m1.Bind('5', &gItems[5]);
     Maps.Bind (M1, '5', Gitems (5)'Access);
---|   m1.Bind('6', &gItems[6]);
     Maps.Bind (M1, '6', Gitems (6)'Access);
---|   m1.Bind('7', &gItems[7]);
     Maps.Bind (M1, '7', Gitems (7)'Access);
---|   m1.Rebind('5', &gItems[7]);
     Maps.Rebind (M1, '5', Gitems (7)'Access);
---|   m1.Rebind('6', &gItems[6]);
     Maps.Rebind (M1, '6', Gitems (6)'Access);
---|   m1.Rebind('7', &gItems[5]);
     Maps.Rebind (M1, '7', Gitems (5)'Access);
---|   assertion(!(m1.IsEmpty()), "** P16: Map is empty");
     Assertion (not Maps.Is_Empty (M1), "** P16: Map is empty");
---|   assertion((m1.Extent() == 3), "** P17: Map Extent is not correct");
     Assertion (Maps.Extent (M1) = 3, "** P17: Map Extent is not correct");
---|   assertion(m1.IsBound('7'), "** P18: Map binding is not correct");
     Assertion (Maps.Is_Bound (M1, '7'), "** P18: Map binding is not correct");
---|   assertion((*m1.ValueOf('5') == &gItems[7]), "** P19: Map binding is not correct");
     Assertion (Maps.Value_Of (M1, '5') = Gitems (7)'Access,
                "** P19: Map binding is not correct");
---|   assertion((*m1.ValueOf('6') == &gItems[6]), "** P20: Map binding is not correct");
     Assertion (Maps.Value_Of (M1, '6') = Gitems (6)'Access,
                "** P20: Map binding is not correct");
---|   assertion((*m1.ValueOf('7') == &gItems[5]), "** P21: Map binding is not correct");
     Assertion (Maps.Value_Of (M1, '7') = Gitems (5)'Access,
                "** P21: Map binding is not correct");
---|   m2 = m1;
     M2 := M1;
---|   assertion(!(m2.IsEmpty()), "** P22: Map is empty");
     Assertion (not Maps.Is_Empty (M2), "** P22: Map is empty");
---|   assertion((m2.Extent() == 3), "** P23: Map Extent is not correct");
     Assertion (Maps.Extent (M2) = 3, "** P23: Map Extent is not correct");
---|   assertion(m2.IsBound('7'), "** P24: Map binding is not correct");
     Assertion (Maps.Is_Bound (M2, '7'), "** P24: Map binding is not correct");
---|   assertion((*m2.ValueOf('5') == &gItems[7]), "** P25: Map binding is not correct");
     Assertion (Maps.Value_Of (M2, '5') = Gitems (7)'Access,
                "** P25: Map binding is not correct");
---|   assertion((*m2.ValueOf('6') == &gItems[6]), "** P26: Map binding is not correct");
     Assertion (Maps.Value_Of (M2, '6') = Gitems (6)'Access,
                "** P26: Map binding is not correct");
---|   assertion((*m2.ValueOf('7') == &gItems[5]), "** P27: Map binding is not correct");
     Assertion (Maps.Value_Of (M2, '7') = Gitems (5)'Access,
                "** P27: Map binding is not correct");
---|   assertion((m1 == m2), "** P28: Maps are not equal");
     Assertion (Maps.Are_Equal (M1, M2), "** P28: Maps are not equal");
---|   m2.Clear();
     Maps.Clear (M2);
---|   assertion(!(m1.IsEmpty()), "** P29: Map is empty");
     Assertion (not Maps.Is_Empty (M1), "** P29: Map is empty");
---|   assertion((m1.Extent() == 3), "** P30: Map Extent is not correct");
     Assertion (Maps.Extent (M1) = 3, "** P30: Map Extent is not correct");
---|   assertion(m1.IsBound('6'), "** P31: Map binding is not correct");
     Assertion (Maps.Is_Bound (M1, '6'), "** P31: Map binding is not correct");
---|   assertion(m2.IsEmpty(), "** P32: Map is not empty");
     Assertion (Maps.Is_Empty (M2), "** P32: Map is not empty");
---|   assertion((m2.Extent() == 0), "** P33: Map Extent is not correct");
     Assertion (Maps.Extent (M2) = 0, "** P33: Map Extent is not correct");
---|   assertion((m1 != m2), "** P34: Maps not equal");
     Assertion (Maps."/=" (M1, M2), "** P34: Maps equal");
---|   assertion(m1.IsBound('6'), "** P35: Map binding is not correct");
     Assertion (Maps.Is_Bound (M1, '6'), "** P35: Map binding is not correct");
---|   assertion(m1.IsBound('6'), "** P36: Map binding is not correct");
---|   m1.Unbind('6');
     Maps.Unbind (M1, '6');
---|   assertion(!(m1.IsBound('6')), "** P37: Map binding is not correct");
     Assertion (not Maps.Is_Bound (M1, '6'),
                "** P37: Map binding is not correct");
---|   m1.Bind('6', &gItems[6]);
     Maps.Bind (M1, '6', Gitems (6)'Access);
---|   assertion(m1.IsBound('6'), "** P38: Map binding is not correct");
     Assertion (Maps.Is_Bound (M1, '6'), "** P38: Map binding is not correct");
---|   assertion(m1.IsBound('6'), "** P39: Map binding is not correct");
---|   assertion(!m1.Bind('6', &gItems[6]), "** P40: Map was already bound");
     begin
       Maps.Bind (M1, '6', Gitems (6)'Access);
       Put_Line ("** P40: Map was not already bound");
     exception
       when BC.Duplicate => null;
     end;
---|   m1.Unbind('6');
     Maps.Unbind (M1, '6');
---|   assertion(!m1.Rebind('6', &gItems[6]), "** P41: Map was already unbound");
     begin
       Maps.Rebind (M1, '6', Gitems (6)'Access);
       Put_Line ("** P41: Map was not already unbound");
     exception
       when BC.Not_Found => null;
     end;
---|   assertion(!m1.Unbind('6'), "** P42: Map was already unbound");
     begin
       Maps.Unbind (M1, '6');
       Put_Line ("** P42: Map was not already unbound");
@@ -202,18 +129,7 @@ procedure Map_Test is
       when BC.Not_Found => null;
     end;
     Maps.Bind (M1, '6', Gitems (6)'Access);
---|   m1.Bind('6', &gItems[6]);
---| }
   end Test;
-
---| void test_active_iterator (BC_TMap<Char, CPtr>& m)
---| {
---|   Active_Iterator iter(m);
---|   while (!iter.IsDone()) {
---|     process(*iter.CurrentItem(), *iter.CurrentValue());
---|     iter.Next();;
---|   }
---| }
 
   procedure Test_Active_Iterator (M : in out Maps.Map'Class) is
     use Containers; use Maps; use MB;
@@ -227,12 +143,6 @@ procedure Map_Test is
       Containers.Next (Iter);
     end loop;
   end Test_Active_Iterator;
-
---| BC_Boolean process(const Char& Item, const CPtr& value)
---| {
---|   cout << "      Item: " << Item << " Value: " << *value << "\n";
---|   return 1;
---| }
 
   procedure Process (Item : Character; Value : Chunk_Ptr; OK : out Boolean) is
   begin
@@ -248,12 +158,6 @@ procedure Map_Test is
     OK := True;
   end Process_Modifiable;
 
---| void test_passive_iterator (BC_TMap<Char, CPtr>& m)
---| {
---|   Passive_Iterator iter(m);
---|   iter.Apply(process);
---| }
-
   procedure Test_Passive_Iterator (M : in out Maps.Map'Class) is
     procedure Visitor is new Maps.Visit (Process, M);
   begin
@@ -266,118 +170,60 @@ procedure Map_Test is
     Modifier;
   end Test_Passive_Modifying_Iterator;
 
---|   Bounded_Char_Chunk_Map map_b_pu1, map_b_pu2;
   Map_B_Pu1, Map_B_Pu2 : MB.Bounded_Map;
---|   Dynamic_Char_Chunk_Map map_d_pu1(5), map_d_pu2(5);
   Map_D_Pu1, Map_D_Pu2 : MD.Dynamic_Map;
---|   Unbounded_Char_Chunk_Map map_u_pu1, map_u_pu2;
   Map_U_Pu1, Map_U_Pu2 : MU.Unbounded_Map;
 
 begin
---|
---|   message("Starting map tests");
   Put_Line ("Starting map tests");
---|
---|   message("...Bounded Map");
   Put_Line ("...Bounded Map");
---|   test(map_b_pu1, map_b_pu2);
   Test (Map_B_Pu1, Map_B_Pu2);
---|
---|   message("...Dynamic Map");
   Put_Line ("...Dynamic Map");
---|   map_d_pu1.Preallocate(50);
   MD.Preallocate (Map_D_Pu1, 50);
---|   test(map_d_pu1, map_d_pu2);
   Test (Map_D_Pu1, Map_D_Pu2);
---|
---|   message("...Unbounded Map");
   Put_Line ("...Unbounded Map");
---|   test(map_u_pu1, map_u_pu2);
   Test (Map_U_Pu1, Map_U_Pu2);
 
---|
---|   message("...Map Active Iterator");
   Put_Line ("...Map Active Iterator");
---|   message("   Bounded:");
   Put_Line ("   Bounded:");
---|   test_active_iterator(map_b_pu1);
   Test_Active_Iterator (Map_B_Pu1);
---|   message("   Dynamic:");
   Put_Line ("   Dynamic:");
---|   test_active_iterator(map_d_pu1);
   Test_Active_Iterator (Map_D_Pu1);
---|   message("   Unbounded:");
   Put_Line ("   Unbounded:");
---|   test_active_iterator(map_u_pu1);
   Test_Active_Iterator (Map_U_Pu1);
---|
---|   message("...Map Passive Iterator");
   Put_Line ("...Map Passive Iterator");
---|   message("   Bounded:");
   Put_Line ("   Bounded:");
---|   test_passive_iterator(map_b_pu1);
   Test_Passive_Iterator (Map_B_Pu1);
   Test_Passive_Modifying_Iterator (Map_B_Pu1);
---|   message("   Dynamic:");
   Put_Line ("   Dynamic:");
---|   test_passive_iterator(map_d_pu1);
   Test_Passive_Iterator (Map_D_Pu1);
   Test_Passive_Modifying_Iterator (Map_D_Pu1);
---|   message("   Unbounded:");
   Put_Line ("   Unbounded:");
---|   test_passive_iterator(map_u_pu1);
   Test_Passive_Iterator (Map_U_Pu1);
   Test_Passive_Modifying_Iterator (Map_U_Pu1);
---|
---|   assertion(map_b_pu1.IsBound('6'), "** M01: Map binding is not correct");
   Assertion (MB.Is_Bound (Map_B_Pu1, '6'),
              "** M01: Map binding is not correct");
---|   assertion((map_b_pu2.Extent() == 0), "** M02: Map Extent is not correct");
   Assertion (MB.Extent (Map_B_Pu2) = 0, "** M02: Map Extent is not correct");
---|   assertion(map_d_pu1.IsBound('6'), "** M03: Map binding is not correct");
   Assertion (MD.Is_Bound (Map_D_Pu1, '6'),
              "** M03: Map binding is not correct");
---|   assertion((map_d_pu2.Extent() == 0), "** M04: Map Extent is not correct");
   Assertion (MD.Extent (Map_D_Pu2) = 0, "** M04: Map Extent is not correct");
---|   assertion(map_u_pu1.IsBound('6'), "** M05: Map binding is not correct");
   Assertion (MU.Is_Bound (Map_U_Pu1, '6'),
              "** M05: Map binding is not correct");
---|   assertion((map_u_pu2.Extent() == 0), "** M06: Map Extent is not correct");
   Assertion (MU.Extent (Map_U_Pu2) = 0, "** M06: Map Extent is not correct");
---|
---| //  Bounded_Char_Chunk_Map map_b_pu3(map_b_pu1);
---|   Dynamic_Char_Chunk_Map map_d_pu3(map_d_pu1);
---|   Unbounded_Char_Chunk_Map map_u_pu3(map_u_pu1);
---|
---| //  assertion((map_b_pu1 == map_b_pu3), "** M07: Maps are not equal");
---|   assertion((map_d_pu1 == map_d_pu3), "** M08: Maps are not equal");
   -- I don't understand this one ..
   declare
     Map_D_Pu3 : MD.Dynamic_Map := Map_D_Pu1;
   begin
     Assertion (MD."=" (Map_D_Pu1, Map_D_Pu3), "** M08: Maps are not equal");
   end;
---|   assertion((map_u_pu1 == map_u_pu3), "** M09: Maps are not equal");
   declare
     Map_U_Pu3 : MU.Unbounded_Map := Map_U_Pu1;
   begin
     Assertion (MU."=" (Map_U_Pu1, Map_U_Pu3), "** M09: Maps are not equal");
   end;
---|
---| //  map_b_pu3.Clear();
---|   map_d_pu3.Clear();
---|   map_u_pu3.Clear();
---|
---|   assertion((map_b_pu1.Available() == 297), "** M10: Available space is not correct");
   Assertion (MB.Available (Map_B_Pu1) = 297,
              "** M10: Available space is not correct");
---|   assertion((map_b_pu2.Available() == 300), "** M11: Available space is not correct");
   Assertion (MB.Available (Map_B_Pu2) = 300,
              "** M11: Available space is not correct");
---|
---|   message("Completed map tests");
   Put_Line ("Completed map tests");
---|
---|   return 0;
---|
 end Map_Test;
