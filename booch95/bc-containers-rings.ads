@@ -20,6 +20,8 @@
 generic
 package BC.Containers.Rings is
 
+  pragma Elaborate_Body;
+
   type Ring is abstract new Container with private;
 
   -- A ring denotes a sequence in which items may be added and removed

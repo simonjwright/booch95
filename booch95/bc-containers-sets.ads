@@ -20,6 +20,8 @@
 generic
 package BC.Containers.Sets is
 
+  pragma Elaborate_Body;
+
   -- A set denotes a collection of items, drawn from some well-defined
   -- universe. A set may not contain duplicate items.
 

@@ -26,6 +26,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Stacks.Unbounded is
 
+  pragma Elaborate_Body;
+
   type Unbounded_Stack is new Stack with private;
   -- This Stack exhibits unlimited growth and collapsing, limited only by
   -- available memory.  Assignment is "deep".
@@ -51,8 +53,6 @@ package BC.Containers.Stacks.Unbounded is
 
   function Top (S : in Unbounded_Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
-
-  -- XXX need accessor generic
 
   function New_Iterator (For_The_Stack : Unbounded_Stack) return Iterator;
   -- Return a reset Iterator bound to the specific Stack.

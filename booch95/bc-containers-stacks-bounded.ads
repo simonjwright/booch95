@@ -22,6 +22,8 @@ generic
   Maximum_Size : Positive;
 package BC.Containers.Stacks.Bounded is
 
+  pragma Elaborate_Body;
+
   type Bounded_Stack is new Stack with private;
 
   procedure Clear (S : in out Bounded_Stack);
@@ -44,8 +46,6 @@ package BC.Containers.Stacks.Bounded is
 
   function Top (S : in Bounded_Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
-
-  -- XXX need accessor generic
 
   function "=" (Left, Right : in Bounded_Stack) return boolean;
   -- Return True if and only if both stacks have the same depth and the
