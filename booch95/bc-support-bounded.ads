@@ -33,7 +33,7 @@ package BC.Support.Bounded is
 
   subtype Size_Range is Natural range 0..Max_Size;
 
-  type Bnd_Node_Ref is access Bnd_Node;
+  type Bnd_Node_Ref is access all Bnd_Node;
 
   function Create (Obj : in Bnd_Node) return Bnd_Node_Ref;
 
@@ -67,18 +67,18 @@ package BC.Support.Bounded is
   -- Returns the number of items in the container
 
   function First (Obj : Bnd_Node) return Item;
-  function First (Obj : access Bnd_Node) return Item_Ptr;
+  function First (Obj : Bnd_Node) return Item_Ptr;
   -- Returns the Item at the front of the container
 
   function Last (Obj : Bnd_Node) return Item;
-  function Last (Obj : access Bnd_Node) return Item_Ptr;
+  function Last (Obj : Bnd_Node) return Item_Ptr;
   -- Returns the item at the end of the container
 
-  function Item_At (Obj : Bnd_Node; Index : Natural) return Item;
-  function Item_At (Obj : access Bnd_Node; Index : Natural) return Item_Ptr;
+  function Item_At (Obj : Bnd_Node; Index : Positive) return Item;
+  function Item_At (Obj : Bnd_Node; Index : Positive) return Item_Ptr;
   -- Returns the item at the given index
 
-  function Location (Obj : access Bnd_Node;
+  function Location (Obj : Bnd_Node;
                      Elem : in Item;
                      Start : in Natural := 1) return Natural;
   -- Returns the first index in which the given item is found. Returns 0
@@ -88,13 +88,13 @@ package BC.Support.Bounded is
 
 private
 
-  type Elem_Array is array (Positive range <>) of aliased Item;
+  type Elem_Array is array (Positive range 1 .. Max_Size) of aliased Item;
 
   -- XXX
   -- this representation is not the same as the C++ components
-  -- why is Elems aliased?
+  -- why is Elems aliased? -- so we can take 'Access of components
   type Bnd_Node is record
-    Elems : aliased Elem_Array (1..Max_Size);
+    Elems : aliased Elem_Array;
     Size : Size_Range := 0;
   end record;
 
