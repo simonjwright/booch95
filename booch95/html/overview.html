@@ -1,50 +1,43 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML VERSION="2.0">
 <HEAD>
-<!-- WEBMAGIC VERSION NUMBER="2.0.1" -->
-<!-- WEBMAGIC TRANSLATION NAME="ServerRoot" SRC="/var/www/htdocs/" DST="/" -->
-<!-- WEBMAGIC TRANSLATION NAME="ProjectRoot" SRC="./" DST="" -->
 <TITLE>Overview</TITLE>
 </HEAD>
 <BODY BGCOLOR="#ffffff">
-<H1><IMG SRC="title-overview.gif" ALT="overview"></H1>
+<H1><IMG SRC="ada95lgo.gif" ALT="overview"></H1>
+
 <P>(Please note that this web page is a work-in-progress. Some documentation,
 commentaries, statistics, source code, etc. will change over the course
 of time. If anything is updated on the Booch Components, you'll see it here
 first, so be sure to check from time to time.) </P>
+
 <H2>History</H2>
-<P>In late 1994, I asked Grady Booch about the future of his popular Booch
-Components. At that time, versions existed for Ada 83, C++, and Eiffel,
-and a Smalltalk version was about to be released. Grady indicated he had
-no intention of releasing a version for Ada 95, not because he felt it was
-an inappropriate language, but because he wanted to focus on his OO methods.
-The result was an e-mail comment Grady made to myself and a few others on
-the <A HREF="http://lglwww.epfl.ch/Ada/FAQ/team-ada.html">Team Ada</A> mailing list: &quot;I'd be delighted to have a freeware set of the [Ada 95]
-booch components....anyone care to take this on and throw it into the public
-domain?&quot; </P>
-<P>In what will historically be considered a moment of insanity, I volunteered. </P>
-<P>The result is a useful collection of utilities and structures that emphasize
-efficiency as well as style, similar to the attempt with the <A HREF="http://www.cs.rpi.edu/~musser/stl.html">Standard Template Library</A> for C++. </P>
-<P>Interestingly, Ed Schonberg did some early work in testing the viability
-of migrating the Booch Components into Ada 95 back in 1992 [paper published
-at Tri-Ada '92]. His work was of significant value to me in my early stages.
-His knowledge of Ada 95, and the practical application thereof, is quite
-significant (as is his piano playing :-), and I'm thankful for his help. </P>
-<P>The Ada 95 Booch Components present a couple of significant firsts for the
-Ada community: </P>
-<UL>
-<LI>The first commercial C++ product to be migrated to Ada 95 (and totalling
-about <A HREF="booboo.html">10% <B>less</B> code</A> than the C++ components). 
-<LI>The first &quot;industrial strength&quot; commercial product to be converted to freeware
-(I might be wrong on that one, but it's certainly one of the first). 
-<LI>It would also be fair to say it's the first Ada 95 project delivered late
-:-(
-</UL>
-<H2>Schedule (as of February 28, 1997)</H2>
-<P>A beta release was previously available, but has since been removed due
-to significant design changes. If you downloaded that beta release (version
-0.4q), <B>PLEASE DELETE ALL TRACES OF IT! </B>I can <U>guarantee</U> it will not work with the release coming Real Soon Now: </P>
-<P>The version to be release will have the following components available:</P>
+
+<p>The Ada 95 Booch Components began in late 1994 when <a
+href=mailto="dweller@rivatech.com">David Weller</a> began a port of
+Grady Booch's C++ components.</p>
+
+<p>A first beta release was soon available, followed by a release in
+February 1997.</p>
+
+<p>In December of that year, David concluded that he wouldn't be able
+to continue with the Components and appealed on the <A
+HREF="http://www.adahome.com/Ada/FAQ/team-ada.html">Team Ada</A>
+mailing list for a volunteer. Having already found the Components very
+useful, I got my employers' permission to take them on (not a speedy
+process); work began 18.vii.98.</p>
+
+<H2>Schedule</H2>
+
+<p>(Please note, the Components are likely to change fairly
+dramatically between releases over the next few iterations. You'll
+probably need to change your source at each issue; you'll certainly
+need to recompile).</p>
+
+<P>The version to be released will have the following components
+available (the <font color=red>red</font> parts are new since David's
+last release):</P>
+
 <UL>
 <LI>Bounded Stacks 
 <LI>Dynamic Stacks
@@ -54,12 +47,63 @@ to significant design changes. If you downloaded that beta release (version
 <LI>Unbounded Queues
 <LI>Single Lists 
 <LI>Double Lists
-<LI>AVL Trees 
-<LI>Binary Trees
-<LI>Multiway Trees
+<LI><font color=red>Binary Trees</font>
+<LI><font color=red>Multiway Trees</font>
+<li><font color=red>Smart Pointers</font>
 </UL>
-<P>Soon, the full set of structures and utilities will be released (see <A HREF="documentation.html">Component Documentation</A> for the full text). </P>
-<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4" SGI_SETWIDTH SGI_SETHEIGHT SGI_FULLPATH="/d4/people/dweller/booch/html/greenline.gif"> </P>
-<P><A HREF="index.html"><IMG SRC="home.gif" ALT="[home]"></A> <!-------------------------------------------------------------------> </P>
+
+<P>See the <A HREF="documentation.html">Component Documentation</A> for
+the details.</P>
+
+
+<h2>ISSUES</h2>
+
+<p>Please feel free to <a href=mailto:"simon@pogner.demon.co.uk">mail
+me</a> with any thoughts you may have!</p>
+
+<dl>
+
+<dt>Iterators</dt>
+
+<dd>
+The current <tt>BC.Containers</tt> generic requires both the
+<tt>Item</tt> and an accessor (<tt>Item_Ptr</tt>) as parameters.<br>
+
+I found this very awkward when the type I was interested in was
+<tt>limited private</tt> (and I therefore had to create an accessor
+anyway, because the Components require a copyable type).<br>
+
+The need for the pointer type arises from the C++ iterators that give
+a reference to the <tt>Item</tt>, so you can modify the contained
+<tt>Item</tt> rather than a copy of it: we have both of
+
+<pre>
+  function Current_Item (Obj : Iterator) return Item_Ptr;
+</pre>
+
+and
+
+<pre>
+  generic
+    with procedure Apply (Elem_Ref : in Item_Ptr; OK : out Boolean);
+  function Modify (Obj : access Passive_Iterator) return Boolean;
+</pre>
+
+My thought is to replace the "<tt>in Item_Ptr</tt>"s by "<tt>in out
+Item</tt>"s.<br>
+
+This means we need either a generic or a procedure access parameter.
+
+</dd>
+
+</dl>
+
+<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
+
+<P><A HREF="index.html">[index]</A></p>
+
+<p><i>Last update: 29.vii.98</i></p>
+
+<!------------------------------------------------------------------->
 </BODY>
 </HTML>
