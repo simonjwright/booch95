@@ -27,24 +27,44 @@ all::
 # The -Wl,-u,malloc forces the malloc symbol to be required so as to ensure
 # that it's satisfied from libccmalloc.a.
 
-MEMORY_CHECK = -largs -Wl,-u,malloc ~/ccmalloc-0.2.3/src/libccmalloc.a -ldl
+MEMORY_CHECK = \
+  -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
 
-test:: $(TESTABLE)
-	for t in $(TESTABLE); do \
-	  gnatmake -g -gnata $$t $(MEMORY_CHECK); \
-	done
+test: testable
 	for t in $(TESTABLE); do \
 	  echo running $$t; \
 	  ./$$t 2>$$t.log; \
 	done
 
 TESTABLE += graph_test
+graph_test: force
+	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+
 TESTABLE += list_test
+list_test: force
+	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+
 TESTABLE += map_test
+map_test: force
+	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+
 TESTABLE += queue_test
+queue_test: force
+	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+
 TESTABLE += smart_test
+smart_test: force
+	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+
 TESTABLE += stack_test
+stack_test: force
+	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+
 TESTABLE += tree_test
+tree_test: force
+	gnatmake -g -gnata $@ $(MEMORY_CHECK)
+
+testable: $(TESTABLE)
 
 ############################
 # Distribution construction
