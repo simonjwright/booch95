@@ -86,9 +86,8 @@ package body BC.Containers.Queues.Unbounded is
   end Cardinality;
 
   function Item_At (Obj : in Unb_Queue; Index : in Natural) return Item_Ptr is
-    Tobj : aliased Unb_Queue := Obj;
   begin
-    return Unb_Queue_Nodes.Item_At (TObj.Rep, Index);
+    return Unb_Queue_Nodes.Item_At (Obj.Rep, Index);
   end Item_At;
 
   procedure Initialize (Obj : in out Unb_Queue) is
