@@ -105,10 +105,6 @@ private
 
    type Abstract_Collection is abstract new Container with null record;
 
-   procedure Lock (C : in out Abstract_Collection);
-
-   procedure Unlock (C : in out Abstract_Collection);
-
    type Collection_Iterator is new Iterator with record
       Index : Natural;
    end record;
