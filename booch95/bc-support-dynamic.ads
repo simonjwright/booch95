@@ -45,7 +45,6 @@ package BC.Support.Dynamic is
   -- passed-in value
 
   function "=" (Left, Right : Dyn_Node) return Boolean;
-  -- Creation, Equality, and Inequality predefined
 
   procedure Clear (Obj : in out Dyn_Node);
   -- Empty the container of all Items

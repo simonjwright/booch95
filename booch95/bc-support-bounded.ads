@@ -37,11 +37,12 @@ package BC.Support.Bounded is
   type Bnd_Node_Ref is access all Bnd_Node;
 
   function Create (Obj : in Bnd_Node) return Bnd_Node_Ref;
-
-  -- Creation, Equality, and Inequality predefined
+  -- Construct a new bounded container that is identical to the given container
 
   procedure Clear (Obj : in out Bnd_Node);
   -- Empty the container of all Items
+
+  function "=" (Left, Right : Bnd_Node) return Boolean;
 
   procedure Insert (Obj : in out Bnd_Node; Elem : Item);
   -- Add an item to the front of the container

@@ -100,7 +100,7 @@ procedure Stack_Test is
     Assertion (not (Is_Empty (S1)), "** P16: Stack is empty");
     Assertion ((Depth (S1) = 1), "** P17: Stack depth is not correct");
     Assertion ((Top (S1) = '7'), "** P18: Stack top is not correct");
-    S2:= S1;
+    S2 := S1;
     Assertion (not (Is_Empty (S1)), "** P19: Stack is empty");
     Assertion ((Depth (S1) = 1), "** P20: Stack depth is not correct");
     Assertion ((Top (S1) = '7'), "** P21: Stack top is not correct");
@@ -130,7 +130,10 @@ procedure Stack_Test is
     Assertion (Top (S2) = 'b', "** P33: Stack top is not correct");
     Pop (S2);
     Assertion (Top (S2) = 'z', "** P34: Stack top is not correct");
-    Pop (S2);
+    Clear (S2);
+    Push (S2, '7');
+    Assertion (S1 = S2, "** P35: Stacks are not equal");
+    Clear (S2);
   end Test_Primitive;
 
   procedure Test_Iterator_Deletion (S : in out Stack'Class) is
