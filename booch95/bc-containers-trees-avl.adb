@@ -34,7 +34,7 @@ package body BC.Containers.Trees.AVL is
   procedure Search_Insert (Obj : in out AVL_Tree;
                            Element : Item;
                            Node : in out Nodes.AVL_Node_Ref;
-                           Increased : out Boolean;
+                           Increased : in out Boolean;
                            Inserted : out Boolean) is
     P1, P2 : Nodes.AVL_Node_Ref;
     use type Nodes.AVL_Node_Ref;
@@ -129,7 +129,7 @@ package body BC.Containers.Trees.AVL is
   end Search_Insert;
 
   procedure Balance_Left (Node : in out Nodes.AVL_Node_Ref;
-                          Decreased : out Boolean) is
+                          Decreased : in out Boolean) is
     P1, P2 : Nodes.AVL_Node_Ref;
     Balance1, Balance2 : Nodes.Node_Balance;
     use type Nodes.Node_Balance;
@@ -179,7 +179,7 @@ package body BC.Containers.Trees.AVL is
   end Balance_Left;
 
   procedure Balance_Right (Node : in out Nodes.AVL_Node_Ref;
-                           Decreased : out Boolean)  is
+                           Decreased : in out Boolean)  is
     P1, P2 : Nodes.AVL_Node_Ref;
     Balance1, Balance2 : Nodes.Node_Balance;
     use type Nodes.Node_Balance;
@@ -261,7 +261,7 @@ package body BC.Containers.Trees.AVL is
       if Element < Node.Element then
         Search_Delete (Obj, Element, Node.Left, Decreased, Deleted);
         if Decreased then
-          Balance_Right (Node, Decreased);
+          Balance_Left (Node, Decreased);
         end if;
       elsif Node.Element < Element then
         Search_Delete (Obj, Element, Node.Right, Decreased, Deleted);
@@ -317,7 +317,7 @@ package body BC.Containers.Trees.AVL is
   procedure Insert (Obj : in out AVL_Tree;
                     Element : Item;
                     Not_Found : out Boolean) is
-    Increased: Boolean := False;
+    Increased : Boolean := False;
     Result : Boolean;
   begin
     Search_Insert (Obj, Element, Obj.Rep, Increased, Result);
