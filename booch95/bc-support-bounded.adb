@@ -96,14 +96,13 @@ package body BC.Support.Bounded is
                Obj.Elems (Actual + 1 .. Last + 1)
                  := Obj.Elems (Actual .. Last);
                Obj.Elems (Actual) := Elem;
-            elsif Default_Maximum_Size > 1
-              and then (Last = Obj.Elems'Last or else Last < Actual) then
+            elsif (Last = Obj.Elems'Last or else Last < Actual) then
                --  the right part is wedged, shift the left part down
                Obj.Elems (Start - 1 .. Actual - 2)
                  := Obj.Elems (Start .. Actual - 1);
                Start := Start - 1;
                Obj.Elems (Actual - 1) := Elem;
-            elsif Default_Maximum_Size > 1 and then Before < Obj.Size / 2 then
+            elsif Before < Obj.Size / 2 then
                --  the left part is shorter, shift it down
                Obj.Elems (Start - 1 .. Actual - 2)
                  := Obj.Elems (Start .. Actual - 1);
@@ -183,7 +182,7 @@ package body BC.Support.Bounded is
                --  the left part wraps round; shift the right part down
                Obj.Elems (Actual .. Last - 1)
                  := Obj.Elems (Actual + 1 .. Last);
-            elsif Default_Maximum_Size > 1 and then Actual > Last then
+            elsif Actual > Last then
                --  the right part wraps round; shift the left part up
                Obj.Elems (Start + 1 .. Actual)
                  := Obj.Elems (Start .. Actual - 1);
