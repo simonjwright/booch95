@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Calendar;
 with Ada.Text_Io;
 with BC.Support.Synchronization;
 
@@ -35,11 +36,11 @@ procedure Test_Synchronization is
     accept Start;
     loop
       Put_Line ("semaphore_test" & Positive'Image (Id) & " seizing ..");
-      Using.Seize;
+      Seize (Using.all);
       Put_Line ("semaphore_test" & Positive'Image (Id) & " seized.");
       delay 2.0;
       Put_Line ("semaphore_test" & Positive'Image (Id) & " releasing.");
-      Using.Release;
+      Release (Using.all);
       select
         accept Stop;
         Put_Line ("semaphore_test" & Positive'Image (Id) & " stopping.");
@@ -50,7 +51,7 @@ procedure Test_Synchronization is
     end loop;
   end Semaphore_Test;
 
-  task type Reader (Id : Positive; Using : access Monitor'Class) is
+  task type Reader (Id : Positive; Using : access Monitor_Base'Class) is
     entry Start;
     entry Stop;
   end Reader;
@@ -77,7 +78,7 @@ procedure Test_Synchronization is
     end loop;
   end Reader;
 
-  task type Writer (Id : Positive; Using : access Monitor'Class) is
+  task type Writer (Id : Positive; Using : access Monitor_Base'Class) is
     entry Start;
     entry Stop;
   end Writer;
@@ -106,11 +107,11 @@ procedure Test_Synchronization is
 
 begin
 
-  Put_Line ("Test 1: simple Semaphore, initial count.");
+  Put_Line ("Test 1: Semaphore.");
 
   declare
 
-    S : aliased Semaphore (Initially_Seized => True);
+    S : aliased Semaphore;
 
     St1 : Semaphore_Test (1, S'Access);
     St2 : Semaphore_Test (2, S'Access);
@@ -119,10 +120,6 @@ begin
     St1.Start;
     delay 1.0;
     St2.Start;
-    delay 1.0;
-    Put_Line ("Test 1 main loop releasing ..");
-    S.Release;
-    Put_Line ("Test 1 main loop released.");
     delay 10.0;
     Put_Line ("Test 1 stopping ..");
     St1.Stop;
@@ -198,6 +195,46 @@ begin
   end;
 
   Put_Line ("Test 3 stopped.");
+  New_Line;
+
+  Put_Line ("Test 4: Timing.");
+
+  declare
+
+    N : constant := 10_000;
+    S : aliased Single_Monitor;
+    Start : Ada.Calendar.Time;
+    Null_Interval, Real_Interval : Duration;
+    J : Integer := 0;
+    use type Ada.Calendar.Time;
+
+  begin
+
+    Start := Ada.Calendar.Clock;
+    for I in 1 .. N loop
+      begin
+        J := J + 1;
+      end;
+    end loop;
+    Null_Interval := Ada.Calendar.Clock - Start;
+
+    Start := Ada.Calendar.Clock;
+    for I in 1 .. N loop
+      declare
+        L : Read_Lock (S'Access);
+      begin
+        J := J + 1;
+      end;
+    end loop;
+    Real_Interval := Ada.Calendar.Clock - Start;
+
+    Ada.Text_Io.Put_Line ("Acquiring a read lock took"
+                          & Duration'Image ((Real_Interval - Null_Interval)/ N)
+                          & " seconds.");
+
+  end;
+
+  Put_Line ("Test 4 stopped.");
   New_Line;
 
 end Test_Synchronization;
