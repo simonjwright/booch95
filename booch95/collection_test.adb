@@ -45,7 +45,7 @@ procedure Collection_Test is
   end Assertion;
 
   procedure Test_Active_Iterator (C : Container'Class) is
-    Iter : Iterator := New_Iterator (C);
+    Iter : Iterator'Class := New_Iterator (C);
     Success : Boolean;
     Temp : Character;
   begin
@@ -58,13 +58,13 @@ procedure Collection_Test is
 
   procedure Test_Passive_Iterator (C : Container'Class) is
     procedure Iterate is new Visit (Apply => Process);
-    Iter : Iterator := New_Iterator (C);
+    Iter : Iterator'Class := New_Iterator (C);
   begin
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
   procedure Test_Iterator_Deletion (C : in out Collection'Class) is
-    Iter : Iterator := New_Iterator (C);
+    Iter : Iterator'Class := New_Iterator (C);
     Delete : Boolean;
   begin
     Clear (C);

@@ -92,14 +92,11 @@ private
 
   procedure Unlock (C : in out Collection);
 
-  type Collection_Iterator (C : access Collection'Class)
-  is new Actual_Iterator (C) with record
+  type Collection_Iterator is new Iterator with record
     Index : Natural;
   end record;
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
-
-  procedure Initialize (It : in out Collection_Iterator);
 
   procedure Reset (It : in out Collection_Iterator);
 
@@ -109,7 +106,7 @@ private
 
   function Current_Item (It : Collection_Iterator) return Item;
 
-  function Current_Item (It : Collection_Iterator) return Item_Ptr;
+  function Current_Item_Ptr (It : Collection_Iterator) return Item_Ptr;
 
   procedure Delete_Item_At (It : Collection_Iterator);
 

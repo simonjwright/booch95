@@ -82,7 +82,7 @@ package BC.Containers.Collections.Ordered.Unbounded is
   -- item desn't exist in the collecton).
 
   function New_Iterator
-     (For_The_Collection : Unbounded_Ordered_Collection) return Iterator;
+     (For_The_Collection : Unbounded_Ordered_Collection) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Collection.
 
 private

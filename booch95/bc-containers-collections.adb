@@ -30,8 +30,8 @@ package body BC.Containers.Collections is
       return False;
     end if;
     declare
-      Left_Iter : Iterator := New_Iterator (Left);
-      Right_Iter : Iterator := New_Iterator (Right);
+      Left_Iter : Iterator'Class := New_Iterator (Left);
+      Right_Iter : Iterator'Class := New_Iterator (Right);
     begin
       while not Is_Done (Left_Iter) and then
          not Is_Done (Right_Iter) loop
@@ -46,7 +46,7 @@ package body BC.Containers.Collections is
   end Are_Equal;
 
   procedure Copy (From : Collection'Class; To : in out Collection'Class) is
-    Iter : Iterator := New_Iterator (From);
+    Iter : Iterator'Class := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
       Clear (To);
@@ -75,14 +75,10 @@ package body BC.Containers.Collections is
     null;
   end Unlock;
 
-  procedure Initialize (It : in out Collection_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
   procedure Reset (It : in out Collection_Iterator) is
+    C : Collection'Class renames Collection'Class(It.For_The_Container.all);
   begin
-    if Length (It.C.all) = 0 then
+    if Length (C) = 0 then
       It.Index := 0;
     else
       It.Index := 1;
@@ -90,8 +86,9 @@ package body BC.Containers.Collections is
   end Reset;
 
   function Is_Done (It : Collection_Iterator) return Boolean is
+    C : Collection'Class renames Collection'Class(It.For_The_Container.all);
   begin
-    return It.Index = 0 or else It.Index > Length (It.C.all);
+    return It.Index = 0 or else It.Index > Length (C);
   end Is_Done;
 
   procedure Next (It : in out Collection_Iterator) is
@@ -100,27 +97,30 @@ package body BC.Containers.Collections is
   end Next;
 
   function Current_Item (It : Collection_Iterator) return Item is
+    C : Collection'Class renames Collection'Class(It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.C.all, It.Index).all;
+    return Item_At (C, It.Index).all;
   end Current_Item;
 
-  function Current_Item (It : Collection_Iterator) return Item_Ptr is
+  function Current_Item_Ptr (It : Collection_Iterator) return Item_Ptr is
+    C : Collection'Class renames Collection'Class(It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.C.all, It.Index);
-  end Current_Item;
+    return Item_At (C, It.Index);
+  end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Collection_Iterator) is
+    C : Collection'Class renames Collection'Class(It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    Remove (It.C.all, It.Index);
+    Remove (C, It.Index);
   end Delete_Item_At;
 
 end BC.Containers.Collections;

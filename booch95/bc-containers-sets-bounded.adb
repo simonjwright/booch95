@@ -77,11 +77,13 @@ package body BC.Containers.Sets.Bounded is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Bounded_Set);
 
-  function New_Iterator (For_The_Set : Bounded_Set) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Set'Address);
+  function New_Iterator (For_The_Set : Bounded_Set) return Iterator'Class is
+    Result : Set_Iterator;
   begin
-    return Iterator (SP.Create (new Bounded_Set_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Set'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   -- Private implementations
