@@ -30,8 +30,8 @@ package body BC.Containers.Sets.Dynamic is
     S : Set;
   begin
     for B in 1 .. Buckets loop
-      IC.Set_Chunk_Size (Tables.Item_Bucket (S.Rep, B).all, Size);
-      VC.Set_Chunk_Size (Tables.Value_Bucket (S.Rep, B).all, Size);
+      IC.Set_Chunk_Size (S.Rep.Items (B), Size);
+      VC.Set_Chunk_Size (S.Rep.Values (B), Size);
     end loop;
     return S;
   end Create;
@@ -78,22 +78,22 @@ package body BC.Containers.Sets.Dynamic is
   procedure Preallocate (S : in out Set; Size : Positive) is
   begin
     for B in 1 .. Buckets loop
-      IC.Preallocate (Tables.Item_Bucket (S.Rep, B).all, Size);
-      VC.Preallocate (Tables.Value_Bucket (S.Rep, B).all, Size);
+      IC.Preallocate (S.Rep.Items (B), Size);
+      VC.Preallocate (S.Rep.Values (B), Size);
     end loop;
   end Preallocate;
 
   procedure Set_Chunk_Size (S : in out Set; Size : Positive) is
   begin
     for B in 1 .. Buckets loop
-      IC.Set_Chunk_Size (Tables.Item_Bucket (S.Rep, B).all, Size);
-      VC.Set_Chunk_Size (Tables.Value_Bucket (S.Rep, B).all, Size);
+      IC.Set_Chunk_Size (S.Rep.Items (B), Size);
+      VC.Set_Chunk_Size (S.Rep.Values (B), Size);
     end loop;
   end Set_Chunk_Size;
 
   function Chunk_Size (S : Set) return Positive is
   begin
-    return IC.Chunk_Size (Tables.Item_Bucket (S.Rep, 1).all);
+    return IC.Chunk_Size (S.Rep.Items (1));
   end Chunk_Size;
 
   package Address_Conversions
@@ -127,15 +127,16 @@ package body BC.Containers.Sets.Dynamic is
 
   function Length (S : Set; Bucket : Positive) return Natural is
   begin
-    return IC.Length (Tables.Item_Bucket (S.Rep, Bucket).all);
+    return IC.Length (S.Rep.Items (Bucket));
   end Length;
 
   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (Tables.Item_Bucket (S.Rep, Bucket).all, Index);
+    return IC.Item_At (S.Rep.Items (Bucket), Index);
   end Item_At;
 
   Empty_Container : Set;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Set is
   begin
