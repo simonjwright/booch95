@@ -1,4 +1,4 @@
--- Copyright (C) 1998 Pat Rogers.
+-- Copyright (C) 1998 Grady Booch, Pat Rogers and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -89,6 +89,15 @@ package body BC.Support.Managed_Storage is
   begin
     return As_Chunk_Pointer( new Block );
   end New_Allocation;
+
+
+
+  function Pool_Overhead( Type_Overhead  : SSE.Storage_Count := 0;
+                          Alignment      : SSE.Storage_Count       ) return SSE.Storage_Count is
+  begin
+    return Aligned( Chunk_Overhead+Type_Overhead, Alignment );
+  end Pool_Overhead;
+
 
 
   procedure Get_Chunk( Result                 :    out Chunk_Pointer;

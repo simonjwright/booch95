@@ -1,4 +1,4 @@
--- Copyright (C) 1998 Pat Rogers.
+-- Copyright (C) 1998 Grady Booch and Pat Rogers.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -42,6 +42,9 @@ package BC.Support.Managed_Storage is
                         Alignment                : in     SSE.Storage_Count );
 
   function Storage_Size( This : Pool ) return SSE.Storage_Count;
+
+  function Pool_Overhead( Type_Overhead  : SSE.Storage_Count := 0;
+                          Alignment      : SSE.Storage_Count       ) return SSE.Storage_Count;
 
   procedure Preallocate_Chunks( This : in out Pool;  Count : in Positive );
 
@@ -100,6 +103,6 @@ private
 
   use type SSE.Storage_Offset;
 
-  Chunk_Overhead : constant SSE.Storage_Count := Chunk'Size / System.Storage_Unit;
+  Chunk_Overhead : constant SSE.Storage_Count := (Chunk'Size+System.Storage_Unit-1) / System.Storage_Unit;
 
 end BC.Support.Managed_Storage;
