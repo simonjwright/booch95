@@ -41,24 +41,25 @@ package BC.Containers.Collections.Ordered.Unbounded is
   -- Add the item to the collection.
 
   procedure Insert (C : in out Unbounded_Ordered_Collection;
-		    Elem : Item;
-		    Before : Positive);
+                    Elem : Item;
+                    Before : Positive);
   -- Add the item to the collection.
 
   procedure Append (C : in out Unbounded_Ordered_Collection; Elem : Item);
   -- Add the item to the collection.
 
   procedure Append (C : in out Unbounded_Ordered_Collection;
-		    Elem : Item;
-		    After : Positive);
+                    Elem : Item;
+                    After : Positive);
   -- Add the item to the collection.
 
-  procedure Remove (C : in out Unbounded_Ordered_Collection; At_Index : Positive);
+  procedure Remove
+     (C : in out Unbounded_Ordered_Collection; At_Index : Positive);
   -- Remove the item at the given index in the collection.
 
   procedure Replace (C : in out Unbounded_Ordered_Collection;
-		     At_Index : Positive;
-		     Elem : Item);
+                     At_Index : Positive;
+                     Elem : Item);
   -- Replace the item at the given index with the given item.
 
   function Length (C : Unbounded_Ordered_Collection) return Natural;
@@ -90,7 +91,8 @@ private
 
   procedure Add (C : in out Unbounded_Ordered_Collection; Elem : Item);
   function Cardinality (C : Unbounded_Ordered_Collection) return Natural;
-  function Item_At (C : Unbounded_Ordered_Collection; Index : Positive) return Item_Ptr;
+  function Item_At
+     (C : Unbounded_Ordered_Collection; Index : Positive) return Item_Ptr;
   procedure Purge (C : in out Unbounded_Ordered_Collection);
 
   package Unbounded_Ordered_Collection_Nodes
