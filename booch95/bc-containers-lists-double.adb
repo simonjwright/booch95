@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -648,6 +648,7 @@ package body BC.Containers.Lists.Double is
    end Item_At;
 
    procedure Initialize (L : in out List) is
+      pragma Warnings (Off, L);
    begin
       null;
    end Initialize;

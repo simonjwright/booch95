@@ -1,4 +1,5 @@
-comp_opt=-O2 -g -gnata -gnatf -gnatwu -gnatwl -gnaty
+comp_opt=-O2 -gnatqQafy -gnatwaL
+bind_opt=-E
 gnatmake_opt=-g -m -j2
 main=${current}
 main_unit=${current}

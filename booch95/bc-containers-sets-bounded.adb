@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -107,11 +107,13 @@ package body BC.Containers.Sets.Bounded is
    end Detach;
 
    function Number_Of_Buckets (S : Set) return Natural is
+      pragma Warnings (Off, S);
    begin
       return Buckets;
    end Number_Of_Buckets;
 
    function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr is
+      pragma Warnings (Off, Bucket);
    begin
       return Tables.Access_Item_At (S.Rep, Index);
    end Item_At;
