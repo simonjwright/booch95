@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -89,7 +89,5 @@ private
    type Ring is new Abstract_Ring with record
       Rep : Ring_Nodes.Bnd_Node (Maximum_Size => Maximum_Size);
    end record;
-
-   procedure Initialize (R : in out Ring);
 
 end BC.Containers.Rings.Bounded;

@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -123,8 +123,6 @@ private
       Rep : Tables.Table (Number_Of_Buckets => Number_Of_Buckets,
                           Maximum_Size => Maximum_Size);
    end record;
-
-   procedure Initialize (B : in out Unconstrained_Bag);
 
    procedure Attach (B : in out Unconstrained_Bag; I : Item; C : Positive);
 
