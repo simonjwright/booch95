@@ -90,8 +90,7 @@ private
   use IC;
   package Items is new BC.Support.Hash_Tables.Item_Signature
      (Item => Item,
-      Item_Container => IC.Unb_Node,
-      Item_Container_Ptr => IC.Unb_Node_Ref);
+      Item_Container => IC.Unb_Node);
 
   type Positive_Ptr is access all Positive;
   package VC is new BC.Support.Unbounded (Item => Positive,
@@ -102,8 +101,7 @@ private
   package Values is new BC.Support.Hash_Tables.Value_Signature
      (Value => Positive,
       Value_Ptr => Positive_Ptr,
-      Value_Container => VC.Unb_Node,
-      Value_Container_Ptr => VC.Unb_Node_Ref);
+      Value_Container => VC.Unb_Node);
 
   package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Items,

@@ -95,8 +95,7 @@ private
   use KC;
   package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
-      Item_Container => KC.Unb_Node,
-      Item_Container_Ptr => KC.Unb_Node_Ref);
+      Item_Container => KC.Unb_Node);
 
   package IC is new BC.Support.Unbounded (Item => Item,
                                           Item_Ptr => Item_Ptr,
@@ -106,8 +105,7 @@ private
   package Items is new BC.Support.Hash_Tables.Value_Signature
      (Value => Item,
       Value_Ptr => Item_Ptr,
-      Value_Container => IC.Unb_Node,
-      Value_Container_Ptr => IC.Unb_Node_Ref);
+      Value_Container => IC.Unb_Node);
 
   package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Keys,
