@@ -36,6 +36,9 @@ package BC.Containers.Queues is
   procedure Pop (Q : in out Queue) is abstract;
   -- Remove the item from the front of the queue.
 
+  procedure Pop_Value (Q : in out Queue; Elem : out Item);
+  -- Remove and return the item from the front of the queue.
+
   procedure Remove (Q : in out Queue; From : Positive) is abstract;
   -- Remove the item at the given index (may be a balking operation).
 
