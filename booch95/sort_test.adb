@@ -43,29 +43,29 @@ procedure Sort_Test is
   end Print;
 
   procedure SSort is new Containers.Shellsort
-     (Container => CU.Collection,
-      Length => CU.Length);
+     (Container => CB.Collection,
+      Length => CB.Length);
 
   procedure Reverse_SSort is new Containers.Shellsort
-     (Container => CU.Collection,
+     (Container => CB.Collection,
       "<" => ">",
-      Length => CU.Length);
+      Length => CB.Length);
 
   procedure QSort is new Containers.Quicksort
-     (Container => CU.Collection,
-      Length => CU.Length);
+     (Container => CB.Collection,
+      Length => CB.Length);
 
   procedure Reverse_QSort is new Containers.Quicksort
-     (Container => CU.Collection,
+     (Container => CB.Collection,
       "<" => ">",
-      Length => CU.Length);
+      Length => CB.Length);
 
-  C : CU.Collection;
+  C : CB.Collection;
 
-  procedure Add (To : in out CU.Collection; S : String) is
+  procedure Add (To : in out CB.Collection; S : String) is
   begin
     for Ch in S'Range loop
-      CU.Append (To, S (Ch));
+      CB.Append (To, S (Ch));
     end loop;
   end Add;
 
@@ -73,7 +73,7 @@ begin
 
   Put_Line ("Shellsort:");
 
-  CU.Clear (C);
+  CB.Clear (C);
 
   Add (C, "holy_moses");
   SSort (C);
@@ -92,7 +92,7 @@ begin
   New_Line;
   Put_Line ("equal keys, starting from empty");
 
-  CU.Clear (C);
+  CB.Clear (C);
   SSort (C);
   Print (C);
 
@@ -114,7 +114,7 @@ begin
 
   New_Line;
   Put_Line ("length 2");
-  CU.Clear (C);
+  CB.Clear (C);
   Add (C, "b");
   Add (C, "a");
   SSort (C);
@@ -126,7 +126,7 @@ begin
 
   Put_Line ("Quicksort:");
 
-  CU.Clear (C);
+  CB.Clear (C);
 
   Add (C, "holy_moses");
   QSort (C);
@@ -145,7 +145,7 @@ begin
   New_Line;
   Put_Line ("equal keys, starting from empty");
 
-  CU.Clear (C);
+  CB.Clear (C);
   QSort (C);
   Print (C);
 
@@ -167,7 +167,7 @@ begin
 
   New_Line;
   Put_Line ("length 2");
-  CU.Clear (C);
+  CB.Clear (C);
   Add (C, "b");
   Add (C, "a");
   QSort (C);
