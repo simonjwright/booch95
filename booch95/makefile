@@ -9,7 +9,7 @@
 #      PURPOSE. See the Ada Community License for more details.
 #      You should have received a copy of the Ada Community
 #      License with this library, in the file named "Ada Community
-#      License" or "ACL". If not, contact the author of this library 
+#      License" or "ACL". If not, contact the author of this library
 #      for a copy.
 #
 
@@ -27,8 +27,8 @@ all::
 # The -Wl,-u,malloc forces the malloc symbol to be required so as to ensure
 # that it's satisfied from libccmalloc.a.
 
-MEMORY_CHECK = \
-  -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
+#MEMORY_CHECK = \
+#  -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
 GNATMAKE_FLAGS = -O3 -g -gnata -gnatwu
 
 test: testable
@@ -104,9 +104,9 @@ AONIX_TESTABLE += bag_test_aonix
 bag_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
-AONIX_TESTABLE += collection_test_aonix
-collection_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+#AONIX_TESTABLE += collection_test_aonix
+#collection_test_aonix: force
+#	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 AONIX_TESTABLE += map_test_aonix
 map_test_aonix: force
@@ -114,11 +114,11 @@ map_test_aonix: force
 
 #AONIX_TESTABLE += ordered_collection_test_aonix
 #ordered_collection_test_aonix: force
-#	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+#       gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 #AONIX_TESTABLE += ordered_queue_test_aonix
 #ordered_queue_test_aonix: force
-#	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+#       gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 AONIX_TESTABLE += queue_test_aonix
 queue_test_aonix: force
@@ -157,7 +157,7 @@ ordering_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
 test_synchronization: force
-	gnatmake $(GNATMAKE_FLAGS) $@
+	gnatmake $(GNATMAKE_FLAGS) $@ -largs -rdynamic
 
 time_lists: force
 	gnatmake $(GNATMAKE_FLAGS) $@
@@ -270,7 +270,6 @@ bc.ad[bs] \
 bcwords.ada \
 chunks.ad[bs] \
 collection_test.ad[bs] \
-collection_test_aonix.ad[bs] \
 collection_test_support.ad[bs] \
 global_heap.ad[bs] \
 graph_test.ad[bs] \
@@ -285,6 +284,8 @@ map_test_aonix.ad[bs] \
 map_test_support.ad[bs] \
 ordered_collection_test.ad[bs] \
 ordered_collection_test_support.ad[bs] \
+ordered_queue_test.ad[bs] \
+ordered_queue_test_support.ad[bs] \
 ordering_support.ad[bs] \
 ordering_test.ad[bs] \
 queues_for_timing.ad[bs] \
