@@ -24,57 +24,58 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Maps.Unbounded is
 
-   function "=" (L, R : Map) return Boolean is
+   function "=" (L, R : Unconstrained_Map) return Boolean is
    begin
       return Tables."=" (L.Rep, R.Rep);
    end "=";
 
-   procedure Clear (M : in out Map) is
+   procedure Clear (M : in out Unconstrained_Map) is
    begin
       Tables.Clear (M.Rep);
    end Clear;
 
    procedure Bind
-     (M : in out Map; K : Key; I : Item) is
+     (M : in out Unconstrained_Map; K : Key; I : Item) is
    begin
       Tables.Bind (M.Rep, K, I);
    end Bind;
 
    procedure Rebind
-     (M : in out Map; K : Key; I : Item) is
+     (M : in out Unconstrained_Map; K : Key; I : Item) is
    begin
       Tables.Rebind (M.Rep, K, I);
    end Rebind;
 
-   procedure Unbind (M : in out Map; K : Key) is
+   procedure Unbind (M : in out Unconstrained_Map; K : Key) is
    begin
       Tables.Unbind (M.Rep, K);
    end Unbind;
 
-   function Extent (M : Map) return Natural is
+   function Extent (M : Unconstrained_Map) return Natural is
    begin
       return Tables.Extent (M.Rep);
    end Extent;
 
-   function Is_Empty (M : Map) return Boolean is
+   function Is_Empty (M : Unconstrained_Map) return Boolean is
    begin
       return Tables.Extent (M.Rep) = 0;
    end Is_Empty;
 
-   function Is_Bound (M : Map; K : Key) return Boolean is
+   function Is_Bound (M : Unconstrained_Map; K : Key) return Boolean is
    begin
       return Tables.Is_Bound (M.Rep, K);
    end Is_Bound;
 
-   function Item_Of (M : Map; K : Key) return Item is
+   function Item_Of (M : Unconstrained_Map; K : Key) return Item is
    begin
       return Tables.Value_Of (M.Rep, K);
    end Item_Of;
 
    package Address_Conversions
-   is new System.Address_To_Access_Conversions (Map);
+   is new System.Address_To_Access_Conversions (Unconstrained_Map);
 
-   function New_Iterator (For_The_Map : Map) return Iterator'Class is
+   function New_Iterator
+     (For_The_Map : Unconstrained_Map) return Iterator'Class is
       Result : Map_Iterator;
    begin
       Result.For_The_Container :=
@@ -85,30 +86,30 @@ package body BC.Containers.Maps.Unbounded is
 
    --  Private implementations
 
-   procedure Attach (M : in out Map; K : Key; I : Item) is
+   procedure Attach (M : in out Unconstrained_Map; K : Key; I : Item) is
    begin
       Tables.Bind (M.Rep, K, I);
    end Attach;
 
-   function Number_Of_Buckets (M : Map) return Natural is
+   function Number_Of_Buckets (M : Unconstrained_Map) return Natural is
       pragma Warnings (Off, M);
    begin
       return Buckets;
    end Number_Of_Buckets;
 
-   function Length (M : Map; Bucket : Positive) return Natural is
+   function Length (M : Unconstrained_Map; Bucket : Positive) return Natural is
    begin
       return KC.Length (M.Rep.Items (Bucket));
    end Length;
 
    function Item_At
-     (M : Map; Bucket, Index : Positive) return Item_Ptr is
+     (M : Unconstrained_Map; Bucket, Index : Positive) return Item_Ptr is
    begin
       return IC.Item_At (M.Rep.Values (Bucket), Index);
    end Item_At;
 
    function Key_At
-     (M : Map; Bucket, Index : Positive) return Key_Ptr is
+     (M : Unconstrained_Map; Bucket, Index : Positive) return Key_Ptr is
    begin
       return KC.Item_At (M.Rep.Items (Bucket), Index);
    end Key_At;
@@ -116,7 +117,7 @@ package body BC.Containers.Maps.Unbounded is
    Empty_Container : Map;
    pragma Warnings (Off, Empty_Container);
 
-   function Null_Container return Map is
+   function Null_Container return Unconstrained_Map is
    begin
       return Empty_Container;
    end Null_Container;

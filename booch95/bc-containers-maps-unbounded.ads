@@ -47,47 +47,53 @@ package BC.Containers.Maps.Unbounded is
    --  uniformly across the number of buckets. The quality of the hash
    --  function has a significant impact upon performance.
 
-   type Map is new Abstract_Map with private;
+   type Unconstrained_Map
+     (Number_Of_Buckets : Positive) is new Abstract_Map with private;
 
-   function Null_Container return Map;
+   subtype Map is Unconstrained_Map (Number_Of_Buckets => Buckets);
 
-   function "=" (L, R : Map) return Boolean;
+   function Null_Container return Unconstrained_Map;
+   --  Note, this function has to be provided but the object returned
+   --  is in fact a Map (ie, it is constrained).
+
+   function "=" (L, R : Unconstrained_Map) return Boolean;
    --  Return True if the two Maps contain the same items bound to the
    --  same values.
 
-   procedure Clear (M : in out Map);
+   procedure Clear (M : in out Unconstrained_Map);
    --  Empty the map of all key/item pairs.
 
-   procedure Bind (M : in out Map; K : Key; I : Item);
+   procedure Bind (M : in out Unconstrained_Map; K : Key; I : Item);
    --  If the key already exists in the map, raise
    --  BC.Duplicate. Otherwise, add the key/item pair to the map.
 
-   procedure Rebind (M : in out Map; K : Key; I : Item);
+   procedure Rebind (M : in out Unconstrained_Map; K : Key; I : Item);
    --  If the key does not exist in the map, raise
    --  BC.Not_Found. Otherwise, change the key's binding to the given
    --  value.
 
-   procedure Unbind (M : in out Map; K : Key);
+   procedure Unbind (M : in out Unconstrained_Map; K : Key);
    --  If the key does not exist in the map, raise
    --  BC.Not_Found. Otherwise, remove the key/item binding.
 
-   function Extent (M : Map) return Natural;
+   function Extent (M : Unconstrained_Map) return Natural;
    --  Return the number of key/item bindings in the map.
 
-   function Is_Empty (M : Map) return Boolean;
+   function Is_Empty (M : Unconstrained_Map) return Boolean;
    --  Return True if and only if there are no key/item bindings in
    --  the map; otherwise, return False.
 
-   function Is_Bound (M : Map; K : Key) return Boolean;
+   function Is_Bound (M : Unconstrained_Map; K : Key) return Boolean;
    --  Return True if and only if there is a binding for the given key
    --  in the map; otherwise, return False.
 
-   function Item_Of (M : Map; K : Key) return Item;
+   function Item_Of (M : Unconstrained_Map; K : Key) return Item;
    --  If the key does not exist in the map, raises
    --  BC.Not_Found. Otherwise, return a copy of the item bound to the
    --  given key.
 
-   function New_Iterator (For_The_Map : Map) return Iterator'Class;
+   function New_Iterator
+     (For_The_Map : Unconstrained_Map) return Iterator'Class;
    --  Return a reset Iterator bound to the specific Map.
 
 private
@@ -117,20 +123,22 @@ private
      (Items => Keys,
       Values => Items);
 
-   type Map is new Abstract_Map with record
+   type Unconstrained_Map
+     (Number_Of_Buckets : Positive)
+   is new Abstract_Map with record
       Rep : Tables.Table (Number_Of_Buckets => Buckets);
    end record;
 
-   procedure Attach (M : in out Map; K : Key; I : Item);
+   procedure Attach (M : in out Unconstrained_Map; K : Key; I : Item);
 
-   function Number_Of_Buckets (M : Map) return Natural;
+   function Number_Of_Buckets (M : Unconstrained_Map) return Natural;
 
-   function Length (M : Map; Bucket : Positive) return Natural;
+   function Length (M : Unconstrained_Map; Bucket : Positive) return Natural;
 
    function Item_At
-     (M : Map; Bucket, Index : Positive) return Item_Ptr;
+     (M : Unconstrained_Map; Bucket, Index : Positive) return Item_Ptr;
 
    function Key_At
-     (M : Map; Bucket, Index : Positive) return Key_Ptr;
+     (M : Unconstrained_Map; Bucket, Index : Positive) return Key_Ptr;
 
 end BC.Containers.Maps.Unbounded;
