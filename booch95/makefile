@@ -30,7 +30,7 @@ all::
 
 GCOV_FLAGS = -ftest-coverage -fprofile-arcs
 
-GNATMAKE_FLAGS = -O2 -g -gnata -gnatf -gnatwu -gnatwl -gnaty -j2
+GNATMAKE_FLAGS = -O2 -g -gnatafy -gnatwu -j2 -m
 GNATMAKE_FLAGS += $(GCOV_FLAGS)
 
 ADA_SOURCE = \
