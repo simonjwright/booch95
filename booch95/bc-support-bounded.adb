@@ -17,7 +17,6 @@
 
 -- $Id$
 
-with Ada.Unchecked_Deallocation;
 with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
