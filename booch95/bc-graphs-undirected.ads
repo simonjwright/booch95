@@ -20,6 +20,8 @@
 generic
 package BC.Graphs.Undirected is
 
+  pragma Elaborate_Body;
+
   type Undirected_Graph is new Graph with private;
   type Undirected_Vertex is new Vertex with private;
   type Undirected_Arc is new Arc with private;

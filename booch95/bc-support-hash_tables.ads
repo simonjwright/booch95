@@ -77,6 +77,8 @@ generic
 
 package BC.Support.Hash_Tables is
 
+  pragma Elaborate_Body;
+
   -- The type Table represents an open hash table whose buckets may be
   -- formed by bounded, dynamic, or unbounded containers. Each table
   -- contains n buckets, wherein each bucket is a container of item/value

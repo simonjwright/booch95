@@ -23,6 +23,8 @@ with Ada.Finalization;
 
 package Chunks is
 
+  pragma Elaborate_Body;
+
   type Chunk is private;
   type Chunk_Ptr is access all Chunk;
 

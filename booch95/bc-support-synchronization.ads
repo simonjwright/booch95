@@ -22,6 +22,7 @@ with Ada.Task_Identification;
 
 package BC.Support.Synchronization is
 
+  pragma Elaborate_Body;
 
   type Semaphore_Base is abstract new Ada.Finalization.Controlled with private;
   procedure Seize (The_Semaphore : in out Semaphore_Base) is abstract;
