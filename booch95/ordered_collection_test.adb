@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -209,6 +209,7 @@ procedure Ordered_Collection_Test is
    Collection_B_P1, Collection_B_P2 : CB.Collection;
    Collection_D_P1, Collection_D_P2 : CD.Collection;
    Collection_U_P1, Collection_U_P2 : CU.Collection;
+   Collection_UM_P1, Collection_UM_P2 : CUM.Collection;
 
 begin
 
@@ -224,6 +225,9 @@ begin
    Put_Line ("...Unbounded Ordered Collection");
    Test_Primitive (Collection_U_P1, Collection_U_P2);
 
+   Put_Line ("...Unmanaged Ordered Collection");
+   Test_Primitive (Collection_UM_P1, Collection_UM_P2);
+
    Put_Line ("...Ordered Collection Active Iterator");
    Put_Line ("   Bounded:");
    Test_Active_Iterator (Collection_B_P1);
@@ -231,6 +235,8 @@ begin
    Test_Active_Iterator (Collection_D_P1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (Collection_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Collection_UM_P1);
 
    Put_Line ("...Ordered Collection Passive Iterator");
    Put_Line ("   Bounded:");
@@ -242,6 +248,9 @@ begin
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (Collection_U_P1);
    Test_Passive_Modifying_Iterator (Collection_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Collection_UM_P1);
+   Test_Passive_Modifying_Iterator (Collection_UM_P1);
 
    Put_Line ("...Ordered Collection Iterator Deletion");
    Put_Line ("   Bounded:");
@@ -250,6 +259,8 @@ begin
    Test_Iterator_Deletion (Collection_D_P1);
    Put_Line ("   Unbounded:");
    Test_Iterator_Deletion (Collection_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Iterator_Deletion (Collection_UM_P1);
 
    Put_Line ("Completed Ordered Collection tests");
 
