@@ -24,9 +24,7 @@ with BC.Support.Dynamic;
 with System.Storage_Pools;
 
 generic
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-   Storage : in out Storage_Manager;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
    Initial_Size : Positive := 10;
 package BC.Containers.Stacks.Dynamic is
 
@@ -86,7 +84,6 @@ private
    package Stack_Nodes
    is new BC.Support.Dynamic (Item => Item,
                               Item_Ptr => Item_Ptr,
-                              Storage_Manager => Storage_Manager,
                               Storage => Storage,
                               Initial_Size => Initial_Size);
 

@@ -24,9 +24,7 @@ with BC.Support.Unbounded;
 with System.Storage_Pools;
 
 generic
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-   Storage : in out Storage_Manager;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Collections.Ordered.Unbounded is
 
    pragma Elaborate_Body;
@@ -96,7 +94,6 @@ private
    package Collection_Nodes
    is new BC.Support.Unbounded (Item => Item,
                                 Item_Ptr => Item_Ptr,
-                                Storage_Manager => Storage_Manager,
                                 Storage => Storage);
 
    type Collection is new Abstract_Ordered_Collection with record

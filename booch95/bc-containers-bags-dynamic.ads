@@ -27,9 +27,7 @@ with System.Storage_Pools;
 generic
    with function Hash (V : Item) return Natural is <>;
    Buckets : Positive;
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-   Storage : in out Storage_Manager;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
    Initial_Size : Positive := 10;
 package BC.Containers.Bags.Dynamic is
 
@@ -101,7 +99,6 @@ private
 
    package IC is new BC.Support.Dynamic (Item => Item,
                                          Item_Ptr => Item_Ptr,
-                                         Storage_Manager => Storage_Manager,
                                          Storage => Storage,
                                          Initial_Size => Initial_Size);
    use IC;
@@ -112,7 +109,6 @@ private
    type Positive_Ptr is access all Positive;
    package VC is new BC.Support.Dynamic (Item => Positive,
                                          Item_Ptr => Positive_Ptr,
-                                         Storage_Manager => Storage_Manager,
                                          Storage => Storage,
                                          Initial_Size => Initial_Size);
    use VC;

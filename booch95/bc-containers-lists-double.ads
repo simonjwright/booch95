@@ -24,9 +24,7 @@ with BC.Support.Nodes;
 with System.Storage_Pools;
 
 generic
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-   Storage : in out Storage_Manager;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Lists.Double is
 
    pragma Elaborate_Body;
@@ -170,7 +168,7 @@ private
    function Item_At (L : List; Index : Positive) return Item_Ptr;
 
    package Nodes
-   is new BC.Support.Nodes (Item, Storage_Manager, Storage);
+   is new BC.Support.Nodes (Item, Storage);
 
    type List is new Container with record
       Rep : Nodes.Double_Node_Ref;

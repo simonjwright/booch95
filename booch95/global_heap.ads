@@ -18,10 +18,14 @@
 --  $Id$
 
 with BC.Support.Managed_Storage;
+with System.Storage_Pools;
 
 package Global_Heap is
 
    subtype Pool is BC.Support.Managed_Storage.Pool;
-   Storage : Pool (Chunk_Size => 1024);
+   Storage_Pool : Pool (Chunk_Size => 1024);
+
+   Storage : System.Storage_Pools.Root_Storage_Pool'Class
+     renames System.Storage_Pools.Root_Storage_Pool'Class (Storage_Pool);
 
 end Global_Heap;

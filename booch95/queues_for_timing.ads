@@ -23,17 +23,16 @@ with BC.Containers.Queues.Bounded;
 with BC.Containers.Queues.Dynamic;
 with BC.Containers.Queues.Unbounded;
 with BC.Support.Managed_Storage;
---  with BC.Support.Unmanaged_Storage;
+with System.Storage_Pools;
 
 package Queues_For_Timing is
    Size : constant := 10_000;
    package C is new BC.Containers (Integer);
    package Q is new C.Queues;
    package B is new Q.Bounded (Size);
-   P : BC.Support.Managed_Storage.Pool (10_000);
-   package D is new Q.Dynamic (BC.Support.Managed_Storage.Pool, P);
-   package U is new Q.Unbounded (BC.Support.Managed_Storage.Pool, P);
-   --   P : BC.Support.Unmanaged_Storage.Pool;
-   --   package D is new Q.Dynamic (BC.Support.Unmanaged_Storage.Pool, P);
-   --   package U is new Q.Unbounded (BC.Support.Unmanaged_Storage.Pool, P);
+   Pool : BC.Support.Managed_Storage.Pool (10_000);
+   Pool_View : System.Storage_Pools.Root_Storage_Pool'Class
+     renames System.Storage_Pools.Root_Storage_Pool'Class (Pool);
+   package D is new Q.Dynamic (Pool_View);
+   package U is new Q.Unbounded (Pool_View);
 end Queues_For_Timing;

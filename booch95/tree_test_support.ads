@@ -30,13 +30,10 @@ package Tree_Test_Support is
 
    package Trees is new Containers.Trees;
 
-   package TA is new Trees.AVL (Storage_Manager => Global_Heap.Pool,
-                                Storage => Global_Heap.Storage);
+   package TA is new Trees.AVL (Storage => Global_Heap.Storage);
 
-   package TB is new Trees.Binary (Storage_Manager => Global_Heap.Pool,
-                                   Storage => Global_Heap.Storage);
+   package TB is new Trees.Binary (Storage => Global_Heap.Storage);
 
-   package TM is new Trees.Multiway (Storage_Manager => Global_Heap.Pool,
-                                     Storage => Global_Heap.Storage);
+   package TM is new Trees.Multiway (Storage => Global_Heap.Storage);
 
 end Tree_Test_Support;

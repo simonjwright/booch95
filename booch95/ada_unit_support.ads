@@ -50,7 +50,6 @@ private
    package Dependencies_Base is new BC.Graphs
      (Vertex_Item => Unit_P,
       Arc_Item => Dependency,
-      Storage_Manager => Global_Heap.Pool,
       Storage => Global_Heap.Storage);
    package Dependencies is new Dependencies_Base.Directed;
 

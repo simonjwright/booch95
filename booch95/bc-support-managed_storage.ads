@@ -40,23 +40,23 @@ package BC.Support.Managed_Storage is
    --  Your_Type is unconstrained, so that some additional storage is
    --  required to hold the actual object's constraints).
 
-   procedure Allocate (The_Pool                 : in out Pool;
-                       Storage_Address          :    out System.Address;
-                       Size_In_Storage_Elements : in     SSE.Storage_Count;
-                       Alignment                : in     SSE.Storage_Count);
+   procedure Allocate (The_Pool : in out Pool;
+                       Storage_Address : out System.Address;
+                       Size_In_Storage_Elements : SSE.Storage_Count;
+                       Alignment : SSE.Storage_Count);
 
-   procedure Deallocate (The_Pool                 : in out Pool;
-                         Storage_Address          : in     System.Address;
-                         Size_In_Storage_Elements : in     SSE.Storage_Count;
-                         Alignment                : in     SSE.Storage_Count);
+   procedure Deallocate (The_Pool : in out Pool;
+                         Storage_Address : System.Address;
+                         Size_In_Storage_Elements : SSE.Storage_Count;
+                         Alignment : SSE.Storage_Count);
 
    function Storage_Size (This : Pool) return SSE.Storage_Count;
 
    function Pool_Overhead
      (Type_Overhead  : SSE.Storage_Count := 0;
-      Alignment      : SSE.Storage_Count) return SSE.Storage_Count;
+      Alignment : SSE.Storage_Count) return SSE.Storage_Count;
 
-   procedure Preallocate_Chunks (This : in out Pool;  Count : in Positive);
+   procedure Preallocate_Chunks (This : in out Pool;  Count : Positive);
 
    procedure Reclaim_Unused_Chunks (This : in out Pool);
 
@@ -77,40 +77,40 @@ private
    type Chunk (Payload_Size : SSE.Storage_Count) is
       record
          Previous_Sized_Chunk : Chunk_Pointer;
-         Next_Sized_Chunk     : Chunk_Pointer;
-         Next_Chunk           : Chunk_Pointer;
-         Element_Size         : SSE.Storage_Count;
-         Alignment            : SSE.Storage_Count;
-         Number_Elements      : SSE.Storage_Count;
-         Next_Element         : System.Address;
-         Payload              : SSE.Storage_Array (1 .. Payload_Size);
+         Next_Sized_Chunk : Chunk_Pointer;
+         Next_Chunk : Chunk_Pointer;
+         Element_Size : SSE.Storage_Count;
+         Alignment : SSE.Storage_Count;
+         Number_Elements : SSE.Storage_Count;
+         Next_Element : System.Address;
+         Payload : SSE.Storage_Array (1 .. Payload_Size);
       end record;
 
    type Pool (Chunk_Size : SSE.Storage_Count) is
      new SSP.Root_Storage_Pool with
       record
-         Head                 : Chunk_Pointer;
-         Unused               : Chunk_Pointer;
+         Head : Chunk_Pointer;
+         Unused : Chunk_Pointer;
          Allocated_Chunk_Size : SSE.Storage_Count;
       end record;
 
    procedure Initialize (This : in out Pool);
    procedure Finalize (This : in out Pool);
 
-   function Aligned (Size      : SSE.Storage_Count;
+   function Aligned (Size : SSE.Storage_Count;
                      Alignment : SSE.Storage_Count) return SSE.Storage_Offset;
 
    function New_Allocation (Size : SSE.Storage_Count) return Chunk_Pointer;
 
    function Within_Range (Target : System.Address;
-                          Base   : Chunk_Pointer;
+                          Base : Chunk_Pointer;
                           Offset : SSE.Storage_Count) return Boolean;
    pragma Inline (Within_Range);
 
-   procedure Get_Chunk (Result                 :    out Chunk_Pointer;
-                        From                   : in out Pool;
-                        Requested_Element_Size : in     SSE.Storage_Count;
-                        Requested_Alignment    : in     SSE.Storage_Count);
+   procedure Get_Chunk (Result : out Chunk_Pointer;
+                        From : in out Pool;
+                        Requested_Element_Size : SSE.Storage_Count;
+                        Requested_Alignment : SSE.Storage_Count);
 
 
    use type SSE.Storage_Offset;

@@ -25,9 +25,7 @@ with BC.Support.Nodes;
 with System.Storage_Pools;
 
 generic
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-   Storage : in out Storage_Manager;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Trees.Binary is
 
    pragma Elaborate_Body;
@@ -130,7 +128,7 @@ package BC.Containers.Trees.Binary is
 
 private
 
-   package Nodes is new BC.Support.Nodes (Item, Storage_Manager, Storage);
+   package Nodes is new BC.Support.Nodes (Item, Storage);
 
    procedure Purge (Node : in out Nodes.Binary_Node_Ref);
 

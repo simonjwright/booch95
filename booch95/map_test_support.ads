@@ -22,6 +22,7 @@ with BC.Containers.Maps;
 with BC.Containers.Maps.Bounded;
 with BC.Containers.Maps.Dynamic;
 with BC.Containers.Maps.Unbounded;
+with BC.Support.Standard_Storage;
 with Chunks;
 with Global_Heap;
 
@@ -34,19 +35,20 @@ package Map_Test_Support is
 
    function Char_Hash (C : Character) return Natural;
 
-   package MB is new Maps.Bounded (Hash => Char_Hash,
-                                   Buckets => 3,
-                                   Maximum_Size => 100);
+   package MB is new Maps.Bounded
+     (Hash => Char_Hash,
+      Buckets => 3,
+      Maximum_Size => 100);
 
-   package MD is new Maps.Dynamic (Hash => Char_Hash,
-                                   Buckets => 3,
-                                   Storage_Manager => Global_Heap.Pool,
-                                   Storage => Global_Heap.Storage);
+   package MD is new Maps.Dynamic
+     (Hash => Char_Hash,
+      Buckets => 3,
+      Storage => Global_Heap.Storage);
 
-   package MU is new Maps.Unbounded (Hash => Char_Hash,
-                                     Buckets => 3,
-                                     Storage_Manager => Global_Heap.Pool,
-                                     Storage => Global_Heap.Storage);
+   package MU is new Maps.Unbounded
+     (Hash => Char_Hash,
+      Buckets => 3,
+      Storage => BC.Support.Standard_Storage.Pool);
 
    Gitems : array (0 .. 9) of aliased Chunks.Chunk;
 

@@ -22,11 +22,13 @@ with BC.Containers.Lists;
 with BC.Containers.Lists.Single;
 with BC.Containers.Lists.Double;
 with BC.Support.Managed_Storage;
---  with BC.Support.Unmanaged_Storage;
+with System.Storage_Pools;
 package Lists_For_Timing is
    package C is new BC.Containers (Integer);
    package L is new C.Lists;
-   P : BC.Support.Managed_Storage.Pool (10_000);
-   package S is new L.Single (BC.Support.Managed_Storage.Pool, P);
-   package D is new L.Double (BC.Support.Managed_Storage.Pool, P);
+   Pool : BC.Support.Managed_Storage.Pool (10_000);
+   Pool_View : System.Storage_Pools.Root_Storage_Pool'Class
+     renames System.Storage_Pools.Root_Storage_Pool'Class (Pool);
+   package S is new L.Single (Pool_View);
+   package D is new L.Double (Pool_View);
 end Lists_For_Timing;

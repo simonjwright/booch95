@@ -24,9 +24,7 @@ with BC.Support.Unbounded;
 with System.Storage_Pools;
 
 generic
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-   Storage : in out Storage_Manager;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Rings.Unbounded is
 
    pragma Elaborate_Body;
@@ -80,7 +78,6 @@ private
    package Ring_Nodes
    is new BC.Support.Unbounded (Item => Item,
                                 Item_Ptr => Item_Ptr,
-                                Storage_Manager => Storage_Manager,
                                 Storage => Storage);
 
    type Ring is new Abstract_Ring with record

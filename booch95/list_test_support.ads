@@ -32,10 +32,8 @@ package List_Test_Support is
 
    package Lists is new Containers.Lists;
 
-   package LS is new Lists.Single (Storage_Manager => Global_Heap.Pool,
-                                   Storage => Global_Heap.Storage);
+   package LS is new Lists.Single (Storage => Global_Heap.Storage);
 
-   package LD is new Lists.Double (Storage_Manager => Global_Heap.Pool,
-                                   Storage => Global_Heap.Storage);
+   package LD is new Lists.Double (Storage => Global_Heap.Storage);
 
 end List_Test_Support;

@@ -22,6 +22,7 @@ with BC.Containers.Queues;
 with BC.Containers.Queues.Bounded;
 with BC.Containers.Queues.Dynamic;
 with BC.Containers.Queues.Unbounded;
+with BC.Support.Standard_Storage;
 with Global_Heap;
 
 package Queue_Test_Support is
@@ -30,13 +31,14 @@ package Queue_Test_Support is
 
    package Queues is new Containers.Queues;
 
-   package QB is new Queues.Bounded (Maximum_Size => 100);
+   package QB is new Queues.Bounded
+     (Maximum_Size => 100);
 
-   package QD is new Queues.Dynamic (Initial_Size => 10,
-                                     Storage_Manager => Global_Heap.Pool,
-                                     Storage => Global_Heap.Storage);
+   package QD is new Queues.Dynamic
+     (Initial_Size => 10,
+      Storage => Global_Heap.Storage);
 
-   package QU is new Queues.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                       Storage => Global_Heap.Storage);
+   package QU is new Queues.Unbounded
+     (Storage => BC.Support.Standard_Storage.Pool);
 
 end Queue_Test_Support;

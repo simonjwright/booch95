@@ -108,7 +108,6 @@ package Word_Count_Support is
 
    package BU is new Bags.Unbounded (Hash => Hash,
                                      Buckets => 1,
-                                     Storage_Manager => Global_Heap.Pool,
                                      Storage => Global_Heap.Storage);
 
    type Word_Stat is record
@@ -125,7 +124,6 @@ package Word_Count_Support is
 
    package ST is new Trees.AVL
      ("<" => ">",     --  we need the most popular first
-      Storage_Manager => Global_Heap.Pool,
       Storage => Global_Heap.Storage);
 
 end Word_Count_Support;

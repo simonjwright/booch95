@@ -22,6 +22,7 @@ with BC.Containers.Sets;
 with BC.Containers.Sets.Bounded;
 with BC.Containers.Sets.Dynamic;
 with BC.Containers.Sets.Unbounded;
+with BC.Support.Standard_Storage;
 with Global_Heap;
 
 package Set_Test_Support is
@@ -32,18 +33,19 @@ package Set_Test_Support is
 
    function Char_Hash (C : Character) return Natural;
 
-   package SB is new Sets.Bounded (Hash => Char_Hash,
-                                   Buckets => 3,
-                                   Maximum_Size => 100);
+   package SB is new Sets.Bounded
+     (Hash => Char_Hash,
+      Buckets => 3,
+      Maximum_Size => 100);
 
-   package SD is new Sets.Dynamic (Hash => Char_Hash,
-                                   Buckets => 3,
-                                   Storage_Manager => Global_Heap.Pool,
-                                   Storage => Global_Heap.Storage);
+   package SD is new Sets.Dynamic
+     (Hash => Char_Hash,
+      Buckets => 3,
+      Storage => Global_Heap.Storage);
 
-   package SU is new Sets.Unbounded (Hash => Char_Hash,
-                                     Buckets => 3,
-                                     Storage_Manager => Global_Heap.Pool,
-                                     Storage => Global_Heap.Storage);
+   package SU is new Sets.Unbounded
+     (Hash => Char_Hash,
+      Buckets => 3,
+      Storage => BC.Support.Standard_Storage.Pool);
 
 end Set_Test_Support;

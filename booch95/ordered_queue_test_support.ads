@@ -26,6 +26,7 @@ with BC.Containers.Queues.Ordered;
 with BC.Containers.Queues.Ordered.Bounded;
 with BC.Containers.Queues.Ordered.Dynamic;
 with BC.Containers.Queues.Ordered.Unbounded;
+with BC.Support.Standard_Storage;
 with Global_Heap;
 
 package Ordered_Queue_Test_Support is
@@ -36,12 +37,13 @@ package Ordered_Queue_Test_Support is
 
    package Queues is new Base_Queues.Ordered;
 
-   package QB is new Queues.Bounded (Maximum_Size => 100);
+   package QB is new Queues.Bounded
+     (Maximum_Size => 100);
 
-   package QD is new Queues.Dynamic (Storage_Manager => Global_Heap.Pool,
-                                     Storage => Global_Heap.Storage);
+   package QD is new Queues.Dynamic
+     (Storage => Global_Heap.Storage);
 
-   package QU is new Queues.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                       Storage => Global_Heap.Storage);
+   package QU is new Queues.Unbounded
+     (Storage => BC.Support.Standard_Storage.Pool);
 
 end Ordered_Queue_Test_Support;
