@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -33,20 +33,20 @@ package body BC.Containers.Maps.Unbounded is
   end Clear;
 
   procedure Bind
-     (M : in out Unbounded_Map; I : Item; V : Value) is
+     (M : in out Unbounded_Map; K : Key; I : Item) is
   begin
-    Tables.Bind (M.Rep.all, I, V);
+    Tables.Bind (M.Rep.all, K, I);
   end Bind;
 
   procedure Rebind
-     (M : in out Unbounded_Map; I : Item; V : Value) is
+     (M : in out Unbounded_Map; K : Key; I : Item) is
   begin
-    Tables.Rebind (M.Rep.all, I, V);
+    Tables.Rebind (M.Rep.all, K, I);
   end Rebind;
 
-  procedure Unbind (M : in out Unbounded_Map; I : Item) is
+  procedure Unbind (M : in out Unbounded_Map; K : Key) is
   begin
-    Tables.Unbind (M.Rep.all, I);
+    Tables.Unbind (M.Rep.all, K);
   end Unbind;
 
   function Extent (M : Unbounded_Map) return Natural is
@@ -59,15 +59,15 @@ package body BC.Containers.Maps.Unbounded is
     return Tables.Extent (M.Rep.all) = 0;
   end Is_Empty;
 
-  function Is_Bound (M : Unbounded_Map; I : Item) return Boolean is
+  function Is_Bound (M : Unbounded_Map; K : Key) return Boolean is
   begin
-    return Tables.Is_Bound (M.Rep.all, I);
+    return Tables.Is_Bound (M.Rep.all, K);
   end Is_Bound;
 
-  function Value_Of (M : Unbounded_Map; I : Item) return Value is
+  function Item_Of (M : Unbounded_Map; K : Key) return Item is
   begin
-    return Tables.Value_Of (M.Rep.all, I);
-  end Value_Of;
+    return Tables.Value_Of (M.Rep.all, K);
+  end Item_Of;
 
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Unbounded_Map);
@@ -100,9 +100,9 @@ package body BC.Containers.Maps.Unbounded is
     Free (M.Rep);
   end Finalize;
 
-  procedure Attach (M : in out Unbounded_Map; I : Item; V : Value) is
+  procedure Attach (M : in out Unbounded_Map; K : Key; I : Item) is
   begin
-    Tables.Bind (M.Rep.all, I, V);
+    Tables.Bind (M.Rep.all, K, I);
   end Attach;
 
   function Number_Of_Buckets (M : Unbounded_Map) return Natural is
@@ -112,20 +112,20 @@ package body BC.Containers.Maps.Unbounded is
 
   function Length (M : Unbounded_Map; Bucket : Positive) return Natural is
   begin
-    return IC.Length (Tables.Item_Bucket (M.Rep.all, Bucket).all);
+    return KC.Length (Tables.Item_Bucket (M.Rep.all, Bucket).all);
   end Length;
 
   function Item_At
      (M : Unbounded_Map; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (Tables.Item_Bucket (M.Rep.all, Bucket).all, Index);
+    return IC.Item_At (Tables.Value_Bucket (M.Rep.all, Bucket).all, Index);
   end Item_At;
 
-  function Value_At
-     (M : Unbounded_Map; Bucket, Index : Positive) return Value_Ptr is
+  function Key_At
+     (M : Unbounded_Map; Bucket, Index : Positive) return Key_Ptr is
   begin
-    return VC.Item_At (Tables.Value_Bucket (M.Rep.all, Bucket).all, Index);
-  end Value_At;
+    return KC.Item_At (Tables.Item_Bucket (M.Rep.all, Bucket).all, Index);
+  end Key_At;
 
   Empty_Container : Unbounded_Map;
 

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -25,8 +25,8 @@ package body BC.Containers.Maps.Dynamic is
     M : Dynamic_Map;
   begin
     for B in 1 .. Buckets loop
-      IC.Set_Chunk_Size (Tables.Item_Bucket (M.Rep, B).all, Size);
-      VC.Set_Chunk_Size (Tables.Value_Bucket (M.Rep, B).all, Size);
+      KC.Set_Chunk_Size (Tables.Item_Bucket (M.Rep, B).all, Size);
+      IC.Set_Chunk_Size (Tables.Value_Bucket (M.Rep, B).all, Size);
     end loop;
     return M;
   end Create;
@@ -37,20 +37,20 @@ package body BC.Containers.Maps.Dynamic is
   end Clear;
 
   procedure Bind
-     (M : in out Dynamic_Map; I : Item; V : Value) is
+     (M : in out Dynamic_Map; K : Key; I : Item) is
   begin
-    Tables.Bind (M.Rep, I, V);
+    Tables.Bind (M.Rep, K, I);
   end Bind;
 
   procedure Rebind
-     (M : in out Dynamic_Map; I : Item; V : Value) is
+     (M : in out Dynamic_Map; K : Key; I : Item) is
   begin
-    Tables.Rebind (M.Rep, I, V);
+    Tables.Rebind (M.Rep, K, I);
   end Rebind;
 
-  procedure Unbind (M : in out Dynamic_Map; I : Item) is
+  procedure Unbind (M : in out Dynamic_Map; K : Key) is
   begin
-    Tables.Unbind (M.Rep, I);
+    Tables.Unbind (M.Rep, K);
   end Unbind;
 
   function Extent (M : Dynamic_Map) return Natural is
@@ -63,35 +63,35 @@ package body BC.Containers.Maps.Dynamic is
     return Tables.Extent (M.Rep) = 0;
   end Is_Empty;
 
-  function Is_Bound (M : Dynamic_Map; I : Item) return Boolean is
+  function Is_Bound (M : Dynamic_Map; K : Key) return Boolean is
   begin
-    return Tables.Is_Bound (M.Rep, I);
+    return Tables.Is_Bound (M.Rep, K);
   end Is_Bound;
 
-  function Value_Of (M : Dynamic_Map; I : Item) return Value is
+  function Item_Of (M : Dynamic_Map; K : Key) return Item is
   begin
-    return Tables.Value_Of (M.Rep, I);
-  end Value_Of;
+    return Tables.Value_Of (M.Rep, K);
+  end Item_Of;
 
   procedure Preallocate (M : in out Dynamic_Map; Size : Positive) is
   begin
     for B in 1 .. Buckets loop
-      IC.Preallocate (Tables.Item_Bucket (M.Rep, B).all, Size);
-      VC.Preallocate (Tables.Value_Bucket (M.Rep, B).all, Size);
+      KC.Preallocate (Tables.Item_Bucket (M.Rep, B).all, Size);
+      IC.Preallocate (Tables.Value_Bucket (M.Rep, B).all, Size);
     end loop;
   end Preallocate;
 
   procedure Set_Chunk_Size (M : in out Dynamic_Map; Size : Positive) is
   begin
     for B in 1 .. Buckets loop
-      IC.Set_Chunk_Size (Tables.Item_Bucket (M.Rep, B).all, Size);
-      VC.Set_Chunk_Size (Tables.Value_Bucket (M.Rep, B).all, Size);
+      KC.Set_Chunk_Size (Tables.Item_Bucket (M.Rep, B).all, Size);
+      IC.Set_Chunk_Size (Tables.Value_Bucket (M.Rep, B).all, Size);
     end loop;
   end Set_Chunk_Size;
 
   function Chunk_Size (M : Dynamic_Map) return Positive is
   begin
-    return IC.Chunk_Size (Tables.Item_Bucket (M.Rep, 1).all);
+    return KC.Chunk_Size (Tables.Item_Bucket (M.Rep, 1).all);
   end Chunk_Size;
 
   package Address_Conversions
@@ -108,9 +108,9 @@ package body BC.Containers.Maps.Dynamic is
 
   -- Private implementations
 
-  procedure Attach (M : in out Dynamic_Map; I : Item; V : Value) is
+  procedure Attach (M : in out Dynamic_Map; K : Key; I : Item) is
   begin
-    Tables.Bind (M.Rep, I, V);
+    Tables.Bind (M.Rep, K, I);
   end Attach;
 
   function Number_Of_Buckets (M : Dynamic_Map) return Natural is
@@ -120,20 +120,20 @@ package body BC.Containers.Maps.Dynamic is
 
   function Length (M : Dynamic_Map; Bucket : Positive) return Natural is
   begin
-    return IC.Length (Tables.Item_Bucket (M.Rep, Bucket).all);
+    return KC.Length (Tables.Item_Bucket (M.Rep, Bucket).all);
   end Length;
 
   function Item_At
      (M : Dynamic_Map; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (Tables.Item_Bucket (M.Rep, Bucket).all, Index);
+    return IC.Item_At (Tables.Value_Bucket (M.Rep, Bucket).all, Index);
   end Item_At;
 
-  function Value_At
-     (M : Dynamic_Map; Bucket, Index : Positive) return Value_Ptr is
+  function Key_At
+     (M : Dynamic_Map; Bucket, Index : Positive) return Key_Ptr is
   begin
-    return VC.Item_At (Tables.Value_Bucket (M.Rep, Bucket).all, Index);
-  end Value_At;
+    return KC.Item_At (Tables.Item_Bucket (M.Rep, Bucket).all, Index);
+  end Key_At;
 
   Empty_Container : Dynamic_Map;
 

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -27,7 +27,7 @@ package body BC.Containers.Maps is
   is new BSE.Assert ("BC.Containers.Maps");
 
   function Are_Equal (L, R : Map'Class) return Boolean is
-    It : Iterator'Class := New_Iterator (L);
+    It : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (L));
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -35,7 +35,7 @@ package body BC.Containers.Maps is
       return False;
     end if;
     while not Is_Done (It) loop
-      if not Is_Bound (R, Current_Item (It)) then
+      if not Is_Bound (R, Current_Key (It)) then
         return False;
       end if;
       -- XXX what about the Value?
@@ -137,16 +137,16 @@ package body BC.Containers.Maps is
     raise BC.Not_Yet_Implemented;
   end Delete_Item_At;
 
-  function Current_Value (It : Map_Iterator) return Value is
+  function Current_Key (It : Map_Iterator) return Key is
     M : Map'Class renames Map'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Value_At (M,
-                     It.Bucket_Index,
-                     It.Index).all;
-  end Current_Value;
+    return Key_At (M,
+                   It.Bucket_Index,
+                   It.Index).all;
+  end Current_Key;
 
   procedure Visit (Using : in out Map_Iterator'Class) is
     M : Map'Class renames Map'Class (Using.For_The_Container.all);
@@ -154,12 +154,12 @@ package body BC.Containers.Maps is
   begin
     Reset (Using);
     while not Is_Done (Using) loop
-      Apply (Item_At (M,
+      Apply (Key_At (M,
+                     Using.Bucket_Index,
+                     Using.Index).all,
+             Item_At (M,
                       Using.Bucket_Index,
                       Using.Index).all,
-             Value_At (M,
-                       Using.Bucket_Index,
-                       Using.Index).all,
              Status);
       exit when not Status;
       Next (Using);
@@ -172,12 +172,12 @@ package body BC.Containers.Maps is
   begin
     Reset (Using);
     while not Is_Done (Using) loop
-      Apply (Item_At (M,
+      Apply (Key_At (M,
+                     Using.Bucket_Index,
+                     Using.Index).all,
+             Item_At (M,
                       Using.Bucket_Index,
                       Using.Index).all,
-             Value_At (M,
-                       Using.Bucket_Index,
-                       Using.Index).all,
              Status);
       exit when not Status;
       Next (Using);
@@ -186,7 +186,7 @@ package body BC.Containers.Maps is
 
   -- Subprograms to be overridden
 
-  procedure Attach (M : in out Map; I : Item; V : Value) is
+  procedure Attach (M : in out Map; K : Key; I : Item) is
   begin
     raise Should_Have_Been_Overridden;
   end Attach;
@@ -209,10 +209,10 @@ package body BC.Containers.Maps is
     return null;
   end Item_At;
 
-  function Value_At (M : Map; Bucket, Index : Positive) return Value_Ptr is
+  function Key_At (M : Map; Bucket, Index : Positive) return Key_Ptr is
   begin
     raise Should_Have_Been_Overridden;
     return null;
-  end Value_At;
+  end Key_At;
 
 end BC.Containers.Maps;

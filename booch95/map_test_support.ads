@@ -27,9 +27,10 @@ with Global_Heap;
 
 package Map_Test_Support is
 
-  package Containers is new BC.Containers (Item => Character);
+  package Containers is new BC.Containers (Item => Chunks.Chunk_Ptr,
+                                           "=" => Chunks."=");
 
-  package Maps is new Containers.Maps (Value => Chunks.Chunk_Ptr);
+  package Maps is new Containers.Maps (Key => Character);
 
   function Char_Hash (C : Character) return Natural;
 
