@@ -70,10 +70,7 @@ private
   use Stack_Nodes;
 
   type Stack is new Abstract_Stack with record
-    Rep : Stack_Nodes.Bnd_Node_Ref := new Bnd_Node;
+    Rep : Stack_Nodes.Bnd_Node;
   end record;
-
-  procedure Adjust (S : in out Stack);
-  procedure Finalize (S : in out Stack);
 
 end BC.Containers.Stacks.Bounded;

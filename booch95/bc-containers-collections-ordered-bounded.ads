@@ -94,11 +94,7 @@ private
                              Maximum_Size => Maximum_Size);
 
   type Collection is new Abstract_Ordered_Collection with record
-    Rep : Collection_Nodes.Bnd_Node_Ref
-       := new Collection_Nodes.Bnd_Node;
+    Rep : Collection_Nodes.Bnd_Node;
   end record;
-
-  procedure Adjust (C : in out Collection);
-  procedure Finalize (C : in out Collection);
 
 end BC.Containers.Collections.Ordered.Bounded;
