@@ -45,28 +45,28 @@ package BC.Containers.Lists.Double is
   procedure Insert (L : in out List; Elem : Item);
   -- Add the item to the head of the list.
 
-  procedure Insert (L : in out List; From_List : in List);
-  -- Add the given list to the head of the list.
+  procedure Insert (L : in out List; From_List : in out List);
+  -- Add From_List to the head of the list.
 
   procedure Insert (L : in out List; Elem : Item; Before : Positive);
-  -- Add the item before the given index item in the list; if before is 1,
+  -- Add the item before the given index item in the list; if Before is 1,
   -- the item is added to the head of the list.
 
   procedure Insert (L : in out List; From_List: in out List; Before : Positive);
-  -- Add the list before the given index item in the list; if before is 1,
+  -- Add the list before the given index item in the list; if Before is 1,
   -- the list is added to the head of the list.
 
   procedure Append (L : in out List; Elem : Item);
   -- Add the item at the end of the list.
 
-  procedure Append (L : in out List; From_List : in List);
-  -- Add the given list at the end of the list.
+  procedure Append (L : in out List; From_List : in out List);
+  -- Add From_List at the end of the list.
 
   procedure Append (L : in out List; Elem : Item; After : Positive);
   -- Add the item after the given index item in the list.
 
-  procedure Append (L : in out List; From_List : in List; After : Positive);
-  -- Add the list after the given index item in the list.
+  procedure Append (L : in out List; From_List : in out List; After : Positive);
+  -- Add From_List after the given index item in the list.
 
   procedure Remove (L : in out List; From : Positive);
   -- Remove the item at the given index in the list.
