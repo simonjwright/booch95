@@ -34,18 +34,20 @@ procedure Set_Test is
     end if;
   end Assertion;
 
---    procedure Print_Set (S : in out Sets.Set'Class; Named : String) is
---      procedure Print (Item : Character; OK : out Boolean) is
---      begin
---        Put (" " & Item);
---        OK := True;
---      end Print;
---      procedure Visitor is new Containers.Visit (Print);
---    begin
---      Put ("Set " & Named);
---      Visitor (S);
---      New_Line;
---    end Print_Set;
+   procedure Print_Set (S : in out Sets.Abstract_Set'Class; Named : String) is
+     procedure Print (Item : Character; OK : out Boolean) is
+     begin
+       Put (" " & Item);
+       OK := True;
+     end Print;
+     procedure Visitor is new Containers.Visit (Print);
+     It : Containers.Iterator'Class
+        := Containers.New_Iterator (Containers.Container'Class (S));
+   begin
+     Put ("Set " & Named);
+     Visitor (It);
+     New_Line;
+   end Print_Set;
 
   procedure Test (S1, S2 : in out Sets.Abstract_Set'Class) is
     Status : Boolean;
