@@ -103,7 +103,7 @@ package body BC.Containers.Trees.Multiway is
 
   procedure Append (Obj : in out Multiway_Tree;
                     Elem : in Item;
-                    After : Natural) is
+                    After : Positive) is
   begin
     if Obj.Rep = null then
       Obj.Rep := Create (Elem,
@@ -121,7 +121,7 @@ package body BC.Containers.Trees.Multiway is
                                    Sibling => Obj.Rep.Child);
         else
           declare
-            I : Natural := 0;
+            I : Positive := 1;
           begin
             while Curr /= null and then I < After loop
               Curr := Curr.Sibling;
@@ -157,11 +157,11 @@ package body BC.Containers.Trees.Multiway is
     end if;
   end Append;
 
-  procedure Remove (Obj : in out Multiway_Tree; Index : Natural) is
+  procedure Remove (Obj : in out Multiway_Tree; Index : Positive) is
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to Remove from a NULL tree");
     declare
-      I : Natural := 0;
+      I : Positive := 1;
       Prev : Multiway_Node_Ref;
       Curr : Multiway_Node_Ref := Obj.Rep.Child;
     begin
@@ -184,9 +184,9 @@ package body BC.Containers.Trees.Multiway is
 
   procedure Share (Obj : in out Multiway_Tree;
                    Share_With : in Multiway_Tree;
-                   Child : Natural) is
+                   Child : Positive) is
     Ptr : Multiway_Node_Ref := Share_With.Rep;
-    I : Natural := 0;
+    I : Positive := 1;
   begin
     pragma Assert (Ptr /= null, "Attempt to Share with a NULL tree");
     Ptr := Ptr.Child;
@@ -202,10 +202,10 @@ package body BC.Containers.Trees.Multiway is
 
   procedure Swap_Child (Obj : in out Multiway_Tree;
                         Swap_WIth : in out Multiway_Tree;
-                        Child : in Natural) is
+                        Child : in Positive) is
     Prev : Multiway_Node_Ref;
     Curr : Multiway_Node_Ref := Obj.Rep;
-    I : Natural := 0;
+    I : Positive := 1;
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to Swap with NULL tree");
     pragma Assert (Swap_With.Rep = null or else Swap_With.Rep.Parent = null,
@@ -232,9 +232,9 @@ package body BC.Containers.Trees.Multiway is
   end Swap_Child;
 
 
-  procedure Child (Obj : in out Multiway_Tree; Child : in Natural) is
+  procedure Child (Obj : in out Multiway_Tree; Child : in Positive) is
     Curr : Multiway_Node_Ref := Obj.Rep;
-    I : Natural := 0;
+    I : Positive := 1;
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to move in a NULL direction");
     Curr := Curr.Child;

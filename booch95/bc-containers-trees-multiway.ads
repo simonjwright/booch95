@@ -35,18 +35,18 @@ package BC.Containers.Trees.Multiway is
                     Elem : in Item);
   procedure Append (Obj : in out Multiway_Tree;
                     Elem : in Item;
-                    After : Natural);
+                    After : Positive);
   procedure Append (Obj : in out Multiway_Tree;
                     From_Tree : in out Multiway_Tree);
 
-  procedure Remove (Obj : in out Multiway_Tree; Index : Natural);
+  procedure Remove (Obj : in out Multiway_Tree; Index : Positive);
   procedure Share (Obj : in out Multiway_Tree;
                    Share_With : in Multiway_Tree;
-                   Child : Natural);
+                   Child : Positive);
   procedure Swap_Child (Obj : in out Multiway_Tree;
                         Swap_WIth : in out Multiway_Tree;
-                        Child : in Natural);
-  procedure Child (Obj : in out Multiway_Tree; Child : in Natural);
+                        Child : in Positive);
+  procedure Child (Obj : in out Multiway_Tree; Child : in Positive);
   procedure Parent (Obj : in out Multiway_Tree);
   procedure Set_Item (Obj : in out Multiway_Tree; Elem : in Item);
 
