@@ -57,6 +57,10 @@ TESTABLE += map_test
 map_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+TESTABLE += ordered_collection_test
+ordered_collection_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
 TESTABLE += queue_test
 queue_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
@@ -102,6 +106,10 @@ collection_test_aonix: force
 
 AONIX_TESTABLE += map_test_aonix
 map_test_aonix: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+TESTABLE += ordered_collection_test_aonix
+ordered_collection_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 AONIX_TESTABLE += queue_test_aonix
@@ -192,6 +200,8 @@ bc-containers-bags-bounded.ad[bs] \
 bc-containers-bags-dynamic.ad[bs] \
 bc-containers-bags-unbounded.ad[bs] \
 bc-containers-bags.ad[bs] \
+bc-containers-collections-ordered-unbounded.ad[bs] \
+bc-containers-collections-ordered.ad[bs] \
 bc-containers-collections-unbounded.ad[bs] \
 bc-containers-collections.ad[bs] \
 bc-containers-lists-double.ad[bs] \
@@ -258,6 +268,8 @@ list_test_support.ad[bs] \
 map_test.ad[bs] \
 map_test_aonix.ad[bs] \
 map_test_support.ad[bs] \
+ordered_collection_test.ad[bs] \
+ordered_collection_test_support.ad[bs] \
 queues_for_timing.ad[bs] \
 queue_test.ad[bs] \
 queue_test_aonix.ad[bs] \
