@@ -479,7 +479,7 @@ distinguished by the approach to storage management. The forms are
 
 <li><i>Bounded</i>,
 
-<li><i>Dynamic</i>,
+<li><i>Dynamic</i> (deprecated),
 
 <li><i>Unbounded</i>, and
 
@@ -504,6 +504,15 @@ finalization will only occur when the item's storage slot is
 overwritten or when the container itself is finalized. Also, if the
 item is an access type, <i>you</i> have to manage deallocation.
 
+<h3>Dynamic</h3>
+
+<p>This form was designed before storage pools were properly
+understood. You're probably best off not using it.
+
+<h3>Unbounded</h3>
+
+<p>
+
 <h3>Unmanaged</h3>
 
 <p>The unmanaged form allocates space for each item held from the
@@ -521,8 +530,6 @@ far the simplest form to use.
       Buckets => 5);
 </pre>
 
-
-<h3>Dynamic</h3>
 
 <p>
 
