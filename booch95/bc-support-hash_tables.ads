@@ -40,6 +40,7 @@ package BC.Support.Hash_Tables is
    generic
 
       type Item is private;
+      type Item_Ptr is access all Item;
       with function "=" (L, R : Item) return Boolean is <>;
       with function Hash (V : Item) return Natural is <>;
 
@@ -57,6 +58,8 @@ package BC.Support.Hash_Tables is
       with function Length (C : Item_Container) return Natural is <>;
       with function Item_At
         (C : Item_Container; Index : Positive) return Item is <>;
+      with function Item_At
+        (C : Item_Container; Index : Positive) return Item_Ptr is <>;
       with function Location
         (C : Item_Container; I : Item; Start : Positive) return Natural is <>;
 
@@ -155,6 +158,32 @@ package BC.Support.Hash_Tables is
       --  If the item does not have a binding in the hash table, raise
       --  BC.Not_Found; otherwise, return the value corresponding to
       --  this item.
+
+      --  Iterator support
+
+      procedure Reset (T : Table;
+                       Bucket : out Positive;
+                       Index : out Positive);
+
+      function Is_Done (T : Table;
+                        Bucket : Positive;
+                        Index : Positive) return Boolean;
+
+      function Current_Item_Ptr (T : Table;
+                                 Bucket : Positive;
+                                 Index : Positive) return Items.Item_Ptr;
+
+      function Current_Value_Ptr (T : Table;
+                                  Bucket : Positive;
+                                  Index : Positive) return Values.Value_Ptr;
+
+      procedure Delete_Item_At (T : in out Table;
+                                Bucket : in out Positive;
+                                Index : in out  Positive);
+
+      procedure Next (T : Table;
+                      Bucket : in out Positive;
+                      Index : in out  Positive);
 
    end Tables;
 
