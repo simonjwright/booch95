@@ -166,7 +166,7 @@ procedure Collection_Test is
       Assertion (not Is_Empty (C1), "** P03: Collection is empty");
       Assertion (Length (C1) = 3, "** P04: Collection Length is not correct");
       Assertion (First (C1) = '3', "** P05: Collection First is not correct");
-      Assertion (Last (C1) = '1', "** P05: Collection Last is not correct");
+      Assertion (Last (C1) = '1', "** P06: Collection Last is not correct");
       Assertion (Item_At (C1, 2) = '2',
                  "** P07: Collection Item is not correct");
       Clear (C1);
