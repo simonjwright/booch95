@@ -106,14 +106,15 @@ package body BC.Support.Bounded_Hash_Tables is
 
 
       procedure Bind (T : in out Table; I : Items.Item; V : Values.Value) is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          B : Index renames T.Buckets (Bucket);
       begin
          Assert (Location (T, B, I) = 0,
                  BC.Duplicate'Identity,
                  "Bind",
                  BSE.Duplicate);
-         Assert (T.Size < Maximum_Size,
+         Assert (T.Size < T.Maximum_Size,
                  BC.Overflow'Identity,
                  "Bind",
                  BSE.Full);
@@ -132,7 +133,8 @@ package body BC.Support.Bounded_Hash_Tables is
 
 
       procedure Rebind (T : in out Table; I : Items.Item; V : Values.Value) is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          C : constant Index := Location (T, T.Buckets (Bucket), I);
       begin
          Assert (C /= 0,
@@ -144,7 +146,8 @@ package body BC.Support.Bounded_Hash_Tables is
 
 
       procedure Unbind (T : in out Table; I : Items.Item) is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          Current : Index := T.Buckets (Bucket);
          Previous : Index := 0;
       begin
@@ -189,14 +192,16 @@ package body BC.Support.Bounded_Hash_Tables is
 
 
       function Is_Bound (T : Table; I : Items.Item) return Boolean is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
       begin
          return Location (T, T.Buckets (Bucket), I) /= 0;
       end Is_Bound;
 
 
       function Value_Of (T : Table; I : Items.Item) return Values.Value is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
+         Bucket : constant Positive
+           := (Items.Hash (I) mod T.Number_Of_Buckets) + 1;
          C : constant Index := Location (T, T.Buckets (Bucket), I);
       begin
          Assert (C /= 0,
