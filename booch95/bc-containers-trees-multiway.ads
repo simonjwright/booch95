@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -61,13 +61,19 @@ package BC.Containers.Trees.Multiway is
 
    procedure Append (T : in out Multiway_Tree;
                      Elem : in Item;
-                     After : Positive);
+                     After : Natural);
    --  Add the item as a child of the tree, after the given indexed
-   --  child.
+   --  child. If After is 0, the item is inserted as the first child.
 
    procedure Append (T : in out Multiway_Tree;
                      From_Tree : in out Multiway_Tree);
    --  Add the tree as the immediate child of the tree.
+
+   procedure Append (T : in out Multiway_Tree;
+                     From_Tree : in out Multiway_Tree;
+                     After : Natural);
+   --  Add the tree as a child of the tree, after the given indexed
+   --  child. If After is 0, the tree is inserted as the first child.
 
    procedure Remove (T : in out Multiway_Tree; Index : Positive);
    --  Remove the given child and destroy it if it is no longer
