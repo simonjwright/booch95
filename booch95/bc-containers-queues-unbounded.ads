@@ -26,58 +26,60 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Queues.Unbounded is
 
-  type Unb_Queue is new Queue with private;
+  type Unbounded_Queue is new Queue with private;
   -- This Queue exhibits unlimited growth and collapsing, limited only by
   -- available memory.  Assignment is "deep".
 
-  procedure Clear (Obj : in out Unb_Queue);
+  procedure Clear (Obj : in out Unbounded_Queue);
   -- Empty the queue of all items.
 
-  procedure Append (Obj : in out Unb_Queue; Elem : Item);
+  procedure Append (Obj : in out Unbounded_Queue; Elem : Item);
   -- Add the item to the back of the queue; the item itself is copied.
 
-  procedure Pop (Obj : in out Unb_Queue);
+  procedure Pop (Obj : in out Unbounded_Queue);
   -- Remove the item from the front of the queue.
 
-  procedure Remove (Obj : in out Unb_Queue; From : Natural);
+  procedure Remove (Obj : in out Unbounded_Queue; From : Natural);
   -- Remove the item at the given index.
 
-  function Length (Obj : in Unb_Queue) return Natural;
+  function Length (Obj : in Unbounded_Queue) return Natural;
   -- Return the number of items in the queue.
 
-  function Is_Empty (Obj : in Unb_Queue) return Boolean;
+  function Is_Empty (Obj : in Unbounded_Queue) return Boolean;
   -- Return True if and only if there are no items in the queue.
 
-  function Front (Obj : in Unb_Queue) return Item;
+  function Front (Obj : in Unbounded_Queue) return Item;
   -- Return a copy of the item at the front of the queue.
 
-  function Front (Obj : in Unb_Queue) return Item_Ptr;
-  -- Return a pointer to the item at the front of the queue.
-
-  function Location (Obj : in Unb_Queue; Elem : Item) return Natural;
+  -- XXX need accessor generic
+  function Location (Obj : in Unbounded_Queue; Elem : Item) return Natural;
   -- Return the first index at which the item is found; return 0 if the
   -- item does not exist in the queue.
 
-  function "=" (Left, Right : in Unb_Queue) return Boolean;
+  function "=" (Left, Right : in Unbounded_Queue) return Boolean;
   -- Return True if and only if both queues have the same length and the same
   -- items in the same order; return False otherwise.
 
+  function New_Iterator (For_The_Queue : Unbounded_Queue) return Iterator;
+  -- Return a reset Iterator bound to the specific Queue.
+
 private
 
-  package Unb_Queue_Nodes
+  package Unbounded_Queue_Nodes
   is new BC.Support.Unbounded (Item, Item_Ptr, Storage_Manager, Storage);
 
-  type Unb_Queue is new Queue with record
-    Rep : Unb_Queue_Nodes.Unb_Node_Ref := new Unb_Queue_Nodes.Unb_Node;
+  type Unbounded_Queue is new Queue with record
+    Rep : Unbounded_Queue_Nodes.Unb_Node_Ref
+       := new Unbounded_Queue_Nodes.Unb_Node;
   end record;
 
-  function Item_At (Obj : in Unb_Queue; Index : in Natural) return Item_Ptr;
-  function Cardinality (Obj : in Unb_Queue) return Integer;
-  procedure Purge (Obj : in out Unb_Queue);
-  procedure Add (Obj : in out Unb_Queue; Elem : in out Item);
+  function Item_At (Obj : Unbounded_Queue; Index : Positive) return Item_Ptr;
+  function Cardinality (Obj : Unbounded_Queue) return Natural;
+  procedure Purge (Obj : in out Unbounded_Queue);
+  procedure Add (Obj : in out Unbounded_Queue; Elem : Item);
 
-  procedure Initialize (Obj : in out Unb_Queue);
-  procedure Adjust (Obj : in out Unb_Queue);
-  procedure Finalize (Obj : in out Unb_Queue);
+  procedure Initialize (Obj : in out Unbounded_Queue);
+  procedure Adjust (Obj : in out Unbounded_Queue);
+  procedure Finalize (Obj : in out Unbounded_Queue);
 
 end BC.Containers.Queues.Unbounded;
