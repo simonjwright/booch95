@@ -23,25 +23,6 @@ all::
 ########
 # Tests
 
-# For checking memory leaks, I use ccmalloc from Armin Biere
-# (armin@ira.uka.de + armin+@cs.cmu.edu, http://iseran.ira.uka.de/~armin)
-# The -Wl,-u,malloc forces the malloc symbol to be required so as to ensure
-# that it's satisfied from libccmalloc.a.
-MEMORY_CHECK = \
-  -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
-
-# Note, this strategy does _not_ work if the program to be checked
-# uses tasking, because both libpthread and ccmalloc wrap the standard
-# malloc(), free() etc calls. Instead, we need to use a special
-# version of libpthread.so with ccmalloc's functionality buit
-# in. ccmalloc has to be able to find main(), so we link with the flag
-# that exports the program's symbol table to dynamic libraries that
-# need access.
-#
-# See http://www.pogner.demon.co.uk/leaks/ (NB, this is *not* applicable to
-# glibc2 systems, ie most :-)
-DYNAMIC_MEMORY_CHECK = -largs -rdynamic
-
 GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu -gnatwl
 
 ADA_SOURCE = \
@@ -71,7 +52,7 @@ TEST_SRC = global_heap.ad[bs]
 TESTABLE += avl_test
 TEST_SRC += avl_test.ad[bs] avl_test_support.ad[bs]
 avl_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-bags-bounded.ad[bs] \
@@ -81,7 +62,7 @@ bc-containers-bags.ad[bs]
 TESTABLE += bag_test
 TEST_SRC += bag_test.ad[bs] bag_test_support.ad[bs]
 bag_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-collections-bounded.ad[bs] \
@@ -91,15 +72,17 @@ bc-containers-collections.ad[bs]
 TESTABLE += collection_test
 TEST_SRC += collection_test.ad[bs] collection_test_support.ad[bs]
 collection_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
+bc-containers-deques-bounded.ad[bs] \
+bc-containers-deques-dynamic.ad[bs] \
 bc-containers-deques-unbounded.ad[bs] \
 bc-containers-deques.ad[bs]
 TESTABLE += deque_test
 TEST_SRC += deque_test.ad[bs] deque_test_support.ad[bs]
 deque_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 
 ADA_SOURCE += \
@@ -109,7 +92,7 @@ bc-graphs-undirected.ad[bs]
 TESTABLE += graph_test
 TEST_SRC += graph_test.ad[bs] graph_test_support.ad[bs]
 graph_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-lists-double.ad[bs] \
@@ -118,7 +101,7 @@ bc-containers-lists.ad[bs]
 TESTABLE += list_test
 TEST_SRC += list_test.ad[bs] list_test_support.ad[bs]
 list_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-maps-bounded.ad[bs] \
@@ -131,7 +114,7 @@ bc-containers-maps.ad[bs]
 TESTABLE += map_test
 TEST_SRC += map_test.ad[bs] map_test_support.ad[bs] chunks.ad[bs]
 map_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-collections-ordered-bounded.ad[bs] \
@@ -141,15 +124,17 @@ bc-containers-collections-ordered.ad[bs]
 TESTABLE += ordered_collection_test
 TEST_SRC += ordered_collection_test.ad[bs] ordered_collection_test_support.ad[bs]
 ordered_collection_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-queues-ordered.ad[bs] \
+bc-containers-queues-ordered-bounded.ad[bs]
+bc-containers-queues-ordered-dynamic.ad[bs]
 bc-containers-queues-ordered-unbounded.ad[bs]
 TESTABLE += ordered_queue_test
 TEST_SRC += ordered_queue_test.ad[bs] ordered_queue_test_support.ad[bs]
 ordered_queue_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-queues-bounded.ad[bs] \
@@ -159,7 +144,7 @@ bc-containers-queues.ad[bs]
 TESTABLE += queue_test
 TEST_SRC += queue_test.ad[bs] queue_test_support.ad[bs]
 queue_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-rings.ad[bs] \
@@ -169,7 +154,7 @@ bc-containers-rings-unbounded-synchronized.ad[bs]
 TESTABLE += ring_test
 TEST_SRC += ring_test.ad[bs] ring_test_support.ad[bs]
 ring_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK) 
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-sets-bounded.ad[bs] \
@@ -179,14 +164,14 @@ bc-containers-sets.ad[bs]
 TESTABLE += set_test
 TEST_SRC += set_test.ad[bs] set_test_support.ad[bs]
 set_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-smart.ad[bs]
 TESTABLE += smart_test
 TEST_SRC += smart_test.ad[bs] smart_test_support.ad[bs]
 smart_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-stacks-bounded.ad[bs] \
@@ -196,7 +181,7 @@ bc-containers-stacks.ad[bs]
 TESTABLE += stack_test
 TEST_SRC += stack_test.ad[bs] stack_test_support.ad[bs]
 stack_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-trees-avl.ad[bs] \
@@ -213,7 +198,7 @@ bc-containers-trees.ad[bs]
 TESTABLE += tree_test
 TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs]
 tree_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 testable: $(TESTABLE)
 
@@ -229,27 +214,27 @@ aonix_test: aonix_testable
 AONIX_TESTABLE += bag_test_aonix
 TEST_SRC += bag_test_aonix.ad[bs]
 bag_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 AONIX_TESTABLE += map_test_aonix
 TEST_SRC += map_test_aonix.ad[bs]
 map_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 AONIX_TESTABLE += queue_test_aonix
 TEST_SRC += queue_test_aonix.ad[bs]
 queue_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 AONIX_TESTABLE += set_test_aonix
 TEST_SRC += set_test_aonix.ad[bs]
 set_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 AONIX_TESTABLE += stack_test_aonix
 TEST_SRC += stack_test_aonix.ad[bs]
 stack_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 aonix_testable: $(AONIX_TESTABLE)
 
@@ -281,7 +266,7 @@ storage: force
 DEMOS += test_synchronization
 DEMO_SRC += test_synchronization.ad[bs]
 test_synchronization: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 DEMOS += time_lists
 DEMO_SRC += time_lists.ad[bs] lists_for_timing.ad[bs]
