@@ -121,6 +121,8 @@ map_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 CONCURRENT_TESTABLE += map_test_concurrent
 TEST_SRC += map_test_concurrent.ad[bs] map_test_concurrent_support.ad[bs]
+map_test_concurrent: force
+	gnatmake $(GNATMAKE_FLAGS) $@
 
 ADA_SOURCE += \
 bc-containers-collections-ordered-bounded.ad[bs] \
