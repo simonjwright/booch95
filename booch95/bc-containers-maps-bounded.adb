@@ -75,11 +75,13 @@ package body BC.Containers.Maps.Bounded is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Bounded_Map);
 
-  function New_Iterator (For_The_Map : Bounded_Map) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Map'Address);
+  function New_Iterator (For_The_Map : Bounded_Map) return Iterator'Class is
+    Result : Map_Iterator;
   begin
-    return Iterator (SP.Create (new Bounded_Map_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Map'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   -- Private implementations
