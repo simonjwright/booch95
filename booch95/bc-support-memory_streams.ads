@@ -70,8 +70,13 @@ package BC.Support.Memory_Streams is
    procedure Set_Contents (From : Ada.Streams.Stream_Element_Array;
                            Stream : in out Stream_Type);
    --  Sets the contents of Stream to be the contents of array From,
-   --  so that values can be read by a 'Input operation on Stream.
+   --  so that values can be read by a 'Input operation on
+   --  Stream. Raises Ada.IO_Exceptions.End_Error on overrun.
    --  The previous contents of Stream are lost.
+   --
+   --  Aimed at use with datagram sockets, where you have to take the
+   --  contents in one bite and can't know in advance how long the
+   --  datagram is.
 
    --  A possible use of these features might be where an external
    --  datagram 'stream' requires the length of the data to be written
