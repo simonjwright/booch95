@@ -35,9 +35,9 @@ package BC.Containers.Deques.Unbounded is
   procedure Clear (D : in out Unbounded_Deque);
   -- Empty the deque of all items.
 
-  procedure Append (D : in out Unbounded_Deque; 
-		    Elem : Item;
-		    Location : Deque_End := Back);
+  procedure Append (D : in out Unbounded_Deque;
+                    Elem : Item;
+                    Location : Deque_End := Back);
   -- Add the item to the deque at the given location; the item itself
   -- is copied.
 
@@ -67,7 +67,7 @@ package BC.Containers.Deques.Unbounded is
   -- Return True if and only if both deques have the same length and the same
   -- items in the same order; return False otherwise.
 
-  function New_Iterator (For_The_Deque : Unbounded_Deque) return Iterator;
+  function New_Iterator (For_The_Deque : Unbounded_Deque) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Deque.
 
 private
