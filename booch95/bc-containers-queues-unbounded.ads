@@ -75,14 +75,9 @@ private
                                Storage => Storage);
 
   type Queue is new Abstract_Queue with record
-    Rep : Queue_Nodes.Unb_Node_Ref
-       := new Queue_Nodes.Unb_Node;
+    Rep : Queue_Nodes.Unb_Node;
   end record;
 
   function Item_At (Q : Queue; Index : Positive) return Item_Ptr;
-
-  procedure Initialize (Q : in out Queue);
-  procedure Adjust (Q : in out Queue);
-  procedure Finalize (Q : in out Queue);
 
 end BC.Containers.Queues.Unbounded;
