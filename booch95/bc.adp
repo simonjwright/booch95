@@ -1,5 +1,4 @@
-comp_opt=-gnatwu -gnata -gnatf -g -O2 -fprofile-arcs -ftest-coverage
-link_opt=-rdynamic
+comp_opt=-O2 -g -gnata -gnatf -gnatwu -gnatwl -gnaty
 gnatmake_opt=-g -m -j2
 main=${current}
 main_unit=${current}
