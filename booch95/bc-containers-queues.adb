@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -92,5 +92,13 @@ package body BC.Containers.Queues is
     end if;
     return Item_At (It.Q.all, It.Index);
   end Current_Item;
+
+  procedure Delete_Item_At (It : Queue_Iterator) is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    Remove (It.Q.all, It.Index);
+  end Delete_Item_At;
 
 end BC.Containers.Queues;
