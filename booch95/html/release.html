@@ -30,6 +30,62 @@
 
 <dl>
 
+<dt>25 March 2001</dt>
+
+<dd>
+
+
+<p>Containers no longer allocate their representation from the
+heap. This particularly affects Bounded forms, which no longer use the
+heap at all (at any rate in non-Guarded, non-Synchronized forms).
+
+
+<p>Bounded forms now use a strategy derived from that in the C++
+Components to minimise the amount of data copying on insertion and
+removal.
+
+
+<p>Lists no longer allow the use of <tt>Remove</tt> to delete an
+element that is aliased by another List (the new exception
+<tt>BC.Referenced</tt> will be raised).
+
+<br>I hope this won't upset too many of you, but if you were using
+this feature you were living dangerously! miscalculated reference
+counts, dangling pointers, ... the simplest thing to do is to
+<tt>Clear</tt> the second List.
+
+
+<p>For consistency, what were the Bounded forms' <tt>Size</tt>
+parameters are now all <tt>Maximum_Size</tt>.
+
+
+<p>For consistency, the Dynamic forms' <tt>Create</tt> operation has
+been replaced by a new generic parameter <tt>Initial_Size</tt>.
+
+
+<p>Added generic <tt>Copy</tt>, <tt>Filter</tt> functions to
+<tt>BC</tt>; this allows you to copy or filter between different
+instantiations of <tt>BC.Containers</tt> (for the same Item type, of
+course).
+
+<br>I think these remove the need for <tt>BC.Containers.Copy</tt>,
+<tt>BC.Containers.Filter</tt>.
+
+
+<p>If <tt>AVL_Tree.Insert</tt> finds that there is already an element
+which compares equal to the given element, it now replaces the
+existing element. This is in case you have important non-key record
+components that you wish to change.
+
+<br> An alternative strategy in this situation is to make the actual
+item type a pointer to your record, so that you can change the
+indicated non-key fields as required (<em>not</em> the key fields,
+please!)
+
+<p>
+
+</dd>
+
 <dt>21 January 2001</dt>
 
 <dd>
