@@ -115,11 +115,10 @@ private
 
    package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Keys,
-      Values => Items,
-      Buckets => Buckets);
+      Values => Items);
 
    type Map is new Abstract_Map with record
-      Rep : Tables.Table;
+      Rep : Tables.Table (Number_Of_Buckets => Buckets);
    end record;
 
    procedure Attach (M : in out Map; K : Key; I : Item);
