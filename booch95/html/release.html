@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML VERSION="2.0">
 <HEAD>
-<TITLE>The Ada95 Booch Components</TITLE>
+<TITLE>The Ada95 Booch Components (Release notes)</TITLE>
 </HEAD>
 
 <BODY BGCOLOR="#ffffff">
@@ -29,6 +29,30 @@
 <P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4" ></P>
 
 <dl>
+
+<dt>30 September 2000</dt>
+
+<dd>
+
+Implemented the remaining Bounded and Dynamic forms (Collections,
+Deques, Ordered Collections, Ordered Queues, Queues and Rings).<p>
+
+Added a <tt>Null_Container</tt> operation, so users can initialize
+structures containing Containers.<p>
+
+Began an alternative approach to the provision of Guarded and
+Synchronized forms. You can see this in
+<tt>BC.Containers.Guarded</tt>,
+<tt>BC.Containers.Maps.Synchronized</tt> and in
+<tt>Map_Test</tt>. Unfortunately there seems to be <a
+href="compiler-problems.html#13aug2000">a disagreement between
+compilers</a> about this one!<p>
+
+Fixed an error in passive modifying iteration, where the first element
+was visited repeatedly. This has changed
+<tt>BC.Containers.Access_Current_Item</tt>'s profile.<p>
+
+</dd>
 
 <dt>4 June 2000</dt>
 
