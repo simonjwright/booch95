@@ -43,9 +43,9 @@ README
 
 dist: $(DISTRIBUTION_FILES)
 	-@rm -rf distribution
-	mkdir distribution
-	cp $(DISTRIBUTION_FILES) distribution/
-	cp `find ./html -type f -maxdepth 1 -print` distribution/
+	mkdir -p distribution/download
+	cp $(DISTRIBUTION_FILES) distribution/download/
+	cp ACL html/*.html html/*.gif distribution/
 
 ADA_SOURCE = \
 bc-containers-lists-double.ad[bs] \
@@ -97,7 +97,7 @@ smart_test.ad[bs] \
 stack_test.ad[bs] \
 tree_test.ad[bs]
 
-SOURCE = makefile $(ADA_SOURCE)
+SOURCE = makefile ACL README $(ADA_SOURCE)
 
 bc.tar.gz:
 	tar zcvf bc.tar.gz $(SOURCE)
