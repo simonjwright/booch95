@@ -112,6 +112,7 @@ ADA_SOURCE += \
 bc-containers-maps-bounded.ad[bs] \
 bc-containers-maps-dynamic.ad[bs] \
 bc-containers-maps-unbounded.ad[bs] \
+bc-containers-maps-unmanaged.ad[bs] \
 bc-containers-maps.ad[bs]
 TESTABLE += map_test
 TEST_SRC += map_test.ad[bs] map_test_support.ad[bs] chunks.ad[bs]
@@ -179,6 +180,7 @@ ADA_SOURCE += \
 bc-containers-stacks-bounded.ad[bs] \
 bc-containers-stacks-dynamic.ad[bs] \
 bc-containers-stacks-unbounded.ad[bs] \
+bc-containers-stacks-unmanaged.ad[bs] \
 bc-containers-stacks.ad[bs]
 TESTABLE += stack_test
 TEST_SRC += stack_test.ad[bs] stack_test_support.ad[bs]
