@@ -109,7 +109,10 @@ graph_test: force
 ADA_SOURCE += \
 bc-lists-double.ad[bs] \
 bc-lists-single.ad[bs] \
-bc-lists.ad[bs]
+bc-lists.ad[bs] \
+bc-containers-lists-double.ad[bs] \
+bc-containers-lists-single.ad[bs] \
+bc-containers-lists.ad[bs]
 TESTABLE += list_test
 TEST_SRC += list_test.ad[bs] list_test_support.ad[bs]
 list_test: force
@@ -213,7 +216,18 @@ bc-trees-binary_trees-pre_order.ad[bs] \
 bc-trees-multiway_trees.ad[bs] \
 bc-trees-multiway_trees-post_order.ad[bs] \
 bc-trees-multiway_trees-pre_order.ad[bs] \
-bc-trees.ad[bs]
+bc-trees.ad[bs] \
+bc-containers-trees-avl.ad[bs] \
+bc-containers-trees-avl-print.ad[bs] \
+bc-containers-trees-avl-validate.ad[bs] \
+bc-containers-trees-binary.ad[bs] \
+bc-containers-trees-binary-in_order.ad[bs] \
+bc-containers-trees-binary-post_order.ad[bs] \
+bc-containers-trees-binary-pre_order.ad[bs] \
+bc-containers-trees-multiway.ad[bs] \
+bc-containers-trees-multiway-post_order.ad[bs] \
+bc-containers-trees-multiway-pre_order.ad[bs] \
+bc-containers-trees.ad[bs]
 TESTABLE += tree_test
 TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs]
 tree_test: force
