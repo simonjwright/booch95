@@ -19,6 +19,8 @@
 
 with BC.Support.Exceptions;
 
+with Ada.Text_Io;
+
 package body BC.Support.Hash_Tables is
 
 
@@ -29,29 +31,30 @@ package body BC.Support.Hash_Tables is
 
   package body Tables is
 
-    
+
     function "=" (L, R : Table) return Boolean is
     begin
       -- optimisation if L, R are the same Table?
       if L.Size = R.Size then
-	for B in 1 .. Buckets loop
-	  for Index in 1 .. Items.Length (L.Items (B).all) loop
-	    declare
-	      This_Item : Items.Item 
-		 renames Items.Item_At (L.Items (B).all, Index);
-	      use type Values.Value;
-	    begin
-	      if not Is_Bound (R, This_Item)
-		 or else not (Values.Item_At (L.Values (B).all, Index)
-			      = Values.Value'(Value_Of (R, This_Item))) then
-		return False;
-	      end if;
-	    end;
-	  end loop;
-	end loop;
-	return True;
+        for B in 1 .. Buckets loop
+          for Index in 1 .. Items.Length (L.Items (B).all) loop
+            declare
+              This_Item : Items.Item
+                 renames Items.Item_At (L.Items (B).all, Index);
+              function "=" (L, R : Values.Value) return Boolean
+                 renames Values."=";
+            begin
+              if not Is_Bound (R, This_Item)
+                 or else not (Values.Item_At (L.Values (B).all, Index)
+                                = Value_Of (R, This_Item)) then
+                return False;
+              end if;
+            end;
+          end loop;
+        end loop;
+        return True;
       else
-	return False;
+        return False;
       end if;
     end "=";
 
@@ -59,9 +62,9 @@ package body BC.Support.Hash_Tables is
     procedure Clear (T : in out Table) is
     begin
       for B in 1 .. Buckets loop
-	Items.Clear (T.Items (B).all);
-	Values.Clear (T.Values (B).all);
-	T.Size := 0;
+        Items.Clear (T.Items (B).all);
+        Values.Clear (T.Values (B).all);
+        T.Size := 0;
       end loop;
     end Clear;
 
@@ -70,9 +73,9 @@ package body BC.Support.Hash_Tables is
       Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
     begin
       Assert (Items.Location (T.Items (Bucket).all, I, 1) = 0,
-	      BC.Duplicate'Identity,
-	      "Bind",
-	      BSE.Duplicate);
+              BC.Duplicate'Identity,
+              "Bind",
+              BSE.Duplicate);
       Items.Insert (T.Items (Bucket).all, I);
       Values.Insert (T.Values (Bucket).all, V);
       T.Size := T.Size + 1;
@@ -84,9 +87,9 @@ package body BC.Support.Hash_Tables is
       Index : constant Natural := Items.Location (T.Items (Bucket).all, I, 1);
     begin
       Assert (Index /= 0,
-	      BC.Not_Found'Identity,
-	      "Rebind",
-	      BSE.Missing);
+              BC.Not_Found'Identity,
+              "Rebind",
+              BSE.Missing);
       Values.Replace (T.Values (Bucket).all, Index, V);
     end Rebind;
 
@@ -96,9 +99,9 @@ package body BC.Support.Hash_Tables is
       Index : constant Natural := Items.Location (T.Items (Bucket).all, I, 1);
     begin
       Assert (Index /= 0,
-	      BC.Not_Found'Identity,
-	      "Unbind",
-	      BSE.Missing);
+              BC.Not_Found'Identity,
+              "Unbind",
+              BSE.Missing);
       Items.Remove (T.Items (Bucket).all, Index);
       Values.Remove (T.Values (Bucket).all, Index);
       T.Size := T.Size - 1;
@@ -122,31 +125,32 @@ package body BC.Support.Hash_Tables is
       Index : constant Natural := Items.Location (T.Items (Bucket).all, I, 1);
     begin
       Assert (Index /= 0,
-	      BC.Not_Found'Identity,
-	      "Value_Of",
-	      BSE.Missing);
+              BC.Not_Found'Identity,
+              "Value_Of",
+              BSE.Missing);
       return Values.Item_At (T.Values (Bucket).all, Index);
     end Value_Of;
 
 
-    function Value_Of (T : Table; I : Items.Item) return Values.Value_Ptr is
+    function Access_Value_Of (T : Table;
+                              I : Items.Item) return Values.Value_Ptr is
       Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
       Index : constant Natural := Items.Location (T.Items (Bucket).all, I, 1);
     begin
       Assert (Index /= 0,
-	      BC.Not_Found'Identity,
-	      "Value_Of",
-	      BSE.Missing);
+              BC.Not_Found'Identity,
+              "Access_Value_Of",
+              BSE.Missing);
       return Values.Item_At (T.Values (Bucket).all, Index);
-    end Value_Of;
+    end Access_Value_Of;
 
 
     function Item_Bucket
        (T : Table; Bucket : Positive) return Items.Item_Container_Ptr is
     begin
       Assert (Bucket <= Buckets,
-	      BC.Container_Error'Identity,
-	      "Item_Bucket");
+              BC.Container_Error'Identity,
+              "Item_Bucket");
       return T.Items (Bucket);
     end Item_Bucket;
 
@@ -155,8 +159,8 @@ package body BC.Support.Hash_Tables is
        (T : Table; Bucket : Positive) return Values.Value_Container_Ptr is
     begin
       Assert (Bucket <= Buckets,
-	      BC.Container_Error'Identity,
-	      "Value_Bucket");
+              BC.Container_Error'Identity,
+              "Value_Bucket");
       return T.Values (Bucket);
     end Value_Bucket;
 
@@ -164,8 +168,8 @@ package body BC.Support.Hash_Tables is
     procedure Initialize (T : in out Table) is
     begin
       for B in 1 .. Buckets loop
-	T.Items (B) := new Items.Item_Container;
-	T.Values (B) := new Values.Value_Container;
+        T.Items (B) := new Items.Item_Container;
+        T.Values (B) := new Values.Value_Container;
       end loop;
     end Initialize;
 
@@ -173,8 +177,8 @@ package body BC.Support.Hash_Tables is
     procedure Adjust (T : in out Table) is
     begin
       for B in 1 .. Buckets loop
-	T.Items (B) := Items.Create (T.Items (B).all);
-	T.Values (B) := Values.Create (T.Values (B).all);
+        T.Items (B) := Items.Create (T.Items (B).all);
+        T.Values (B) := Values.Create (T.Values (B).all);
       end loop;
     end Adjust;
 
@@ -182,13 +186,13 @@ package body BC.Support.Hash_Tables is
     procedure Finalize (T : in out Table) is
     begin
       for B in 1 .. Buckets loop
-	Items.Free (T.Items (B));
-	Values.Free (T.Values (B));
+        Items.Free (T.Items (B));
+        Values.Free (T.Values (B));
       end loop;
     end Finalize;
 
 
   end Tables;
-  
+
 
 end BC.Support.Hash_Tables;
