@@ -1,0 +1,55 @@
+If this README file or the web page (www.rivatech.com/booch) are no
+help, please send e-mail to the author, David Weller, at 
+dweller@rivatech.com, or, if that fails, dweller@imagin.net.
+
+Documentation on usage of the components can be found at
+www.rivatech.com/booch.
+
+
+This release of the Booch Components runs with the following
+compilers: 
+
+    Aonix ObjectAda 7.1 (not sure about 7.0) 
+    SGI Ada 95 v1.2 
+
+This release currently does NOT work with the following compilers: 
+
+    GNU Ada 95 Compiler (GNAT v3.09).  Bug report has been submitted.
+
+Compilers currently unknown (if you get it running, send me a note!) 
+
+    OC Systems PowerAda 95 
+    Green Hills Ada 95 
+    RR Software Janus Ada 95 
+    Others(?) 
+
+
+This beta release contains the following components: 
+
+    Stacks 
+        Bounded 
+        Dynamic 
+        Unbounded 
+    Queues 
+        Bounded 
+        Dynamic 
+        Unbounded 
+    Lists 
+        Single 
+        Double 
+
+Each form has a test program associated with it (list_test.adb,
+stack_test.adb, queue_test.adb).  Use those programs as an example of
+proper usage of
+the components. 
+
+Please note that these components are considered a work-in-progress.
+As such, generic parameters, subprogram profiles, and other things may
+change that may impact your software.  We will take the greatest steps
+possible to ensure this is not a problem. 
+
+Note that assertions, which are supported with both Aonix ObjectAda
+and the GNU Ada compiler, are used in this software.  If your program
+fails for an unknown reason, recompile with assertions turned on and run
+again. 
+                                                              
