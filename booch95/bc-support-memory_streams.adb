@@ -22,7 +22,7 @@
 
 with Ada.IO_Exceptions;
 
-package body  BC.Memory_Streams is
+package body BC.Support.Memory_Streams is
 
 
    procedure Read
@@ -80,4 +80,4 @@ package body  BC.Memory_Streams is
    end Reset;
 
 
-end BC.Memory_Streams;
+end BC.Support.Memory_Streams;

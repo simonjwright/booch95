@@ -22,7 +22,7 @@
 
 with Ada.Streams;
 
-package BC.Memory_Streams is
+package BC.Support.Memory_Streams is
 
    type Stream_Type
      (Capacity : Ada.Streams.Stream_Element_Count)
@@ -52,4 +52,4 @@ private
       Buffer : Ada.Streams.Stream_Element_Array (1 .. Capacity);
    end record;
 
-end BC.Memory_Streams;
+end BC.Support.Memory_Streams;
