@@ -57,6 +57,7 @@ procedure Stream_Test is
       end loop;
    end Setup;
 
+   --  Debug support only
    procedure Image (C : Abstract_Base_Containers.Container'Class);
    procedure Image (C : Abstract_Base_Containers.Container'Class) is
       It : Abstract_Base_Containers.Iterator'Class :=
@@ -322,8 +323,6 @@ begin
       Collection'Output (Stream (F), C1);
       Reset (F, Mode => In_File);
       C2 := Collection'Input (Stream (F));
-      Image (C1);
-      Image (C2);
       Assertion (C1 = C2, "TCD2: Collections are unequal");
 
    exception
