@@ -161,41 +161,41 @@ package body BC.Containers.Maps is
                      Map_Iter.Index).all;
   end Current_Value;
 
-  procedure Visit (Over_The_Container : Map'Class) is
-    Iter : Iterator := New_Iterator (Over_The_Container);
+  procedure Visit (Using : in out Iterator) is
     Map_Iter : Map_Iterator
-       renames Map_Iterator (SP.Value (SP.Pointer (Iter)).all);
+       renames Map_Iterator (SP.Value (SP.Pointer (Using)).all);
     Status : Boolean;
   begin
-    while not Is_Done (Iter) loop
-      Apply (Item_At (Over_The_Container,
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Item_At (Map_Iter.M.all,
                       Map_Iter.Bucket_Index,
                       Map_Iter.Index).all,
-             Value_At (Over_The_Container,
+             Value_At (Map_Iter.M.all,
                        Map_Iter.Bucket_Index,
                        Map_Iter.Index).all,
              Status);
       exit when not Status;
-      Next (Iter);
+      Next (Using);
     end loop;
   end Visit;
 
-  procedure Modify (Over_The_Container : Map'Class) is
-    Iter : Iterator := New_Iterator (Over_The_Container);
+  procedure Modify (Using : in out Iterator) is
     Map_Iter : Map_Iterator
-       renames Map_Iterator (SP.Value (SP.Pointer (Iter)).all);
+       renames Map_Iterator (SP.Value (SP.Pointer (Using)).all);
     Status : Boolean;
   begin
-    while not Is_Done (Iter) loop
-      Apply (Item_At (Over_The_Container,
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Item_At (Map_Iter.M.all,
                       Map_Iter.Bucket_Index,
                       Map_Iter.Index).all,
-             Value_At (Over_The_Container,
+             Value_At (Map_Iter.M.all,
                        Map_Iter.Bucket_Index,
                        Map_Iter.Index).all,
              Status);
       exit when not Status;
-      Next (Iter);
+      Next (Using);
     end loop;
   end Modify;
 
@@ -217,12 +217,6 @@ package body BC.Containers.Maps is
     raise Should_Have_Been_Overridden;
     return 0;
   end Length;
-
-  function Exists (M : Map; I : Item) return Boolean is
-  begin
-    raise Should_Have_Been_Overridden;
-    return False;
-  end Exists;
 
   function Item_At (M : Map; Bucket, Index : Positive) return Item_Ptr is
   begin
