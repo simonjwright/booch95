@@ -26,12 +26,11 @@ generic
    type Item is private;
    with function "=" (L, R : Item) return Boolean is <>;
    type Item_Ptr is access all Item;
-   Default_Maximum_Size : Positive;
 package BC.Support.Bounded is
 
    pragma Elaborate_Body;
 
-   type Bnd_Node (Maximum_Size : Positive := Default_Maximum_Size) is private;
+   type Bnd_Node (Maximum_Size : Positive) is private;
    --  An optimally-packed static container whose items are stored on
    --  the stack.  Items are indexable starting at 1.  This is a
    --  supporting type.  As such, it is not intended to be used
@@ -95,12 +94,12 @@ package BC.Support.Bounded is
 
 private
 
-   subtype Elem_Range is Positive range 1 .. Default_Maximum_Size;
+   subtype Elem_Range is Positive;
    type Elem_Array is array (Elem_Range range <>) of Item;
 
-   subtype Size_Range is Natural range 0 .. Default_Maximum_Size;
+   subtype Size_Range is Natural;
 
-   type Bnd_Node (Maximum_Size : Positive := Default_Maximum_Size) is record
+   type Bnd_Node (Maximum_Size : Positive) is record
       Elems : Elem_Array (1 .. Maximum_Size);
       Start : Elem_Range := 1;
       Size : Size_Range := 0;
