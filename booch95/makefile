@@ -36,6 +36,7 @@ test:: $(TESTABLE)
 	  ./$$t 2>$$t.log; \
 	done
 
+TESTABLE += graph_test
 TESTABLE += list_test
 TESTABLE += queue_test
 TESTABLE += smart_test
@@ -78,6 +79,9 @@ bc-containers-trees-binary.ad[bs] \
 bc-containers-trees-multiway.ad[bs] \
 bc-containers-trees.ad[bs] \
 bc-containers.ad[bs] \
+bc-graphs.ad[bs] \
+bc-graphs-directed.ad[bs] \
+bc-graphs-undirected.ad[bs] \
 bc-smart.ad[bs] \
 bc-support-bounded.ad[bs] \
 bc-support-dynamic.ad[bs] \
@@ -90,6 +94,8 @@ bc-support.ad[bs] \
 bc.ad[bs] \
 character_references.ad[bs] \
 global_heap.ads \
+graph_test.adb \
+graph_test_support.ads \
 lists_for_timing.ads \
 list_test.ad[bs] \
 queues_for_timing.ads \
