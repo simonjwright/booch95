@@ -25,6 +25,11 @@
 --  $Date$
 --  $Author$
 
+--  Call Apply with a copy of each Item in the Tree, in preorder (for
+--  each node, visit the left subtree, the right subtree and the node
+--  itself). The iteration will terminate early if Apply sets OK to
+--  False.
+
 generic
   with procedure Apply (Elem : in Item; OK : out Boolean);
 procedure BC.Trees.Binary_Trees.Post_Order

@@ -1,8 +1,3 @@
---  Call Apply with a copy of each Item in the Tree, in preorder (for
---  each node, visit the left subtree, the right subtree and the node
---  itself). The iteration will terminate early if Apply sets OK to
---  False.
-
 --  Copyright 1994 Grady Booch
 --  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
