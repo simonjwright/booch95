@@ -60,6 +60,7 @@ The current version has the following components available (the
 <li>Unbounded Bags
 <li>Unbounded Collections
 <li>Unbounded Ordered Collections
+<li><font color=red>Unbounded Deques</font>
 <li>Directed Graphs
 <li>Undirected Graphs
 <LI>Single Lists 
@@ -121,32 +122,30 @@ returns an Iterator. This uses the fact that tagged types are passed
 by reference to allow a reference to the concrete Container to be kept
 behind the scenes.<p>
 
-You can see an example of this style in <tt>Map_Test</tt>;
+You can see an example of this style in <tt>Stack_Test</tt>;
 
 <pre>
-  procedure Test_Active_Iterator (M : in out Maps.Map'Class) is
-    use Containers; use Maps; use MB;
-    Iter : Containers.Iterator := New_Iterator (M);
+  procedure Test_Active_Iterator (S : Container'Class) is
+    Iter : Iterator'Class := New_Iterator (C);
+    Success : Boolean;
+    Temp : Character;
   begin
-    while not Containers.Is_Done (Iter) loop
-      Put_Line ("      Item: "
-                & Containers.Current_Item (Iter)
-                & " Value: "
-                & Image (Maps.Current_Value (Iter).all));
-      Containers.Next (Iter);
+    while not Is_Done (Iter) loop
+      Temp := Current_Item (Iter);
+      Process (Temp, Success);
+      Next (Iter);
     end loop;
   end Test_Active_Iterator;
 </pre>
 
-Passive iteration is handled via generics. In the same test, we might have
-had
+Passive iteration is handled via generics. In the same test, we have
 
 <pre>
-  procedure Test_Passive_Iterator (M : in out Maps.Map'Class) is
-    procedure Visitor is new Maps.Visit (Process, M);
-    Iter : Containers.Iterator := New_Iterator (M);
+  procedure Test_Passive_Iterator (S : Container'Class) is
+    procedure Iterate is new Visit (Apply => Process);
+    Iter : Iterator'Class := New_Iterator (S);
   begin
-    Visitor (using => Iter);
+    Iterate (Using => Iter);
   end Test_Passive_Iterator;
 </pre>
 
