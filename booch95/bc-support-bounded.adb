@@ -42,7 +42,9 @@ package body BC.Support.Bounded is
 
   function Create (From : in Bnd_Node) return Bnd_Node_Ref is
   begin
-    return new Bnd_Node'(Elems => From.Elems, Size => From.Size);
+    return new Bnd_Node'(Elems => From.Elems,
+                         Start => From.Start,
+                         Size => From.Size);
   end Create;
 
   function "=" (Left, Right : Bnd_Node) return Boolean is
@@ -50,12 +52,18 @@ package body BC.Support.Bounded is
     if Left.Size /= Right.Size then
       return False;
     else
-      return Left.Elems (1 .. Left.Size) = Right.Elems (1 .. Left.Size);
+      for I in 1 .. Left.Size loop
+        if Item'(Item_At (Left, I)) /= Item'(Item_At (Right, I)) then
+          return False;
+        end if;
+      end loop;
+      return True;
     end if;
   end "=";
 
   procedure Clear (Obj : in out Bnd_Node) is
   begin
+    Obj.Start := 0;
     Obj.Size := 0;
   end Clear;
 
@@ -65,13 +73,17 @@ package body BC.Support.Bounded is
             BC.Overflow'Identity,
             "Insert",
             BSE.Full);
-    Obj.Elems (2 .. Obj.Size + 1) := Obj.Elems (1 .. Obj.Size);
-    Obj.Elems (1) := Elem;
+    Obj.Start := (Obj.Start - 1) mod Max_Size;
     Obj.Size := Obj.Size + 1;
+    Obj.Elems (Obj.Start) := Elem;
   end Insert;
 
   procedure Insert (Obj : in out Bnd_Node; Elem : Item; Before : Positive) is
   begin
+--     Assert (Before < Obj.Size,
+--             BC.Range_Error'Identity,
+--             "Insert",
+--             BSE.Invalid_Index);
     Assert (Obj.Size < Max_Size,
             BC.Overflow'Identity,
             "Insert",
@@ -79,9 +91,38 @@ package body BC.Support.Bounded is
     if Obj.Size = 0 or else Before = 1 then
       Insert (Obj, Elem);
     else
-      Obj.Elems (Before + 1 .. Obj.Size + 1) := Obj.Elems (Before .. Obj.Size);
-      Obj.Elems (Before) := Elem;
-      Obj.Size := Obj.Size + 1;
+      -- We are inserting in the middle.
+      --
+      -- In the comments below, 'left' means the part of Elems before
+      -- the element which the new entry is to be inserted before
+      -- (indexed by Actual), 'right' means the part after.
+      declare
+        Elems : Elem_Array renames Obj.Elems;
+        Start : Elem_Range renames Obj.Start;
+        Actual : constant Elem_Range := (Obj.Start + Before - 1) mod Max_Size;
+        Last : constant Elem_Range := (Obj.Start + Obj.Size - 1) mod Max_Size;
+      begin
+        if Start = 0 or else Start > Actual then
+          -- the left part is wedged, shift the right part up
+          Elems (Actual + 1 .. Last + 1) := Elems (Actual .. Last);
+          Elems (Actual) := Elem;
+        elsif Last = Elem_Range'Last or else Last < Actual then
+          -- the right part is wedged, shift the left part down
+          Elems (Start - 1 .. Actual - 2) := Elems (Start .. Actual - 1);
+          Start := Start - 1;
+          Elems (Actual - 1) := Elem;
+        elsif Before < Obj.Size / 2 then
+          -- the left part is shorter, shift it down
+          Elems (Start - 1 .. Actual - 2) := Elems (Start .. Actual - 1);
+          Start := Start - 1;
+          Elems (Actual - 1) := Elem;
+        else
+          -- the right part is shorter, shift it up
+          Elems (Actual + 1 .. Last + 1) := Elems (Actual .. Last);
+          Elems (Actual) := Elem;
+        end if;
+        Obj.Size := Obj.Size + 1;
+      end;
     end if;
   end Insert;
 
@@ -92,7 +133,7 @@ package body BC.Support.Bounded is
             "Append",
             BSE.Full);
     Obj.Size := Obj.Size + 1;
-    Obj.Elems (Obj.Size) := Elem;
+    Obj.Elems ((Obj.Start + Obj.Size - 1) mod Max_Size) := Elem;
   end Append;
 
   procedure Append (Obj : in out Bnd_Node; Elem : Item; After : Positive) is
@@ -105,13 +146,10 @@ package body BC.Support.Bounded is
             BC.Overflow'Identity,
             "Append",
             BSE.Full);
-    if After = Obj.Size then
-      Obj.Size := Obj.Size + 1;
-      Obj.Elems (Obj.Size) := Elem;
+    if Obj.Size = 0 or else After = Obj.Size then
+      Append (Obj, Elem);
     else
-      Obj.Elems (After + 2 .. Obj.Size + 1) := Obj.Elems (After + 1 .. Obj.Size);
-      Obj.Size := Obj.Size + 1;
-      Obj.Elems (After + 1) := Elem;
+      Insert (Obj, Elem, Before => After + 1);
     end if;
   end Append;
 
@@ -121,15 +159,47 @@ package body BC.Support.Bounded is
             BC.Range_Error'Identity,
             "Remove",
             BSE.Invalid_Index);
+    -- XXX can this ever happen, given the test above?
     Assert (Obj.Size > 0,
             BC.Underflow'Identity,
             "Remove",
             BSE.Empty);
     if Obj.Size = 1 then
       Clear (Obj);
-    else
-      Obj.Elems (From .. Obj.Size - 1) := Obj.Elems (From + 1 .. Obj.Size);
+    elsif From = 1 then
+      Obj.Start := (Obj.Start + 1) mod Max_Size;
       Obj.Size := Obj.Size - 1;
+    elsif From = Obj.Size then
+      Obj.Size := Obj.Size - 1;
+    else
+      -- We are removing from the middle.
+      --
+      -- In the comments below, 'left' means the part of Elems before
+      -- the element to be removed (indexed by Actual), 'right' means the
+      -- part after.
+      declare
+        Elems : Elem_Array renames Obj.Elems;
+        Start : Elem_Range renames Obj.Start;
+        Actual : constant Elem_Range := (Obj.Start + From - 1) mod Max_Size;
+        Last : constant Elem_Range := (Obj.Start + Obj.Size - 1) mod Max_Size;
+      begin
+        if Start > Actual then
+          -- the left part wraps round; shift the right part down
+          Elems (Actual .. Last - 1) := Elems (Actual + 1 .. Last);
+        elsif Actual > Last then
+          -- the right part wraps round; shift the left part up
+          Elems (Start + 1 .. Actual) := Elems (Start .. Actual - 1);
+          Start := Start + 1;
+        elsif From < Obj.Size / 2 then
+          -- the left part is shorter
+          Elems (Start + 1 .. Actual) := Elems (Start .. Actual - 1);
+          Start := Start + 1;
+        else
+          -- the right part is shorter
+          Elems (Actual .. Last - 1) := Elems (Actual + 1 .. Last);
+        end if;
+        Obj.Size := Obj.Size - 1;
+      end;
     end if;
   end Remove;
 
@@ -139,7 +209,7 @@ package body BC.Support.Bounded is
             BC.Range_Error'Identity,
             "Replace",
             BSE.Invalid_Index);
-    Obj.Elems (Index) := Elem;
+    Obj.Elems ((Obj.Start + Index - 1) mod Max_Size) := Elem;
   end Replace;
 
   function Available (Obj: Bnd_Node) return Natural is
@@ -158,7 +228,7 @@ package body BC.Support.Bounded is
             BC.Underflow'Identity,
             "First",
             BSE.Empty);
-    return Obj.Elems (1);
+    return Obj.Elems (Obj.Start);
   end First;
 
   function First (Obj : Bnd_Node) return Item_Ptr is
@@ -170,7 +240,7 @@ package body BC.Support.Bounded is
             "First",
             BSE.Empty);
     return Item_Ptr
-       (Allow_Element_Access.To_Pointer (E (1)'Address));
+       (Allow_Element_Access.To_Pointer (E (Obj.Start)'Address));
   end First;
 
   function Last (Obj : Bnd_Node) return Item is
@@ -179,7 +249,7 @@ package body BC.Support.Bounded is
             BC.Underflow'Identity,
             "Last",
             BSE.Empty);
-    return Obj.Elems(Obj.Size);
+    return Obj.Elems((Obj.Start + Obj.Size - 1) mod Max_Size);
   end Last;
 
   function Last (Obj : Bnd_Node) return Item_Ptr is
@@ -191,7 +261,8 @@ package body BC.Support.Bounded is
             "Last",
             BSE.Empty);
     return Item_Ptr
-       (Allow_Element_Access.To_Pointer (E (Obj.Size)'Address));
+       (Allow_Element_Access.To_Pointer
+        (E ((Obj.Start + Obj.Size - 1) mod Max_Size)'Address));
   end Last;
 
   function Item_At (Obj : Bnd_Node; Index : Positive) return Item is
@@ -200,7 +271,7 @@ package body BC.Support.Bounded is
             BC.Range_Error'Identity,
             "Item_At",
             BSE.Invalid_Index);
-    return Obj.Elems (Index);
+    return Obj.Elems ((Obj.Start + Index - 1) mod Max_Size);
   end Item_At;
 
   function Item_At (Obj : Bnd_Node; Index : Positive) return Item_Ptr is
@@ -212,16 +283,14 @@ package body BC.Support.Bounded is
             "Item_At",
             BSE.Invalid_Index);
     return Item_Ptr
-       (Allow_Element_Access.To_Pointer (E (Index)'Address));
+       (Allow_Element_Access.To_Pointer
+        (E ((Obj.Start + Index - 1) mod Max_Size)'Address));
   end Item_At;
 
   function Location (Obj : Bnd_Node;
                      Elem : Item;
-                     Start : Natural := 1) return Natural is
+                     Start : Positive := 1) return Natural is
   begin
-    -- XXX the C++ (which indexes from 0) nevertheless checks "start <= count"
-    -- We have to special-case the empty Node; the C++ indexes from 0, so
-    -- it can legally start with index 0 when the Node is empty.
     if Obj.Size = 0 then
       return 0;
     end if;
@@ -230,7 +299,7 @@ package body BC.Support.Bounded is
             "Start",
             BSE.Invalid_Index);
     for I in Start .. Obj.Size loop
-      if Obj.Elems (I) = Elem then
+      if Obj.Elems ((Obj.Start + I - 1) mod Max_Size) = Elem then
         return I;
       end if;
     end loop;
