@@ -58,9 +58,9 @@ package BC.Containers.Maps is
 
   procedure Rebind (M : in out Map; I : Item; V : Value)
     is abstract;
-  -- If the item does not exist in the map, raise BC.Not_Found. Otherwise, change
-  -- the item's binding to the given value. The cached
-  -- item/value pair is set to this new binding.
+  -- If the item does not exist in the map, raise BC.Not_Found. Otherwise,
+  -- change the item's binding to the given value. The cached item/value
+  -- pair is set to this new binding.
 
   procedure Unbind (M : in out Map; I : Item)
     is abstract;
@@ -95,9 +95,6 @@ package BC.Containers.Maps is
   function Current_Value (It : Iterator) return Value;
   -- Return a copy of the current Value.
 
-  -- XXX what about the accessor? would be generic, but clearly not for an
-  -- abstract type! use the 'Class?
-
   generic
     with procedure Apply (I : Item; V : Value; OK : out Boolean);
     Over_The_Container : Map'Class;
@@ -120,11 +117,7 @@ private
   type Value_Ptr is access all Value;
   for Value_Ptr'Storage_Size use 0;
 
-  procedure Purge (M : in out Map);
-
   procedure Attach (M : in out Map; I : Item; V : Value);
-
-  function Cardinality (M : Map) return Natural;
 
   function Number_Of_Buckets (M : Map) return Natural;
 

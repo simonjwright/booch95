@@ -29,6 +29,8 @@ package body BC.Containers.Maps is
   function Are_Equal (L, R : Map'Class) return Boolean is
     It : Iterator := New_Iterator (L);
   begin
+    -- XXX left out the optimisation which checks whether L, R are
+    -- identical.
     if Cardinality (L) /= Cardinality (R) then
       return False;
     end if;
@@ -189,21 +191,10 @@ package body BC.Containers.Maps is
 
   -- Subprograms to be overridden
 
-  procedure Purge (M : in out Map) is
-  begin
-    raise Should_Have_Been_Overridden;
-  end Purge;
-
   procedure Attach (M : in out Map; I : Item; V : Value) is
   begin
     raise Should_Have_Been_Overridden;
   end Attach;
-
-  function Cardinality (M : Map) return Natural is
-  begin
-    raise Should_Have_Been_Overridden;
-    return 0;
-  end Cardinality;
 
   function Number_Of_Buckets (M : Map) return Natural is
   begin
