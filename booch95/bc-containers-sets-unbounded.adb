@@ -41,6 +41,13 @@ package body BC.Containers.Sets.Unbounded is
       end if;
    end Add;
 
+   procedure Add (S : in out Set; I : Item) is
+   begin
+      if not Tables.Is_Bound (S.Rep, I) then
+         Tables.Bind (S.Rep, I, True);
+      end if;
+   end Add;
+
    procedure Remove (S : in out Set; I : Item) is
    begin
       Assert (Tables.Is_Bound (S.Rep, I),
