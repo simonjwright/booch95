@@ -197,16 +197,19 @@ procedure Set_Test is
     OK := True;
   end Process_Modifiable;
 
-  procedure Test_Passive_Iterator (S : in out Sets.Set'Class) is
+  procedure Test_Passive_Iterator (S : in out Containers.Container'Class) is
     procedure Visitor is new Containers.Visit (Process);
+    Iter : Containers.Iterator := Containers.New_Iterator (S);
   begin
-    Visitor (S);
+    Visitor (Using => Iter);
   end Test_Passive_Iterator;
 
-  procedure Test_Passive_Modifying_Iterator (S : in out Sets.Set'Class) is
+  procedure Test_Passive_Modifying_Iterator
+     (S : in out Containers.Container'Class) is
     procedure Modifier is new Containers.Modify (Process_Modifiable);
+    Iter : Containers.Iterator := Containers.New_Iterator (S);
   begin
-    Modifier (S);
+    Modifier (Using => Iter);
   end Test_Passive_Modifying_Iterator;
 
   Set_B_Pu1, Set_B_Pu2 : SB.Bounded_Set;

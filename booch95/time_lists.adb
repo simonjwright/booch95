@@ -37,15 +37,18 @@ procedure Time_Lists is
       Total := Total + Elem;
       Ok := True;
     end Apply;
-    procedure S_Application is new Lists_For_Timing.C.Visit (Apply, S);
-    procedure D_Application is new Lists_For_Timing.C.Visit (Apply, D);
+    procedure S_Application is new Lists_For_Timing.C.Visit (Apply);
+    procedure D_Application is new Lists_For_Timing.C.Visit (Apply);
     Start : Ada.Calendar.Time;
     Taken : Duration;
+    It : Lists_For_Timing.C.Iterator;
     use type Ada.Calendar.Time;
   begin
     Total := 0;
+    It := Lists_For_Timing.C.New_Iterator
+       (Lists_For_Timing.C.Container'Class (S));
     Start := Ada.Calendar.Clock;
-    S_Application;
+    S_Application (It);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
        (".. single list took"
@@ -54,8 +57,10 @@ procedure Time_Lists is
         & Integer'Image (Total));
 
     Total := 0;
+    It := Lists_For_Timing.C.New_Iterator
+       (Lists_For_Timing.C.Container'Class (D));
     Start := Ada.Calendar.Clock;
-    D_Application;
+    D_Application (It);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
        (".. double list took"

@@ -451,8 +451,9 @@ procedure List_Test is
 
   procedure Test_Passive_Iterator (L : Container'Class) is
     procedure Iterate is new Visit (Apply => Process);
+    Iter : Iterator := New_Iterator (L);
   begin
-    Iterate (Over_The_Container => L);
+    Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
   Slist_P1, Slist_P2 : Single_List;

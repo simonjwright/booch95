@@ -41,7 +41,7 @@ begin
   end loop;
   Ada.Text_Io.Put_Line ("Full list's length is"
                         & Natural'Image (Lists_For_Traversal.D.Length (D)));
-  K := D;
+--  K := D;
   for I in 1 .. 9 loop
     Lists_For_Traversal.D.Tail (D);
   end loop;
