@@ -63,7 +63,7 @@ package BC.Containers.Queues.Ordered.Unbounded is
   -- items; return False otherwise.
 
   function New_Iterator
-     (For_The_Queue : Unbounded_Ordered_Queue) return Iterator;
+     (For_The_Queue : Unbounded_Ordered_Queue) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Queue.
 
 private

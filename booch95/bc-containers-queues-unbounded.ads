@@ -61,7 +61,8 @@ package BC.Containers.Queues.Unbounded is
   -- Return True if and only if both queues have the same length and the same
   -- items in the same order; return False otherwise.
 
-  function New_Iterator (For_The_Queue : Unbounded_Queue) return Iterator;
+  function New_Iterator
+     (For_The_Queue : Unbounded_Queue) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Queue.
 
 private

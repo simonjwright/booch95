@@ -80,11 +80,13 @@ package body BC.Containers.Queues.Ordered.Unbounded is
   is new System.Address_To_Access_Conversions (Unbounded_Ordered_Queue);
 
   function New_Iterator
-     (For_The_Queue : Unbounded_Ordered_Queue) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Queue'Address);
+     (For_The_Queue : Unbounded_Ordered_Queue) return Iterator'Class is
+    Result : Queue_Iterator;
   begin
-    return Iterator (SP.Create (new Queue_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Queue'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   function Item_At
