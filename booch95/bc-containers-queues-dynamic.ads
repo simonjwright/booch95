@@ -18,9 +18,12 @@
 -- $Id$
 
 with BC.Support.Dynamic;
+with System.Storage_Pools;
 
 generic
-  with package Dyn_Queue_Nodes is new BC.Support.Dynamic (Item, Item_Ptr);
+  type Storage_Manager (<>)
+  is new System.Storage_Pools.Root_Storage_Pool with private;
+  Storage : in out Storage_Manager;
 package BC.Containers.Queues.Dynamic is
 
   type Dyn_Queue is new Queue with private;
@@ -60,6 +63,9 @@ package BC.Containers.Queues.Dynamic is
 private
 
   function Item_At (Obj : in Dyn_Queue; Index : in Natural) return Item_Ptr;
+
+  package Dyn_Queue_Nodes
+  is new BC.Support.Dynamic (Item, Item_Ptr, Storage_Manager, Storage);
 
   type Dyn_Queue is new Queue with record
     Rep : Dyn_Queue_Nodes.Dyn_Node_Ref;

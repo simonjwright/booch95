@@ -18,8 +18,12 @@
 -- $Id$
 
 with Bc.Support.Nodes;
+with System.Storage_Pools;
 
 generic
+  type Storage_Manager (<>)
+  is new System.Storage_Pools.Root_Storage_Pool with private;
+  Storage : in out Storage_Manager;
 package Bc.Containers.Lists.Single is
 
   -- Singly-linked list
@@ -75,7 +79,8 @@ private
   function Item_At (Obj : Single_List; Index : Natural) return Item_Ptr;
   function Cardinality (Obj : Single_List) return Integer;
 
-  package Single_Nodes is new Bc.Support.Nodes (Item);
+  package Single_Nodes
+  is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
 
   type Single_List is new Container with record
     Rep : Single_Nodes.Single_Node_Ref;

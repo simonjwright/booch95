@@ -1,4 +1,5 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1998 Grady Booch, David Weller, Pat Rogers and
+-- Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -23,7 +24,8 @@ with System.Storage_Pools;
 generic
   type Item is private;
   type Item_Ptr is access all Item;
-  type Storage_Manager(<>) is new System.Storage_Pools.Root_Storage_Pool with private;
+  type Storage_Manager(<>)
+  is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
 package BC.Support.Dynamic is
 
