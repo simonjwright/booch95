@@ -1,5 +1,5 @@
--- Copyright (C) 1998, 2001 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1998, 2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,69 +15,69 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with Ada.Exceptions;
-with Ada.Text_Io;
+with Ada.Text_IO;
 with Smart_Test_Support;
 
 procedure Smart_Test is
-  use Ada.Text_Io;
-  use Smart_Test_Support;
-  A : Smart.Pointer;
-  B : Smart.Pointer := A;
-  C : Smart.Pointer;
+   use Ada.Text_IO;
+   use Smart_Test_Support;
+   A : Smart.Pointer;
+   B : Smart.Pointer := A;
+   C : Smart.Pointer;
 begin
 
-  Put_Line ("creating m, assigning to a");
-  A := Create ('m');
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("creating m, assigning to a");
+   A := Create ('m');
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("assigning a to a");
-  A := A;
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("assigning a to a");
+   A := A;
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("assigning b to b");
-  B := B;
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("assigning b to b");
+   B := B;
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("assigning a to c");
-  C := A;
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("assigning a to c");
+   C := A;
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("assigning a to b");
-  B := A;
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("assigning a to b");
+   B := A;
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("assigning a to a");
-  A := A;
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("assigning a to a");
+   A := A;
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("creating n, assigning to a");
-  A := Create ('n');
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("creating n, assigning to a");
+   A := Create ('n');
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("creating o, assigning to a");
-  A := Create ('o');
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("creating o, assigning to a");
+   A := Create ('o');
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("assigning a to b");
-  B := A;
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("assigning a to b");
+   B := A;
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("creating p, assigning to c");
-  C := Create ('p');
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("creating p, assigning to c");
+   C := Create ('p');
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("creating q, assigning to b");
-  B := Create ('q');
-  Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
+   Put_Line ("creating q, assigning to b");
+   B := Create ('q');
+   Put_Line ("a " & Value (A) & ", b " & Value (B) & ", c " & Value (C));
 
-  Put_Line ("done.");
+   Put_Line ("done.");
 
 exception
-  when E : others =>
-    Put_Line ("                                   EXCEPTION "
-              & Ada.Exceptions.Exception_Name (E)
-              & " OCCURRED.");
+   when E : others =>
+      Put_Line ("                                   EXCEPTION "
+                & Ada.Exceptions.Exception_Name (E)
+                & " OCCURRED.");
 end Smart_Test;
