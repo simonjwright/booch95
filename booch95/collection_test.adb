@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Text_IO;
 with BC;
 with Collection_Test_Support;
@@ -235,4 +236,9 @@ begin
 
   Put_Line ("Completed Collection tests");
 
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end Collection_Test;

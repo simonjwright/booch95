@@ -17,8 +17,7 @@
 
 -- $Id$
 
---  This file contains tests for the list classes.
-
+with Ada.Exceptions;
 with Ada.Text_IO;
 with BC;
 with List_Test_Support;
@@ -573,4 +572,10 @@ begin
   Test_Iterator_Deletion (Dlist_P1);
 
   Put_Line ("Completed list tests");
+
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end List_Test;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Text_IO;
 with BC;
 with Ordered_Collection_Test_Support;
@@ -237,4 +238,9 @@ begin
 
   Put_Line ("Completed Ordered Collection tests");
 
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end Ordered_Collection_Test;

@@ -17,6 +17,7 @@
 
 -- $Id$
 
+with Ada.Exceptions;
 with Ada.Text_Io;
 with BC;
 with Bag_Test_Support;
@@ -286,4 +287,10 @@ begin
              "** M10: Bag Count is not correct");
 
   Put_Line ("Completed bag tests");
+
+exception
+  when E : others =>
+    Put_Line ("                                   EXCEPTION "
+              & Ada.Exceptions.Exception_Name (E)
+              & " OCCURRED.");
 end Bag_Test;
