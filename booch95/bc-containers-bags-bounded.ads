@@ -124,6 +124,8 @@ private
                           Maximum_Size => Maximum_Size);
    end record;
 
+   procedure Initialize (B : in out Unconstrained_Bag);
+
    procedure Attach (B : in out Unconstrained_Bag; I : Item; C : Positive);
 
    procedure Detach (B : in out Unconstrained_Bag; I : Item);

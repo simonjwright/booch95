@@ -111,6 +111,11 @@ package body BC.Containers.Bags.Bounded is
 
    --  Private implementations
 
+   procedure Initialize (B : in out Unconstrained_Bag) is
+   begin
+      Tables.Clear (B.Rep);
+   end Initialize;
+
    procedure Attach (B : in out Unconstrained_Bag; I : Item; C : Positive) is
    begin
       Tables.Bind (B.Rep, I, C);

@@ -24,8 +24,6 @@
 --  $Date$
 --  $Author$
 
-with Ada.Finalization;
-
 package BC.Support.Bounded_Hash_Tables is
 
    pragma Elaborate_Body;
@@ -88,14 +86,12 @@ package BC.Support.Bounded_Hash_Tables is
       type Cells is array (Cell_Index range <>) of Cell;
 
       type Table (Number_Of_Buckets : Positive; Maximum_Size : Positive)
-      is new Ada.Finalization.Controlled with record
+      is record
          Buckets : Bkts (1 .. Number_Of_Buckets);
          Contents : Cells (1 .. Maximum_Size);
          Size : Natural;
          Free : Index;
       end record;
-
-      procedure Initialize (T : in out Table);
 
       function "=" (L, R : Table) return Boolean;
 
