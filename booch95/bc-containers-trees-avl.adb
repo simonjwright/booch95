@@ -81,9 +81,9 @@ package body BC.Containers.Trees.AVL is
       Inserted := True;
       if Node = null then
          Node := new AVL_Node'(Element => Element,
-                                     Left => null,
-                                     Right => null,
-                                     Balance => Middle);
+                               Left => null,
+                               Right => null,
+                               Balance => Middle);
          Increased := True;
       elsif Element < Node.Element then
          Search_Insert (T, Element, Node.Left, Increased, Inserted);
