@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -62,7 +62,9 @@ private
   function Item_At (Obj : Bounded_Stack; Index : Positive) return Item_Ptr;
 
   package Bounded_Stack_Nodes
-  is new BC.Support.Bounded (Item, Item_Ptr, Maximum_Size);
+  is new BC.Support.Bounded (Item => Item,
+                             Item_Ptr => Item_Ptr,
+                             Maximum_Size => Maximum_Size);
   use Bounded_Stack_Nodes;
 
   type Bounded_Stack is new Stack with record

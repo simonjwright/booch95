@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -70,7 +70,9 @@ private
   procedure Add (Obj : in out Bounded_Queue; Elem : Item);
 
   package Bounded_Queue_Nodes
-  is new BC.Support.Bounded (Item,Item_Ptr,Maximum_Size);
+  is new BC.Support.Bounded (Item => Item,
+                             Item_Ptr => Item_Ptr,
+                             Maximum_Size => Maximum_Size);
 
   type Bounded_Queue is new Queue with record
     Rep : Bounded_Queue_Nodes.Bnd_Node_Ref := new Bounded_Queue_Nodes.Bnd_Node;
