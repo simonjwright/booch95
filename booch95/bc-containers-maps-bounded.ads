@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,73 +15,76 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Support.Bounded_Hash_Tables;
 
 generic
-  with function Hash (K : Key) return Natural is <>;
-  Buckets : Positive;
-  Maximum_Size : Positive;
+   with function Hash (K : Key) return Natural is <>;
+   Buckets : Positive;
+   Maximum_Size : Positive;
 package BC.Containers.Maps.Bounded is
 
-  pragma Elaborate_Body;
+   pragma Elaborate_Body;
 
-  -- A map denotes a collection forming a dictionary of domain/range
-  -- pairs.
+   --  A map denotes a collection forming a dictionary of domain/range
+   --  pairs.
 
-  -- The hash function (the generic parameter Hash) determines the
-  -- allocation of pairs to hash buckets. The value returned must not
-  -- change during the lifetime of a given Item. The range of hash values
-  -- need not be constrained to the number of buckets in the map.
+   --  The hash function (the generic parameter Hash) determines the
+   --  allocation of pairs to hash buckets. The value returned must
+   --  not change during the lifetime of a given Item. The range of
+   --  hash values need not be constrained to the number of buckets in
+   --  the map.
 
-  -- The hash function must satisfy the condition that, for objects A and
-  -- B, if A = B, then Hash (A) must equal Hash (B). The hash function
-  -- should attempt to spread the set of possible items uniformly across
-  -- the number of buckets. The quality of the hash function has a
-  -- significant impact upon performance.
+   --  The hash function must satisfy the condition that, for objects
+   --  A and B, if A = B, then Hash (A) must equal Hash (B). The hash
+   --  function should attempt to spread the set of possible items
+   --  uniformly across the number of buckets. The quality of the hash
+   --  function has a significant impact upon performance.
 
-  type Map is new Abstract_Map with private;
+   type Map is new Abstract_Map with private;
 
-  function Null_Container return Map;
+   function Null_Container return Map;
 
-  procedure Clear (M : in out Map);
-  -- Empty the map of all key/item pairs.
+   procedure Clear (M : in out Map);
+   --  Empty the map of all key/item pairs.
 
-  procedure Bind (M : in out Map; K : Key; I : Item);
-  -- If the key already exists in the map, raise BC.Duplicate. Otherwise,
-  -- add the key/item pair to the map.
+   procedure Bind (M : in out Map; K : Key; I : Item);
+   --  If the key already exists in the map, raise
+   --  BC.Duplicate. Otherwise, add the key/item pair to the map.
 
-  procedure Rebind (M : in out Map; K : Key; I : Item);
-  -- If the key does not exist in the map, raise BC.Not_Found. Otherwise,
-  -- change the key's binding to the given value.
+   procedure Rebind (M : in out Map; K : Key; I : Item);
+   --  If the key does not exist in the map, raise
+   --  BC.Not_Found. Otherwise, change the key's binding to the given
+   --  value.
 
-  procedure Unbind (M : in out Map; K : Key);
-  -- If the key does not exist in the map, raise BC.Not_Found. Otherwise,
-  -- remove the key/item binding.
+   procedure Unbind (M : in out Map; K : Key);
+   --  If the key does not exist in the map, raise
+   --  BC.Not_Found. Otherwise, remove the key/item binding.
 
-  function Available (M : Map) return Natural;
-  -- Return the number of unused slots in the map. Note, since hash buckets
-  -- are of fixed size in the bounded map it will probably not be possible
-  -- to use all these slots.
+   function Available (M : Map) return Natural;
+   --  Return the number of unused slots in the map. Note, since hash
+   --  buckets are of fixed size in the bounded map it will probably
+   --  not be possible to use all these slots.
 
-  function Extent (M : Map) return Natural;
-  -- Return the number of key/item bindings in the map.
+   function Extent (M : Map) return Natural;
+   --  Return the number of key/item bindings in the map.
 
-  function Is_Empty (M : Map) return Boolean;
-  -- Return True if and only if there are no key/item bindings in the
-  -- map; otherwise, return False.
+   function Is_Empty (M : Map) return Boolean;
+   --  Return True if and only if there are no key/item bindings in
+   --  the map; otherwise, return False.
 
-  function Is_Bound (M : Map; K : Key) return Boolean;
-  -- Return True if and only if there is a binding for the given key in
-  -- the map; otherwise, return False.
+   function Is_Bound (M : Map; K : Key) return Boolean;
+   --  Return True if and only if there is a binding for the given key
+   --  in the map; otherwise, return False.
 
-  function Item_Of (M : Map; K : Key) return Item;
-  -- If the key does not exist in the map, raises BC.Not_Found. Otherwise,
-  -- return a copy of the item bound to the given key.
+   function Item_Of (M : Map; K : Key) return Item;
+   --  If the key does not exist in the map, raises
+   --  BC.Not_Found. Otherwise, return a copy of the item bound to the
+   --  given key.
 
-  function New_Iterator (For_The_Map : Map) return Iterator'Class;
-  -- Return a reset Iterator bound to the specific Map.
+   function New_Iterator (For_The_Map : Map) return Iterator'Class;
+   --  Return a reset Iterator bound to the specific Map.
 
 private
 
@@ -89,42 +92,42 @@ private
      (Item => Key,
       Item_Ptr => Key_Ptr);
 
-  package Items is new BC.Support.Bounded_Hash_Tables.Value_Signature
+   package Items is new BC.Support.Bounded_Hash_Tables.Value_Signature
      (Value => Item,
       Value_Ptr => Item_Ptr);
 
-  package Tables is new BC.Support.Bounded_Hash_Tables.Tables
+   package Tables is new BC.Support.Bounded_Hash_Tables.Tables
      (Items => Keys,
       Values => Items,
       Buckets => Buckets,
       Maximum_Size => Maximum_Size);
 
-  type Map is new Abstract_Map with record
-    Rep : Tables.Table;
-  end record;
+   type Map is new Abstract_Map with record
+      Rep : Tables.Table;
+   end record;
 
-  procedure Attach (M : in out Map; K : Key; I : Item);
+   procedure Attach (M : in out Map; K : Key; I : Item);
 
-  function Number_Of_Buckets (M : Map) return Natural;
+   function Number_Of_Buckets (M : Map) return Natural;
 
-  function Item_At
+   function Item_At
      (M : Map; Bucket, Index : Positive) return Item_Ptr;
 
-  function Key_At
+   function Key_At
      (M : Map; Bucket, Index : Positive) return Key_Ptr;
 
-  type Bounded_Map_Iterator is new Map_Iterator with null record;
+   type Bounded_Map_Iterator is new Map_Iterator with null record;
 
-  procedure Reset (It : in out Bounded_Map_Iterator);
+   procedure Reset (It : in out Bounded_Map_Iterator);
 
-  procedure Next (It : in out Bounded_Map_Iterator);
+   procedure Next (It : in out Bounded_Map_Iterator);
 
-  function Is_Done (It : Bounded_Map_Iterator) return Boolean;
+   function Is_Done (It : Bounded_Map_Iterator) return Boolean;
 
-  function Current_Item (It : Bounded_Map_Iterator) return Item;
+   function Current_Item (It : Bounded_Map_Iterator) return Item;
 
-  function Current_Item (It : Bounded_Map_Iterator) return Item_Ptr;
+   function Current_Item (It : Bounded_Map_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : in out Bounded_Map_Iterator);
+   procedure Delete_Item_At (It : in out Bounded_Map_Iterator);
 
 end BC.Containers.Maps.Bounded;

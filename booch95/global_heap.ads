@@ -1,5 +1,5 @@
--- Copyright (C) 1998 Pat Rogers.
--- All Rights Reserved.
+--  Copyright (C) 1998 Pat Rogers.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,13 +15,13 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Support.Managed_Storage;
 
 package Global_Heap is
 
-  subtype Pool is BC.Support.Managed_Storage.Pool;
-  Storage : Pool (Chunk_Size => 1024);
+   subtype Pool is BC.Support.Managed_Storage.Pool;
+   Storage : Pool (Chunk_Size => 1024);
 
 end Global_Heap;

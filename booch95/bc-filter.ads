@@ -1,5 +1,5 @@
--- Copyright (C) 2001 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,16 +15,16 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Containers;
 generic
-  type Item is private;
-  with package Source is new BC.Containers (Item);
-  type From is new Source.Container with private;
-  with package Target is new BC.Containers (Item);
-  type To is new Target.Container with private;
-  with function Pass (I : Item) return Boolean is <>;
-  with procedure Clear (The_Container : in out To) is <>;
-  with procedure Add (To_The_Container : in out To; I : Item) is <>;
+   type Item is private;
+   with package Source is new BC.Containers (Item);
+   type From is new Source.Container with private;
+   with package Target is new BC.Containers (Item);
+   type To is new Target.Container with private;
+   with function Pass (I : Item) return Boolean is <>;
+   with procedure Clear (The_Container : in out To) is <>;
+   with procedure Add (To_The_Container : in out To; I : Item) is <>;
 procedure BC.Filter (Input : From; Output : in out To);

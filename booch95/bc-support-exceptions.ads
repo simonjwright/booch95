@@ -1,5 +1,5 @@
--- Copyright (C) 1998 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1998 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,43 +15,44 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with Ada.Exceptions;
-with Ada.Text_Io;
+with Ada.Text_IO;
 
 package BC.Support.Exceptions is
 
-  pragma Elaborate_Body;
+   pragma Elaborate_Body;
 
-  -- These codes are shorthand for standard messages
-  type Reason is (No_Reason_Given,
-                  Disjoint,
-                  Duplicate,
-                  Empty,
-                  Full,
-                  Illegal,
-                  Invalid_Index,
-                  Invalid_Number,
-                  Missing,
-                  Not_Empty,
-                  Not_Root,
-                  Is_Null,
-                  Out_Of_Memory,
-                  Referenced,
-                  Timing,
-                  Too_Large,
-                  Too_Small);
+   --  These codes are shorthand for standard messages
+   type Reason is (No_Reason_Given,
+                   Disjoint,
+                   Duplicate,
+                   Empty,
+                   Full,
+                   Illegal,
+                   Invalid_Index,
+                   Invalid_Number,
+                   Missing,
+                   Not_Empty,
+                   Not_Root,
+                   Is_Null,
+                   Out_Of_Memory,
+                   Referenced,
+                   Timing,
+                   Too_Large,
+                   Too_Small);
 
-  generic
-    Module : String;
-  procedure Assert (Condition : Boolean;
-                    Raising_If_False : Ada.Exceptions.Exception_Id;
-                    From_Subprogram : String;
-                    With_Reason : Reason := No_Reason_Given);
-  pragma Inline (Assert);
+   generic
+      Module : String;
+   procedure Assert (Condition : Boolean;
+                     Raising_If_False : Ada.Exceptions.Exception_Id;
+                     From_Subprogram : String;
+                     With_Reason : Reason := No_Reason_Given);
+   pragma Inline (Assert);
 
-  procedure Report (The_Exception : Ada.Exceptions.Exception_Occurrence;
-                    To : Ada.Text_Io.File_Type := Ada.Text_Io.Standard_Output);
+   procedure Report
+     (The_Exception : Ada.Exceptions.Exception_Occurrence;
+      To : Ada.Text_IO.File_Type := Ada.Text_IO.Standard_Output);
 
 end BC.Support.Exceptions;

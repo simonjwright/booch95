@@ -1,5 +1,5 @@
--- Copyright (C) 1999-2000 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1999-2000 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,9 +15,9 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 generic
-  with function Image (E : Item) return String;
+   with function Image (E : Item) return String;
 procedure BC.Containers.Trees.AVL.Print (T : AVL_Tree);
 pragma Elaborate_Body (BC.Containers.Trees.AVL.Print);

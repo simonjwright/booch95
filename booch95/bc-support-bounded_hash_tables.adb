@@ -1,5 +1,5 @@
--- Copyright (C) 2001 Simon Wright.
--- All Rights Reserved.
+--   Copyright (C) 2001 Simon Wright.
+--   All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,7 @@
 --      for a copy.
 --
 
--- $Id$
+--   $Id$
 
 with BC.Support.Exceptions;
 with System;
@@ -31,6 +31,13 @@ package body BC.Support.Bounded_Hash_Tables is
 
    package body Tables is
 
+
+      pragma Warnings (Off);
+      --  for GNAT: style checks require a specification, but the
+      --  operation can't be dispatching.
+      function Location
+        (T : Table; Start : Index; I : Items.Item) return Index;
+      pragma Warnings (On);
 
       function Location
         (T : Table; Start : Index; I : Items.Item) return Index is
@@ -184,9 +191,9 @@ package body BC.Support.Bounded_Hash_Tables is
       end Value_Of;
 
 
-      -- We can't take 'Access of non-aliased components. But if we alias
-      -- discriminated objects they become constrained - even if the
-      -- discriminant has a default.
+      --  We can't take 'Access of non-aliased components. But if we
+      --  alias discriminated objects they become constrained - even
+      --  if the discriminant has a default.
       package Allow_Value_Access
       is new System.Address_To_Access_Conversions (Values.Value);
 
@@ -204,27 +211,27 @@ package body BC.Support.Bounded_Hash_Tables is
       end Access_Value_Of;
 
 
-      -- We can't take 'Access of non-aliased components. But if we alias
-      -- discriminated objects they become constrained - even if the
-      -- discriminant has a default.
+      --  We can't take 'Access of non-aliased components. But if we
+      --  alias discriminated objects they become constrained - even
+      --  if the discriminant has a default.
       package Allow_Item_Access
       is new System.Address_To_Access_Conversions (Items.Item);
 
       function Access_Item_At (T : Table; Position : Cell_Index)
-        return Items.Item_Ptr is
+                              return Items.Item_Ptr is
       begin
          return Items.Item_Ptr
-            (Allow_Item_Access.To_Pointer
-             (T.Contents (Position).Item'Address));
+           (Allow_Item_Access.To_Pointer
+            (T.Contents (Position).Item'Address));
       end Access_Item_At;
 
 
       function Access_Value_At (T : Table; Position : Cell_Index)
-        return Values.Value_Ptr is
+                               return Values.Value_Ptr is
       begin
          return Values.Value_Ptr
-            (Allow_Value_Access.To_Pointer
-             (T.Contents (Position).Value'Address));
+           (Allow_Value_Access.To_Pointer
+            (T.Contents (Position).Value'Address));
       end Access_Value_At;
 
 

@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,101 +15,103 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Support.Dynamic;
 with System.Storage_Pools;
 
 generic
-  type Storage_Manager (<>)
-  is new System.Storage_Pools.Root_Storage_Pool with private;
-  Storage : in out Storage_Manager;
-  Initial_Size : Positive := 10;
+   type Storage_Manager (<>)
+   is new System.Storage_Pools.Root_Storage_Pool with private;
+   Storage : in out Storage_Manager;
+   Initial_Size : Positive := 10;
 package BC.Containers.Collections.Dynamic is
 
-  pragma Elaborate_Body;
+   pragma Elaborate_Body;
 
-  type Collection is new Abstract_Collection with private;
+   type Collection is new Abstract_Collection with private;
 
-  function Null_Container return Collection;
+   function Null_Container return Collection;
 
-  function "=" (Left, Right : in Collection) return Boolean;
+   function "=" (Left, Right : in Collection) return Boolean;
 
-  procedure Clear (C : in out Collection);
-  -- Empty the collection of all items.
+   procedure Clear (C : in out Collection);
+   --  Empty the collection of all items.
 
-  procedure Insert (C : in out Collection; Elem : Item);
-  -- Add the item to the front of the collection.
+   procedure Insert (C : in out Collection; Elem : Item);
+   --  Add the item to the front of the collection.
 
-  procedure Insert (C : in out Collection;
-                    Elem : Item;
-                    Before : Positive);
-  -- Add the item before the given index item in the collection; if
-  -- before is 1, the item is added to the front of the collection.
+   procedure Insert (C : in out Collection;
+                     Elem : Item;
+                     Before : Positive);
+   --  Add the item before the given index item in the collection; if
+   --  before is 1, the item is added to the front of the collection.
 
-  procedure Append (C : in out Collection; Elem : Item);
-  -- Add the item at the end of the collection.
+   procedure Append (C : in out Collection; Elem : Item);
+   --  Add the item at the end of the collection.
 
-  procedure Append (C : in out Collection;
-                    Elem : Item;
-                    After : Positive);
-  -- Add the item after the given index item in the collection.
+   procedure Append (C : in out Collection;
+                     Elem : Item;
+                     After : Positive);
+   --  Add the item after the given index item in the collection.
 
-  procedure Remove (C : in out Collection; At_Index : Positive);
-  -- Remove the item at the given index in the collection.
+   procedure Remove (C : in out Collection; At_Index : Positive);
+   --  Remove the item at the given index in the collection.
 
-  procedure Replace (C : in out Collection;
-                     At_Index : Positive;
-                     Elem : Item);
-  -- Replace the item at the given index with the given item.
+   procedure Replace (C : in out Collection;
+                      At_Index : Positive;
+                      Elem : Item);
+   --  Replace the item at the given index with the given item.
 
-  function Length (C : Collection) return Natural;
-  -- Return the number of items in the collection.
+   function Length (C : Collection) return Natural;
+   --  Return the number of items in the collection.
 
-  function Is_Empty (C : Collection) return Boolean;
-  -- Return True if and only if there are no items in the collection.
+   function Is_Empty (C : Collection) return Boolean;
+   --  Return True if and only if there are no items in the
+   --  collection.
 
-  function First (C : Collection) return Item;
-  -- Return a copy of the item at the front of the collection.
+   function First (C : Collection) return Item;
+   --  Return a copy of the item at the front of the collection.
 
-  function Last (C : Collection) return Item;
-  -- Return a copy of the item at the end of the collection.
+   function Last (C : Collection) return Item;
+   --  Return a copy of the item at the end of the collection.
 
-  function Item_At
+   function Item_At
      (C : Collection; At_Index : Positive) return Item;
-  -- Return a copy of the item at the indicated position in the collection.
+   --  Return a copy of the item at the indicated position in the
+   --  collection.
 
-  function Location (C : Collection; Elem : Item) return Natural;
-  -- Return the first index at which the item is found (0 if the
-  -- item desn't exist in the collecton).
+   function Location (C : Collection; Elem : Item) return Natural;
+   --  Return the first index at which the item is found (0 if the
+   --  item desn't exist in the collecton).
 
-  procedure Preallocate (C : in out Collection; Size : Natural);
-  -- Allocates 'Size' additional storage elements for the Collection
+   procedure Preallocate (C : in out Collection; Size : Natural);
+   --  Allocates 'Size' additional storage elements for the Collection
 
-  procedure Set_Chunk_Size (C : in out Collection; Size : Natural);
-  -- Establishes the Size the Collection will grow if the Collection
-  -- exhausts its current size.
+   procedure Set_Chunk_Size (C : in out Collection; Size : Natural);
+   --  Establishes the Size the Collection will grow if the Collection
+   --  exhausts its current size.
 
-  function Chunk_Size (C : Collection) return Natural;
-  -- Returns the Chunk_Size
+   function Chunk_Size (C : Collection) return Natural;
+   --  Returns the Chunk_Size.
 
-  function New_Iterator
+   function New_Iterator
      (For_The_Collection : Collection) return Iterator'Class;
-  -- Return a reset Iterator bound to the specific Collection.
+   --  Return a reset Iterator bound to the specific Collection.
 
 private
 
-  function Item_At (C : Collection; Index : Positive) return Item_Ptr;
+   function Item_At (C : Collection; Index : Positive) return Item_Ptr;
 
-  package Collection_Nodes
-  is new BC.Support.Dynamic (Item => Item,
-                             Item_Ptr => Item_Ptr,
-                             Storage_Manager => Storage_Manager,
-                             Storage => Storage,
-                             Initial_Size => Initial_Size);
+   package Collection_Nodes
+   is new BC.Support.Dynamic (Item => Item,
+                              Item_Ptr => Item_Ptr,
+                              Storage_Manager => Storage_Manager,
+                              Storage => Storage,
+                              Initial_Size => Initial_Size);
 
-  type Collection is new Abstract_Collection with record
-    Rep : Collection_Nodes.Dyn_Node;
-  end record;
+   type Collection is new Abstract_Collection with record
+      Rep : Collection_Nodes.Dyn_Node;
+   end record;
 
 end BC.Containers.Collections.Dynamic;

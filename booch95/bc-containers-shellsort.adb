@@ -1,5 +1,5 @@
--- Copyright (C) 2001 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,41 +15,40 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
--- Algorithm from "Algorithms", Robert Sedgewick, Addison-Wesley 1983
+--  Algorithm from "Algorithms", Robert Sedgewick, Addison-Wesley 1983
 
 procedure BC.Containers.Shellsort (C : in out Container) is
-  procedure Sort (C : in out Containers.Container'Class);
-  pragma Inline (Sort);
-  Len : constant Natural := Length (C);
-  procedure Sort (C : in out Containers.Container'Class) is
-    H : Positive := 1;
-    J : Positive;
-    V : Item;
-  begin
-    loop
-      H := 3 * H + 1;
-      exit when H > Len;
-    end loop;
-    loop
-      H := H / 3;
-      for I in H + 1 .. Len loop
-        V := Item_At (C, I).all;
-        J := I;
-        while V < Item_At (C, J - H).all loop
-          Item_At (C, J).all := Item_At (C, J - H).all;
-          J := J - H;
-          exit when J <= H;
-        end loop;
-        Item_At (C, J).all := V;
+   procedure Sort (C : in out Containers.Container'Class);
+   pragma Inline (Sort);
+   Len : constant Natural := Length (C);
+   procedure Sort (C : in out Containers.Container'Class) is
+      H : Positive := 1;
+      J : Positive;
+      V : Item;
+   begin
+      loop
+         H := 3 * H + 1;
+         exit when H > Len;
       end loop;
-      exit when H = 1;
-    end loop;
-  end Sort;
+      loop
+         H := H / 3;
+         for I in H + 1 .. Len loop
+            V := Item_At (C, I).all;
+            J := I;
+            while V < Item_At (C, J - H).all loop
+               Item_At (C, J).all := Item_At (C, J - H).all;
+               J := J - H;
+               exit when J <= H;
+            end loop;
+            Item_At (C, J).all := V;
+         end loop;
+         exit when H = 1;
+      end loop;
+   end Sort;
 begin
-  Sort (C);
+   Sort (C);
 exception
-  when Should_Have_Been_Overridden => raise Container_Error;
+   when Should_Have_Been_Overridden => raise Container_Error;
 end BC.Containers.Shellsort;
-

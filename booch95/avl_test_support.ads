@@ -1,7 +1,7 @@
--- Copyright (C) 1999, 2001 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1999, 2001 Simon Wright.
+--  All Rights Reserved.
 --
--- This program is distributed in the hope that it will be
+--      This program is distributed in the hope that it will be
 --      useful, but WITHOUT ANY WARRANTY; without even the implied
 --      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 --      PURPOSE. See the Ada Community License for more details.
@@ -11,7 +11,7 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Containers;
 with BC.Containers.Trees;
@@ -22,26 +22,26 @@ with Global_Heap;
 
 package AVL_Test_Support is
 
-  type Key is range 0 .. 1023;
+   type Key is range 0 .. 1023;
 
-  type Item is record
-    K : Key;
-    Count : Integer := 0;
-  end record;
+   type Item is record
+      K : Key;
+      Count : Integer := 0;
+   end record;
 
-  function "=" (L, R : Item) return Boolean;
-  function "<" (L, R : Item) return Boolean;
-  function Image (Val : Item) return String;
+   function "=" (L, R : Item) return Boolean;
+   function "<" (L, R : Item) return Boolean;
+   function Image (Val : Item) return String;
 
-  package Containers is new BC.Containers (Item => Item);
+   package Containers is new BC.Containers (Item => Item);
 
-  package Trees is new Containers.Trees;
+   package Trees is new Containers.Trees;
 
-  package TA is new Trees.AVL (Storage_Manager => Global_Heap.Pool,
-                               Storage => Global_Heap.Storage);
+   package TA is new Trees.AVL (Storage_Manager => Global_Heap.Pool,
+                                Storage => Global_Heap.Storage);
 
-  procedure Print is new TA.Print (Image => Image);
+   procedure Print is new TA.Print (Image => Image);
 
-  procedure Validate is new TA.Validate;
+   procedure Validate is new TA.Validate;
 
 end AVL_Test_Support;

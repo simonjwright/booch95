@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,13 +15,13 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 package body Set_Test_Support is
 
-  function Char_Hash (C : Character) return Natural is
-  begin
-    return Character'Pos (C);
-  end Char_Hash;
+   function Char_Hash (C : Character) return Natural is
+   begin
+      return Character'Pos (C);
+   end Char_Hash;
 
 end Set_Test_Support;

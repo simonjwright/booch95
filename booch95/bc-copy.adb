@@ -1,5 +1,5 @@
--- Copyright (C) 2001 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,19 +15,19 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 procedure BC.Copy (Input : From; Output : in out To) is
-  procedure Ins (I : Item; OK : out Boolean);
-  pragma Inline (Ins);
-  procedure Cp is new Source.Visit (Ins);
-  procedure Ins (I : Item; OK : out Boolean) is
-  begin
-    Add (Output, I);
-    OK := True;
-  end Ins;
-  It : Source.Iterator'Class := New_Iterator (Input);
+   procedure Ins (I : Item; OK : out Boolean);
+   pragma Inline (Ins);
+   procedure Cp is new Source.Visit (Ins);
+   procedure Ins (I : Item; OK : out Boolean) is
+   begin
+      Add (Output, I);
+      OK := True;
+   end Ins;
+   It : Source.Iterator'Class := New_Iterator (Input);
 begin
-  Clear (Output);
-  Cp (It);
+   Clear (Output);
+   Cp (It);
 end BC.Copy;
