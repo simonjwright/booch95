@@ -55,22 +55,32 @@ need to recompile).</p>
 <font color=red>red</font> parts are new since the last release):</P>
 
 <UL>
+<li><font color=red>Unbounded Bags</font>
 <li>Directed Graphs
 <li>Undirected Graphs
 <LI>Single Lists 
 <LI>Double Lists
-<li><font color=red>Bounded Maps</font>
-<li><font color=red>Dynamic Maps</font>
-<li><font color=red>Unbounded Maps</font>
+<li>Bounded Maps
+<li>Dynamic Maps
+<li>Unbounded Maps
 <LI>Bounded Queues 
 <LI>Dynamic Queues
 <LI>Unbounded Queues
+<li><font color=red>Bounded Sets</font>
+<li><font color=red>Dynamic Sets</font>
+<li><font color=red>Unbounded Sets</font>
 <LI>Bounded Stacks 
 <LI>Dynamic Stacks
 <LI>Unbounded Stacks
-<li><font color=red>AVL Trees</font>
+<li>AVL Trees
 <LI>Binary Trees
+<ul>
+<li><font color=red>Pre-order, in-order and post-order iteration</font>
+</ul>
 <LI>Multiway Trees
+<ul>
+<li><font color=red>Pre-order and post-order iteration</font>
+</ul>
 <li>Smart Pointers
 </UL>
 
@@ -114,13 +124,15 @@ You can see an example of this style in <tt>Map_Test</tt>;
   end Test_Active_Iterator;
 </pre>
 
-Passive iteration is handled via generics. In the same test,
+Passive iteration is handled via generics. In the same test, we might have
+had
 
 <pre>
   procedure Test_Passive_Iterator (M : in out Maps.Map'Class) is
     procedure Visitor is new Maps.Visit (Process, M);
+    Iter : Containers.Iterator := New_Iterator (M);
   begin
-    Visitor;
+    Visitor (using => Iter);
   end Test_Passive_Iterator;
 </pre>
 
@@ -130,7 +142,7 @@ later)</font></b>.<p>
 
 </dd>
 
-<dt>Hierarchy and Graphs</dt>
+<dt>Hierarchy, Graphs and Trees</dt>
 
 <dd>
 
@@ -145,6 +157,10 @@ This works fine except for Graphs; a Graph is a collection of Vertices
 (OK so far), while Vertices are connected by (not collections of)
 Arcs. Unless I can think of a sensible way of doing things, Graphs
 will remain outside the Containers hierarchy.<p>
+
+Although Trees come under the Container hierarchy, they aren't
+Containers.  This is largely because of the difficulty of supporting
+standard Iterators in a non-linear structure like a Tree.<p>
 
 That said, I've tried to use a common style throughout.<p>
 
