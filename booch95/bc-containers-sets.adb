@@ -63,7 +63,7 @@ package body BC.Containers.Sets is
 
    procedure Intersection (S : in out Abstract_Set'Class;
                            O : Abstract_Set'Class) is
-      Tmp : Abstract_Set'Class := S;
+      Tmp : constant Abstract_Set'Class := S;
       It : Iterator'Class := New_Iterator (Tmp);
    begin
       --  XXX left out the optimisation which checks whether L, R are

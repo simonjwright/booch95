@@ -29,6 +29,7 @@ procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is
    use Ada.Text_IO;
 
    Overall_Depth : Natural;
+   pragma Warnings (Off, Overall_Depth);
 
    function Validate (N : AVL_Node_Ref) return Natural;
    function Validate (N : AVL_Node_Ref) return Natural is

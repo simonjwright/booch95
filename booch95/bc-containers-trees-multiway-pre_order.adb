@@ -27,7 +27,6 @@
 
 procedure BC.Containers.Trees.Multiway.Pre_Order
   (T : Multiway_Tree; Success : out Boolean) is
-   Subtree : Multiway_Tree;
    Result : Boolean;
 begin
    Success := True;

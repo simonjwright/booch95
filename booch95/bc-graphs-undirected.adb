@@ -207,7 +207,7 @@ package body BC.Graphs.Undirected is
 
    function New_Graph_Iterator
      (For_The_Graph : Graph) return Graph_Iterator'Class is
-      Result : Undirected_Graph_Iterator
+      Result : constant Undirected_Graph_Iterator
         := (For_The_Graph => Graph_Address_Conversions.To_Pointer
               (For_The_Graph'Address).all'Access,
             Index => For_The_Graph.Rep);

@@ -60,8 +60,6 @@ package body BC.Containers.Maps is
 
 
    procedure Visit (Using : in out Map_Iterator'Class) is
-      M : Abstract_Map'Class
-        renames Abstract_Map'Class (Using.For_The_Container.all);
       Status : Boolean;
    begin
       Reset (Using);
@@ -76,8 +74,6 @@ package body BC.Containers.Maps is
 
 
    procedure Modify (Using : in out Map_Iterator'Class) is
-      M : Abstract_Map'Class
-        renames Abstract_Map'Class (Using.For_The_Container.all);
       Status : Boolean;
    begin
       Reset (Using);
