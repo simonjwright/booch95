@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -20,6 +20,7 @@ with BC.Containers.Deques;
 with BC.Containers.Deques.Bounded;
 with BC.Containers.Deques.Dynamic;
 with BC.Containers.Deques.Unbounded;
+with BC.Containers.Deques.Unmanaged;
 with BC.Support.Standard_Storage;
 with Global_Heap;
 
@@ -37,5 +38,7 @@ package Deque_Test_Support is
 
    package DU is new Deques.Unbounded
      (Storage => BC.Support.Standard_Storage.Pool);
+
+   package DUM is new Deques.Unmanaged;
 
 end Deque_Test_Support;
