@@ -23,42 +23,42 @@ package body BC.Containers.Stacks.Bounded is
 
   procedure Clear (S : in out Stack) is
   begin
-    Stack_Nodes.Clear (S.Rep.all);
+    Stack_Nodes.Clear (S.Rep);
   end Clear;
 
   procedure Push (S : in out Stack; Elem : Item) is
   begin
-    Stack_Nodes.Insert (S.Rep.all, Elem);
+    Stack_Nodes.Insert (S.Rep, Elem);
   end Push;
 
   procedure Pop (S : in out Stack) is
   begin
-    Stack_Nodes.Remove (S.Rep.all, 1);
+    Stack_Nodes.Remove (S.Rep, 1);
   end Pop;
 
   function Available (S: in Stack) return Natural is
   begin
-    return Stack_Nodes.Available (S.Rep.all);
+    return Stack_Nodes.Available (S.Rep);
   end Available;
 
   function Depth (S : Stack) return Natural is
   begin
-    return Stack_Nodes.Length (S.Rep.all);
+    return Stack_Nodes.Length (S.Rep);
   end Depth;
 
   function Is_Empty (S : Stack) return Boolean is
   begin
-    return Stack_Nodes.Length (S.Rep.all) = 0;
+    return Stack_Nodes.Length (S.Rep) = 0;
   end Is_Empty;
 
   function Top (S : Stack) return Item is
   begin
-    return Stack_Nodes.First (S.Rep.all);
+    return Stack_Nodes.First (S.Rep);
   end Top;
 
   function "=" (Left, Right : Stack) return Boolean is
   begin
-    return Left.Rep.all = Right.Rep.all;
+    return Left.Rep = Right.Rep;
   end "=";
 
   package Address_Conversions
@@ -76,30 +76,21 @@ package body BC.Containers.Stacks.Bounded is
   function Item_At
      (S : Stack; Index : Positive) return Item_Ptr is
   begin
-    return Stack_Nodes.Item_At (S.Rep.all, Index);
+    return Stack_Nodes.Item_At (S.Rep, Index);
   end Item_at;
 
   procedure Add (S : in out Stack; Elem : Item) is
   begin
-    Stack_Nodes.Append (S.Rep.all, Elem);
+    Stack_Nodes.Append (S.Rep, Elem);
   end Add;
 
   procedure Remove (S : in out Stack; From : Positive) is
   begin
-    Stack_Nodes.Remove (S.Rep.all, From);
+    Stack_Nodes.Remove (S.Rep, From);
   end Remove;
 
-  procedure Adjust (S : in out Stack) is
-  begin
-    S.Rep := Stack_Nodes.Create (S.Rep.all);
-  end Adjust;
-
-  procedure Finalize (S : in out Stack) is
-  begin
-    Free (S.Rep);
-  end Finalize;
-
   Empty_Container : Stack;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Stack is
   begin

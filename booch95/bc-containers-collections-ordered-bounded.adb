@@ -24,106 +24,106 @@ package body BC.Containers.Collections.Ordered.Bounded is
   function "=" (Left, Right : in Collection) return Boolean is
     use Collection_Nodes;
   begin
-    return Left.Rep.all = Right.Rep.all;
+    return Left.Rep = Right.Rep;
   end "=";
 
   procedure Clear (C : in out Collection) is
   begin
-    Collection_Nodes.Clear (C.Rep.all);
+    Collection_Nodes.Clear (C.Rep);
   end Clear;
 
   procedure Insert (C : in out Collection; Elem : Item) is
   begin
-    for Index in 1 .. Collection_Nodes.Length (C.Rep.all)
+    for Index in 1 .. Collection_Nodes.Length (C.Rep)
     loop
-      if not (Collection_Nodes.Item_At (C.Rep.all, Index)
+      if not (Collection_Nodes.Item_At (C.Rep, Index)
               < Elem) then
-        Collection_Nodes.Insert (C.Rep.all, Elem, Index);
+        Collection_Nodes.Insert (C.Rep, Elem, Index);
         return;
       end if;
     end loop;
-    Collection_Nodes.Append (C.Rep.all, Elem);
+    Collection_Nodes.Append (C.Rep, Elem);
   end Insert;
 
   procedure Insert (C : in out Collection;
                     Elem : Item;
                     Before : Positive) is
   begin
-    for Index in 1 .. Collection_Nodes.Length (C.Rep.all)
+    for Index in 1 .. Collection_Nodes.Length (C.Rep)
     loop
-      if not (Collection_Nodes.Item_At (C.Rep.all, Index)
+      if not (Collection_Nodes.Item_At (C.Rep, Index)
               < Elem) then
-        Collection_Nodes.Insert (C.Rep.all, Elem, Index);
+        Collection_Nodes.Insert (C.Rep, Elem, Index);
         return;
       end if;
     end loop;
-    Collection_Nodes.Append (C.Rep.all, Elem);
+    Collection_Nodes.Append (C.Rep, Elem);
   end Insert;
 
   procedure Append (C : in out Collection; Elem : Item) is
   begin
-    for Index in 1 .. Collection_Nodes.Length (C.Rep.all)
+    for Index in 1 .. Collection_Nodes.Length (C.Rep)
     loop
-      if Elem < Collection_Nodes.Item_At (C.Rep.all, Index)
+      if Elem < Collection_Nodes.Item_At (C.Rep, Index)
       then
-        Collection_Nodes.Insert (C.Rep.all, Elem, Index);
+        Collection_Nodes.Insert (C.Rep, Elem, Index);
         return;
       end if;
     end loop;
-    Collection_Nodes.Append (C.Rep.all, Elem);
+    Collection_Nodes.Append (C.Rep, Elem);
   end Append;
 
   procedure Append (C : in out Collection;
                     Elem : Item;
                     After : Positive) is
   begin
-    for Index in 1 .. Collection_Nodes.Length (C.Rep.all)
+    for Index in 1 .. Collection_Nodes.Length (C.Rep)
     loop
-      if Elem < Collection_Nodes.Item_At (C.Rep.all, Index)
+      if Elem < Collection_Nodes.Item_At (C.Rep, Index)
       then
-        Collection_Nodes.Insert (C.Rep.all, Elem, Index);
+        Collection_Nodes.Insert (C.Rep, Elem, Index);
         return;
       end if;
     end loop;
-    Collection_Nodes.Append (C.Rep.all, Elem);
+    Collection_Nodes.Append (C.Rep, Elem);
   end Append;
 
   procedure Remove (C : in out Collection; At_Index : Positive) is
   begin
-    Collection_Nodes.Remove (C.Rep.all, At_Index);
+    Collection_Nodes.Remove (C.Rep, At_Index);
   end Remove;
 
   procedure Replace (C : in out Collection;
                      At_Index : Positive;
                      Elem : Item) is
   begin
-    Collection_Nodes.Remove (C.Rep.all, At_Index);
+    Collection_Nodes.Remove (C.Rep, At_Index);
     Insert (C, Elem);
   end Replace;
 
   function Available (C: in Collection) return Natural is
   begin
-    return Collection_Nodes.Available (C.Rep.all);
+    return Collection_Nodes.Available (C.Rep);
   end Available;
 
   function Length (C : Collection) return Natural is
   begin
-    return Collection_Nodes.Length (C.Rep.all);
+    return Collection_Nodes.Length (C.Rep);
   end Length;
 
   function Is_Empty (C : Collection) return Boolean is
   begin
-    return Collection_Nodes.Length (C.Rep.all) = 0;
+    return Collection_Nodes.Length (C.Rep) = 0;
   end Is_Empty;
 
   function First (C : Collection) return Item is
   begin
-    return Collection_Nodes.First (C.Rep.all);
+    return Collection_Nodes.First (C.Rep);
   end First;
 
   function Last (C : Collection) return Item is
   begin
-    return Collection_Nodes.Last (C.Rep.all);
+    return Collection_Nodes.Last (C.Rep);
   end Last;
 
   function Item_At (C : Collection; At_Index : Positive) return Item is
@@ -133,7 +133,7 @@ package body BC.Containers.Collections.Ordered.Bounded is
 
   function Location (C : Collection; Elem : Item) return Natural is
   begin
-    return Collection_Nodes.Location (C.Rep.all, Elem);
+    return Collection_Nodes.Location (C.Rep, Elem);
   end Location;
 
   package Address_Conversions
@@ -151,20 +151,11 @@ package body BC.Containers.Collections.Ordered.Bounded is
 
   function Item_At (C : Collection; Index : Positive) return Item_Ptr is
   begin
-    return Collection_Nodes.Item_At (C.Rep.all, Index);
+    return Collection_Nodes.Item_At (C.Rep, Index);
   end Item_At;
 
-  procedure Adjust (C : in out Collection) is
-  begin
-    C.Rep := Collection_Nodes.Create (From => C.Rep.all);
-  end Adjust;
-
-  procedure Finalize (C : in out Collection) is
-  begin
-    Collection_Nodes.Free (C.Rep);
-  end Finalize;
-
   Empty_Container : Collection;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Collection is
   begin
