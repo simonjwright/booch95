@@ -24,8 +24,10 @@ all::
 
 # For checking memory leaks, I use ccmalloc from Armin Biere
 # (armin@ira.uka.de + armin+@cs.cmu.edu, http://iseran.ira.uka.de/~armin)
+# The -Wl,-u,malloc forces the malloc symbol to be required so as to ensure
+# that it's satisfied from libccmalloc.a.
 
-MEMORY_CHECK = -largs ~/ccmalloc-0.2.3/src/libccmalloc.a -ldl
+MEMORY_CHECK = -largs -Wl,-u,malloc ~/ccmalloc-0.2.3/src/libccmalloc.a -ldl
 
 test:: $(TESTABLE)
 	for t in $(TESTABLE); do \
@@ -38,6 +40,7 @@ test:: $(TESTABLE)
 
 TESTABLE += graph_test
 TESTABLE += list_test
+TESTABLE += map_test
 TESTABLE += queue_test
 TESTABLE += smart_test
 TESTABLE += stack_test
