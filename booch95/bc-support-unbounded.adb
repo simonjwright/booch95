@@ -43,10 +43,26 @@ package body BC.Support.Unbounded is
    package Allow_Element_Access
    is new System.Address_To_Access_Conversions (Item);
 
-   use type Nodes.Node_Ref;
+   function Create (I : Item; Previous, Next : Node_Ref) return Node_Ref;
+   pragma Inline (Create);
+
+   function Create (I : Item; Previous, Next : Node_Ref) return Node_Ref is
+      Result : Node_Ref;
+   begin
+      Result := new Node'(Element => I,
+                          Previous => Previous,
+                          Next => Next);
+      if Previous /= null then
+         Previous.Next := Result;
+      end if;
+      if Next /= null then
+         Next.Previous := Result;
+      end if;
+      return Result;
+   end Create;
 
    procedure Delete_Node is new
-     Ada.Unchecked_Deallocation (Nodes.Node, Nodes.Node_Ref);
+     Ada.Unchecked_Deallocation (Node, Node_Ref);
 
    procedure Update_Cache (Obj : in out Unb_Node; Index : Positive);
 
@@ -70,7 +86,7 @@ package body BC.Support.Unbounded is
          end if;
       end if;
       declare
-         Ptr : Nodes.Node_Ref := Obj.Rep;
+         Ptr : Node_Ref := Obj.Rep;
       begin
          for I in 1 .. Index - 1 loop
             Ptr := Ptr.Next;
@@ -84,8 +100,8 @@ package body BC.Support.Unbounded is
    begin
       if Left.Size = Right.Size then
          declare
-            Temp_L : Nodes.Node_Ref := Left.Rep;
-            Temp_R : Nodes.Node_Ref := Right.Rep;
+            Temp_L : Node_Ref := Left.Rep;
+            Temp_R : Node_Ref := Right.Rep;
          begin
             while Temp_L /= null loop
                if Temp_L.Element /= Temp_R.Element then
@@ -103,7 +119,7 @@ package body BC.Support.Unbounded is
 
    procedure Clear (Obj : in out Unb_Node) is
       Empty_Node : Unb_Node;
-      Ptr : Nodes.Node_Ref;
+      Ptr : Node_Ref;
    begin
       while Obj.Rep /= null loop
          Ptr := Obj.Rep;
@@ -115,7 +131,7 @@ package body BC.Support.Unbounded is
 
    procedure Insert (Obj : in out Unb_Node; Elem : Item) is
    begin
-      Obj.Rep := Nodes.Create (Elem, Previous => null, Next => Obj.Rep);
+      Obj.Rep := Create (Elem, Previous => null, Next => Obj.Rep);
       if Obj.Last = null then
          Obj.Last := Obj.Rep;
       end if;
@@ -134,10 +150,10 @@ package body BC.Support.Unbounded is
          Insert (Obj, Elem);
       else
          declare
-            Temp_Node : Nodes.Node_Ref;
+            Temp_Node : Node_Ref;
          begin
             Update_Cache (Obj, Before);
-            Temp_Node := Nodes.Create (Elem,
+            Temp_Node := Create (Elem,
                                        Previous => Obj.Cache.Previous,
                                        Next => Obj.Cache);
             if Temp_Node.Previous = null then
@@ -151,7 +167,7 @@ package body BC.Support.Unbounded is
 
    procedure Append (Obj : in out Unb_Node; Elem : Item) is
    begin
-      Obj.Last := Nodes.Create (Elem, Previous => Obj.Last, Next => null);
+      Obj.Last := Create (Elem, Previous => Obj.Last, Next => null);
       if Obj.Last.Previous /= null then
          Obj.Last.Previous.Next := Obj.Last;
       end if;
@@ -173,10 +189,10 @@ package body BC.Support.Unbounded is
          Append (Obj, Elem);
       else
          declare
-            Temp_Node : Nodes.Node_Ref;
+            Temp_Node : Node_Ref;
          begin
             Update_Cache (Obj, After);
-            Temp_Node := Nodes.Create (Elem,
+            Temp_Node := Create (Elem,
                                        Previous => Obj.Cache,
                                        Next => Obj.Cache.Next);
             if Temp_Node.Previous /= null then
@@ -206,7 +222,7 @@ package body BC.Support.Unbounded is
          Clear (Obj);
       else
          declare
-            Ptr : Nodes.Node_Ref;
+            Ptr : Node_Ref;
          begin
             Update_Cache (Obj, From);
             Ptr := Obj.Cache;
@@ -243,7 +259,7 @@ package body BC.Support.Unbounded is
               BSE.Invalid_Index);
       if not ((Obj.Cache /= null) and then (Index = Obj.Cache_Index)) then
          declare
-            Ptr : Nodes.Node_Ref := Obj.Rep;
+            Ptr : Node_Ref := Obj.Rep;
          begin
             for I in 1 .. Obj.Size loop
                if I = Index then
@@ -332,7 +348,7 @@ package body BC.Support.Unbounded is
 
    function Location (Obj : Unb_Node; Elem : Item; Start : Positive := 1)
                      return Natural is
-      Ptr : Nodes.Node_Ref := Obj.Rep;
+      Ptr : Node_Ref := Obj.Rep;
       U : Allow_Access.Object_Pointer := Allow_Access.To_Pointer (Obj'Address);
    begin
       --  XXX the C++ (which indexes from 0) nevertheless checks
@@ -365,14 +381,14 @@ package body BC.Support.Unbounded is
    end Location;
 
    procedure Adjust (U : in out Unb_Node) is
-      Tmp : Nodes.Node_Ref := U.Last;
+      Tmp : Node_Ref := U.Last;
    begin
       if Tmp /= null then
-         U.Last := Nodes.Create (Tmp.Element, Previous => null, Next => null);
+         U.Last := Create (Tmp.Element, Previous => null, Next => null);
          U.Rep := U.Last;
          Tmp := Tmp.Previous;  -- move to previous node from orig list
          while Tmp /= null loop
-            U.Rep := Nodes.Create (Tmp.Element,
+            U.Rep := Create (Tmp.Element,
                                    Previous => null,
                                    Next => U.Rep);
             Tmp := Tmp.Previous;
@@ -383,7 +399,7 @@ package body BC.Support.Unbounded is
    end Adjust;
 
    procedure Finalize (U : in out Unb_Node) is
-      Ptr : Nodes.Node_Ref;
+      Ptr : Node_Ref;
    begin
       --  code to delete Rep copied from Clear()
       while U.Rep /= null loop
