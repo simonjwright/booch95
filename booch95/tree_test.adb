@@ -17,15 +17,16 @@
 
 -- $Id$
 
-with Text_Io;
+with Ada.Text_Io;
 with Tree_Test_Support;
 with Character_References;
 
+-- with BC.Containers.Trees.AVL.Print;
+
 procedure Tree_Test is
 
-  use Text_IO;
+  use Ada.Text_IO;
   use Tree_Test_Support;
---    use Character_References;
 
   procedure Assertion (Cond : Boolean; Message : String) is
   begin
@@ -36,7 +37,7 @@ procedure Tree_Test is
   pragma Inline (Assertion);
 
   -- I used this while trying to figure out my booboos. An example
-  -- (not good) of how to approach tree traversal.
+  -- (not particularly good) of how to approach tree traversal.
   procedure Print_Tree (T : TB.Binary_Tree;
                         Message : String := "";
                         Depth : Natural := 0) is
@@ -178,7 +179,7 @@ procedure Tree_Test is
     Assertion (Item_At (Tt1) = '7', "** B40: Tree item is not correct");
   end Test_Primitive;
 
-  B_Tree_P1, B_Tree_P2 : aliased TB.Binary_Tree;
+  B_Tree_P1, B_Tree_P2 : TB.Binary_Tree;
 
   procedure Test_Primitive (T1, T2 : in out TM.Multiway_Tree) is
     use TM;
@@ -285,7 +286,93 @@ procedure Tree_Test is
     Assertion (Item_At (Tt2) = '1', "** M47: Tree item is not correct");
   end Test_Primitive;
 
-  M_Tree_P1, M_Tree_P2 : aliased TM.Multiway_Tree;
+  M_Tree_P1, M_Tree_P2 : TM.Multiway_Tree;
+
+  -- procedure Print_Tree is new TA.Print (Character'Image);
+
+  procedure Test_Primitive (T : in out TA.Avl_Tree) is
+    use TA;
+    Result : Boolean;
+  begin
+    Assertion (Is_Null (T), "** A01: Tree is not null");
+    Insert (T, '4', Result);
+    Assertion (Result, "** A02: Tree insertion not correct");
+    Insert (T, '5', Result);
+    Assertion (Result, "** A03: Tree insertion not correct");
+    Insert (T, '7', Result);
+    Assertion (Result, "** A04: Tree insertion not correct");
+    Insert (T, '2', Result);
+    Assertion (Result, "** A05: Tree insertion not correct");
+    Insert (T, '1', Result);
+    Assertion (Result, "** A06: Tree insertion not correct");
+    Insert (T, '3', Result);
+    Assertion (Result, "** A07: Tree insertion not correct");
+    Insert (T, '6', Result);
+    Assertion (Result, "** A08: Tree insertion not correct");
+    Assertion (Is_Member (T, '3'), "** A09: Tree membership is not correct");
+    Assertion (Is_Member (T, '7'), "** A10: Tree membership is not correct");
+    Assertion (not Is_Member (T, 'g'), "** A11: Tree membership is not correct");
+    Assertion (not Is_Null (T), "** A12: Tree is null");
+    Insert (T, '8', Result);
+    Assertion (Result, "** A13: Tree insertion not correct");
+    Insert (T, '9', Result);
+    Assertion (Result, "** A14: Tree insertion not correct");
+    Insert (T, 'A', Result);
+    Assertion (Result, "** A15: Tree insertion not correct");
+    Insert (T, 'B', Result);
+    Assertion (Result, "** A16: Tree insertion not correct");
+    -- Print_Tree (T);
+    declare
+      procedure Process (C : Character; Result : out Boolean) is
+      begin
+        Put_Line ("      Item: " & C);
+        Result := True;
+      end Process;
+      procedure Visit is new TA.Visit (Process);
+    begin
+      Visit (T);
+    end;
+    Delete (T, '3', Result);
+    Assertion (Result, "** A17: Tree deletion is not correct");
+    Delete (T, 'g', Result);
+    Assertion (not Result, "** A18: Tree deletion is not correct");
+    Delete (T, '5', Result);
+    Assertion (Result, "** A19: Tree deletion is not correct");
+    Delete (T, 'A', Result);
+    Assertion (Result, "** A20: Tree deletion is not correct");
+    -- Print_Tree (T);
+    Delete (T, 'A', Result);
+    Assertion (not Result, "** A21: Tree deletion is not correct");
+    Delete (T, '8', Result);
+    Assertion (Result, "** A22: Tree deletion is not correct");
+    Delete (T, '4', Result);
+    Assertion (Result, "** A23: Tree deletion is not correct");
+    Delete (T, '9', Result);
+    Assertion (Result, "** A24: Tree deletion is not correct");
+    Delete (T, '2', Result);
+    Assertion (Result, "** A25: Tree deletion is not correct");
+    Delete (T, '6', Result);
+    Assertion (Result, "** A26: Tree deletion is not correct");
+    Delete (T, '1', Result);
+    Assertion (Result, "** A27: Tree deletion is not correct");
+    Delete (T, 'B', Result);
+    Assertion (Result, "** A28: Tree deletion is not correct");
+    Delete (T, '7', Result);
+    Assertion (Result, "** A29: Tree deletion is not correct");
+    Assertion (Is_Null (T), "** A30: Tree is not null");
+    Insert (T, '4', Result);
+    Insert (T, '5', Result);
+    Insert (T, '7', Result);
+    Insert (T, '2', Result);
+    Assertion (Extent (T) = 4, "** A31: Tree extent is not correct");
+    Delete (T, '4', Result);
+    Assertion (Result, "** A32: Tree deletion is not correct");
+    Clear (T);
+    Assertion (Extent (T) = 0, "** A33: Tree extent is not correct");
+    Assertion (Is_Null (T), "** A34: Tree is not null");
+  end Test_Primitive;
+
+  A_Tree_P1 : TA.Avl_Tree;
 
 begin
 
@@ -297,7 +384,8 @@ begin
   Put_Line ("...Multiway Tree");
   Test_Primitive (M_Tree_P1, M_Tree_P2);
 
-  Put_Line ("...sorry, no AVL trees yet.");
+  Put_Line ("...AVL Tree");
+  Test_Primitive (A_Tree_P1);
 
   Put_Line ("Completed Tree tests");
 
