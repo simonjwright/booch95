@@ -41,6 +41,11 @@ package body BC.Support.Hash_Tables is
                  renames Items.Item_At (L.Items (B).all, Index);
               function "=" (L, R : Values.Value) return Boolean
                  renames Values."=";
+              -- There seems to be a problem wrt the 'function "=" (L,
+              -- R : Values.Value) return Boolean"'. This version
+              -- works with GNAT 3.12, OA & APEX. Other versions (eg,
+              -- 'use type Values.Value', 'Values."="') cause problems
+              -- with one or the other.
             begin
               if not Is_Bound (R, This_Item)
                  or else not (Values.Item_At (L.Values (B).all, Index)
@@ -104,6 +109,7 @@ package body BC.Support.Hash_Tables is
       Values.Remove (T.Values (Bucket).all, Index);
       T.Size := T.Size - 1;
     end Unbind;
+
 
     function Extent (T : Table) return Natural is
     begin
