@@ -203,16 +203,16 @@ stream_test_support-tc[bdu].ad[bs]
 stream_test: force
 
 ADA_SOURCE += \
-bc-trees-avl.ad[bs] \
-bc-trees-avl-print.ad[bs] \
-bc-trees-avl-validate.ad[bs] \
-bc-trees-binary.ad[bs] \
-bc-trees-binary-in_order.ad[bs] \
-bc-trees-binary-post_order.ad[bs] \
-bc-trees-binary-pre_order.ad[bs] \
-bc-trees-multiway.ad[bs] \
-bc-trees-multiway-post_order.ad[bs] \
-bc-trees-multiway-pre_order.ad[bs] \
+bc-trees-avl_trees.ad[bs] \
+bc-trees-avl_trees-print.ad[bs] \
+bc-trees-avl_trees-validate.ad[bs] \
+bc-trees-binary_trees.ad[bs] \
+bc-trees-binary_trees-in_order.ad[bs] \
+bc-trees-binary_trees-post_order.ad[bs] \
+bc-trees-binary_trees-pre_order.ad[bs] \
+bc-trees-multiway_trees.ad[bs] \
+bc-trees-multiway_trees-post_order.ad[bs] \
+bc-trees-multiway_trees-pre_order.ad[bs] \
 bc-trees.ad[bs]
 TESTABLE += tree_test
 TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs]
