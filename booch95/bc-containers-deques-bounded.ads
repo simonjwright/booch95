@@ -78,12 +78,9 @@ private
                              Maximum_Size => Maximum_Size);
 
   type Deque is new Abstract_Deque with record
-    Rep : Deque_Nodes.Bnd_Node_Ref := new Deque_Nodes.Bnd_Node;
+    Rep : Deque_Nodes.Bnd_Node;
   end record;
 
   function Item_At (D : Deque; Index : Positive) return Item_Ptr;
-
-  procedure Adjust (D : in out Deque);
-  procedure Finalize (D : in out Deque);
 
 end BC.Containers.Deques.Bounded;
