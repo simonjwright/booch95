@@ -38,16 +38,19 @@ procedure Time_Queues is
       Total := Total + Elem;
       Ok := True;
     end Apply;
-    procedure B_Application is new Queues_For_Timing.C.Visit (Apply, B);
-    procedure D_Application is new Queues_For_Timing.C.Visit (Apply, D);
-    procedure U_Application is new Queues_For_Timing.C.Visit (Apply, U);
+    procedure B_Application is new Queues_For_Timing.C.Visit (Apply);
+    procedure D_Application is new Queues_For_Timing.C.Visit (Apply);
+    procedure U_Application is new Queues_For_Timing.C.Visit (Apply);
     Start : Ada.Calendar.Time;
     Taken : Duration;
+    It : Queues_For_Timing.C.Iterator;
     use type Ada.Calendar.Time;
   begin
     Total := 0;
+    It := Queues_For_Timing.C.New_Iterator
+       (Queues_For_Timing.C.Container'Class (B));
     Start := Ada.Calendar.Clock;
-    B_Application;
+    B_Application (It);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
        (".. bounded queue took"
@@ -55,8 +58,10 @@ procedure Time_Queues is
         & " sec, sum"
         & Integer'Image (Total));
     Total := 0;
+    It := Queues_For_Timing.C.New_Iterator
+       (Queues_For_Timing.C.Container'Class (D));
     Start := Ada.Calendar.Clock;
-    D_Application;
+    D_Application (It);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
        (".. dynamic queue took"
@@ -64,8 +69,10 @@ procedure Time_Queues is
         & " sec, sum"
         & Integer'Image (Total));
     Total := 0;
+    It := Queues_For_Timing.C.New_Iterator
+       (Queues_For_Timing.C.Container'Class (U));
     Start := Ada.Calendar.Clock;
-    U_Application;
+    U_Application (It);
     Taken := Ada.Calendar.Clock - Start;
     Ada.Text_Io.Put_Line
        (".. unbounded queue took"
