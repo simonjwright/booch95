@@ -37,30 +37,35 @@ package body BC.Containers is
     return null;
   end Item_At;
 
-  procedure Reset (Obj : in out Iterator) is
+  procedure Reset (It : in out Iterator) is
   begin
-    Reset (SP.Value (SP.Pointer (Obj)).all);
+    Reset (SP.Value (SP.Pointer (It)).all);
   end Reset;
 
-  procedure Next (Obj : in out Iterator) is
+  procedure Next (It : in out Iterator) is
   begin
-    Next (SP.Value (SP.Pointer (Obj)).all);
+    Next (SP.Value (SP.Pointer (It)).all);
   end Next;
 
-  function Is_Done (Obj : Iterator) return Boolean is
+  function Is_Done (It : Iterator) return Boolean is
   begin
-    return Is_Done (SP.Value (SP.Pointer (Obj)).all);
+    return Is_Done (SP.Value (SP.Pointer (It)).all);
   end Is_Done;
 
-  function Current_Item (Obj : Iterator) return Item is
+  function Current_Item (It : Iterator) return Item is
   begin
-    return Current_Item (SP.Value (SP.Pointer (Obj)).all);
+    return Current_Item (SP.Value (SP.Pointer (It)).all);
   end Current_Item;
 
   procedure Access_Current_Item is
   begin
     Apply (Current_Item (SP.Value (SP.Pointer (In_The_Iterator)).all).all);
   end Access_Current_Item;
+
+  procedure Delete_Item_At (It : Iterator) is
+  begin
+    Delete_Item_At (SP.Value (SP.Pointer (It)).all);
+  end Delete_Item_At;
 
   procedure Visit (Using : in out Iterator) is
     Success : Boolean;

@@ -39,16 +39,16 @@ package BC.Containers is
     is abstract;
   -- Return a reset Iterator bound to the specific Container.
 
-  procedure Reset (Obj : in out Iterator);
+  procedure Reset (It : in out Iterator);
   -- Reset the Iterator to the beginning.
 
-  procedure Next (Obj : in out Iterator);
+  procedure Next (It : in out Iterator);
   -- Advance the Iterator to the next Item in the Container.
 
-  function Is_Done (Obj : Iterator) return Boolean;
+  function Is_Done (It : Iterator) return Boolean;
   -- Return True if there are no more Items in the Container.
 
-  function Current_Item (Obj : Iterator) return Item;
+  function Current_Item (It : Iterator) return Item;
   -- Return a copy of the current Item.
 
   generic
@@ -56,6 +56,9 @@ package BC.Containers is
     In_The_Iterator : Iterator;
   procedure Access_Current_Item;
   -- Call Apply for the Iterator's current Item.
+
+  procedure Delete_Item_At (It : Iterator);
+  -- Remove the current item.
 
   -- Passive iteration
 
@@ -133,9 +136,9 @@ private
 
   function Cardinality (C : Container) return Natural;
 
-  procedure Purge (C : in out Container);
-
   function Item_At (C : Container; Index : Positive) return Item_Ptr;
+
+  procedure Purge (C : in out Container);
 
   -- Actual_Iterators are strongly dependent on the concrete Container
   -- implementation. The externally-visible Iterator is implemented as
@@ -149,15 +152,17 @@ private
 
   type Iterator_P is access Actual_Iterator'Class;
 
-  procedure Reset (Obj : in out Actual_Iterator) is abstract;
+  procedure Reset (It : in out Actual_Iterator) is abstract;
 
-  procedure Next (Obj : in out Actual_Iterator) is abstract;
+  procedure Next (It : in out Actual_Iterator) is abstract;
 
-  function Is_Done (Obj : Actual_Iterator) return Boolean is abstract;
+  function Is_Done (It : Actual_Iterator) return Boolean is abstract;
 
-  function Current_Item (Obj : Actual_Iterator) return Item is abstract;
+  function Current_Item (It : Actual_Iterator) return Item is abstract;
 
-  function Current_Item (Obj : Actual_Iterator) return Item_Ptr is abstract;
+  function Current_Item (It : Actual_Iterator) return Item_Ptr is abstract;
+
+  procedure Delete_Item_At (It : Actual_Iterator) is abstract;
 
   package SP is new BC.Smart (T => Actual_Iterator'Class, P => Iterator_P);
 
