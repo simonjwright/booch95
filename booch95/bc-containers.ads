@@ -130,6 +130,11 @@ package BC.Containers is
 
 private
 
+   --  Suppress "unreferenced" warnings here (GNAT 5.02). Can't use
+   --  pragma Unreferenced, because then we get warnings in child
+   --  packages.
+   pragma Warnings (Off, "=");
+
    --  We need access to Items; but we must make sure that no actual
    --  allocations occur using this type.
 
