@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -53,10 +53,19 @@ package body BC.Containers.Stacks is
     end loop;
   end Copy;
 
-  procedure Add (Obj : in out Stack; Elem : Item) is
+  -- Subprograms to be overridden
+
+  procedure Add (S : in out Stack; Elem : Item) is
   begin
     raise Should_Have_Been_Overridden;
   end Add;
+
+  procedure Remove (S : in out Stack; From : Positive) is
+  begin
+    raise Should_Have_Been_Overridden;
+  end Remove;
+
+  -- Iterators
 
   procedure Initialize (It : in out Stack_Iterator) is
   begin
@@ -97,5 +106,13 @@ package body BC.Containers.Stacks is
     end if;
     return Item_At (It.S.all, It.Index);
   end Current_Item;
+
+  procedure Delete_Item_At (It : Stack_Iterator) is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    Remove (It.S.all, It.Index);
+  end Delete_Item_At;
 
 end BC.Containers.Stacks;
