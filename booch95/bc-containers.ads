@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller, Steve Doiel
+-- Copyright (C) 1994-2001 Grady Booch, David Weller, Steve Doiel
 -- and Simon Wright.
 -- All Rights Reserved.
 --
@@ -149,6 +149,7 @@ private
   -- Iteration
 
   type Container_Ptr is access all Container'Class;
+  for Container_Ptr'Storage_Size use 0;
 
   type Iterator is abstract new Ada.Finalization.Controlled with record
     For_The_Container : Container_Ptr;
