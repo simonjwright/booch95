@@ -112,17 +112,6 @@ private
 
    type Abstract_Set is abstract new Container with null record;
 
-   procedure Attach (S : in out Abstract_Set; I : Item);
-
-   procedure Detach (S : in out Abstract_Set; I : Item);
-
-   function Number_Of_Buckets (S : Abstract_Set) return Natural;
-
-   function Length (S : Abstract_Set; Bucket : Positive) return Natural;
-
-   function Item_At
-     (S : Abstract_Set; Bucket, Index : Positive) return Item_Ptr;
-
    type Set_Iterator is abstract new Iterator with record
       Bucket_Index : Natural := 0;
       Index : Natural := 0;

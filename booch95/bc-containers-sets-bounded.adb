@@ -95,33 +95,6 @@ package body BC.Containers.Sets.Bounded is
       return Result;
    end New_Iterator;
 
-   --  Private implementations
-
-   --  XXX there is another Attach() which I don't understand
-
-   procedure Attach (S : in out Unconstrained_Set; I : Item) is
-   begin
-      Tables.Bind (S.Rep, I, True);
-   end Attach;
-
-   procedure Detach (S : in out Unconstrained_Set; I : Item) is
-   begin
-      Tables.Unbind (S.Rep, I);
-   end Detach;
-
-   function Number_Of_Buckets (S : Unconstrained_Set) return Natural is
-      pragma Warnings (Off, S);
-   begin
-      return Buckets;
-   end Number_Of_Buckets;
-
-   function Item_At (S : Unconstrained_Set;
-                     Bucket, Index : Positive) return Item_Ptr is
-      pragma Warnings (Off, Bucket);
-   begin
-      return Tables.Access_Item_At (S.Rep, Index);
-   end Item_At;
-
    --  Null containers
 
    Empty_Container : Set;

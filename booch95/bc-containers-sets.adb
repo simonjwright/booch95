@@ -49,7 +49,7 @@ package body BC.Containers.Sets is
             This_Item : Item renames Current_Item (It);
          begin
             if not Is_Member (S, This_Item) then
-               Attach (S, This_Item);
+               Add (S, This_Item);
             end if;
          end;
          Next (It);
@@ -68,7 +68,7 @@ package body BC.Containers.Sets is
             This_Item : Item renames Current_Item (It);
          begin
             if not Is_Member (O, This_Item) then
-               Detach (S, This_Item);
+               Remove (S, This_Item);
             end if;
             Next (It);
          end;
@@ -86,7 +86,7 @@ package body BC.Containers.Sets is
             This_Item : Item renames Current_Item (It);
          begin
             if Is_Member (S, This_Item) then
-               Detach (S, This_Item);
+               Remove (S, This_Item);
             end if;
          end;
          Next (It);
@@ -134,36 +134,5 @@ package body BC.Containers.Sets is
    begin
       return Natural'Last;
    end Available;
-
-   --  Subprograms to be overridden
-
-   procedure Attach (S : in out Abstract_Set; I : Item) is
-   begin
-      raise Should_Have_Been_Overridden;
-   end Attach;
-
-   procedure Detach (S : in out Abstract_Set; I : Item) is
-   begin
-      raise Should_Have_Been_Overridden;
-   end Detach;
-
-   function Number_Of_Buckets (S : Abstract_Set) return Natural is
-   begin
-      raise Should_Have_Been_Overridden;
-      return 0;
-   end Number_Of_Buckets;
-
-   function Length (S : Abstract_Set; Bucket : Positive) return Natural is
-   begin
-      raise Should_Have_Been_Overridden;
-      return 0;
-   end Length;
-
-   function Item_At (S : Abstract_Set;
-                     Bucket, Index : Positive) return Item_Ptr is
-   begin
-      raise Should_Have_Been_Overridden;
-      return null;
-   end Item_At;
 
 end BC.Containers.Sets;
