@@ -101,7 +101,7 @@ private
    package Items is new BC.Support.Bounded_Hash_Tables.Item_Signature
      (Item => Item,
       Item_Ptr => Item_Ptr,
-      Eq => "=",
+      Eq => Containers."=",
       Hash => Hash);
 
    --  We need a dummy type for the Value component of the hash table.
