@@ -102,10 +102,9 @@ private
 
   package Tables is new BC.Support.Hash_Tables
      (Item => Item,
-      Item_Ptr => Item_Ptr,
       Value => Value,
       Value_Ptr => Value_Ptr,
-      Buckets => buckets,
+      Buckets => Buckets,
       Item_Container => IC.Bnd_Node,
       Item_Container_Ptr => IC.Bnd_Node_Ref,
       Value_Container => VC.Bnd_Node,
