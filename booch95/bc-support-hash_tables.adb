@@ -20,6 +20,7 @@
 --  $Date$
 --  $Author$
 
+with Ada.Exceptions;
 with BC.Support.Exceptions;
 
 package body BC.Support.Hash_Tables is
@@ -148,19 +149,22 @@ package body BC.Support.Hash_Tables is
                        Bucket : out Positive;
                        Index : out Positive) is
       begin
-         Index := Positive'Last;         --  we have to ensure it's > 0
          if T.Size = 0 then
             Bucket := T.Number_Of_Buckets + 1;
+            Index := Positive'Last;         --  we have to ensure it's > 0
          else
             Bucket := 1;
             loop
                exit when Bucket > T.Number_Of_Buckets;
                if Items.Length (T.Items (Bucket)) > 0 then
                   Index := 1;
-                  exit;
+                  return;
                end if;
                Bucket := Bucket + 1;
             end loop;
+            Ada.Exceptions.Raise_Exception
+              (Program_Error'Identity,
+               "BC.Support.Hash_Tables.Reset: no items found");
          end if;
       end Reset;
 
