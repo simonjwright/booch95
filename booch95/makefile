@@ -27,15 +27,19 @@ all::
 # The -Wl,-u,malloc forces the malloc symbol to be required so as to ensure
 # that it's satisfied from libccmalloc.a.
 
-#MEMORY_CHECK = \
-#  -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
-GNATMAKE_FLAGS = -O3 -g -gnata -gnatwu
+MEMORY_CHECK = \
+  -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
+GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu -gnatwl
 
 test: testable
 	for t in $(TESTABLE); do \
 	  echo running $$t; \
 	  ./$$t 2>$$t.log; \
 	done
+
+TESTABLE += avl_test
+avl_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += bag_test
 bag_test: force
