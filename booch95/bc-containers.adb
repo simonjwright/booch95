@@ -35,7 +35,7 @@ package body BC.Containers is
    begin
       Reset (Using);
       while not Is_Done (Using) loop
-         Apply (Current_Item (Using), Success);
+         Apply (Current_Item_Ptr (Using).all, Success);
          exit when not Success;
          Next (Using);
       end loop;
@@ -47,7 +47,7 @@ package body BC.Containers is
    begin
       Reset (Using);
       while not Is_Done (Using) loop
-         Apply (Current_Item (Using), Param, Success);
+         Apply (Current_Item_Ptr (Using).all, Param, Success);
          exit when not Success;
          Next (Using);
       end loop;
@@ -59,7 +59,7 @@ package body BC.Containers is
    begin
       Reset (Using);
       while not Is_Done (Using) loop
-         Apply (Current_Item (Using), Param, Success);
+         Apply (Current_Item_Ptr (Using).all, Param, Success);
          exit when not Success;
          Next (Using);
       end loop;
@@ -67,16 +67,10 @@ package body BC.Containers is
 
    procedure Modify (Using : in out Iterator'Class) is
       Success : Boolean;
-      procedure Caller (I : in out Item);
-      procedure Call_Apply is new Access_Current_Item (Caller);
-      procedure Caller (I : in out Item) is
-      begin
-         Apply (I, Success);
-      end Caller;
    begin
       Reset (Using);
       while not Is_Done (Using) loop
-         Call_Apply (Using);
+         Apply (Current_Item_Ptr (Using).all, Success);
          exit when not Success;
          Next (Using);
       end loop;
@@ -85,16 +79,10 @@ package body BC.Containers is
    procedure Modify_With_In_Param (Using : in out Iterator'Class;
                                    Param : in Param_Type) is
       Success : Boolean;
-      procedure Caller (I : in out Item);
-      procedure Call_Apply is new Access_Current_Item (Caller);
-      procedure Caller (I : in out Item) is
-      begin
-         Apply (I, Param, Success);
-      end Caller;
    begin
       Reset (Using);
       while not Is_Done (Using) loop
-         Call_Apply (Using);
+         Apply (Current_Item_Ptr (Using).all, Param, Success);
          exit when not Success;
          Next (Using);
       end loop;
@@ -103,16 +91,10 @@ package body BC.Containers is
    procedure Modify_With_In_Out_Param (Using : in out Iterator'Class;
                                        Param : in out Param_Type) is
       Success : Boolean;
-      procedure Caller (I : in out Item);
-      procedure Call_Apply is new Access_Current_Item (Caller);
-      procedure Caller (I : in out Item) is
-      begin
-         Apply (I, Param, Success);
-      end Caller;
    begin
       Reset (Using);
       while not Is_Done (Using) loop
-         Call_Apply (Using);
+         Apply (Current_Item_Ptr (Using).all, Param, Success);
          exit when not Success;
          Next (Using);
       end loop;
