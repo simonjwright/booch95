@@ -230,6 +230,7 @@ procedure Collection_Test is
    Collection_B_P1, Collection_B_P2 : CB.Collection;
    Collection_D_P1, Collection_D_P2 : CD.Collection;
    Collection_U_P1, Collection_U_P2 : CU.Collection;
+   Collection_UM_P1, Collection_UM_P2 : CUM.Collection;
 
 begin
 
@@ -245,6 +246,9 @@ begin
    Put_Line ("...Unbounded Collection");
    Test_Primitive (Collection_U_P1, Collection_U_P2);
 
+   Put_Line ("...Unmanaged Collection");
+   Test_Primitive (Collection_UM_P1, Collection_UM_P2);
+
    Put_Line ("...Collection Active Iterator");
    Put_Line ("   Bounded:");
    Test_Active_Iterator (Collection_B_P1);
@@ -252,6 +256,8 @@ begin
    Test_Active_Iterator (Collection_D_P1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (Collection_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Collection_UM_P1);
 
    Put_Line ("...Collection Passive Iterator");
    Put_Line ("   Bounded:");
@@ -263,6 +269,9 @@ begin
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (Collection_U_P1);
    Test_Passive_Modifying_Iterator (Collection_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Collection_UM_P1);
+   Test_Passive_Modifying_Iterator (Collection_UM_P1);
 
    Put_Line ("...Collection Iterator Deletion");
    Put_Line ("   Bounded:");
@@ -271,6 +280,8 @@ begin
    Test_Iterator_Deletion (Collection_D_P1);
    Put_Line ("   Unbounded:");
    Test_Iterator_Deletion (Collection_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Iterator_Deletion (Collection_UM_P1);
 
    Put_Line ("Completed Collection tests");
 
