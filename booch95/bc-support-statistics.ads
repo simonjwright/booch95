@@ -50,7 +50,7 @@ private
       Count : Natural := 0;
       Min : Long_Float := Long_Float'Last;
       Max : Long_Float := Long_Float'First;
-      Summed_Data : Positive_Long_Float := 0.0;
+      Summed_Data : Float := 0.0;
       Summed_Squared_Data : Positive_Long_Float := 0.0;
    end record;
 
