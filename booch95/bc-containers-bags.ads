@@ -67,17 +67,17 @@ package BC.Containers.Bags is
    --  operation, the bag B contains the items and counts found in its
    --  original state combined with the bag O. For each item in the
    --  bag O, if the item is not already a distinct member of the bag
-   --  S, copy the item and add it and its count to the bag S. If the
-   --  item already is a member, increment its count in S.
+   --  B, copy the item and add it and its count to the bag B. If the
+   --  item already is a member, increment its count in B.
 
    procedure Intersection (B : in out Abstract_Bag'Class;
                            O : Abstract_Bag'Class);
    --  Perform a logical bag intersection; at the completion of this
    --  operation, the bag B contains the items found both in its
    --  original state and in the bag O. For each item in the bag O, if
-   --  the item is not already a distinct member of the bag S, do
-   --  nothing. If the item already is a member of S, set its count to
-   --  the lower of the two counts. Items in the bag S but not in the
+   --  the item is not already a distinct member of the bag B, do
+   --  nothing. If the item already is a member of B, set its count to
+   --  the lower of the two counts. Items in the bag B but not in the
    --  bag O are also removed.
 
    procedure Difference (B : in out Abstract_Bag'Class;
@@ -85,11 +85,11 @@ package BC.Containers.Bags is
    --  Perform a logical bag difference; at the completion of this
    --  operation, the bag B contains the items found in its original
    --  state, less those found in the bag O. For each item in the bag
-   --  O, if the item is not already a distinct member of the bag S,
-   --  do nothing. If the item is a member of the bag S with a count
-   --  less than that in the bag O, remove the item from the bag S. If
-   --  the item is a member of the bag S with a count more than that
-   --  in the bag O, decrement the count in the bag S by the count in
+   --  O, if the item is not already a distinct member of the bag B,
+   --  do nothing. If the item is a member of the bag B with a count
+   --  less than that in the bag O, remove the item from the bag B. If
+   --  the item is a member of the bag B with a count more than that
+   --  in the bag O, decrement the count in the bag B by the count in
    --  the bag O.
 
    function Available (B : Abstract_Bag) return Natural;
