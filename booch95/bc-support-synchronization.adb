@@ -206,7 +206,10 @@ package body BC.Support.Synchronization is
 
    procedure Finalize (The_Lock : in out Lock) is
    begin
-      Release (The_Lock.Using.all);
+      if not The_Lock.Finalized then
+         The_Lock.Finalized := True;
+         Release (The_Lock.Using.all);
+      end if;
    end Finalize;
 
    --  Read_Lock  --
@@ -218,7 +221,10 @@ package body BC.Support.Synchronization is
 
    procedure Finalize (The_Lock : in out Read_Lock) is
    begin
-      Release_From_Reading (The_Lock.Using.all);
+      if not The_Lock.Finalized then
+         The_Lock.Finalized := True;
+         Release_From_Reading (The_Lock.Using.all);
+      end if;
    end Finalize;
 
    --  Write_Lock  --
@@ -230,7 +236,10 @@ package body BC.Support.Synchronization is
 
    procedure Finalize (The_Lock : in out Write_Lock) is
    begin
-      Release_From_Writing (The_Lock.Using.all);
+      if not The_Lock.Finalized then
+         The_Lock.Finalized := True;
+         Release_From_Writing (The_Lock.Using.all);
+      end if;
    end Finalize;
 
 end BC.Support.Synchronization;
