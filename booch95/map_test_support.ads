@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -20,6 +20,7 @@ with BC.Containers.Maps;
 with BC.Containers.Maps.Bounded;
 with BC.Containers.Maps.Dynamic;
 with BC.Containers.Maps.Unbounded;
+with BC.Containers.Maps.Unmanaged;
 with BC.Support.Standard_Storage;
 with Chunks;
 with Global_Heap;
@@ -48,6 +49,9 @@ package Map_Test_Support is
       Buckets => 3,
       Storage => BC.Support.Standard_Storage.Pool);
 
+   package MUM is new Maps.Unmanaged
+     (Hash => Char_Hash,
+      Buckets => 3);
    Gitems : array (1 .. 7) of aliased Chunks.Chunk;
 
 end Map_Test_Support;
