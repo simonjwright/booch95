@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -47,12 +47,6 @@ package BC.Graphs is
                            V : in out Vertex'Class;
                            I : Vertex_Item);
 
-  procedure Create_Arc (G : in out Graph;
-                        A : in out Arc'Class;
-                        I : Arc_Item;
-                        From : in out Vertex'Class;
-                        To : in out Vertex'Class);
-
   procedure Destroy_Vertex (G : in out Graph;
                             V : in out Vertex'Class);
 
@@ -85,10 +79,6 @@ package BC.Graphs is
 
   function Item (V : Vertex) return Vertex_Item_Ptr;  -- hmm
 
-  function Number_Of_Incoming_Arcs (V : Vertex) return Natural;
-
-  function Number_Of_Outgoing_Arcs (V : Vertex) return Natural;
-
   function Enclosing_Graph (V : Vertex) return Graph_Ptr;
 
   --------------------
@@ -101,10 +91,6 @@ package BC.Graphs is
 
   procedure Set_Item (A : in out Arc; I : Arc_Item);
 
-  procedure Set_From_Vertex (A : in out Arc; V : access Vertex'Class);
-
-  procedure Set_To_Vertex (A : in out Arc; V : access Vertex'Class);
-
   function Is_Null (A : Arc) return Boolean;
 
   function Is_Shared (A : Arc) return Boolean;
@@ -112,10 +98,6 @@ package BC.Graphs is
   function Item (A : Arc) return Arc_Item;
 
   function Item (A : Arc) return Arc_Item_Ptr;
-
-  procedure From_Vertex (A : Arc; V : in out Vertex'Class);
-
-  procedure To_Vertex (A : Arc; V : in out Vertex'Class);
 
   function Enclosing_Graph (A : Arc) return Graph_Ptr;
 
