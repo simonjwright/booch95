@@ -75,13 +75,31 @@ package BC.Graphs.Directed is
   -- Iteration support --
   -----------------------
 
+  -- Standard iteration over a Vertex only visits outgoing Arcs.
+
   function New_Graph_Iterator (For_The_Graph : Directed_Graph)
                                return Graph_Iterator;
   -- Return a reset Iterator bound to the specific Graph.
 
   function New_Vertex_Iterator (For_The_Vertex : Directed_Vertex)
                                 return Vertex_Iterator;
-  -- Return a reset Iterator bound to the specific Vertex.
+  -- Return a reset Iterator bound to the specific Vertex; only outgoing
+  -- Arcs are visited.
+
+  -----------------------------------------
+  -- Vertex iteration over incoming arcs --
+  -----------------------------------------
+
+  function New_Vertex_Incoming_Iterator
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator;
+  -- Return a reset Iterator bound to the specific Vertex; only incoming
+  -- Arcs are visited.
+
+  generic
+    with procedure Apply (Elem : in Arc'Class; OK : out Boolean);
+  procedure Visit_Incoming_Arcs (Over_The_Vertex : Directed_Vertex);
+  -- Call Apply with a handle on each incoming Arc in the Vertex. The iteration
+  -- will terminate early if Apply sets OK to False.
 
 private
 
@@ -104,19 +122,34 @@ private
 
   function Current_Vertex (It : Directed_Graph_Iterator) return Vertex'Class;
 
-  type Directed_Vertex_Iterator (D : access Directed_Vertex'Class)
+  type Directed_Vertex_Outgoing_Iterator (D : access Directed_Vertex'Class)
      is new Actual_Vertex_Iterator (D) with record
     Index : Arc_Node_Ptr;
   end record;
 
-  procedure Initialize (It : in out Directed_Vertex_Iterator);
+  procedure Initialize (It : in out Directed_Vertex_Outgoing_Iterator);
 
-  procedure Reset (It : in out Directed_Vertex_Iterator);
+  procedure Reset (It : in out Directed_Vertex_Outgoing_Iterator);
 
-  procedure Next (It : in out Directed_Vertex_Iterator);
+  procedure Next (It : in out Directed_Vertex_Outgoing_Iterator);
 
-  function Is_Done (It : Directed_Vertex_Iterator) return Boolean;
+  function Is_Done (It : Directed_Vertex_Outgoing_Iterator) return Boolean;
 
-  function Current_Arc (It : Directed_Vertex_Iterator) return Arc'Class;
+  function Current_Arc (It : Directed_Vertex_Outgoing_Iterator) return Arc'Class;
+
+  type Directed_Vertex_Incoming_Iterator (D : access Directed_Vertex'Class)
+     is new Actual_Vertex_Iterator (D) with record
+    Index : Arc_Node_Ptr;
+  end record;
+
+  procedure Initialize (It : in out Directed_Vertex_Incoming_Iterator);
+
+  procedure Reset (It : in out Directed_Vertex_Incoming_Iterator);
+
+  procedure Next (It : in out Directed_Vertex_Incoming_Iterator);
+
+  function Is_Done (It : Directed_Vertex_Incoming_Iterator) return Boolean;
+
+  function Current_Arc (It : Directed_Vertex_Incoming_Iterator) return Arc'Class;
 
 end BC.Graphs.Directed;
