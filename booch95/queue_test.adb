@@ -119,6 +119,22 @@ procedure Queue_Test is
     Assertion ((Front (Q2) = '2'), "** P36: Queue front is not correct");
     Remove(Q2, 1);
     Assertion ((Length (Q2) = 0), "** P37: Queue length is not correct");
+    Append(Q2, 'a');
+    Append(Q2, 'z');
+    declare
+      procedure P (Ch : in out Character) is
+      begin
+        Ch := Character'Succ (Ch);
+      end P;
+      procedure Acc is new Queues.Process_Front (P);
+    begin
+      Acc (Q2);
+    end;
+    Assertion (Length (Q2) = 2, "** P38: Queue length is not correct");
+    Assertion (Front (Q2) = 'b', "** P39: Queue front is not correct");
+    Remove (Q2, 1);
+    Assertion (Front (Q2) = 'z', "** P40: Queue front is not correct");
+    Remove (Q2, 1);
   end Test_Primitive;
 
   procedure Test_Passive_Iterator (Q : Container'Class) is
