@@ -27,7 +27,7 @@ with BC.Containers.Maps.Dynamic;
 with BC.Containers.Maps.Unbounded;
 with BC.Containers.Maps.Unbounded.Guarded;
 with BC.Containers.Maps.Unbounded.Synchronized;
--- with BC.Containers.Maps.Synchronized;
+with BC.Containers.Maps.Synchronized;
 with BC.Support.Synchronization;
 with Chunks;
 with Global_Heap;
@@ -57,14 +57,14 @@ package Map_Test_Support is
   package MUG is new MU.Guarded
      (Semaphore =>  BC.Support.Synchronization.Semaphore);
 
---   package MUSA is new Maps.Synchronized
---      (Map_Base => MU.Unbounded_Map,
---       Monitor => BC.Support.Synchronization.Single_Monitor);
+  package MUSA is new Maps.Synchronized
+     (Map_Base => MU.Unbounded_Map,
+      Monitor => BC.Support.Synchronization.Single_Monitor);
 
-  package MUSC is new MU.Synchronized
-     (Monitor => BC.Support.Synchronization.Single_Monitor);
+--   package MUSC is new MU.Synchronized
+--      (Monitor => BC.Support.Synchronization.Single_Monitor);
 
-  package MUS renames MUSC;
+  package MUS renames MUSA;
 
   Gitems : array (0 .. 9) of aliased Chunks.Chunk;
 
