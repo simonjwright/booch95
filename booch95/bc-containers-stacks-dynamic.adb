@@ -64,12 +64,12 @@ package body BC.Containers.Stacks.Dynamic is
 
   function Top (Obj : in Dyn_Stack) return Item_Ptr is
   begin
-    return Dyn_Stack_Nodes.First (Obj.Rep.all'access);
+    return Dyn_Stack_Nodes.First (Obj.Rep.all);
   end Top;
 
   function Location (Obj : Dyn_Stack; Elem : Item) return Natural is
   begin
-    return Dyn_Stack_Nodes.Location (Obj.Rep.all'access, Elem);
+    return Dyn_Stack_Nodes.Location (Obj.Rep.all, Elem);
   end Location;
 
   procedure Preallocate (Obj : in out Dyn_Stack; Size : Natural) is
@@ -104,7 +104,7 @@ package body BC.Containers.Stacks.Dynamic is
 
   function Item_At (Obj : in Dyn_Stack; Index : in Natural) return Item_Ptr is
   begin
-    return Dyn_Stack_Nodes.Item_At (Obj.Rep, Index);
+    return Dyn_Stack_Nodes.Item_At (Obj.Rep.all, Index);
   end Item_At;
 
   procedure Initialize (Obj : in out Dyn_Stack) is
