@@ -308,6 +308,28 @@ package body BC.Containers.Trees.AVL is
 
   --end supporting functions
 
+  function "=" (L, R : AVL_Tree) return Boolean is
+    -- Once we know that the sizes are the same, we only need to check
+    -- that all members of L are in R, because we don't allow
+    -- duplicate members.
+    procedure Check_In_Right (Elem : in Item; Found : out Boolean);
+    procedure Compare is new Visit (Apply => Check_In_Right);
+    Are_Equal : Boolean := True;
+    procedure Check_In_Right (Elem : in Item; Found : out Boolean) is
+    begin
+      Found := Is_Member (R, Elem); -- to terminate early
+      if not Found then
+        Are_Equal := False;
+      end if;
+    end Check_In_Right;
+  begin
+    if L.Size /= R.Size then
+      return False;
+    end if;
+    Compare (Over_The_Tree => L);
+    return Are_Equal;
+  end "=";
+
   procedure Clear (Obj : in out AVL_Tree) is
   begin
     Purge (Obj.Rep);
@@ -466,6 +488,30 @@ package body BC.Containers.Trees.AVL is
   begin
     null;
   end Initialize;
+
+  procedure Adjust (Obj : in out AVL_Tree) is
+    New_Tree : AVL_Tree;
+    procedure Add (Elem : in Item; OK : out Boolean);
+    procedure Copy is new Visit (Apply => Add);
+    procedure Add (Elem : in Item; OK : out Boolean) is
+      Inserted : Boolean;
+    begin
+      Insert (Obj => New_Tree, Element => Elem, Not_Found => Inserted);
+      -- XXX should test Inserted?
+      OK := True;
+    end Add;
+  begin
+    -- Create a deep copy of the representation
+    Copy (Over_The_Tree => Obj);
+    -- Replace the original representation with the copy
+    Obj.Rep := New_Tree.Rep;
+    -- Null out the spare reference to the copy (so that when New_Tree
+    -- gets finalized on exit from this procedure, we don't Clear it
+    -- down). NB, mustn't do a whole-record assignment here or we'll
+    -- end up with a recursive disaster).
+    New_Tree.Rep := null;
+    New_Tree.Size := 0;
+  end Adjust;
 
   procedure Finalize (Obj : in out AVL_Tree) is
   begin
