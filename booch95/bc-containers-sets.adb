@@ -68,7 +68,8 @@ package body BC.Containers.Sets is
 
   procedure Intersection (S : in out Abstract_Set'Class;
                           O : Abstract_Set'Class) is
-    It : Iterator'Class := New_Iterator (S);
+    Tmp : Abstract_Set'Class := S;
+    It : Iterator'Class := New_Iterator (Tmp);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -78,9 +79,8 @@ package body BC.Containers.Sets is
       begin
         if not Is_Member (O, This_Item) then
           Detach (S, This_Item);
-        else
-          Next (It);
         end if;
+        Next (It);
       end;
     end loop;
   end Intersection;

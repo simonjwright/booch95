@@ -74,7 +74,8 @@ package body BC.Containers.Bags is
 
   procedure Intersection
      (B : in out Abstract_Bag'Class; O : Abstract_Bag'Class) is
-    It : Iterator'Class := New_Iterator (B);
+    Tmp : Abstract_Bag'Class := B;
+    It : Iterator'Class := New_Iterator (Tmp);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -85,7 +86,6 @@ package body BC.Containers.Bags is
       begin
         if not Is_Member (O, This_Item) then
           Detach (B, This_Item);
---           Delete_Item_At (It);
         else
           declare
             O_Count : Positive := Count (O, This_Item);
@@ -94,8 +94,8 @@ package body BC.Containers.Bags is
               Set_Value (B, This_Item, O_Count);
             end if;
           end;
-          Next (It);
         end if;
+        Next (It);
       end;
     end loop;
   end Intersection;
