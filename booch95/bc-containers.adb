@@ -64,6 +64,7 @@ package body BC.Containers is
   procedure Visit  (Using : in out Iterator) is
     Success : Boolean;
   begin
+    Reset (Using);
     while not Is_Done (Using) loop
       Apply (Current_Item (Using), Success);
       exit when not Success;
@@ -79,6 +80,7 @@ package body BC.Containers is
     end Caller;
     procedure Call_Apply is new Access_Current_Item (Caller, Using);
   begin
+    Reset (Using);
     while not Is_Done (Using) loop
       Call_Apply;
       exit when not Success;
