@@ -33,11 +33,11 @@ procedure Graph_Test is
     end if;
   end Assertion;
 
-  procedure Test_Directed (G : in out DG.Graph;
-                           V1, V2, V3 : in out DG.Vertex;
-                           A1, A2, A3 : in out DG.Arc) is
+  procedure Test_Directed (G : in out DG.Directed_Graph;
+                           V1, V2, V3 : in out DG.Directed_Vertex;
+                           A1, A2, A3 : in out DG.Directed_Arc) is
     --| BC_TDirectedArc<Char, CPtr, BC_CManaged> a4;
-    A4 : DG.Arc;
+    A4 : DG.Directed_Arc;
     use AG;
     use DG;
   begin
@@ -97,12 +97,16 @@ procedure Graph_Test is
     Assertion (Is_Member (G, V3),
                "** D14: Vertex is not a member of the graph");
     --| assertion((v1.EnclosingGraph().NumberOfVertices() == 7), "** D15: Number of vertices is not correct");
-    Assertion (Number_Of_Vertices (DG.Graph (Enclosing_Graph (V1).all)) = 7,
+    -- XXX don't like the type conversion here
+    Assertion (Number_Of_Vertices
+	       (DG.Directed_Graph (Enclosing_Graph (V1).all)) = 7,
                "** D15: Number of vertices is not correct");
     --| v3 = v1;
     V3 := V1;
     --| assertion((v3.EnclosingGraph().NumberOfVertices() == 7), "** D16: Number of vertices is not correct");
-    Assertion (Number_Of_Vertices (DG.Graph (Enclosing_Graph (V3).all)) = 7,
+    -- XXX don't like the type conversion here
+    Assertion (Number_Of_Vertices
+	       (DG.Directed_Graph (Enclosing_Graph (V3).all)) = 7,
                "** D16: Number of vertices is not correct");
     --| v3.Clear();
     Clear (V3);
@@ -248,7 +252,9 @@ procedure Graph_Test is
     Assertion (Item (A3) = '4',
                "** D51: Arc Item is not correct");
     --| assertion((a3.EnclosingGraph().NumberOfVertices() == 3), "** D52: Number of vertices is not correct");
-    Assertion (Number_Of_Vertices (DG.Graph (Enclosing_Graph (A3).all)) = 3,
+    -- XXX don't like the type conversion here
+    Assertion (Number_Of_Vertices
+                 (DG.Directed_Graph (Enclosing_Graph (A3).all)) = 3,
                "** D52: Number of vertices is not correct");
     --| a2 = a3;
     A2 := A3;
@@ -306,11 +312,11 @@ procedure Graph_Test is
     Set_From_Vertex (A4, V1'Access);
   end Test_Directed;
 
-  procedure Test_Undirected (G : in out UG.Graph;
-                           V1, V2, V3 : in out UG.Vertex;
-                           A1, A2, A3 : in out UG.Arc) is
+  procedure Test_Undirected (G : in out UG.Undirected_Graph;
+                           V1, V2, V3 : in out UG.Undirected_Vertex;
+                           A1, A2, A3 : in out UG.Undirected_Arc) is
     --|  BC_TUndirectedArc<Char, CPtr, BC_CManaged> a4;
-    A4 : UG.Arc;
+    A4 : UG.Undirected_Arc;
     use AG;
     use UG;
   begin
@@ -370,12 +376,16 @@ procedure Graph_Test is
     Assertion (Is_Member (G, V3),
                "** U14: Vertex is not a member of the graph");
     --| assertion((v1.EnclosingGraph().NumberOfVertices() == 7), "** U15: Number of vertices is not correct");
-    Assertion (Number_Of_Vertices (UG.Graph (Enclosing_Graph (V1).all)) = 7,
+    -- XXX don't like the type conversion here
+    Assertion (Number_Of_Vertices
+	       (UG.Undirected_Graph (Enclosing_Graph (V1).all)) = 7,
                "** U15: Number of vertices is not correct");
     --| v3 = v1;
     V3 := V1;
     --| assertion((v3.EnclosingGraph().NumberOfVertices() == 7), "** U16: Number of vertices is not correct");
-    Assertion (Number_Of_Vertices (UG.Graph (Enclosing_Graph (V3).all)) = 7,
+    -- XXX don't like the type conversion here
+    Assertion (Number_Of_Vertices
+               (UG.Undirected_Graph (Enclosing_Graph (V3).all)) = 7,
                "** U16: Number of vertices is not correct");
     --| v3.Clear();
     Clear (V3);
@@ -518,7 +528,9 @@ procedure Graph_Test is
     Assertion (Item (A3) = '4',
                "** U50: Arc Item is not correct");
     --| assertion((a3.EnclosingGraph().NumberOfVertices() == 3), "** U51: Number of vertices is not correct");
-    Assertion (Number_Of_Vertices (UG.Graph (Enclosing_Graph (A3).all)) = 3,
+    -- XXX don't like the type conversion here
+    Assertion (Number_Of_Vertices
+	       (UG.Undirected_Graph (Enclosing_Graph (A3).all)) = 3,
                "** U51: Number of vertices is not correct");
     --| a2 = a3;
     A2 := A3;
@@ -573,8 +585,8 @@ procedure Graph_Test is
     Set_First_Vertex (A4, V1'Access);
   end Test_Undirected;
 
-  procedure Process_Arc (A : DG.Arc; OK : out Boolean) is
-    V1, V2 : DG.Vertex;
+  procedure Process_Arc (A : DG.Directed_Arc; OK : out Boolean) is
+    V1, V2 : DG.Directed_Vertex;
     use DG;
   begin
     From_Vertex (A, V1);
@@ -594,11 +606,11 @@ procedure Graph_Test is
     OK := True;
   end Process_Arc;
 
-  procedure Process_Vertex (V : DG.Vertex; OK : out Boolean) is
-    Local_V : aliased DG.Vertex := V;
-    A : DG.Arc;
+  procedure Process_Vertex (V : DG.Directed_Vertex; OK : out Boolean) is
+    Local_V : aliased DG.Directed_Vertex := V;
+    A : DG.Directed_Arc;
     Dummy : Boolean;
-    Iter : DG.Vertex_Iterator (Local_V'Access);
+    Iter : DG.Directed_Vertex_Iterator (Local_V'Access);
     use Ag;
     use DG;
   begin
@@ -613,10 +625,10 @@ procedure Graph_Test is
     OK := True;
   end Process_Vertex;
 
-  procedure Test_Directed_Active_Iterator (G : in out DG.Graph) is
-    V : DG.Vertex;
+  procedure Test_Directed_Active_Iterator (G : in out DG.Directed_Graph) is
+    V : DG.Directed_Vertex;
     Dummy : Boolean;
-    Iter : DG.Graph_Iterator (G'Access);
+    Iter : DG.Directed_Graph_Iterator (G'Access);
     use DG;
   begin
     while not Is_Done (Iter) loop
@@ -626,16 +638,16 @@ procedure Graph_Test is
     end loop;
   end Test_Directed_Active_Iterator;
 
-  procedure Test_Directed_Passive_Iterator (G : in out DG.Graph) is
+  procedure Test_Directed_Passive_Iterator (G : in out DG.Directed_Graph) is
     function Visit is new DG.Visit_Vertices (Apply => Process_Vertex);
     Dummy : Boolean;
-    Iter : aliased DG.Passive_Graph_Iterator (G'Access);
+    Iter : aliased DG.Passive_Directed_Graph_Iterator (G'Access);
   begin
     Dummy := Visit (Iter'Access);
   end Test_Directed_Passive_Iterator;
 
-  procedure Process_Arc (A : UG.Arc; OK : out Boolean) is
-    V1, V2 : UG.Vertex;
+  procedure Process_Arc (A : UG.Undirected_Arc; OK : out Boolean) is
+    V1, V2 : UG.Undirected_Vertex;
     use UG;
   begin
     First_Vertex (A, V1);
@@ -655,11 +667,11 @@ procedure Graph_Test is
     OK := True;
   end Process_Arc;
 
-  procedure Process_Vertex (V : UG.Vertex; OK : out Boolean) is
-    Local_V : aliased UG.Vertex := V;
-    A : UG.Arc;
+  procedure Process_Vertex (V : UG.Undirected_Vertex; OK : out Boolean) is
+    Local_V : aliased UG.Undirected_Vertex := V;
+    A : UG.Undirected_Arc;
     Dummy : Boolean;
-    Iter : UG.Vertex_Iterator (Local_V'Access);
+    Iter : UG.Undirected_Vertex_Iterator (Local_V'Access);
     use Ag;
     use UG;
   begin
@@ -673,10 +685,10 @@ procedure Graph_Test is
     OK := True;
   end Process_Vertex;
 
-  procedure Test_Undirected_Active_Iterator (G : in out UG.Graph) is
-    V : UG.Vertex;
+  procedure Test_Undirected_Active_Iterator (G : in out UG.Undirected_Graph) is
+    V : UG.Undirected_Vertex;
     Dummy : Boolean;
-    Iter : UG.Graph_Iterator (G'Access);
+    Iter : UG.Undirected_Graph_Iterator (G'Access);
     use UG;
   begin
     while not Is_Done (Iter) loop
@@ -686,21 +698,21 @@ procedure Graph_Test is
     end loop;
   end Test_Undirected_Active_Iterator;
 
-  procedure Test_Undirected_Passive_Iterator (G : in out UG.Graph) is
+  procedure Test_Undirected_Passive_Iterator (G : in out UG.Undirected_Graph) is
     function Visit is new UG.Visit_Vertices (Apply => Process_Vertex);
     Dummy : Boolean;
-    Iter : aliased UG.Passive_Graph_Iterator (G'Access);
+    Iter : aliased UG.Passive_Undirected_Graph_Iterator (G'Access);
   begin
     Dummy := Visit (Iter'Access);
   end Test_Undirected_Passive_Iterator;
 
-  D_G : DG.Graph;
-  D_V1, D_V2, D_V3 : DG.Vertex;
-  D_A1, D_A2, D_A3 : DG.Arc;
+  D_G : DG.Directed_Graph;
+  D_V1, D_V2, D_V3 : DG.Directed_Vertex;
+  D_A1, D_A2, D_A3 : DG.Directed_Arc;
 
-  U_G : UG.Graph;
-  U_V1, U_V2, U_V3 : UG.Vertex;
-  U_A1, U_A2, U_A3 : UG.Arc;
+  U_G : UG.Undirected_Graph;
+  U_V1, U_V2, U_V3 : UG.Undirected_Vertex;
+  U_A1, U_A2, U_A3 : UG.Undirected_Arc;
 
 begin
   Put_Line ("Starting graph tests");
