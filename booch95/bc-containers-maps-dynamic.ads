@@ -49,10 +49,6 @@ package BC.Containers.Maps.Dynamic is
 
   function Null_Container return Map;
 
-  function Create (Size : Positive) return Map;
-  -- Creates a new Dynamic Map each of whose buckets is preallocated for
-  -- 'Size' elements
-
   procedure Clear (M : in out Map);
   -- Empty the map of all key/item pairs.
 

@@ -21,16 +21,6 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Maps.Dynamic is
 
-  function Create (Size : Positive) return Map is
-    M : Map;
-  begin
-    for B in 1 .. Buckets loop
-      KC.Set_Chunk_Size (Tables.Item_Bucket (M.Rep, B).all, Size);
-      IC.Set_Chunk_Size (Tables.Value_Bucket (M.Rep, B).all, Size);
-    end loop;
-    return M;
-  end Create;
-
   procedure Clear (M : in out Map) is
   begin
     Tables.Clear (M.Rep);
