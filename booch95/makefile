@@ -163,7 +163,7 @@ TEST_SRC += set_test.ad[bs] set_test_support.ad[bs]
 set_test: force
 
 ADA_SOURCE += \
-bc-smart.ad[bs]
+bc-smart.ad[bs] bc-support-smart_pointers.ad[bs]
 TESTABLE += smart_test
 TEST_SRC += smart_test.ad[bs] smart_test_support.ad[bs]
 smart_test: force
