@@ -1,4 +1,5 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1998 Grady Booch, David Weller, Pat Rogers and
+-- Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -18,10 +19,14 @@
 -- $Id$
 
 with BC.Support.Nodes;
+with System.Storage_Pools;
 
 generic
   type Item is private;
   type Item_Ptr is access all Item;
+  type Storage_Manager(<>)
+  is new System.Storage_Pools.Root_Storage_Pool with private;
+  Storage : in out Storage_Manager;
 package BC.Support.Unbounded is
 
   type Unb_Node is private;
@@ -54,7 +59,7 @@ package BC.Support.Unbounded is
 
 private
 
-  package Nodes is new Bc.Support.Nodes (Item);
+  package Nodes is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
 
   type Unb_Node is record
     Rep : Nodes.Node_Ref;
