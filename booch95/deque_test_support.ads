@@ -19,8 +19,8 @@
 
 with BC.Containers;
 with BC.Containers.Deques;
--- with BC.Containers.Deques.Bounded;
--- with BC.Containers.Deques.Dynamic;
+with BC.Containers.Deques.Bounded;
+with BC.Containers.Deques.Dynamic;
 with BC.Containers.Deques.Unbounded;
 with Global_Heap;
 
@@ -30,10 +30,10 @@ package Deque_Test_Support is
 
   package Deques is new Containers.Deques;
 
---   package DB is new Deques.Bounded (Maximum_Size => 100);
+  package DB is new Deques.Bounded (Maximum_Size => 100);
 
---   package DD is new Deques.Dynamic (Storage_Manager => Global_Heap.Pool,
---                                     Storage => Global_Heap.Storage);
+  package DD is new Deques.Dynamic (Storage_Manager => Global_Heap.Pool,
+                                    Storage => Global_Heap.Storage);
 
   package DU is new Deques.Unbounded (Storage_Manager => Global_Heap.Pool,
                                       Storage => Global_Heap.Storage);
