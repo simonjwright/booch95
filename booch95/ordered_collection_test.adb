@@ -64,6 +64,20 @@ procedure Ordered_Collection_Test is
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
+  procedure Process_Modifiable (Item : in out Character; OK : out Boolean) is
+  begin
+    Put_Line ("Item (RW): " & Item);
+    OK := True;
+  end Process_Modifiable;
+
+  procedure Test_Passive_Modifying_Iterator
+     (C : in out Containers.Container'Class) is
+    procedure Modifier is new Containers.Modify (Process_Modifiable);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (C);
+  begin
+    Modifier (Using => Iter);
+  end Test_Passive_Modifying_Iterator;
+
   procedure Test_Iterator_Deletion (C : in out Collection'Class) is
     Iter : Iterator'Class := New_Iterator (C);
     Delete : Boolean;
@@ -207,10 +221,13 @@ begin
   Put_Line ("...Ordered Collection Passive Iterator");
   Put_Line ("   Bounded:");
   Test_Passive_Iterator (Collection_B_P1);
+  Test_Passive_Modifying_Iterator (Collection_B_P1);
   Put_Line ("   Dynamic:");
   Test_Passive_Iterator (Collection_D_P1);
+  Test_Passive_Modifying_Iterator (Collection_D_P1);
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Collection_U_P1);
+  Test_Passive_Modifying_Iterator (Collection_U_P1);
 
   Put_Line ("...Ordered Collection Iterator Deletion");
   Put_Line ("   Bounded:");
