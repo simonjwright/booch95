@@ -206,7 +206,7 @@ procedure Tree_Test is
       Assertion (Arity (T1) = 0, "** M12: Tree arity is not correct");
       Clear (T1);
       Assertion (Is_Null (T1), "** M13: Tree is not empty");
-      Append (T1, '6');
+      Insert (T1, '6');
       Append (T1, '2');
       Append (T1, '3');
       Append (T1, '5');
