@@ -32,8 +32,6 @@ package BC.Support.Bounded is
   -- type.  As such, it is not intended to be used directly by the
   -- end-user.
 
-  subtype Size_Range is Natural range 0..Max_Size;
-
   type Bnd_Node_Ref is access all Bnd_Node;
 
   function Create (Obj : in Bnd_Node) return Bnd_Node_Ref;
@@ -46,19 +44,19 @@ package BC.Support.Bounded is
   procedure Insert (Obj : in out Bnd_Node; Elem : Item);
   -- Add an item to the front of the container
 
-  procedure Insert (Obj : in out Bnd_Node; Elem : Item; Before : Natural);
+  procedure Insert (Obj : in out Bnd_Node; Elem : Item; Before : Positive);
   -- Add an item to the container, before the given index
 
   procedure Append (Obj : in out Bnd_Node; Elem : Item);
   -- Add an item to the end of the container
 
-  procedure Append (Obj : in out Bnd_Node; Elem : Item; After : Natural);
+  procedure Append (Obj : in out Bnd_Node; Elem : Item; After : Positive);
   -- Add an item to the end of the container, after the given index
 
-  procedure Remove (Obj : in out Bnd_Node; From : Natural);
+  procedure Remove (Obj : in out Bnd_Node; From : Positive);
   -- Remove the item at a given index
 
-  procedure Replace (Obj : in out Bnd_Node; Index : Natural; Elem : Item);
+  procedure Replace (Obj : in out Bnd_Node; Index : Positive; Elem : Item);
   -- Replace the Item at Index with the new Elem
 
   function Available (Obj: Bnd_Node) return Natural;
@@ -95,6 +93,7 @@ private
   -- XXX
   -- this representation is not the same as the C++ components
   -- why is Elems aliased? -- so we can take 'Access of components
+  subtype Size_Range is Natural range 0..Max_Size;
   type Bnd_Node is record
     Elems : aliased Elem_Array;
     Size : Size_Range := 0;
