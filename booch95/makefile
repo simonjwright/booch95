@@ -114,7 +114,7 @@ ADA_SOURCE += \
 bc-containers-maps-bounded.ad[bs] \
 bc-containers-maps-dynamic.ad[bs] \
 bc-containers-maps-unbounded.ad[bs] \
-bc-containers-maps.ad[bs] \
+bc-containers-maps.ad[bs]
 TESTABLE += map_test
 TEST_SRC += map_test.ad[bs] map_test_support.ad[bs] chunks.ad[bs]
 map_test: force
