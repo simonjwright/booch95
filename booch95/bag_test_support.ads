@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -20,6 +20,7 @@ with BC.Containers.Bags;
 with BC.Containers.Bags.Bounded;
 with BC.Containers.Bags.Dynamic;
 with BC.Containers.Bags.Unbounded;
+with BC.Containers.Bags.Unmanaged;
 with BC.Support.Standard_Storage;
 with Global_Heap;
 
@@ -45,5 +46,9 @@ package Bag_Test_Support is
      (Hash => Char_Hash,
       Buckets => 3,
       Storage => BC.Support.Standard_Storage.Pool);
+
+   package BUM is new Bags.unmanaged
+     (Hash => Char_Hash,
+      Buckets => 3);
 
 end Bag_Test_Support;
