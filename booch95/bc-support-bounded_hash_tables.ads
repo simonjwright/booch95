@@ -60,8 +60,6 @@ package BC.Support.Bounded_Hash_Tables is
 
       with package Items is new Item_Signature (<>);
       with package Values is new Value_Signature (<>);
-      Buckets : Positive;
-      Maximum_Size : Positive;
 
    package Tables is
 
@@ -74,10 +72,10 @@ package BC.Support.Bounded_Hash_Tables is
       --  The parameter Buckets signifies the static number of buckets
       --  in the hash table.
 
-      subtype Bucket_Index is Positive range 1 .. Buckets;
-      subtype Index is Natural range 0 .. Maximum_Size;
+      subtype Bucket_Index is Positive;
+      subtype Index is Natural;
       --  0 => null reference
-      subtype Cell_Index is Index range 1 .. Index'Last;
+      subtype Cell_Index is Positive;
 
       type Cell is record
          Item : Items.Item;
@@ -85,12 +83,13 @@ package BC.Support.Bounded_Hash_Tables is
          Next : Index;
       end record;
 
-      type Bkts is array (Bucket_Index) of Index;
-      type Cells is array (1 .. Maximum_Size) of Cell;
+      type Bkts is array (Bucket_Index range <>) of Index;
+      type Cells is array (Cell_Index range <>) of Cell;
 
-      type Table is new Ada.Finalization.Controlled with record
-         Buckets : Bkts;
-         Contents : Cells;
+      type Table (Number_Of_Buckets : Positive; Maximum_Size : Positive)
+      is new Ada.Finalization.Controlled with record
+         Buckets : Bkts (1 .. Number_Of_Buckets);
+         Contents : Cells (1 .. Maximum_Size);
          Size : Natural;
          Free : Index;
       end record;
