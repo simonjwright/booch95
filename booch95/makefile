@@ -1,4 +1,4 @@
-# Copyright 1998-2004 Simon Wright <simon@pushface.org>
+# Copyright 1998-2005 Simon Wright <simon@pushface.org>
 
 # This package is free software; you can redistribute it and/or
 # modify it under terms of the GNU General Public License as
@@ -38,6 +38,7 @@ bc-copy.ad[bs] \
 bc-filter.ad[bs]
 
 ADA_SOURCE += \
+bc-support-avl_trees.ad[bs] \
 bc-support-bounded.ad[bs] \
 bc-support-bounded_hash_tables.ad[bs] \
 bc-support-dynamic.ad[bs] \
