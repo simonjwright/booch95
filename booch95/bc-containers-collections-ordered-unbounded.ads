@@ -33,25 +33,21 @@ package BC.Containers.Collections.Ordered.Unbounded is
   procedure Clear (C : in out Unbounded_Ordered_Collection);
   -- Empty the collection of all items.
 
-  -- Note, since this is an ordered collection, the following four
-  -- procedures all have the same effect (we must implement them,
-  -- since they are abstract in Collection).
-
   procedure Insert (C : in out Unbounded_Ordered_Collection; Elem : Item);
-  -- Add the item to the collection.
+  -- Add the item to the collection, starting at the front.
 
   procedure Insert (C : in out Unbounded_Ordered_Collection;
                     Elem : Item;
                     Before : Positive);
-  -- Add the item to the collection.
+  -- Add the item to the collection, starting at the front.
 
   procedure Append (C : in out Unbounded_Ordered_Collection; Elem : Item);
-  -- Add the item to the collection.
+  -- Add the item to the collection, starting at the end.
 
   procedure Append (C : in out Unbounded_Ordered_Collection;
                     Elem : Item;
                     After : Positive);
-  -- Add the item to the collection.
+  -- Add the item to the collection, starting at the end.
 
   procedure Remove
      (C : in out Unbounded_Ordered_Collection; At_Index : Positive);
@@ -89,7 +85,6 @@ package BC.Containers.Collections.Ordered.Unbounded is
 
 private
 
-  procedure Add (C : in out Unbounded_Ordered_Collection; Elem : Item);
   function Cardinality (C : Unbounded_Ordered_Collection) return Natural;
   function Item_At
      (C : Unbounded_Ordered_Collection; Index : Positive) return Item_Ptr;
