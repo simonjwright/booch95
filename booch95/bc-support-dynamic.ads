@@ -16,7 +16,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with Ada.Finalization;
 with System.Storage_Pools;

@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$         --
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with Ada.Finalization;
 

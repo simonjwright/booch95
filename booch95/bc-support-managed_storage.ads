@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with System.Storage_Pools;
 with System.Storage_Elements;

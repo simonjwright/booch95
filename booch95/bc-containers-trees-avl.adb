@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 package body BC.Containers.Trees.AVL is
 

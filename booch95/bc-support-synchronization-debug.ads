@@ -1,4 +1,4 @@
--- Copyright (C) 2000 Simon Wright.
+-- Copyright (C) 2000,2001 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
--- $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 package BC.Support.Synchronization.Debug is
 

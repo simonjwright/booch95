@@ -1,4 +1,4 @@
---  Copyright (C) 1998 Grady Booch and Simon Wright.
+--  Copyright (C) 1998,2001 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with Ada.Exceptions;
 with Ada.Text_IO;
