@@ -46,7 +46,7 @@ package body BC.Support.Dynamic is
       if Left.Size /= Right.Size then
          return False;
       else
-         -- We have to compare element-by-element; LRM 4.5.2(24)
+         --  We have to compare element-by-element; LRM 4.5.2(24)
          for I in 1 .. Left.Size loop
             if Left.Ref (I) /= Right.Ref (I) then
                return False;
