@@ -54,7 +54,7 @@ package BC.Support.Hash_Tables is
 
       type Item_Container is private;
 
-      --  The <> subprograms for Items are provided by one of
+      --  The subprograms for Items are provided by one of
       --  BC.Support.Bounded, Dynamic or Unbounded as appropriate.
 
       with procedure Clear (C : in out Item_Container);
@@ -82,7 +82,7 @@ package BC.Support.Hash_Tables is
 
       type Value_Container is private;
 
-      --  The <> subprograms for Values are provided by one of
+      --  The subprograms for Values are provided by one of
       --  BC.Support.Bounded, Dynamic or Unbounded as appropriate.
 
       with procedure Clear (C : in out Value_Container);
