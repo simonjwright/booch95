@@ -36,7 +36,7 @@ package BC.Support.Bounded is
 
   type Bnd_Node_Ref is access all Bnd_Node;
 
-  function Create (Obj : in Bnd_Node) return Bnd_Node_Ref;
+  function Create (From : in Bnd_Node) return Bnd_Node_Ref;
   -- Construct a new bounded container that is identical to the given container
 
   procedure Clear (Obj : in out Bnd_Node);
