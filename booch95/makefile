@@ -112,13 +112,13 @@ AONIX_TESTABLE += map_test_aonix
 map_test_aonix: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
-AONIX_TESTABLE += ordered_collection_test_aonix
-ordered_collection_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+#AONIX_TESTABLE += ordered_collection_test_aonix
+#ordered_collection_test_aonix: force
+#	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
-AONIX_TESTABLE += ordered_queue_test_aonix
-ordered_queue_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+#AONIX_TESTABLE += ordered_queue_test_aonix
+#ordered_queue_test_aonix: force
+#	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 AONIX_TESTABLE += queue_test_aonix
 queue_test_aonix: force
@@ -139,6 +139,7 @@ aonix_testable: $(AONIX_TESTABLE)
 
 DEMOS += ada_units
 DEMOS += lists_traversal
+DEMOS += ordering_test
 DEMOS += test_synchronization
 DEMOS += time_lists
 DEMOS += time_queues
@@ -150,6 +151,9 @@ ada_units: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
 lists_traversal: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+ordering_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
 test_synchronization: force
@@ -221,6 +225,8 @@ bc-containers-maps-unbounded.ad[bs] \
 bc-containers-maps.ad[bs] \
 bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
+bc-containers-queues-ordered.ad[bs] \
+bc-containers-queues-ordered-unbounded.ad[bs] \
 bc-containers-queues-unbounded.ad[bs] \
 bc-containers-queues.ad[bs] \
 bc-containers-rings.ad[bs] \
@@ -264,6 +270,7 @@ bc.ad[bs] \
 bcwords.ada \
 chunks.ad[bs] \
 collection_test.ad[bs] \
+collection_test_aonix.ad[bs] \
 collection_test_support.ad[bs] \
 global_heap.ad[bs] \
 graph_test.ad[bs] \
@@ -278,6 +285,8 @@ map_test_aonix.ad[bs] \
 map_test_support.ad[bs] \
 ordered_collection_test.ad[bs] \
 ordered_collection_test_support.ad[bs] \
+ordering_support.ad[bs] \
+ordering_test.ad[bs] \
 queues_for_timing.ad[bs] \
 queue_test.ad[bs] \
 queue_test_aonix.ad[bs] \
@@ -293,7 +302,7 @@ stack_test.ad[bs] \
 stack_test_aonix.ad[bs] \
 stack_test_support.ad[bs] \
 storage.ad[bs] \
-test_synchronization.adb \
+test_synchronization.ad[bs] \
 time_lists.ad[bs] \
 time_queues.ad[bs] \
 tree_test.ad[bs] \
