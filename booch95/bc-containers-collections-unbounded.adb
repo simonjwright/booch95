@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -38,8 +38,8 @@ package body BC.Containers.Collections.Unbounded is
   end Insert;
 
   procedure Insert (C : in out Unbounded_Collection;
-		    Elem : Item;
-		    Before : Positive) is
+                    Elem : Item;
+                    Before : Positive) is
   begin
     Unbounded_Collection_Nodes.Insert (C.Rep.all, Elem, Before);
   end Insert;
@@ -50,8 +50,8 @@ package body BC.Containers.Collections.Unbounded is
   end Append;
 
   procedure Append (C : in out Unbounded_Collection;
-		    Elem : Item;
-		    After : Positive) is
+                    Elem : Item;
+                    After : Positive) is
   begin
     Unbounded_Collection_Nodes.Append (C.Rep.all, Elem, After);
   end Append;
@@ -62,8 +62,8 @@ package body BC.Containers.Collections.Unbounded is
   end Remove;
 
   procedure Replace (C : in out Unbounded_Collection;
-		     At_Index : Positive;
-		     Elem : Item) is
+                     At_Index : Positive;
+                     Elem : Item) is
   begin
     Unbounded_Collection_Nodes.Replace (C.Rep.all, At_Index, Elem);
   end Replace;
@@ -110,26 +110,11 @@ package body BC.Containers.Collections.Unbounded is
     return Iterator (SP.Create (new Collection_Iterator (P)));
   end New_Iterator;
 
-  procedure Add (C : in out Unbounded_Collection; Elem : Item) is
-  begin
-    Unbounded_Collection_Nodes.Append (C.Rep.all, Elem);    
-  end Add;
-
-  function Cardinality (C : Unbounded_Collection) return Natural is
-  begin
-    return Unbounded_Collection_Nodes.Length (C.Rep.all);
-  end Cardinality;
-
   function Item_At
      (C : Unbounded_Collection; Index : Positive) return Item_Ptr is
   begin
     return Unbounded_Collection_Nodes.Item_At (C.Rep.all, Index);
   end Item_At;
-
-  procedure Purge (C : in out Unbounded_Collection) is
-  begin
-    Unbounded_Collection_Nodes.Clear (C.Rep.all);    
-  end Purge;
 
   procedure Initialize (C : in out Unbounded_Collection) is
   begin

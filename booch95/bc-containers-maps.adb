@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -31,11 +31,11 @@ package body BC.Containers.Maps is
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
-    if Cardinality (L) /= Cardinality (R) then
+    if Extent (L) /= Extent (R) then
       return False;
     end if;
     while not Is_Done (It) loop
-      if not Exists (R, Current_Item (It)) then
+      if not Is_Bound (R, Current_Item (It)) then
         return False;
       end if;
       -- XXX what about the Value?
@@ -47,7 +47,7 @@ package body BC.Containers.Maps is
   procedure Initialize (It : in out Map_Iterator) is
   begin
     It.Index := 0;
-    if Cardinality (It.M.all) = 0 then
+    if Extent (It.M.all) = 0 then
       It.Bucket_Index := 0;
     else
       It.Bucket_Index := 1;
@@ -64,7 +64,7 @@ package body BC.Containers.Maps is
   procedure Reset (It : in out Map_Iterator) is
   begin
     It.Index := 0;
-    if Cardinality (It.M.all) = 0 then
+    if Extent (It.M.all) = 0 then
       It.Bucket_Index := 0;
     else
       It.Bucket_Index := 1;

@@ -518,11 +518,6 @@ package body BC.Containers.Lists.Single is
     return Iterator (SP.Create (new Single_List_Iterator (P)));
   end New_Iterator;
 
-  function Cardinality (L : Single_List) return Natural is
-  begin
-    return Length (L);
-  end Cardinality;
-
   function Item_At (L : Single_List; Index : Positive) return Item_Ptr is
     Curr : Single_Nodes.Single_Node_Ref := L.Rep;
     Loc : Positive := 1;

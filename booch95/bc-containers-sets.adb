@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -31,11 +31,11 @@ package body BC.Containers.Sets is
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
-    if Cardinality (L) /= Cardinality (R) then
+    if Extent (L) /= Extent (R) then
       return False;
     end if;
     while not Is_Done (It) loop
-      if not Exists (R, Current_Item (It)) then
+      if not Is_Member (R, Current_Item (It)) then
         return False;
       end if;
        Next (It);
@@ -75,7 +75,7 @@ package body BC.Containers.Sets is
       declare
         This_Item : Item renames Current_Item (It);
       begin
-        if not Exists (O, This_Item) then
+        if not Is_Member (O, This_Item) then
           Detach (S, This_Item);
         else
           Next (It);
@@ -93,7 +93,7 @@ package body BC.Containers.Sets is
       declare
         This_Item : Item renames Current_Item (It);
       begin
-        if Exists (S, This_Item) then
+        if Is_Member (S, This_Item) then
           Detach (S, This_Item);
         end if;
       end;
@@ -106,11 +106,11 @@ package body BC.Containers.Sets is
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
-    if Cardinality (S) > Cardinality (O) then
+    if Extent (S) > Extent (O) then
       return False;
     end if;
     while not Is_Done (It) loop
-      if not Exists (O, Current_Item (It)) then
+      if not Is_Member (O, Current_Item (It)) then
         return False;
       end if;
       Next (It);
@@ -123,11 +123,11 @@ package body BC.Containers.Sets is
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
-    if Cardinality (S) >= Cardinality (O) then
+    if Extent (S) >= Extent (O) then
       return False;
     end if;
     while not Is_Done (It) loop
-      if not Exists (O, Current_Item (It)) then
+      if not Is_Member (O, Current_Item (It)) then
         return False;
       end if;
       Next (It);
@@ -138,7 +138,7 @@ package body BC.Containers.Sets is
   procedure Initialize (It : in out Set_Iterator) is
   begin
     It.Index := 0;
-    if Cardinality (It.S.all) = 0 then
+    if Extent (It.S.all) = 0 then
       It.Bucket_Index := 0;
     else
       It.Bucket_Index := 1;
@@ -155,7 +155,7 @@ package body BC.Containers.Sets is
   procedure Reset (It : in out Set_Iterator) is
   begin
     It.Index := 0;
-    if Cardinality (It.S.all) = 0 then
+    if Extent (It.S.all) = 0 then
       It.Bucket_Index := 0;
     else
       It.Bucket_Index := 1;
@@ -263,12 +263,6 @@ package body BC.Containers.Sets is
     raise Should_Have_Been_Overridden;
     return 0;
   end Length;
-
-  function Exists (S : Set; I : Item) return Boolean is
-  begin
-    raise Should_Have_Been_Overridden;
-    return False;
-  end Exists;
 
   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr is
   begin

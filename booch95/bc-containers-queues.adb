@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -44,7 +44,7 @@ package body BC.Containers.Queues is
     if System."=" (Left'Address, Right'Address) then
       return True;
     end if;
-    if Cardinality (Left) /= Cardinality (Right) then
+    if Length (Left) /= Length (Right) then
       return False;
     end if;
     declare
@@ -70,7 +70,7 @@ package body BC.Containers.Queues is
 
   procedure Reset (It : in out Queue_Iterator) is
   begin
-    if Cardinality (It.Q.all) = 0 then
+    if Length (It.Q.all) = 0 then
       It.Index := 0;
     else
       It.Index := 1;
@@ -84,7 +84,7 @@ package body BC.Containers.Queues is
 
   function Is_Done (It : Queue_Iterator) return Boolean is
   begin
-    return It.Index = 0 or else It.Index > Cardinality (It.Q.all);
+    return It.Index = 0 or else It.Index > Length (It.Q.all);
   end Is_Done;
 
   function Current_Item (It : Queue_Iterator) return Item is

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller, Steve Doiel
+-- Copyright (C) 1994-2000 Grady Booch, David Weller, Steve Doiel
 -- and Simon Wright.
 -- All Rights Reserved.
 --
@@ -19,17 +19,6 @@
 -- $Id$
 
 package body BC.Containers is
-
-  function Cardinality (C : Container) return Natural is
-  begin
-    raise Should_Have_Been_Overridden;
-    return 0;
-  end Cardinality;
-
-  procedure Purge (C : in out Container) is
-  begin
-    raise Should_Have_Been_Overridden;
-  end Purge;
 
   function Item_At (C : Container; Index : Positive) return Item_Ptr is
   begin

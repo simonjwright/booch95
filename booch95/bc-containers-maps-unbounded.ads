@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -133,17 +133,11 @@ private
 
   procedure Finalize (M : in out Unbounded_Map);
 
-  procedure Purge (M : in out Unbounded_Map);
-
   procedure Attach (M : in out Unbounded_Map; I : Item; V : Value);
-
-  function Cardinality (M : Unbounded_Map) return Natural;
 
   function Number_Of_Buckets (M : Unbounded_Map) return Natural;
 
   function Length (M : Unbounded_Map; Bucket : Positive) return Natural;
-
-  function Exists (M : Unbounded_Map; I : Item) return Boolean;
 
   function Item_At
      (M : Unbounded_Map; Bucket, Index : Positive) return Item_Ptr;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -72,20 +72,10 @@ package body BC.Containers.Stacks.Unbounded is
     return Iterator (SP.Create (new Stack_Iterator (P)));
   end New_Iterator;
 
-  function Cardinality (S : Unbounded_Stack) return Natural is
-  begin
-    return Unbounded_Stack_Nodes.Length (S.Rep.all);
-  end Cardinality;
-
   function Item_At (S : Unbounded_Stack; Index : Positive) return Item_Ptr is
   begin
     return Unbounded_Stack_Nodes.Item_At (S.Rep.all, Index);
   end Item_At;
-
-  procedure Purge (S : in out Unbounded_Stack) is
-  begin
-    Unbounded_Stack_Nodes.Clear (S.Rep.all);
-  end Purge;
 
   procedure Add (S : in out Unbounded_Stack; Elem : Item) is
   begin

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -86,16 +86,6 @@ package body BC.Containers.Queues.Ordered.Unbounded is
   begin
     return Iterator (SP.Create (new Queue_Iterator (P)));
   end New_Iterator;
-
-  procedure Purge (Q : in out Unbounded_Ordered_Queue) is
-  begin
-    Unbounded_Ordered_Queue_Nodes.Clear (Q.Rep.all);
-  end Purge;
-
-  function Cardinality (Q : Unbounded_Ordered_Queue) return Natural is
-  begin
-    return Unbounded_Ordered_Queue_Nodes.Length (Q.Rep.all);
-  end Cardinality;
 
   function Item_At
      (Q : Unbounded_Ordered_Queue; Index : Positive) return Item_Ptr is

@@ -598,11 +598,6 @@ package body BC.Containers.Lists.Double is
     return Iterator (SP.Create (new Double_List_Iterator (P)));
   end New_Iterator;
 
-  function Cardinality (L : Double_List) return Natural is
-  begin
-    return Length (L);
-  end Cardinality;
-
   function Item_At (L : Double_List; Index : Positive) return Item_Ptr is
     Curr : Double_Nodes.Double_Node_Ref := L.Rep;
     Loc : Positive := 1;

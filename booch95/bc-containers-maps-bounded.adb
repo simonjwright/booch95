@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -84,20 +84,10 @@ package body BC.Containers.Maps.Bounded is
 
   -- Private implementations
 
-  procedure Purge (M : in out Bounded_Map) is
-  begin
-    Tables.Clear (M.Rep);
-  end Purge;
-
   procedure Attach (M : in out Bounded_Map; I : Item; V : Value) is
   begin
     Tables.Bind (M.Rep, I, V);
   end Attach;
-
-  function Cardinality (M : Bounded_Map) return Natural is
-  begin
-    return Tables.Extent (M.Rep);
-  end Cardinality;
 
   function Number_Of_Buckets (M : Bounded_Map) return Natural is
   begin
@@ -108,11 +98,6 @@ package body BC.Containers.Maps.Bounded is
   begin
     return IC.Length (Tables.Item_Bucket (M.Rep, Bucket).all);
   end Length;
-
-  function Exists (M : Bounded_Map; I : Item) return Boolean is
-  begin
-    return Tables.Is_Bound (M.Rep, I);
-  end Exists;
 
   function Item_At
      (M : Bounded_Map; Bucket, Index : Positive) return Item_Ptr is

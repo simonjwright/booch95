@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -77,9 +77,7 @@ private
        := new Unbounded_Queue_Nodes.Unb_Node;
   end record;
 
-  function Cardinality (Q : Unbounded_Queue) return Natural;
   function Item_At (Q : Unbounded_Queue; Index : Positive) return Item_Ptr;
-  procedure Purge (Q : in out Unbounded_Queue);
 
   procedure Initialize (Q : in out Unbounded_Queue);
   procedure Adjust (Q : in out Unbounded_Queue);

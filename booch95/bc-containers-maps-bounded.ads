@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -120,17 +120,11 @@ private
     Rep : Tables.Table;
   end record;
 
-  procedure Purge (M : in out Bounded_Map);
-
   procedure Attach (M : in out Bounded_Map; I : Item; V : Value);
-
-  function Cardinality (M : Bounded_Map) return Natural;
 
   function Number_Of_Buckets (M : Bounded_Map) return Natural;
 
   function Length (M : Bounded_Map; Bucket : Positive) return Natural;
-
-  function Exists (M : Bounded_Map; I : Item) return Boolean;
 
   function Item_At
      (M : Bounded_Map; Bucket, Index : Positive) return Item_Ptr;

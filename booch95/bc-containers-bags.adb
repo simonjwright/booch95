@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -31,11 +31,11 @@ package body BC.Containers.Bags is
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
-    if Cardinality (L) /= Cardinality (R) then
+    if Extent (L) /= Extent (R) then
       return False;
     end if;
     while not Is_Done (It) loop
-      if not Exists (R, Current_Item (It)) then
+      if not Is_Member (R, Current_Item (It)) then
         return False;
       end if;
       if Count (L, Current_Item (It)) /= Count (R, Current_Item (It)) then
@@ -82,7 +82,7 @@ package body BC.Containers.Bags is
         This_Item : Item renames Current_Item (It);
         B_Count : Positive := Count (B, This_Item);
       begin
-        if not Exists (O, This_Item) then
+        if not Is_Member (O, This_Item) then
           Detach (B, This_Item);
         else
           declare
@@ -107,7 +107,7 @@ package body BC.Containers.Bags is
       declare
         This_Item : Item renames Current_Item (It);
       begin
-        if Exists (B, This_Item) then
+        if Is_Member (B, This_Item) then
           declare
             B_Count : Positive := Count (B, This_Item);
             O_Count : Positive := Count (O, This_Item);
@@ -140,7 +140,7 @@ package body BC.Containers.Bags is
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
-    if Cardinality (B) > Cardinality (O) then
+    if Extent (B) > Extent (O) then
       return False;
     end if;
     while not Is_Done (It) loop
@@ -150,7 +150,7 @@ package body BC.Containers.Bags is
         -- why don't I just do "or else Count (B, This_Item) > Count (O,
         -- This_Item)"? .. because it triggered a compiler bug in GNAT
         -- 3.11p (or was it 3.11b2?)
-        if not Exists (O, This_Item) then
+        if not Is_Member (O, This_Item) then
           return False;
         else
           declare
@@ -174,14 +174,14 @@ package body BC.Containers.Bags is
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
-    if Cardinality (B) > Cardinality (O) then
+    if Extent (B) > Extent (O) then
       return False;
     end if;
     while not Is_Done (It) loop
       declare
         This_Item : Item renames Current_Item (It);
       begin
-        if not Exists (O, This_Item) then
+        if not Is_Member (O, This_Item) then
           return False;
         else
           declare
@@ -198,7 +198,7 @@ package body BC.Containers.Bags is
       end;
       Next (It);
     end loop;
-    return Is_Proper or else Cardinality (B) < Cardinality (O);
+    return Is_Proper or else Extent (B) < Extent (O);
   end Is_Proper_Subset;
 
   -- Subprograms to be overridden
@@ -270,7 +270,7 @@ package body BC.Containers.Bags is
   procedure Initialize (It : in out Bag_Iterator) is
   begin
     It.Index := 0;
-    if Cardinality (It.B.all) = 0 then
+    if Extent (It.B.all) = 0 then
       It.Bucket_Index := 0;
     else
       It.Bucket_Index := 1;
@@ -287,7 +287,7 @@ package body BC.Containers.Bags is
   procedure Reset (It : in out Bag_Iterator) is
   begin
     It.Index := 0;
-    if Cardinality (It.B.all) = 0 then
+    if Extent (It.B.all) = 0 then
       It.Bucket_Index := 0;
     else
       It.Bucket_Index := 1;

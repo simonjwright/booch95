@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller, Steve Doiel
+-- Copyright (C) 1994-2000 Grady Booch, David Weller, Steve Doiel
 -- and Simon Wright.
 -- All Rights Reserved.
 --
@@ -136,11 +136,7 @@ private
   -- These should ideally be abstract; instead, we provide implementations,
   -- but they raise Should_Have_Been_Overridden.
 
-  function Cardinality (C : Container) return Natural;
-
   function Item_At (C : Container; Index : Positive) return Item_Ptr;
-
-  procedure Purge (C : in out Container);
 
   -- Actual_Iterators are strongly dependent on the concrete Container
   -- implementation. The externally-visible Iterator is implemented as

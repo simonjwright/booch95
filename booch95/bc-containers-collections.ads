@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -86,7 +86,7 @@ private
 
   type Collection is abstract new Container with null record;
 
-  procedure Add (C : in out Collection; Elem : Item);
+--   procedure Add (C : in out Collection; Elem : Item);
 
   procedure Lock (C : in out Collection);
 

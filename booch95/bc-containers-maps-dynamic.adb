@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -106,20 +106,10 @@ package body BC.Containers.Maps.Dynamic is
 
   -- Private implementations
 
-  procedure Purge (M : in out Dynamic_Map) is
-  begin
-    Tables.Clear (M.Rep);
-  end Purge;
-
   procedure Attach (M : in out Dynamic_Map; I : Item; V : Value) is
   begin
     Tables.Bind (M.Rep, I, V);
   end Attach;
-
-  function Cardinality (M : Dynamic_Map) return Natural is
-  begin
-    return Tables.Extent (M.Rep);
-  end Cardinality;
 
   function Number_Of_Buckets (M : Dynamic_Map) return Natural is
   begin
@@ -130,11 +120,6 @@ package body BC.Containers.Maps.Dynamic is
   begin
     return IC.Length (Tables.Item_Bucket (M.Rep, Bucket).all);
   end Length;
-
-  function Exists (M : Dynamic_Map; I : Item) return Boolean is
-  begin
-    return Tables.Is_Bound (M.Rep, I);
-  end Exists;
 
   function Item_At
      (M : Dynamic_Map; Bucket, Index : Positive) return Item_Ptr is

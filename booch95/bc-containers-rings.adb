@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -26,7 +26,7 @@ package body BC.Containers.Rings is
     if System."=" (Left'Address, Right'Address) then
       return True;
     end if;
-    if Cardinality (Left) /= Cardinality (Right) then
+    if Extent (Left) /= Extent (Right) then
       return False;
     end if;
     declare
@@ -49,7 +49,7 @@ package body BC.Containers.Rings is
     Iter : Iterator := New_Iterator (From);
   begin
     if System."/=" (From'Address, To'Address) then
-      Purge (To);
+      Clear (To);
       Reset (Iter);
       while not Is_Done (Iter) loop
         Add (To, Current_Item (Iter));
@@ -57,7 +57,7 @@ package body BC.Containers.Rings is
       end loop;
       To.Top := From.Top;
       To.Mark := From.Mark;
-      if Cardinality (To) > 0 then
+      if Extent (To) > 0 then
         if To.Mark >= To.Top then                 -- XXX huh?
              To.Mark := To.Mark - To.Top;
         else
@@ -110,7 +110,7 @@ package body BC.Containers.Rings is
 
   procedure Reset (It : in out Ring_Iterator) is
   begin
-    if Cardinality (It.R.all) = 0 then
+    if Extent (It.R.all) = 0 then
       It.Index := 0;
     else
       It.Index := 1;
@@ -119,7 +119,7 @@ package body BC.Containers.Rings is
 
   function Is_Done (It : Ring_Iterator) return Boolean is
   begin
-    return It.Index = 0 or else It.Index > Cardinality (It.R.all);
+    return It.Index = 0 or else It.Index > Extent (It.R.all);
   end Is_Done;
 
   procedure Next (It : in out Ring_Iterator) is
@@ -133,7 +133,7 @@ package body BC.Containers.Rings is
       raise BC.Not_Found;
     end if;
     declare
-      Size : constant Positive := Cardinality (It.R.all);
+      Size : constant Positive := Extent (It.R.all);
       I : Positive;
     begin
       I := It.Index + It.R.Top - 1;
@@ -150,7 +150,7 @@ package body BC.Containers.Rings is
       raise BC.Not_Found;
     end if;
     declare
-      Size : constant Positive := Cardinality (It.R.all);
+      Size : constant Positive := Extent (It.R.all);
       I : Positive;
     begin
       I := It.Index + It.R.Top - 1;
