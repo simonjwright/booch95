@@ -84,7 +84,7 @@ package BC.Containers.Maps is
 
   type Map_Iterator is new Iterator with private;
 
-  function Current_Key (It : Map_Iterator) return Key;
+  function Current_Key (It : Map_Iterator'Class) return Key;
   -- Return a copy of the current Key.
 
   generic
