@@ -184,7 +184,7 @@ package BC.Graphs is
 
   -- Active iteration
 
-  type Graph_Iterator is private;
+  type Graph_Iterator (<>) is private;
 
   function New_Graph_Iterator (For_The_Graph : Graph) return Graph_Iterator
     is abstract;
@@ -206,9 +206,10 @@ package BC.Graphs is
 
   generic
     with procedure Apply (Elem : in Vertex'Class; OK : out Boolean);
-  procedure Visit_Vertices (Over_The_Graph : Graph'Class);
-  -- Call Apply with a handle on each Vertex in the Graph. The iteration
-  -- will terminate early if Apply sets OK to False.
+  procedure Visit_Vertices (Using : in out Graph_Iterator);
+  -- Call Apply with a handle on each Vertex in the Graph to which the
+  -- iterator Using is bound. The iteration will terminate early if Apply
+  -- sets OK to False.
 
   ---------------------------------------------------
   -- Iteration over the Arcs connected to a Vertex --
@@ -220,7 +221,7 @@ package BC.Graphs is
 
   -- Active iteration
 
-  type Vertex_Iterator is private;
+  type Vertex_Iterator (<>) is private;
 
   function New_Vertex_Iterator (For_The_Vertex : Vertex) return Vertex_Iterator
     is abstract;
@@ -242,9 +243,10 @@ package BC.Graphs is
 
   generic
     with procedure Apply (Elem : in Arc'Class; OK : out Boolean);
-  procedure Visit_Arcs (Over_The_Vertex : Vertex'Class);
-  -- Call Apply with a handle on each Arc in the Vertex. The iteration
-  -- will terminate early if Apply sets OK to False.
+  procedure Visit_Arcs (Using : in out Vertex_Iterator);
+  -- Call Apply with a handle on each Arc in the Vertex to which the
+  -- iterator Using is bound. The iteration will terminate early if Apply
+  -- sets OK to False.
 
 private
 
