@@ -23,10 +23,8 @@
 with Ada.Text_IO;
 procedure BC.Containers.Trees.AVL.Print (T : AVL_Tree) is
    use Ada.Text_IO;
-   procedure Print_Node (N : Nodes.AVL_Node_Ref; Indent : Natural);
-   procedure Print_Node (N : Nodes.AVL_Node_Ref; Indent : Natural) is
-      use type Nodes.AVL_Node_Ref;
-      use type Nodes.Node_Balance;
+   procedure Print_Node (N : AVL_Node_Ref; Indent : Natural);
+   procedure Print_Node (N : AVL_Node_Ref; Indent : Natural) is
    begin
       if N.Left /= null then
          Print_Node (N.Left, Indent + 1);
@@ -35,7 +33,7 @@ procedure BC.Containers.Trees.AVL.Print (T : AVL_Tree) is
          Put ("  ");
       end loop;
       Put ("element: " & Image (N.Element));
-      Put (" (" & Nodes.Node_Balance'Image (N.Balance) & ")");
+      Put (" (" & Node_Balance'Image (N.Balance) & ")");
       New_Line;
       if N.Right /= null then
          Print_Node (N.Right, Indent + 1);

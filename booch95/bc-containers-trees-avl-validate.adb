@@ -1,4 +1,4 @@
---  Copyright (C) 1999 Simon Wright.
+--  Copyright (C) 1999, 2001 Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -23,11 +23,9 @@
 with Ada.Text_IO;
 procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is
    use Ada.Text_IO;
-   use type Nodes.AVL_Node_Ref;
-   use type Nodes.Node_Balance;
-   function Depth (N : Nodes.AVL_Node_Ref) return Natural;
-   procedure Validate (N : Nodes.AVL_Node_Ref);
-   function Depth (N : Nodes.AVL_Node_Ref) return Natural is
+   function Depth (N : AVL_Node_Ref) return Natural;
+   procedure Validate (N : AVL_Node_Ref);
+   function Depth (N : AVL_Node_Ref) return Natural is
    begin
       if N = null then
          return 0;
@@ -35,7 +33,7 @@ procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is
          return 1 + Natural'Max (Depth (N.Left), Depth (N.Right));
       end if;
    end Depth;
-   procedure Validate (N : Nodes.AVL_Node_Ref) is
+   procedure Validate (N : AVL_Node_Ref) is
       Left_Depth : constant Natural := Depth (N.Left);
       Right_Depth : constant Natural := Depth (N.Right);
    begin
@@ -46,9 +44,9 @@ procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is
          Validate (N.Right);
       end if;
       if Left_Depth = Right_Depth then
-         if N.Balance /= Nodes.Middle then
+         if N.Balance /= Middle then
             Put_Line ("depths equal but balance "
-                      & Nodes.Node_Balance'Image (N.Balance));
+                      & Node_Balance'Image (N.Balance));
          end if;
       elsif Left_Depth > Right_Depth then
          if Left_Depth - Right_Depth /= 1 then
@@ -56,9 +54,9 @@ procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is
                       & Natural'Image (Left_Depth - Right_Depth)
                       & " greater than right depth");
          end if;
-         if N.Balance /= Nodes.Left then
+         if N.Balance /= Left then
             Put_Line ("left deeper than right but balance "
-                      & Nodes.Node_Balance'Image (N.Balance));
+                      & Node_Balance'Image (N.Balance));
          end if;
       else
          if Right_Depth - Left_Depth /= 1 then
@@ -66,9 +64,9 @@ procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is
                       & Natural'Image (Right_Depth - Left_Depth)
                       & " greater than left depth");
          end if;
-         if N.Balance /= Nodes.Right then
+         if N.Balance /= Right then
             Put_Line ("right deeper than left but balance "
-                      & Nodes.Node_Balance'Image (N.Balance));
+                      & Node_Balance'Image (N.Balance));
          end if;
       end if;
    end Validate;
