@@ -72,7 +72,7 @@ package body BC.Support.Bounded is
 
   procedure Insert (Obj : in out Bnd_Node; Elem : Item; Before : Positive) is
   begin
-    Assert (Before < Obj.Size,
+    Assert (Before <= Obj.Size,
             BC.Range_Error'Identity,
             "Insert",
             BSE.Invalid_Index);
