@@ -462,6 +462,15 @@ package body BC.Containers.Lists.Single is
     return L.Rep.Element;
   end Head;
 
+  procedure Process_Head (L : in out Single_List) is
+  begin
+    Assert (L.Rep /= null,
+            BC.Is_Null'Identity,
+            "Process_Head",
+            BSE.Is_Null);
+    Process (L.Rep.Element);
+  end Process_Head;
+
   function Foot (L : Single_List) return Item is
     Curr : Single_Nodes.Single_Node_Ref := L.Rep;
   begin
@@ -474,6 +483,19 @@ package body BC.Containers.Lists.Single is
     end loop;
     return Curr.Element;
   end Foot;
+
+  procedure Process_Foot (L : in out Single_List) is
+    Curr : Single_Nodes.Single_Node_Ref := L.Rep;
+  begin
+    Assert (L.Rep /= null,
+            BC.Is_Null'Identity,
+            "Process_Foot",
+            BSE.Is_Null);
+    while Curr.Next /= null loop
+      Curr := Curr.Next;
+    end loop;
+    Process (Curr.Element);
+  end Process_Foot;
 
   function Item_At (L : Single_List; Index : Positive) return Item is
   begin

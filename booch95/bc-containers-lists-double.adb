@@ -542,6 +542,15 @@ package body BC.Containers.Lists.Double is
     return L.Rep.Element;
   end Head;
 
+  procedure Process_Head (L : in out Double_List) is
+  begin
+    Assert (L.Rep /= null,
+            BC.Is_Null'Identity,
+            "Process_Head",
+            BSE.Is_Null);
+    Process (L.Rep.Element);
+  end Process_Head;
+
   function Foot (L : Double_List) return Item is
     Curr : Double_Nodes.Double_Node_Ref := L.Rep;
   begin
@@ -554,6 +563,19 @@ package body BC.Containers.Lists.Double is
     end loop;
     return Curr.Element;
   end Foot;
+
+  procedure Process_Foot (L : in out Double_List) is
+    Curr : Double_Nodes.Double_Node_Ref := L.Rep;
+  begin
+    Assert (L.Rep /= null,
+            BC.Is_Null'Identity,
+            "Process_Foot",
+            BSE.Is_Null);
+    while Curr.Next /= null loop
+      Curr := Curr.Next;
+    end loop;
+    Process (Curr.Element);
+  end Process_Foot;
 
   function Item_At (L : Double_List; Index : Positive) return Item is
   begin
