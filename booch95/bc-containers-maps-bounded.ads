@@ -125,18 +125,6 @@ private
                           Maximum_Size => Maximum_Size);
    end record;
 
-   procedure Attach (M : in out Unconstrained_Map; K : Key; I : Item);
-
-   function Number_Of_Buckets (M : Unconstrained_Map) return Natural;
-
-   function Length (M : Unconstrained_Map; Bucket : Positive) return Natural;
-
-   function Item_At
-     (M : Unconstrained_Map; Bucket, Index : Positive) return Item_Ptr;
-
-   function Key_At
-     (M : Unconstrained_Map; Bucket, Index : Positive) return Key_Ptr;
-
    type Bounded_Map_Iterator is new Map_Iterator with null record;
 
    procedure Reset (It : in out Bounded_Map_Iterator);
@@ -145,9 +133,11 @@ private
 
    function Is_Done (It : Bounded_Map_Iterator) return Boolean;
 
+   function Current_Key (It : Bounded_Map_Iterator) return Key;
+
    function Current_Item (It : Bounded_Map_Iterator) return Item;
 
-   function Current_Item (It : Bounded_Map_Iterator) return Item_Ptr;
+   function Current_Item_Ptr (It : Bounded_Map_Iterator) return Item_Ptr;
 
    procedure Delete_Item_At (It : in out Bounded_Map_Iterator);
 

@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 generic
    type Key is private;
@@ -31,7 +34,7 @@ package BC.Containers.Maps is
    --  its doamin; the parameter Item denotes the universe from which
    --  the map draws its range. The parameters Key and Item typically
    --  represent different types, although they may may represent the
-   --  same types. Either may be a primitive type or user-defined.
+   --  same type. Either may be a primitive type or user-defined.
 
    type Abstract_Map is abstract new Container with private;
 
@@ -83,9 +86,9 @@ package BC.Containers.Maps is
 
    --  Additional Iterator support
 
-   type Map_Iterator is new Iterator with private;
+   type Map_Iterator is abstract new Iterator with private;
 
-   function Current_Key (It : Map_Iterator'Class) return Key;
+   function Current_Key (It : Map_Iterator) return Key is abstract;
    --  Returns a copy of the current Key.
 
    generic
@@ -99,7 +102,7 @@ package BC.Containers.Maps is
       with procedure Apply (K : Key; I : in out Item; OK : out Boolean);
    procedure Modify (Using : in out Map_Iterator'Class);
    --  Call Apply for each Key/Item pair in the Container to which the
-   --  iterator Using is bound. The Item is a copy, the Value is the
+   --  iterator Using is bound. The Item is a copy, the Item is the
    --  actual content. The iteration will terminate early if Apply
    --  sets OK to False.
 
@@ -110,17 +113,6 @@ private
    type Key_Ptr is access all Key;
    for Key_Ptr'Storage_Size use 0;
 
-   procedure Attach (M : in out Abstract_Map; K : Key; I : Item);
-
-   function Number_Of_Buckets (M : Abstract_Map) return Natural;
-
-   function Length (M : Abstract_Map; Bucket : Positive) return Natural;
-
-   function Item_At
-     (M : Abstract_Map; Bucket, Index : Positive) return Item_Ptr;
-
-   function Key_At (M : Abstract_Map; Bucket, Index : Positive) return Key_Ptr;
-
    --  The new subprograms for Map iteration (which allow access to
    --  the Key as well as the Item) require the inherited
    --  For_The_Container to in fact be in Map'Class. This must be the
@@ -129,24 +121,10 @@ private
    --
    --   Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
    --
-   --  which GNAT fails at compilation time if M isn't actually a Map.
-   type Map_Iterator is new Iterator with record
+   --  which fails at compilation time if M isn't actually a Map.
+   type Map_Iterator is abstract new Iterator with record
       Bucket_Index : Natural := 0;
       Index : Natural := 0;
    end record;
-
-   --  Overriding primitive supbrograms of the concrete actual Iterator.
-
-   procedure Reset (It : in out Map_Iterator);
-
-   procedure Next (It : in out Map_Iterator);
-
-   function Is_Done (It : Map_Iterator) return Boolean;
-
-   function Current_Item (It : Map_Iterator) return Item;
-
-   function Current_Item (It : Map_Iterator) return Item_Ptr;
-
-   procedure Delete_Item_At (It : in out Map_Iterator);
 
 end BC.Containers.Maps;

@@ -89,135 +89,7 @@ package body BC.Containers.Maps.Bounded is
       return Result;
    end New_Iterator;
 
-   --  Private implementations
-
-   procedure Attach (M : in out Unconstrained_Map; K : Key; I : Item) is
-   begin
-      Tables.Bind (M.Rep, K, I);
-   end Attach;
-
-   function Number_Of_Buckets (M : Unconstrained_Map) return Natural is
-      pragma Warnings (Off, M);
-   begin
-      return M.Number_Of_Buckets;
-   end Number_Of_Buckets;
-
-   function Length (M : Unconstrained_Map; Bucket : Positive) return Natural is
-   begin
-      return Tables.Bucket_Extent (M.Rep, Bucket);
-   end Length;
-
-   function Item_At
-     (M : Unconstrained_Map; Bucket, Index : Positive) return Item_Ptr is
-      pragma Warnings (Off, Bucket);
-   begin
-      return Tables.Access_Value_At (M.Rep, Index);
-   end Item_At;
-
-   function Key_At
-     (M : Unconstrained_Map; Bucket, Index : Positive) return Key_Ptr is
-      pragma Warnings (Off, Bucket);
-   begin
-      return Tables.Access_Item_At (M.Rep, Index);
-   end Key_At;
-
-   procedure Reset (It : in out Bounded_Map_Iterator) is
-      M : Unconstrained_Map'Class
-        renames Unconstrained_Map'Class (It.For_The_Container.all);
-   begin
-      It.Index := 0;
-      if Extent (M) = 0 then
-         It.Bucket_Index := 0;
-      else
-         It.Bucket_Index := 1;
-         while It.Bucket_Index <= Number_Of_Buckets (M) loop
-            if M.Rep.Buckets (It.Bucket_Index) > 0 then
-               It.Index := M.Rep.Buckets (It.Bucket_Index);
-               exit;
-            end if;
-            It.Bucket_Index := It.Bucket_Index + 1;
-         end loop;
-      end if;
-   end Reset;
-
-   procedure Next (It : in out Bounded_Map_Iterator) is
-      M : Unconstrained_Map'Class
-        renames Unconstrained_Map'Class (It.For_The_Container.all);
-   begin
-      if It.Bucket_Index <= Number_Of_Buckets (M) then
-         if M.Rep.Contents (It.Index).Next > 0 then
-            It.Index := M.Rep.Contents (It.Index).Next;
-         else
-            It.Bucket_Index := It.Bucket_Index + 1;
-            It.Index := 0;
-            while It.Bucket_Index <= Number_Of_Buckets (M) loop
-               if M.Rep.Buckets (It.Bucket_Index) > 0 then
-                  It.Index := M.Rep.Buckets (It.Bucket_Index);
-                  exit;
-               end if;
-               It.Bucket_Index := It.Bucket_Index + 1;
-            end loop;
-         end if;
-      end if;
-   end Next;
-
-   function Is_Done (It : Bounded_Map_Iterator) return Boolean is
-      M : Unconstrained_Map'Class
-     renames Unconstrained_Map'Class (It.For_The_Container.all);
-   begin
-      if It.Bucket_Index = 0
-        or else It.Bucket_Index > Number_Of_Buckets (M) then
-         return True;
-      end if;
-      if It.Index > 0 then
-         return False;
-      end if;
-      declare
-         package Conversions is new System.Address_To_Access_Conversions
-           (Bounded_Map_Iterator'Class);
-         P : Conversions.Object_Pointer := Conversions.To_Pointer (It'Address);
-      begin
-         P.Bucket_Index := P.Bucket_Index + 1;
-         P.Index := 0;
-         while P.Bucket_Index <= Number_Of_Buckets (M) loop
-            if M.Rep.Buckets (P.Bucket_Index) > 0 then
-               P.Index := M.Rep.Buckets (P.Bucket_Index);
-               return False;
-            end if;
-            P.Bucket_Index := P.Bucket_Index + 1;
-         end loop;
-      end;
-      return True;
-   end Is_Done;
-
-   function Current_Item (It : Bounded_Map_Iterator) return Item is
-      M : Unconstrained_Map'Class
-     renames Unconstrained_Map'Class (It.For_The_Container.all);
-   begin
-      if Is_Done (It) then
-         raise BC.Not_Found;
-      end if;
-      return M.Rep.Contents (It.Index).Value;
-   end Current_Item;
-
-   function Current_Item (It : Bounded_Map_Iterator) return Item_Ptr is
-      --  XXX this should probably not be permitted!
-      M : Unconstrained_Map'Class
-     renames Unconstrained_Map'Class (It.For_The_Container.all);
-   begin
-      if Is_Done (It) then
-         raise BC.Not_Found;
-      end if;
-      return Tables.Access_Value_At (M.Rep, It.Index);
-   end Current_Item;
-
-   procedure Delete_Item_At (It : in out Bounded_Map_Iterator) is
-   begin
-      if Is_Done (It) then
-         raise BC.Not_Found;
-      end if;
-      raise BC.Not_Yet_Implemented;
-   end Delete_Item_At;
+   --  Null containers
 
    Empty_Container : Map;
    pragma Warnings (Off, Empty_Container);
@@ -226,5 +98,56 @@ package body BC.Containers.Maps.Bounded is
    begin
       return Empty_Container;
    end Null_Container;
+
+   --  Iterators
+
+   procedure Reset (It : in out Bounded_Map_Iterator) is
+      M : Unconstrained_Map'Class
+        renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      Tables.Reset (M.Rep, It.Bucket_Index, It.Index);
+   end Reset;
+
+   procedure Next (It : in out Bounded_Map_Iterator) is
+      M : Unconstrained_Map'Class
+        renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      Tables.Next (M.Rep, It.Bucket_Index, It.Index);
+   end Next;
+
+   function Is_Done (It : Bounded_Map_Iterator) return Boolean is
+      M : Unconstrained_Map'Class
+     renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      return Tables.Is_Done (M.Rep, It.Bucket_Index, It.Index);
+   end Is_Done;
+
+   function Current_Key (It : Bounded_Map_Iterator) return Key is
+      M : Unconstrained_Map'Class
+     renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Item_Ptr (M.Rep, It.Bucket_Index, It.Index).all;
+   end Current_Key;
+
+   function Current_Item (It : Bounded_Map_Iterator) return Item is
+      M : Unconstrained_Map'Class
+     renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Value_Ptr (M.Rep, It.Bucket_Index, It.Index).all;
+   end Current_Item;
+
+   function Current_Item_Ptr (It : Bounded_Map_Iterator) return Item_Ptr is
+      M : Unconstrained_Map'Class
+     renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Value_Ptr (M.Rep, It.Bucket_Index, It.Index);
+   end Current_Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Bounded_Map_Iterator) is
+      M : Unconstrained_Map'Class
+        renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      Tables.Delete_Item_At (M.Rep, It.Bucket_Index, It.Index);
+   end Delete_Item_At;
 
 end BC.Containers.Maps.Bounded;

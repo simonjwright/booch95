@@ -105,12 +105,15 @@ package BC.Containers.Maps.Dynamic is
 private
 
    package KC is new BC.Support.Dynamic (Item => Key,
+                                         "=" => Maps."=",
                                          Item_Ptr => Key_Ptr,
                                          Storage => Storage,
                                          Initial_Size => Initial_Size);
    use KC;
    package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
+      Item_Ptr => Key_Ptr,
+      "=" => Maps."=",
       Item_Container => KC.Dyn_Node);
 
    package IC is new BC.Support.Dynamic (Item => Item,
@@ -131,16 +134,22 @@ private
       Rep : Tables.Table (Number_Of_Buckets => Buckets);
    end record;
 
-   procedure Attach (M : in out Map; K : Key; I : Item);
+   --  Iterators
 
-   function Number_Of_Buckets (M : Map) return Natural;
+   type Dynamic_Map_Iterator is new Map_Iterator with null record;
 
-   function Length (M : Map; Bucket : Positive) return Natural;
+   procedure Reset (It : in out Dynamic_Map_Iterator);
 
-   function Item_At
-     (M : Map; Bucket, Index : Positive) return Item_Ptr;
+   procedure Next (It : in out Dynamic_Map_Iterator);
 
-   function Key_At
-     (M : Map; Bucket, Index : Positive) return Key_Ptr;
+   function Is_Done (It : Dynamic_Map_Iterator) return Boolean;
+
+   function Current_Key (It : Dynamic_Map_Iterator) return Key;
+
+   function Current_Item (It : Dynamic_Map_Iterator) return Item;
+
+   function Current_Item_Ptr (It : Dynamic_Map_Iterator) return Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Dynamic_Map_Iterator);
 
 end BC.Containers.Maps.Dynamic;
