@@ -1,3 +1,22 @@
+-- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- All Rights Reserved.
+--
+--      This program is free software; you can redistribute it
+--      and/or modify it under the terms of the Ada Community
+--      License which comes with this Library.
+--
+--      This program is distributed in the hope that it will be
+--      useful, but WITHOUT ANY WARRANTY; without even the implied
+--      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+--      PURPOSE. See the Ada Community License for more details.
+--      You should have received a copy of the Ada Community
+--      License with this library, in the file named "Ada Community
+--      License" or "ACL". If not, contact the author of this library
+--      for a copy.
+--
+
+-- $Id$
+
 package body BC.Containers.Queues.Unbounded is
 
    procedure Clear  (Obj : in out Unb_Queue) is
@@ -67,7 +86,7 @@ package body BC.Containers.Queues.Unbounded is
    end Cardinality;
 
    function Item_At(Obj : in Unb_Queue; Index : in Natural) return Item_Ptr is
-	Tobj : aliased unb_queue := Obj;
+        Tobj : aliased unb_queue := Obj;
    begin
       return Unb_Queue_Nodes.Item_At(TObj.Rep, Index);
    end Item_At;
@@ -86,7 +105,7 @@ package body BC.Containers.Queues.Unbounded is
 
    procedure Finalize(Obj : in out Unb_Queue) is
    begin
-      Unb_Queue_Nodes.Clear(Obj.Rep.all);
+      Unb_Queue_Nodes.Free (Obj.Rep); -- does a Clear()
    end Finalize;
 
 end BC.Containers.Queues.Unbounded;
