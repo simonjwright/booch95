@@ -52,13 +52,17 @@ begin
        (C, Ordering_Support.Sortable'(Key => 2, Ident => Ident));
   end loop;
   declare
-    It : Ordering_Support.Containers.Iterator;
+    It : Ordering_Support.Containers.Iterator'Class
+       := Ordering_Support.CU.New_Iterator (C);
   begin
     Ada.Text_Io.Put_Line ("Reporting on Unbounded_Ordered_Collection");
-    It := Ordering_Support.CU.New_Iterator (C);
     Report (Using => It);
+  end;
+  declare
+    It : Ordering_Support.Containers.Iterator'Class
+       := Ordering_Support.QU.New_Iterator (Q);
+  begin
     Ada.Text_Io.Put_Line ("Reporting on Unbounded_Ordered_Queue");
-    It := Ordering_Support.QU.New_Iterator (Q);
     Report (Using => It);
   end;
   Ada.Text_Io.Put_Line ("Clearing Unbounded_Ordered_Queue");

@@ -41,12 +41,12 @@ procedure Time_Lists is
     procedure D_Application is new Lists_For_Timing.C.Visit (Apply);
     Start : Ada.Calendar.Time;
     Taken : Duration;
-    It : Lists_For_Timing.C.Iterator;
+    It : Lists_For_Timing.C.Iterator'Class
+       := Lists_For_Timing.C.New_Iterator
+             (Lists_For_Timing.C.Container'Class (S));
     use type Ada.Calendar.Time;
   begin
     Total := 0;
-    It := Lists_For_Timing.C.New_Iterator
-       (Lists_For_Timing.C.Container'Class (S));
     Start := Ada.Calendar.Clock;
     S_Application (It);
     Taken := Ada.Calendar.Clock - Start;
