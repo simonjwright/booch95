@@ -26,6 +26,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Collections.Unbounded is
 
+  pragma Elaborate_Body;
+
   type Unbounded_Collection is new Collection with private;
 
   function "=" (Left, Right : in Unbounded_Collection) return Boolean;
@@ -37,8 +39,8 @@ package BC.Containers.Collections.Unbounded is
   -- Add the item to the front of the collection.
 
   procedure Insert (C : in out Unbounded_Collection;
-		    Elem : Item;
-		    Before : Positive);
+                    Elem : Item;
+                    Before : Positive);
   -- Add the item before the given index item in the collection; if
   -- before is 1, the item is added to the front of the collection.
 
@@ -46,16 +48,16 @@ package BC.Containers.Collections.Unbounded is
   -- Add the item at the end of the collection.
 
   procedure Append (C : in out Unbounded_Collection;
-		    Elem : Item;
-		    After : Positive);
+                    Elem : Item;
+                    After : Positive);
   -- Add the item after the given index item in the collection.
 
   procedure Remove (C : in out Unbounded_Collection; At_Index : Positive);
   -- Remove the item at the given index in the collection.
 
   procedure Replace (C : in out Unbounded_Collection;
-		     At_Index : Positive;
-		     Elem : Item);
+                     At_Index : Positive;
+                     Elem : Item);
   -- Replace the item at the given index with the given item.
 
   function Length (C : Unbounded_Collection) return Natural;

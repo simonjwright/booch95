@@ -29,6 +29,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Maps.Unbounded is
 
+  pragma Elaborate_Body;
+
   -- A map denotes a collection forming a dictionary of domain/range
   -- pairs. Maps are cached, so that the most recently accessed
   -- domain/range pair can be found on the order of O(1).

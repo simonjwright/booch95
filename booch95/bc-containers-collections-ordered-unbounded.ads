@@ -26,6 +26,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Collections.Ordered.Unbounded is
 
+  pragma Elaborate_Body;
+
   type Unbounded_Ordered_Collection is new Ordered_Collection with private;
 
   function "=" (Left, Right : in Unbounded_Ordered_Collection) return Boolean;

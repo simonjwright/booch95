@@ -26,6 +26,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Queues.Dynamic is
 
+  pragma Elaborate_Body;
+
   type Dynamic_Queue is new Queue with private;
   -- A dynamic Queue exhibits similar performance to a Bounded_Queue,
   -- except its size is limited only to available memory.  It dynamically
@@ -55,8 +57,6 @@ package BC.Containers.Queues.Dynamic is
 
   function Front (Q : in Dynamic_Queue) return Item;
   -- Return a copy of the item at the front of the queue.
-
-  -- XXX need generic accessor
 
   function Location (Q : in Dynamic_Queue; Elem : Item) return Natural;
   -- Return the first index at which the item is found; return 0 if the
