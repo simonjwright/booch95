@@ -24,6 +24,11 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Maps.Bounded is
 
+   function "=" (L, R : Map) return Boolean is
+   begin
+      return Tables."=" (L.Rep, R.Rep);
+   end "=";
+
    procedure Clear (M : in out Map) is
    begin
       Tables.Clear (M.Rep);

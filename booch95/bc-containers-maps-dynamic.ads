@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -51,6 +51,10 @@ package BC.Containers.Maps.Dynamic is
    type Map is new Abstract_Map with private;
 
    function Null_Container return Map;
+
+   function "=" (L, R : Map) return Boolean;
+   --  Return True if the two Maps contain the same items bound to the
+   --  same values.
 
    procedure Clear (M : in out Map);
    --  Empty the map of all key/item pairs.

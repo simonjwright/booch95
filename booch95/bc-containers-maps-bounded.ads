@@ -49,6 +49,10 @@ package BC.Containers.Maps.Bounded is
 
    function Null_Container return Map;
 
+   function "=" (L, R : Map) return Boolean;
+   --  Return True if the two Maps contain the same items bound to the
+   --  same values.
+
    procedure Clear (M : in out Map);
    --  Empty the map of all key/item pairs.
 
