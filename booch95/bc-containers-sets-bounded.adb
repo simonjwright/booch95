@@ -51,12 +51,8 @@ package body BC.Containers.Sets.Bounded is
   end Remove;
 
   function Available (S : Set) return Natural is
-    Count : Natural := 0;
   begin
-    for B in 1 .. Buckets loop
-      Count := Count + IC.Available (S.Rep.Items (B));
-    end loop;
-    return Count;
+     return Maximum_Size - S.Rep.Size;
   end Available;
 
   function Extent (S : Set) return Natural is
@@ -107,12 +103,12 @@ package body BC.Containers.Sets.Bounded is
 
   function Length (S : Set; Bucket : Positive) return Natural is
   begin
-    return IC.Length (S.Rep.Items (Bucket));
+    return Tables.Length (S.Rep, Bucket);
   end Length;
 
   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (S.Rep.Items (Bucket), Index);
+    return Tables.Item_At (S.Rep, Bucket, Index);
   end Item_At;
 
   Empty_Container : Set;

@@ -17,8 +17,7 @@
 
 -- $Id$
 
-with BC.Support.Bounded;
-with BC.Support.Hash_Tables;
+with BC.Support.Bounded_Hash_Tables;
 
 generic
   with function Hash (V : Item) return Natural is <>;
@@ -77,29 +76,21 @@ package BC.Containers.Sets.Bounded is
 
 private
 
-  package IC is new BC.Support.Bounded (Item => Item,
-                                        Item_Ptr => Item_Ptr,
-                                        Maximum_Size => Maximum_Size);
-  use IC;
-  package Items is new BC.Support.Hash_Tables.Item_Signature
-     (Item => Item,
-      Item_Container => IC.Bnd_Node);
+  package Items is new BC.Support.Bounded_Hash_Tables.Item_Signature
+    (Item => Item,
+     Item_Ptr => Item_Ptr);
 
   -- We need a dummy type for the Value component of the hash table.
   type Boolean_Ptr is access all Boolean;
-  package VC is new BC.Support.Bounded (Item => Boolean,
-                                        Item_Ptr => Boolean_Ptr,
-                                        Maximum_Size => Maximum_Size);
-  use VC;
-  package Values is new BC.Support.Hash_Tables.Value_Signature
+  package Values is new BC.Support.Bounded_Hash_Tables.Value_Signature
      (Value => Boolean,
-      Value_Ptr => Boolean_Ptr,
-      Value_Container => VC.Bnd_Node);
+      Value_Ptr => Boolean_Ptr);
 
-  package Tables is new BC.Support.Hash_Tables.Tables
+  package Tables is new BC.Support.Bounded_Hash_Tables.Tables
      (Items => Items,
       Values => Values,
-      Buckets => Buckets);
+      Buckets => Buckets,
+      Maximum_Size => Maximum_Size);
 
   type Set is new Abstract_Set with record
     Rep : Tables.Table;
