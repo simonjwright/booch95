@@ -28,6 +28,35 @@ generic
        -- XXX for function Item return Arc_Item_Ptr
 package BC.Graphs is
 
+  -- A directed graph is an unrooted collection of vertices and directed
+  -- arcs where cycles and cross-references are not permitted. An
+  -- undirected graph is an unrooted collection of vertices and undirected
+  -- arcs where cycles and cross-references are permitted. Three types
+  -- collaborate to form the abstraction of a directed and undirected
+  -- graph: a graph type, a vertex type, and an arc type.
+
+  -- Directed and undirected graphs are monolithic structures although
+  -- copying, assignment, and equality are prohibited. Their vertices and
+  -- arcs are polylithic structures, and hence the semantics of copying,
+  -- assignment, and equality involve structural sharing. Care must be
+  -- taken in manipulating the same vertex or arc named by more than one
+  -- alias.
+
+  -- These classes are not intended to be subclassed.
+
+  -- These abstractions have been carefully constructed to eliminate all
+  -- storage leaks, except in the case of intentional abuses. When a graph
+  -- is manipulated, all items that become unreachable are automatically
+  -- reclaimed. Furthermore, this design protects against dangling
+  -- references: an item is never reclaimed if there exists a reference to
+  -- it.
+
+  -- Each vertex and arc is a member of exactly one graph; furthermore, the
+  -- vertices at both ends of an arc are guaranteed to be members of the
+  -- same graph as the arc. This guarantee is provided by an implementation
+  -- strategy whereby every graph is given a unique identity, and each
+  -- vertex and arc is created only in the context of a particular graph.
+
   type Graph is abstract new Ada.Finalization.Limited_Controlled with private;
   type Graph_Ptr is access all Graph'Class;
 
@@ -42,80 +71,103 @@ package BC.Graphs is
   ----------------------
 
   procedure Clear (G : in out Graph);
+  -- Destroy all the vertices in the graph, and by implication, all the
+  -- arcs in the graph. The semantics of destroy are such that any aliased
+  -- vertices and arcs are not eliminated from the graph, because to do so
+  -- would introduce dangling references.
 
   procedure Create_Vertex (G : in out Graph;
                            V : in out Vertex'Class;
                            I : Vertex_Item);
+  -- Create a new vertex and add it to the graph, setting the second
+  -- argument of this function as an alias to this new vertex.
+
+  -- Arc creation is provided in concrete derivations.
 
   procedure Destroy_Vertex (G : in out Graph;
                             V : in out Vertex'Class);
+  -- Destroy the given vertex and any associated arcs. If the vertex has no
+  -- other aliases, eliminate it from the graph.
 
   procedure Destroy_Arc (G : in out Graph;
                          A : in out Arc'Class);
+  -- Destroy the given arc and any associated vertices. If the arc has no
+  -- other aliases, eliminate it from the graph.
 
   function Number_Of_Vertices (G : Graph) return Natural;
+  -- Return the number of vertices in the graph.
 
   function Is_Empty (G : Graph) return Boolean;
+  -- Return True if and only if the graph does not contain any vertices or
+  -- arcs.
 
   function Is_Member (G : Graph; V : Vertex'Class) return Boolean;
+  -- Return True if and only if the given vertex is not null and denotes a
+  -- vertex in the graph.
 
   function Is_Member (G : Graph; A : Arc'Class) return Boolean;
+  -- Return True if and only if the given arc is not null and denotes an
+  -- arc in the graph.
 
   -----------------------
   -- Vertex operations --
   -----------------------
 
   function "=" (L, R : Vertex) return Boolean;
+  -- Return True if and only if both vertices are null or are an alias to
+  -- the same vertex.
 
   procedure Clear (V : in out Vertex);
+  -- If the vertex is not null, remove this alias.
 
   procedure Set_Item (V : in out Vertex; I : Vertex_Item);
+  -- Set the item of the given vertex.
 
   function Is_Null (V : Vertex) return Boolean;
+  -- Return True if and only if the vertex is null.
 
   function Is_Shared (V : Vertex) return Boolean;
+  -- Return True if and only if the vertex has other aliases.
 
   function Item (V : Vertex) return Vertex_Item;
+  -- Return the item associated with the vertex.
 
   function Item (V : Vertex) return Vertex_Item_Ptr;  -- hmm
+  -- Return a pointer to the item associated with the vertex.
 
   function Enclosing_Graph (V : Vertex) return Graph_Ptr;
+  -- Return the graph enclosing the vertex.
 
   --------------------
   -- Arc operations --
   --------------------
 
   function "=" (L, R : Arc) return Boolean;
+  -- Return True if and only if both arcs are null or are an alias to the
+  -- same arc.
 
   procedure Clear (A : in out Arc);
+  -- If the arc is not null, remove this alias.
 
   procedure Set_Item (A : in out Arc; I : Arc_Item);
+  -- Set the item of the given arc.
 
   function Is_Null (A : Arc) return Boolean;
+  -- Return 1 if and only if the arc is null.
 
   function Is_Shared (A : Arc) return Boolean;
+  -- Return True if and only if the arc has other aliases.
 
   function Item (A : Arc) return Arc_Item;
+  -- Return the item associated with the arc.
 
   function Item (A : Arc) return Arc_Item_Ptr;
+  -- Return a pointer to the item associated with the arc.
 
   function Enclosing_Graph (A : Arc) return Graph_Ptr;
+  -- Return the graph enclosing the arc.
 
-  ---------------------
-  -- Graph iterators --
-  ---------------------
-
-  type Graph_Iterator (G : access Graph'Class) is limited private;
-
-  procedure Reset (It : in out Graph_Iterator);
-
-  procedure Next (It : in out Graph_Iterator);
-
-  function Is_Done (It : Graph_Iterator) return Boolean;
-
-  procedure Current_Item (It : Graph_Iterator; V : in out Vertex'Class);
-
-  -- For passive iterator, see concrete Graph package (Directed, Undirected)
+  -- For Iterators, see concrete derivations.
 
 private
 
@@ -171,10 +223,6 @@ private
   end record;
   procedure Adjust (A : in out Arc);
   procedure Finalize (A : in out Arc);
-
-  type Graph_Iterator (G : access Graph'Class) is limited record
-    Index : Vertex_Node_Ptr := G.Rep;
-  end record;
 
 end BC.Graphs;
 
