@@ -56,7 +56,7 @@ private
 
   type Unit is abstract tagged record
     Named : Ada.Strings.Unbounded.Unbounded_String;
-    Vertex : Dependencies.Vertex;
+    Vertex : Dependencies.Directed_Vertex;
   end record;
 
   type Normal_Unit is new Unit with null record;
