@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -335,31 +335,7 @@ package body BC.Graphs is
   -- Iteration over the Vertices in a Graph --
   --------------------------------------------
 
-  procedure Reset (Obj : in out Graph_Iterator) is
-  begin
-    Reset (GSP.Value (GSP.Pointer (Obj)).all);
-  end Reset;
-
-
-  procedure Next (Obj : in out Graph_Iterator) is
-  begin
-    Next (GSP.Value (GSP.Pointer (Obj)).all);
-  end Next;
-
-
-  function Is_Done (Obj : Graph_Iterator) return Boolean is
-  begin
-    return Is_Done (GSP.Value (GSP.Pointer (Obj)).all);
-  end Is_Done;
-
-
-  function Current_Vertex (Obj : Graph_Iterator) return Vertex'Class is
-  begin
-    return Current_Vertex (GSP.Value (GSP.Pointer (Obj)).all);
-  end Current_Vertex;
-
-
-  procedure Visit_Vertices (Using : in out Graph_Iterator) is
+  procedure Visit_Vertices (Using : in out Graph_Iterator'Class) is
     Success : Boolean;
   begin
     Reset (Using);
@@ -375,31 +351,7 @@ package body BC.Graphs is
   -- Iteration over the Arcs connected to a Vertex --
   ---------------------------------------------------
 
-  procedure Reset (Obj : in out Vertex_Iterator) is
-  begin
-    Reset (VSP.Value (VSP.Pointer (Obj)).all);
-  end Reset;
-
-
-  procedure Next (Obj : in out Vertex_Iterator) is
-  begin
-    Next (VSP.Value (VSP.Pointer (Obj)).all);
-  end Next;
-
-
-  function Is_Done (Obj : Vertex_Iterator) return Boolean is
-  begin
-    return Is_Done (VSP.Value (VSP.Pointer (Obj)).all);
-  end Is_Done;
-
-
-  function Current_Arc (Obj : Vertex_Iterator) return Arc'Class is
-  begin
-    return Current_Arc (VSP.Value (VSP.Pointer (Obj)).all);
-  end Current_Arc;
-
-
-  procedure Visit_Arcs (Using : in out Vertex_Iterator) is
+  procedure Visit_Arcs (Using : in out Vertex_Iterator'Class) is
     Success : Boolean;
   begin
     Reset (Using);
