@@ -25,52 +25,52 @@ package body BC.Containers.Queues.Bounded is
 
   procedure Clear (Q : in out Queue) is
   begin
-    Queue_Nodes.Clear (Q.Rep.all);
+    Queue_Nodes.Clear (Q.Rep);
   end Clear;
 
   procedure Append (Q : in out Queue; Elem : Item) is
   begin
-    Queue_Nodes.Append (Q.Rep.all, Elem);
+    Queue_Nodes.Append (Q.Rep, Elem);
   end Append;
 
   procedure Pop (Q : in out Queue) is
   begin
-    Queue_Nodes.Remove (Q.Rep.all, 1);
+    Queue_Nodes.Remove (Q.Rep, 1);
   end Pop;
 
   procedure Remove (Q : in out Queue; From : Positive) is
   begin
-    Queue_Nodes.Remove (Q.Rep.all, From);
+    Queue_Nodes.Remove (Q.Rep, From);
   end Remove;
 
   function Available (Q : in Queue) return Natural is
   begin
-    return Queue_Nodes.Available (Q.Rep.all);
+    return Queue_Nodes.Available (Q.Rep);
   end Available;
 
   function Length  (Q : Queue) return Natural is
   begin
-    return Queue_Nodes.Length (Q.Rep.all);
+    return Queue_Nodes.Length (Q.Rep);
   end Length;
 
   function Is_Empty (Q : Queue) return Boolean is
   begin
-    return Queue_Nodes.Length (Q.Rep.all) = 0;
+    return Queue_Nodes.Length (Q.Rep) = 0;
   end Is_Empty;
 
   function Front (Q : Queue) return Item is
   begin
-    return Queue_Nodes.First (Q.Rep.all);
+    return Queue_Nodes.First (Q.Rep);
   end Front;
 
   function Location (Q : in Queue; Elem : Item) return Natural is
   begin
-    return Queue_Nodes.Location (Q.Rep.all, Elem);
+    return Queue_Nodes.Location (Q.Rep, Elem);
   end Location;
 
   function "=" (Left, Right : Queue) return Boolean is
   begin
-    return Left.Rep.all = Right.Rep.all;
+    return Left.Rep = Right.Rep;
   end "=";
 
   package Address_Conversions
@@ -88,20 +88,11 @@ package body BC.Containers.Queues.Bounded is
 
   function Item_At (Q : Queue; Index : Positive) return Item_Ptr is
   begin
-    return Queue_Nodes.Item_At (Q.Rep.all, Index);
+    return Queue_Nodes.Item_At (Q.Rep, Index);
   end Item_at;
 
-  procedure Adjust (Q : in out Queue) is
-  begin
-    Q.Rep := Queue_Nodes.Create (Q.Rep.all);
-  end Adjust;
-
-  procedure Finalize (Q : in out Queue) is
-  begin
-    Free (Q.Rep);
-  end Finalize;
-
   Empty_Container : Queue;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Queue is
   begin
