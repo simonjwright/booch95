@@ -373,7 +373,7 @@ package body BC.Graphs is
   ----------------------------------------------
 
   procedure Clear_Vertex_Node (G : in out Graph'Class;
-                               N : Vertex_Node_Ptr) is
+                               N : in out Vertex_Node_Ptr) is
     Curr : Arc_Node_Ptr;
     Prev, Index : Vertex_Node_Ptr;
   begin
@@ -417,6 +417,9 @@ package body BC.Graphs is
     Index.Next := null;
     N.Enclosing := null;
     N.Count := N.Count - 1;
+    if N.Count = 0 then
+      Delete (N);
+    end if;
   end Clear_Vertex_Node;
 
 
