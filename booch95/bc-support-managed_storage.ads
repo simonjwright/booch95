@@ -100,6 +100,7 @@ private
   function Within_Range( Target : System.Address;
                          Base   : Chunk_Pointer;
                          Offset : SSE.Storage_Count ) return Boolean;
+  pragma Inline( Within_Range );
 
   procedure Get_Chunk( Result                 :    out Chunk_Pointer;
                        From                   : in out Pool;
