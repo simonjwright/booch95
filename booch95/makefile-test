@@ -119,3 +119,8 @@ stack_test_aonix: force
 aonix_testable: $(AONIX_TESTABLE)
 
 .PHONY: force
+
+# Emacs variable settings
+# Local Variables:
+# mode : makefile
+# End:

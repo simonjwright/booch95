@@ -69,3 +69,8 @@ word_count: bcwords.ada
 demos: $(DEMOS)
 
 .PHONY: force
+
+# Emacs variable settings
+# Local Variables:
+# mode : makefile
+# End:
