@@ -196,6 +196,7 @@ begin
   Test_Primitive (Queue_B_P1, Queue_B_P2);
 
   Put_Line ("...Dynamic Queue");
+  QD.Preallocate (Queue_D_P1, 50);
   Test_Primitive (Queue_D_P1, Queue_D_P2);
 
   Put_Line ("...Unbounded Queue");
