@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -18,8 +18,9 @@
 -- $Id$
 
 with BC.Support.Exceptions;
+with System.Address_To_Access_Conversions;
 
-package body Bc.Containers.Lists.Single is
+package body BC.Containers.Lists.Single is
 
   package BSE renames BC.Support.Exceptions;
   procedure Assert
@@ -266,7 +267,7 @@ package body Bc.Containers.Lists.Single is
     Prev, Ptr : Single_Nodes.Single_Node_Ref;
     Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Index : Positive := 1;
-    Cut : Boolean := True;
+    Shared_Node_Found : Boolean := False;
   begin
     while Curr /= null and then Index < From loop
       Prev := Curr;
@@ -286,17 +287,19 @@ package body Bc.Containers.Lists.Single is
     while Curr /= null and then Index <= Count loop
       Ptr := Curr;
       Curr := Curr.Next;
-      if Cut then
+      if not Shared_Node_Found then
         if Ptr.Count > 1 then
           Ptr.Count := Ptr.Count - 1;
-          Cut := False;
+          Shared_Node_Found := True;
         else
           Single_Nodes.Delete (Ptr);
         end if;
       end if;
       Index := Index + 1;
     end loop;
-    Ptr.Next := null;
+    if Shared_Node_Found then
+      Ptr.Next := null;
+    end if;
     if Curr /= null then
       if Prev /= null then
         Prev.Next := Curr;
@@ -461,15 +464,6 @@ package body Bc.Containers.Lists.Single is
     return Obj.Rep.Element;
   end Head;
 
-  function Head (Obj : Single_List) return Item_Ptr is
-  begin
-    Assert (Obj.Rep /= null,
-            BC.Is_Null'Identity,
-            "Head",
-            BSE.Is_Null);
-    return Obj.Rep.Element'access;
-  end Head;
-
   function Foot (Obj : Single_List) return Item is
     Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
   begin
@@ -483,41 +477,39 @@ package body Bc.Containers.Lists.Single is
     return Curr.Element;
   end Foot;
 
-  function Foot (Obj : Single_List) return Item_Ptr is
-    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
-  begin
-    Assert (Obj.Rep /= null,
-            BC.Is_Null'Identity,
-            "Foot",
-            BSE.Is_Null);
-    while Curr.Next /= null loop
-      Curr := Curr.Next;
-    end loop;
-    return Curr.Element'access;
-  end Foot;
-
   function Item_At (Obj : Single_List; Index : Positive) return Item is
-    Prev : Single_Nodes.Single_Node_Ref;
-    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
-    Loc : Positive := 1;
+--      Prev : Single_Nodes.Single_Node_Ref;
+--      Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
+--      Loc : Positive := 1;
+--    begin
+--      Assert (Obj.Rep /= null,
+--              BC.Is_Null'Identity,
+--              "Item_At",
+--              BSE.Is_Null);
+--      while Curr /= null and then Loc < Index loop
+--        Curr := Curr.Next;
+--        Loc := Loc + 1;
+--      end loop;
+--      Assert (Curr /= null,
+--              BC.Range_Error'Identity,
+--              "Item_At",
+--              BSE.Invalid_Index);
+--      return Curr.Element;
   begin
-    Assert (Obj.Rep /= null,
-            BC.Is_Null'Identity,
-            "Item_At",
-            BSE.Is_Null);
-    while Curr /= null and then Loc < Index loop
-      Curr := Curr.Next;
-      Loc := Loc + 1;
-    end loop;
-    Assert (Curr /= null,
-            BC.Range_Error'Identity,
-            "Item_At",
-            BSE.Invalid_Index);
-    return Curr.Element;
+    return Item_At (Obj, Index).all;
   end Item_At;
 
-  function Item_At (Obj : Single_List; Index : Natural) return Item_Ptr is
-    Prev : Single_Nodes.Single_Node_Ref;
+  package Address_Conversions
+  is new System.Address_To_Access_Conversions (Single_List);
+
+  function New_Iterator (For_The_List : Single_List) return Iterator is
+    P : Address_Conversions.Object_Pointer
+       := Address_Conversions.To_Pointer (For_The_List'Address);
+  begin
+    return Iterator (SP.Create (new Single_List_Iterator (P)));
+  end New_Iterator;
+
+  function Item_At (Obj : Single_List; Index : Positive) return Item_Ptr is
     Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Loc : Positive := 1;
   begin
@@ -536,7 +528,7 @@ package body Bc.Containers.Lists.Single is
     return Curr.Element'access;
   end Item_At;
 
-  function Cardinality (Obj : Single_List) return Integer is
+  function Cardinality (Obj : Single_List) return Natural is
   begin
     return Length (Obj);
   end Cardinality;
@@ -558,4 +550,42 @@ package body Bc.Containers.Lists.Single is
     Clear (Obj);
   end Finalize;
 
-end Bc.Containers.Lists.Single;
+  procedure Initialize (It : in out Single_List_Iterator) is
+  begin
+    Reset (It);
+  end Initialize;
+
+  procedure Reset (It : in out Single_List_Iterator) is
+  begin
+    It.Index := It.L.Rep;
+  end Reset;
+
+  procedure Next (It : in out Single_List_Iterator) is
+  begin
+    if It.Index /= null then
+      It.Index := It.Index.Next;
+    end if;
+  end Next;
+
+  function Is_Done (It : Single_List_Iterator) return Boolean is
+  begin
+    return It.Index = null;
+  end Is_Done;
+
+  function Current_Item (It : Single_List_Iterator) return Item is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    return It.Index.Element;
+  end Current_Item;
+
+  function Current_Item (It : Single_List_Iterator) return Item_Ptr is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    return It.Index.Element'Access;
+  end Current_Item;
+
+end BC.Containers.Lists.Single;

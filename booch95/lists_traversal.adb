@@ -17,6 +17,13 @@
 
 -- $Id$
 
+-- The purpose of this test procedure is to check out a problem that was --
+-- reported   where  the  Predecessor()   operation  didn't   behave  as --
+-- expected.   Although  there  was   an  error,   it  turns   out  that --
+-- Predecessor() can't  be used to  reverse a Tail() operation  when the --
+-- previous head of the list wasn't shared by another alias. You may not --
+-- like this limitation, but that's the way the Components are defined!  --
+
 with Ada.Finalization;
 with Ada.Text_Io;
 with BC.Support.Exceptions;
@@ -34,7 +41,7 @@ begin
   end loop;
   Ada.Text_Io.Put_Line ("Full list's length is"
                         & Natural'Image (Lists_For_Traversal.D.Length (D)));
-  K := D;
+--  K := D;
   for I in 1 .. 9 loop
     Lists_For_Traversal.D.Tail (D);
   end loop;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -19,79 +19,73 @@
 
 package body BC.Containers is
 
-  procedure Reset (Obj : in out Iterator) is
+  function Cardinality (C : Container) return Natural is
   begin
-    if Cardinality (Obj.C.all) > 0 then
-      Obj.Index := 1;
-    else
-      Obj.Index := -1;
-    end if;
-  end Reset;
+    raise Should_Have_Been_Overridden;
+    return 0;
+  end Cardinality;
 
-  procedure Next (Obj : in out Iterator) is
+  procedure Purge (C : in out Container) is
   begin
-    Obj.Index := Obj.Index + 1;
-  end Next;
+    raise Should_Have_Been_Overridden;
+  end Purge;
 
-  function Is_Done (Obj : Iterator) return Boolean is
-  begin
-    return (Obj.Index < 0) or else (Obj.Index > Cardinality (Obj.C.all));
-  end Is_Done;
-
-  function Current_Item (Obj : Iterator) return Item is
-  begin
-    return Item_At (Obj.C.all, Obj.Index).all;
-  end Current_Item;
-
-  function Current_Item (Obj : Iterator) return Item_Ptr is
-  begin
-    return Item_At (Obj.C.all, Obj.Index);
-  end Current_Item;
-
-  function Visit (Obj : access Passive_Iterator) return Boolean is
-    Iter : Iterator (Obj.C);
-    Temp : Item;
-    Success : Boolean;
-  begin
-    while not Is_Done (Iter) loop
-      Temp := Current_Item (Iter);
-      Apply (Temp, Success);
-      if Success then
-        Next (Iter);
-      else
-        return False;
-      end if;
-    end loop;
-    return True;
-  end Visit;
-
-  function Modify (Obj : access Passive_Iterator) return Boolean is
-    Iter : Iterator (Obj.C);
-    Temp : Item_Ptr;
-    Success : Boolean;
-  begin
-    while not Is_Done (Iter) loop
-      Temp := Current_Item (Iter);
-      Apply (Temp, Success);
-      if Success then
-        Next (Iter);
-      else
-        return False;
-      end if;
-    end loop;
-    return True;
-  end Modify;
-
-  function Item_At (Obj : Container; Index : Natural) return Item_Ptr is
+  function Item_At (C : Container; Index : Positive) return Item_Ptr is
   begin
     raise Should_Have_Been_Overridden;
     return null;
   end Item_At;
 
-  function Cardinality (Obj : Container) return Integer is
+  procedure Reset (Obj : in out Iterator) is
   begin
-    raise Should_Have_Been_Overridden;
-    return 0;
-  end Cardinality;
+    Reset (SP.Value (SP.Pointer (Obj)).all);
+  end Reset;
+
+  procedure Next (Obj : in out Iterator) is
+  begin
+    Next (SP.Value (SP.Pointer (Obj)).all);
+  end Next;
+
+  function Is_Done (Obj : Iterator) return Boolean is
+  begin
+    return Is_Done (SP.Value (SP.Pointer (Obj)).all);
+  end Is_Done;
+
+  function Current_Item (Obj : Iterator) return Item is
+  begin
+    return Current_Item (SP.Value (SP.Pointer (Obj)).all);
+  end Current_Item;
+
+  procedure Access_Current_Item is
+  begin
+    Apply (Current_Item (SP.Value (SP.Pointer (In_The_Iterator)).all).all);
+  end Access_Current_Item;
+
+  procedure Visit  (Using : in out Iterator) is
+    Success : Boolean;
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Current_Item (Using), Success);
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Visit;
+
+  procedure Modify (Using : in out Iterator) is
+    Success : Boolean;
+    procedure Caller (I : in out Item) is
+    begin
+      Apply (I, Success);
+    end Caller;
+    procedure Call_Apply is new Access_Current_Item (Caller, Using);
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Call_Apply;
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Modify;
 
 end BC.Containers;

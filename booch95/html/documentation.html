@@ -220,20 +220,31 @@ abstract class (such subprograms can't be abstract, see RM95 3.9.3(10)).</p>
 
 </P>
 <H2><a name="iteration">Iteration<a/></H2>
-<P>Separate types act as agents responsible for iterating across a structure.
-This was done for two reasons: </P>
+
+Separate types act as agents responsible for iterating across a structure.
+This was done for two reasons:
+
 <UL>
-<LI>By providing separate iterator classes, we make it possible to have several
-iterator objects working upon the same object. 
-<P></P>
-<LI>Iteration slightly breaks the encapsulation of an object's state; by separating
-the behaviour of iteration from the rest of an abstraction's protocol, we
-provide a much cleaner separation of the two. 
+
+<LI>By providing separate iterator types, we make it possible to
+have several iterator objects working upon the same object.
+
+<LI>Iteration slightly breaks the encapsulation of an object's state;
+by separating the behaviour of iteration from the rest of an
+abstraction's protocol, we provide a much cleaner separation of the
+two.
+
 </UL>
-<P>There are two forms: active and passive. Active iteration requires the client
+
+There are two forms: active and passive. Active iteration requires the client
 explicitly advance the iterator. For passive, the client supplies a single
-procedure &quot;Apply&quot; to work across the structure. </P>
-<P>There are many different approaches to iteration in Ada 95. The current
+procedure <tt>Apply</tt> to work across the structure.<p>
+
+In both forms, mechanisms are provided (where appropriate) to allow
+access to the actual contained object rather than just to its
+value.<p>
+
+There are many different approaches to iteration in Ada 95. The current
 mechanism was selected for its direct simplicity and efficiency. 
 
 
@@ -270,15 +281,19 @@ Trees
 <font color=red>
 <p>Here are the components presently available.</p>
 <pre>
+Bags       : U
 Graphs
   Directed : U
   Undir    : U
 Lists
   Single   : U
   Double   : U
+Maps       : UBD
 Queues     : UBD
+Sets       : UBD
 Stacks     : UBD
 Trees
+  AVL      : U
   Binary   : U
   Multiway : U
 </pre>
@@ -292,7 +307,12 @@ Trees
 <P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
 <P><A HREF="index.html">[index]</A></p>
 
-<p><i>Last update: 20.x.98</i></p>
+<p><i>
+<script>
+document.write("Last update: ");
+document.write(document.lastModified);
+</script>
+<i></p>
 
 <!------------------------------------------------------------------->
 

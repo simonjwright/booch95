@@ -1,4 +1,4 @@
--- Copyright (C) 1998 Simon Wright.
+-- Copyright (C) 1998-1999 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -56,7 +56,7 @@ private
 
   type Unit is abstract tagged record
     Named : Ada.Strings.Unbounded.Unbounded_String;
-    Vertex : Dependencies.Vertex;
+    Vertex : Dependencies.Directed_Vertex;
   end record;
 
   type Normal_Unit is new Unit with null record;

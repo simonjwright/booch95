@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -17,14 +17,14 @@
 
 -- $Id$
 
-with Bc.Support.Nodes;
+with BC.Support.Nodes;
 with System.Storage_Pools;
 
 generic
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
-package Bc.Containers.Lists.Single is
+package BC.Containers.Lists.Single is
 
   -- Singly-linked list
 
@@ -138,25 +138,26 @@ package Bc.Containers.Lists.Single is
   function Head (Obj : Single_List) return Item;
   -- Return a copy of the item at the head of the list.
 
-  function Head (Obj : Single_List) return Item_Ptr;
-  -- Return a pointer to the item at the head of the list.
+  -- XXX need accessor generic
 
   function Foot (Obj : Single_List) return Item;
   -- Return a copy of the item at the end of the list.
 
-  function Foot (Obj : Single_List) return Item_Ptr;
-  -- Return a pointer to the item at the end of the list.
+  -- XXX need accessor generic
 
   function Item_At (Obj : Single_List; Index : Positive) return Item;
   -- Return a copy of the item at the given index.
 
+  function New_Iterator (For_The_List : Single_List) return Iterator;
+  -- Return a reset Iterator bound to the specific List.
+
 private
 
-  function Item_At (Obj : Single_List; Index : Natural) return Item_Ptr;
-  function Cardinality (Obj : Single_List) return Integer;
+  function Item_At (Obj : Single_List; Index : Positive) return Item_Ptr;
+  function Cardinality (Obj : Single_List) return Natural;
 
   package Single_Nodes
-  is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
+  is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
   type Single_List is new Container with record
     Rep : Single_Nodes.Single_Node_Ref;
@@ -166,4 +167,23 @@ private
   procedure Adjust (Obj : in out Single_List);
   procedure Finalize (Obj : in out Single_List);
 
-end Bc.Containers.Lists.Single;
+  type Single_List_Iterator (L : access Single_List'Class)
+  is new Actual_Iterator (L) with record
+    Index : Single_Nodes.Single_Node_Ref;
+  end record;
+
+  -- Overriding primitive supbrograms of the concrete actual Iterator.
+
+  procedure Initialize (It : in out Single_List_Iterator);
+
+  procedure Reset (It : in out Single_List_Iterator);
+
+  procedure Next (It : in out Single_List_Iterator);
+
+  function Is_Done (It : Single_List_Iterator) return Boolean;
+
+  function Current_Item (It : Single_List_Iterator) return Item;
+
+  function Current_Item (It : Single_List_Iterator) return Item_Ptr;
+
+end BC.Containers.Lists.Single;

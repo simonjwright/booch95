@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -17,44 +17,24 @@
 
 -- $Id$
 
-with Text_Io;
-with Root_Container;
-with Root_Stacks;
-with Root_Bounded_Stacks;
-with Root_Dynamic_Stacks;
-with Root_Unbounded_Stacks;
--- with User_Container;
--- with User_Stacks;
--- with User_Bounded_Stacks;
--- with User_Dynamic_Stacks;
--- with User_Unbounded_Stacks;
--- with User_Defined;
-with Character_References;
+with Ada.Text_IO;
+with Stack_Test_Support;
 procedure Stack_Test is
-  use Text_IO;
-  use ROot_Container;
-  use Root_Stacks;
-  use Root_Bounded_Stacks;
-  use Root_Dynamic_Stacks;
-  use Root_Unbounded_Stacks;
-  use Character_References;
-  --    use User_Container;
-  --    use User_Stacks;
-  --    use User_Bounded_Stacks;
-  --    use User_Dynamic_Stacks;
-  --    use User_Unbounded_Stacks;
-  --    use User_Defined;
+  use Ada.Text_IO;
+  use Stack_Test_Support;
+  use Containers;
+  use Stacks;
+  use SB;
+  use SD;
+  use SU;
 
   --    Global_Items : array(1..10) of aliased Chunk;
 
-  procedure Process (C : in Char_Ptr; OK : out Boolean) is
-    use Text_IO;
+  procedure Process (C : Character; OK : out Boolean) is
   begin
-    Put_Line ("Item: " & C.all );
+    Put_Line ("Item: " & C);
     Ok := True;
   end Process;
-
-  function Mod_Op is new Modify (Apply => Process);
 
   procedure Assertion (Cond : Boolean; Message : String) is
   begin
@@ -62,25 +42,24 @@ procedure Stack_Test is
       Put_Line (Message);
     end if;
   end Assertion;
-  pragma Inline (Assertion);
 
-  procedure Test_Active_Iterator (L : access Container'Class) is
-    Iter : Iterator (L);
+  procedure Test_Active_Iterator (L : Container'Class) is
+    Iter : Iterator := New_Iterator (L);
     Success : Boolean;
-    Temp : Char_Ptr;
+    Temp : Character;
   begin
     while not Is_Done (Iter) loop
       Temp := Current_Item (Iter);
       Process (Temp, Success);
-      Next(Iter);
+      Next (Iter);
     end loop;
   end Test_Active_Iterator;
 
-  procedure Test_Passive_Iterator (L : access Container'Class) is
-    PIter : aliased Passive_Iterator (L);
-    Success : Boolean;
+  procedure Test_Passive_Iterator (S : Container'Class) is
+    procedure Iterate is new Visit (Apply => Process);
+    Iter : Iterator := New_Iterator (S);
   begin
-    Success := Mod_Op (PIter'access); -- just discard Success for now..
+    Iterate (Using => Iter);
   end Test_Passive_Iterator;
 
   procedure Test_Primitive (S1, S2 : in out Stack'Class) is
@@ -129,14 +108,14 @@ procedure Stack_Test is
     Assertion (not (Is_Empty (S2)), "** P22: Stack is empty");
     Assertion ((Depth (S2) = 1), "** P23: Stack depth is not correct");
     Assertion ((Top (S2) = '7'), "** P24: Stack top is not correct");
-    Assertion ((S1 = S2), "** P25: Stacks are not equal");
+    Assertion (Are_Equal (S1, S2), "** P25: Stacks are not equal");
     Clear (S2);
     Assertion (not (Is_Empty (S1)) , "** P26: Stack is empty");
     Assertion (Is_Empty (S2), "** P29: Stack is not empty");
     Assertion ((Depth (S1) = 1), "** P27: Stack depth is not correct");
     Assertion ((Top (S1) = '7'), "** P28: Stack top is not correct");
     Assertion ((Depth (S2) = 0), "** P30: Stack depth is not correct");
-    Assertion ((S1 /= S2), "** P31: Stacks not equal");
+    Assertion (not Are_Equal (S1, S2), "** P31: Stacks not equal");
   end Test_Primitive;
 
   --    procedure Test_User_Defined(S1, S2 : in out Stack'Class) is
@@ -191,10 +170,10 @@ procedure Stack_Test is
   --       Assertion ((s1 /= s2), "** P31: Stacks not equal");
   --    end Test_User_Defined;
 
-  Stack_B_P1, Stack_B_P2 : aliased Root_Bounded_Stacks.Bnd_Stack;
-  Stack_D_P1, Stack_D_P2 : aliased Root_Dynamic_Stacks.Dyn_Stack;
-  Stack_U_P1, Stack_U_P2 : aliased Root_Unbounded_Stacks.Unb_Stack;
-  --    Stack_b_u1, Stack_b_u2 : aliased User_Bound_Stacks.Bnd_Stack;
+  Stack_B_P1, Stack_B_P2 : SB.Bounded_Stack;
+  Stack_D_P1, Stack_D_P2 : SD.Dynamic_Stack;
+  Stack_U_P1, Stack_U_P2 : SU.Unbounded_Stack;
+  --    Stack_b_u1, Stack_b_u2 : aliased User_Bound_Stacks.Bounded_Stack;
   --    Stack_d_u1, Stack_d_u2 : aliased User_Dynamic_Stacks.Dyn_Stack;
   --    Stack_u_u1, Stack_U_u2 : aliased User_Unbounded_Stacks.Unb_Stack;
 
@@ -217,19 +196,19 @@ begin
 
   Put_Line ("...Stack Active Iterator");
   Put_Line ("   Bounded:");
-  Test_Active_Iterator (Stack_B_P1'access);
+  Test_Active_Iterator (Stack_B_P1);
   Put_Line ("   Dynamic:");
-  Test_Active_Iterator (Stack_D_P1'access);
+  Test_Active_Iterator (Stack_D_P1);
   Put_Line ("   Unbounded:");
-  Test_Active_Iterator (Stack_U_P1'access);
+  Test_Active_Iterator (Stack_U_P1);
 
   Put_Line ("...Stack Passive Iterator");
   Put_Line ("   Bounded:");
-  Test_Passive_Iterator (Stack_B_P1'access);
+  Test_Passive_Iterator (Stack_B_P1);
   Put_Line ("   Dynamic:");
-  Test_Passive_Iterator (Stack_D_P1'access);
+  Test_Passive_Iterator (Stack_D_P1);
   Put_Line ("   Unbounded:");
-  Test_Passive_Iterator (Stack_U_P1'access);
+  Test_Passive_Iterator (Stack_U_P1);
 
   Assertion ((Top (Stack_B_P1) = '7'), "** M01: Stack top is not correct");
   Assertion ((Depth (Stack_B_P2) = 0), "** M02: Stack depth is not correct");

@@ -108,7 +108,7 @@ package BC.Containers.Trees.Multiway is
 
 private
 
-  package Nodes is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
+  package Nodes is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
   type Multiway_Tree is new Ada.Finalization.Controlled with record
     Rep : Nodes.Multiway_Node_Ref;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -17,7 +17,6 @@
 
 -- $Id$
 
-with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
 with BC.Support.Exceptions;
 
@@ -330,6 +329,86 @@ package body BC.Graphs is
             BSE.Is_Null);
     return A.Rep.Enclosing;
   end Enclosing_Graph;
+
+
+  --------------------------------------------
+  -- Iteration over the Vertices in a Graph --
+  --------------------------------------------
+
+  procedure Reset (Obj : in out Graph_Iterator) is
+  begin
+    Reset (GSP.Value (GSP.Pointer (Obj)).all);
+  end Reset;
+
+
+  procedure Next (Obj : in out Graph_Iterator) is
+  begin
+    Next (GSP.Value (GSP.Pointer (Obj)).all);
+  end Next;
+
+
+  function Is_Done (Obj : Graph_Iterator) return Boolean is
+  begin
+    return Is_Done (GSP.Value (GSP.Pointer (Obj)).all);
+  end Is_Done;
+
+
+  function Current_Vertex (Obj : Graph_Iterator) return Vertex'Class is
+  begin
+    return Current_Vertex (GSP.Value (GSP.Pointer (Obj)).all);
+  end Current_Vertex;
+
+
+  procedure Visit_Vertices (Using : in out Graph_Iterator) is
+    Success : Boolean;
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Current_Vertex (Using), Success);
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Visit_Vertices;
+
+
+  ---------------------------------------------------
+  -- Iteration over the Arcs connected to a Vertex --
+  ---------------------------------------------------
+
+  procedure Reset (Obj : in out Vertex_Iterator) is
+  begin
+    Reset (VSP.Value (VSP.Pointer (Obj)).all);
+  end Reset;
+
+
+  procedure Next (Obj : in out Vertex_Iterator) is
+  begin
+    Next (VSP.Value (VSP.Pointer (Obj)).all);
+  end Next;
+
+
+  function Is_Done (Obj : Vertex_Iterator) return Boolean is
+  begin
+    return Is_Done (VSP.Value (VSP.Pointer (Obj)).all);
+  end Is_Done;
+
+
+  function Current_Arc (Obj : Vertex_Iterator) return Arc'Class is
+  begin
+    return Current_Arc (VSP.Value (VSP.Pointer (Obj)).all);
+  end Current_Arc;
+
+
+  procedure Visit_Arcs (Using : in out Vertex_Iterator) is
+    Success : Boolean;
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Current_Arc (Using), Success);
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Visit_Arcs;
 
 
   ----------------------------------------------

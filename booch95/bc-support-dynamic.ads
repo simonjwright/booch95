@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller, Pat Rogers and
+-- Copyright (C) 1994-1999 Grady Booch, David Weller, Pat Rogers and
 -- Simon Wright.
 -- All Rights Reserved.
 --
@@ -18,11 +18,12 @@
 
 -- $Id$
 
-with BC.Support.Nodes;
+with Ada.Finalization;
 with System.Storage_Pools;
 
 generic
   type Item is private;
+  with function "=" (L, R : Item) return Boolean is <>;
   type Item_Ptr is access all Item;
   type Storage_Manager(<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
@@ -32,10 +33,10 @@ package BC.Support.Dynamic is
   type Dyn_Node is private;
   -- An optimally-packed dynamic container whose items are stored on the heap
 
-  type Dyn_Node_Ref is access Dyn_Node;
+  type Dyn_Node_Ref is access all Dyn_Node;
 
   function Create (From : Dyn_Node) return Dyn_Node_Ref;
-  -- Construct a new Dynamic container that is identical to the given container
+  -- Construct a new dynamic container that is identical to the given container
 
   function Create (Size : Positive := 10) return Dyn_Node_Ref;
   -- Construct a new dynamic container that has a chunk_Size set to the
@@ -92,9 +93,10 @@ package BC.Support.Dynamic is
   -- Set the Chunk_Size for the container
 
   function Chunk_Size (Obj : in Dyn_Node) return Natural;
-  -- returns the current Chunk_Size
+  -- Returns the current Chunk_Size
 
   procedure Free (Obj : in out Dyn_Node_Ref);
+  -- Dispose of the Node referred to, having first Cleared it
 
 private
 
@@ -103,10 +105,16 @@ private
   type Dyn_Arr_Ref is access all Dyn_Arr;
   for Dyn_Arr_Ref'Storage_Pool use Storage;
 
-  type Dyn_Node is record
+  type Dyn_Node is new Ada.Finalization.Controlled with record
     Ref        : Dyn_Arr_Ref;
     Size       : Natural := 0;
     Chunk_Size : Natural := 10;
   end record;
+
+  for Dyn_Node_Ref'Storage_Pool use Storage;
+
+  procedure Initialize (D : in out Dyn_Node);
+  procedure Adjust (D : in out Dyn_Node);
+  procedure Finalize (D : in out Dyn_Node);
 
 end BC.Support.Dynamic;

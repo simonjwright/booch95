@@ -1,4 +1,4 @@
--- Copyright (C) 1998 Simon Wright.
+-- Copyright (C) 1998-1999 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -33,8 +33,8 @@ package Lists_For_Traversal is
   procedure Finalize (The_T : in out T);
   package Smart is new BC.Smart (T, T_P);
   subtype P is Smart.Pointer;
-  type P_P is access all P; -- foo
-  package C is new BC.Containers (P, P_P);
+  function "=" (L, R : P) return Boolean;
+  package C is new BC.Containers (P);
   package L is new C.Lists;
   Pool : BC.Support.Managed_Storage.Pool (10_000);
   package S is new L.Single (BC.Support.Managed_Storage.Pool, Pool);

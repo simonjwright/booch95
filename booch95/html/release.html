@@ -10,55 +10,199 @@
 
 <p><i>Release notes</i></p>
 
+<!-- Begin Mind It Box -->
+<form method=POST action="http://minder.netmind.com/mindit.shtml">
+<table border=0 cellpadding=5 cellspacing=0 bgcolor=#005599>
+<tr><td align=center colspan=2>
+<font face=arial,helvetica size=-1 color=#ffffff>
+<b>Receive email when this page changes</b>
+</td></tr><tr><td>
+<input type=text value="Enter email address" name="EMAIL" size=20></td><td rowspan=2>
+<input type="image" src="http://www.netmind.com/html/mindit.gif" border="0" width="76" height="28">
+<br><font face=arial,helvetica size=-2 color=#ffffff><center>
+<b>Click Here</td></tr>
+<tr valign=top><td colspan=1 align=center>
+<font face=arial,helvetica size=-2 color=#ffffff>•<b> Powered by Netmind </b>•
+</td></tr></table></form>
+<!-- End Mind It Box -->
+
 <P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4" ></P>
 
 <dl>
 
+<dt>14th March 1999</dt>
+
+<dd>
+Eliminated a problem where a function call, used only for its side
+effect and not for its result, was deleted by high optimisation
+levels (<tt>-O3</tt>).<p>
+
+Passive iteration (in <tt>BC.Containers</tt>) didn't reset the
+passed-in <tt>Iterator</tt>.<p>
+
+<a href="compiler-problems.html#13mar1999">Notes</a> from <a
+href="mailto:woodruff1@llnl.gov">John P. Woodruff</a> on use with
+Rational Apex.<p>
+
+Added a word-counter demo, as suggested by <a
+href="mailto:J.English@bton.ac.uk">John English</a> in the <a
+href="http://www.suffix.com/Ada/SCL/">Ada Standard Component Library
+Working Group</a>.<p>
+
+Further <a href="contrib/">contributions</a>.<p>
+
+</dd>
+
+<dt>21st February 1999</dt>
+
+<dd>
+Containers require a (defaultable) <tt>"="</tt> operation for
+Items.<p>
+
+Added Bags (only in the Unbounded form so far).<p>
+
+Added Sets.<p>
+
+Reworked Iteration; passive iteration now obtains the Container over
+which to iterate via an Iterator bound to the container. This allows
+different styles of iteration with one interface.<p>
+ 
+Graphs have three Vertex iterators: incoming only, outgoing only, both
+ways.<p>
+
+Binary trees have in-order, pre-order and post-order iterators;
+Multiway trees have pre-order and post-order iterators. Only passive
+iteration is available, and the style is different from that of other
+Containers.<p>
+
+If a section of a list which didn't contain a shared node was purged,
+an invalid pointer access (Constraint_Error) would occur. This error
+was in the C++ (where it was OK, it seems, to <tt>free()</tt> a null
+pointer).<p>
+
+Assignment involving unbounded forms didn't correctly invalidate the
+cache in the copy.<p>
+
+Began a <a href="demos.html">demos</a> page.<p>
+
+Began a <a href="contrib/">"contributions"</a> section, with
+initial contributions from <a
+href="mailto:Daniel.Gaudry@wanadoo.fr">Daniel Gaudry</a>.<p>
+
+</dd>
+
+<dt>29 January 1999</dt>
+
+<dd>
+Corrected an error in AVL trees (only the second one that is an error
+in the original C++ and not in the translation!).<p>
+
+Added ObjectAda-special versions of test drivers (avoiding <a
+href="compiler-problems.html#29jan1999">compiler problems</a>).<p>
+
+Removed a use of the GNAT-special <tt>'Img</tt> attribute.<p>
+
+Removed a couple of badly-placed <tt>pragma Inline</tt>s.<p>
+
+</dd>
+
+<dt>24 January 1999</dt>
+
+<dd>
+
+Added Maps.<p>
+
+Added AVL Trees.<p>
+
+Removed some abbreviations; for instance, in
+<tt>BC.Containers.Stacks.Unbounded</tt>, the type <tt>Unb_Stack</tt>
+becomes <tt>Unbounded_Stack</tt>. <em><font color="red">These changes
+will break existing code.</font></em><p>
+
+Reworked Iteration throughout, with a <em><font color="green">vast
+improvement in the efficiency of List iterators</font></em>. <em><font
+color="red">These changes will break existing code</font></em>; <a
+href="compiler-problems.html#23jan1999">compiler problems</a> mean
+that <em><font color="red">you can't use GNAT 3.10p</font></em>.<p>
+
+Moved Graph iterators up to the parent package (<tt>BC.Graphs</tt>),
+and included a little demonstration of Graph usage
+(<tt>Ada_Units</tt>).<p>
+
+For consistency, the concrete Graph, Vertex and Arc types are now
+prefixed with <tt>Undirected_</tt> or <tt>Directed_</tt> as
+appropriate; eg, a directed Vertex becomes
+<tt>Directed_Vertex</tt>.<p>
+
+</dd>
+
 <dt>20 October 1998</dt>
 
 <dd>
-Added Graphs. There are more
-<a href="compiler-problems.html#20oct1998">compiler problems</a>, I'm
-afraid, though we have found a workround for one of the old ones.<br>
-Internal changes in Storage Management.
+
+Added Graphs. There are more <a
+href="compiler-problems.html#20oct1998">compiler problems</a>, I'm
+afraid, though we have found a workround for one of the old ones.<p>
+
+Internal changes in Storage Management.<p>
+
 </dd>
 
 <dt>6 October 1998</dt>
 
-<dd>Updated notes on 
-<a href="compiler-problems.html#6oct1998">compiler problems</a> to give a
-workround for users of ObjectAda 7.1 Special Edition.
+<dd>
+
+Updated notes on <a href="compiler-problems.html#6oct1998">compiler
+problems</a> to give a workround for users of ObjectAda 7.1 Special
+Edition.<p>
+
 </dd>
 
 <dt>4 October 1998</dt>
 
-<dd>Storage Management added, thanks to
-<a href="mailto:pat@classwide.com">Pat Rogers</a>. This has tickled
-some <em><font color="red">compiler problems</font></em>, 
-<a href="compiler-problems.html">please check to see if you're affected</a>.
-<br>Fixed inefficiency in Unbounded (and perhaps Dynamic) forms of
-Queues and Stacks.
-<br>Storage Management for Dynamic and Unbounded forms required that we
+<dd>
+
+Storage Management added, thanks to <a
+href="mailto:pat@classwide.com">Pat Rogers</a>. This has tickled some
+<em><font color="red">compiler problems</font></em>, <a
+href="compiler-problems.html">please check to see if you're
+affected</a>.<p>
+
+Fixed inefficiency in Unbounded (and perhaps Dynamic) forms of Queues
+and Stacks.<p>
+
+Storage Management for Dynamic and Unbounded forms required that we
 instantiate some support packages inside the using generic rather than
-having the user pre-instantiate them. We decided to adopt the same policy
-for Bounded forms too. <em><font color="red">These changes will break
-existing code.</font></em>
-<br>Added some comments to package specs.
-<br>Added some minor demo code (<tt>storage</tt>, <tt>time_lists</tt>
-and <tt>time_queues</tt>).
+having the user pre-instantiate them. We decided to adopt the same
+policy for Bounded forms too. <em><font color="red">These changes will
+break existing code.</font></em><p>
+
+Added some comments to package specs.<p>
+
+Added some minor demo code (<tt>storage</tt>, <tt>time_lists</tt> and
+<tt>time_queues</tt>).<p>
+
 </dd>
 
 <dt>24 August 1998</dt>
 
-<dd>Bugfix release.
-<br>There were several storage leaks.
-<br>It's illegal to declare abstract subprograms in a private part.
-<br>The Stack and Queue iterators were broken (by sjw).
+<dd>Bugfix release.<p>
+
+There were several storage leaks.<p>
+
+It's illegal to declare abstract subprograms in a private part.<p>
+
+The Stack and Queue iterators were broken (by sjw).<p>
+
 </dd>
 
 <dt>1 August 1998</dt>
-<dd>First release by <a href="mailto:simon@pogner.demon.co.uk">Simon
-Wright</a>. Added Binary and Multiway Trees, Smart Pointers.
+
+<dd>
+
+First release by <a href="mailto:simon@pogner.demon.co.uk">Simon
+Wright</a>. Added Binary and Multiway Trees, Smart Pointers.<p>
+
 </dd>
 
 </dl>
@@ -67,7 +211,12 @@ Wright</a>. Added Binary and Multiway Trees, Smart Pointers.
 
 <P><A HREF="index.html">[index]</A></p>
 
-<p><i>Last update: 20.x.98</i></p>
+<p><i>
+<script>
+document.write("Last update: ");
+document.write(document.lastModified);
+</script>
+</i></p>
 
 </BODY>
 </HTML>
