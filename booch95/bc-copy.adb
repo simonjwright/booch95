@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 procedure BC.Copy (Input : From; Output : in out To) is
    procedure Ins (I : Item; OK : out Boolean);

@@ -1,4 +1,4 @@
---  Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-1998,2001 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -15,6 +15,9 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 package BC.Support is end BC.Support;

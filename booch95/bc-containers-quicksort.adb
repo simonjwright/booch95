@@ -16,7 +16,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 --  The Sedgewick algorithm is from "Algorithms", Robert Sedgewick,
 --  Addison-Wesley 1983, with adjustments to obviate Constraint_Error.
