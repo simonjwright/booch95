@@ -131,7 +131,7 @@ package body BC.Containers.Trees.Multiway is
             Curr.Sibling := Create (Elem,
                                     Parent => Obj.Rep,
                                     Child => null,
-                                    Sibling => Curr.Child);
+                                    Sibling => Curr.Sibling);
           end;
         end if;
       end;
