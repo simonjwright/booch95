@@ -130,10 +130,9 @@ procedure Ring_Test is
 
 --   Ring_B_P1, Ring_B_P2 : RB.Bounded_Ring;
 --   Ring_D_P1, Ring_D_P2 : RD.Dynamic_Ring;
---   Ring_U_P1, Ring_U_P2 : RU.Unbounded_Ring;
-  Ring_U_P1, Ring_U_P2 : RU.Unbounded_Ring;
-  Ring_UG_P1, Ring_UG_P2 : RUG.Guarded_Unbounded_Ring;
-  Ring_US_P1, Ring_US_P2 : RUS.Synchronized_Unbounded_Ring;
+  Ring_U_P1, Ring_U_P2 : Unbounded_Ring;
+  Ring_UG_P1, Ring_UG_P2 : Guarded_Unbounded_Ring;
+  Ring_US_P1, Ring_US_P2 : Synchronized_Unbounded_Ring;
 
 begin
 
