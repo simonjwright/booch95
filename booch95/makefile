@@ -128,8 +128,8 @@ ordered_collection_test: force
 
 ADA_SOURCE += \
 bc-containers-queues-ordered.ad[bs] \
-bc-containers-queues-ordered-bounded.ad[bs]
-bc-containers-queues-ordered-dynamic.ad[bs]
+bc-containers-queues-ordered-bounded.ad[bs] \
+bc-containers-queues-ordered-dynamic.ad[bs] \
 bc-containers-queues-ordered-unbounded.ad[bs]
 TESTABLE += ordered_queue_test
 TEST_SRC += ordered_queue_test.ad[bs] ordered_queue_test_support.ad[bs]
