@@ -94,6 +94,11 @@ package body BC.Containers.Maps.Bounded is
       return Result;
    end New_Iterator;
 
+   procedure Initialize (M : in out Unconstrained_Map) is
+   begin
+      Tables.Clear (M.Rep);
+   end Initialize;
+
    --  Null containers
 
    Empty_Container : Map;

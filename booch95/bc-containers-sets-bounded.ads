@@ -122,6 +122,8 @@ private
                           Maximum_Size => Maximum_Size);
    end record;
 
+   procedure Initialize (S : in out Unconstrained_Set);
+
    type Bounded_Set_Iterator is new Set_Iterator with null record;
 
    procedure Reset (It : in out Bounded_Set_Iterator);

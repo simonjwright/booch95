@@ -100,6 +100,11 @@ package body BC.Containers.Sets.Bounded is
       return Result;
    end New_Iterator;
 
+   procedure Initialize (S : in out Unconstrained_Set) is
+   begin
+      Tables.Clear (S.Rep);
+   end Initialize;
+
    --  Null containers
 
    Empty_Container : Set;

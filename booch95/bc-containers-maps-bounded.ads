@@ -130,6 +130,8 @@ private
                           Maximum_Size => Maximum_Size);
    end record;
 
+   procedure Initialize (M : in out Unconstrained_Map);
+
    type Bounded_Map_Iterator is new Map_Iterator with null record;
 
    procedure Reset (It : in out Bounded_Map_Iterator);
