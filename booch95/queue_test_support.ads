@@ -32,7 +32,8 @@ package Queue_Test_Support is
 
   package QB is new Queues.Bounded (Maximum_Size => 100);
 
-  package QD is new Queues.Dynamic (Storage_Manager => Global_Heap.Pool,
+  package QD is new Queues.Dynamic (Initial_Size => 10,
+                                    Storage_Manager => Global_Heap.Pool,
                                     Storage => Global_Heap.Storage);
 
   package QU is new Queues.Unbounded (Storage_Manager => Global_Heap.Pool,
