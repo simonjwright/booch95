@@ -46,19 +46,18 @@ package BC.Containers.Maps is
 
    procedure Bind (M : in out Abstract_Map; K : Key; I : Item)
       is abstract;
-   --  If the key already exists in the map, raise
-   --  BC.Duplicate. Otherwise, add the key/item pair to the map.
+   --  If the key already exists in the map, raise BC.Duplicate.
+   --  Otherwise, add the key/item pair to the map.
 
    procedure Rebind (M : in out Abstract_Map; K : Key; I : Item)
       is abstract;
-   --  If the key does not exist in the map, raise
-   --  BC.Not_Found. Otherwise, change the key's binding to the given
-   --  value.
+   --  If the key does not exist in the map, raise BC.Not_Found.
+   --  Otherwise, change the key's binding to the given value.
 
    procedure Unbind (M : in out Abstract_Map; K : Key)
       is abstract;
-   --  If the key does not exist in the map, raise
-   --  BC.Not_Found. Otherwise, remove the key/item binding.
+   --  If the key does not exist in the map, raise BC.Not_Found.
+   --  Otherwise, remove the key/item binding.
 
    function Available (M : Abstract_Map) return Natural;
    --  Return the number of unused slots in the map.
