@@ -75,8 +75,8 @@ more complex than you'll need.
 
 <p>The first thing to do is to instantiate the top-level abstract
 Containers for Car. Note, you have to supply an equality operator
-(<tt>"="</tt>) for <tt>Car</tt>; you could also just <tt>use</tt>
-<tt>Cars</tt>.
+(<tt>"="</tt>) for <tt>Car</tt>; you could also just
+<tt>use&nbsp;Cars</tt>.
 
 <pre>
    with BC.Containers;
@@ -398,8 +398,75 @@ but uses recursion, so may take more stack space.
 <h2><a name="other-components">What other Components might be
 useful?</a></h2>
 
-<p><i>This will be a discussion of Maps and Sets, I think, with a
-passing glance at Queues.</i>
+<h3>Maps</h3>
+
+<p>If you had a lot of Cars to deal with, you might want a
+quick-access Container to implement Fleet rather than the
+general-purpose Collection.
+
+<p>Quick-access? since all Plates are unique (at any one instant,
+anyway. Let's not worry about transferring Plates between Cars!) you
+can treat Plate as a unique <i>Key</i> to allow you to find the Car
+given the Plate. The Booch Container that does this is the <i>Map</i>;
+other container libraries may use other names (dictionary, associative
+array are two).
+
+<p>Continuing in the style described in the discussion on <a
+href="#separate-instantiation">separate instantiation</a> above,
+you start by creating an Abstract_Car_Maps package:
+
+<pre>
+   with Abstract_Car_Containers;
+   with BC.Containers.Maps;
+   with Cars;
+   package Abstract_Car_Maps
+   is new Abstract_Car_Containers.Maps (Key => Cars.Plate_String,
+					"=" => Cars.Plate_Strings."=");
+</pre>
+
+(this time you can't get away with just <tt>use&nbsp;Cars</tt>).
+
+<p>The Map is implemented using a hash table. You say how many <i>hash
+buckets</i> you want, and you supply a <i>hash function</i> which,
+given a Key, indicates which bucket is to be used. The buckets
+correspond to individual Collection-like containers.
+
+<pre>
+   with Cars;
+   function Plate_Hash (P : Cars.Plate_String) return Natural;
+</pre>
+
+<pre>
+   with Abstract_Car_Maps;
+   with BC.Containers.Maps.Bounded;
+   with Plate_Hash;
+   package Mapped_Fleets is new Abstract_Car_Maps.Bounded
+     (Hash => Plate_Hash,
+      Buckets => 5,
+      Maximum_Size => 30);
+</pre>
+
+<p>Why does this speed things up? The reason is that, to search a
+Collection for a particular element, you need to look at half the
+elements on average. If you have a Map with 1000 Cars split among 10
+hash buckets, a search will only have to examine 50 Cars on average
+rather than the 500 you'd need to look at if you used a plain
+Collection.
+
+<p>For this to work properly you do need a good hash function, of
+course (<tt>Plate_Hash</tt>). It would be quite legal, but not at all
+efficient, for the hash function always to return 0. A set of string
+hash functions (part of the author's <a
+href="http://www.pushface.org/coldframe/">ColdFrame</a> package, a
+code framework generator backend for UML CASE tools) is available in
+<a href="coldframe-hash.tgz">tar</a> and <a
+href="coldframe-hash.zip">zip</a> forms.
+
+<p>In many applications, you'll probably find the fact that a Map
+implements associative lookup as useful as, if not more so than, the
+performance aspects.
+
+<p><i>More to come here on Sets and Queues.</i>
 
 <h2><a name="forms">What are these "Forms"?</a></h2>
 
