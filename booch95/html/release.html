@@ -30,11 +30,68 @@
 
 <dl>
 
+<dt>21 January 2001</dt>
+
+<dd>
+
+<h3>Interface changes</h3>
+
+For Containers with Bounded, Dynamic and Unbounded forms the concrete
+types no longer include the form name; thus,
+<tt>BC.Containers.Maps</tt> declares <tt>Abstract_Map</tt>, while
+<tt>BC.Containers.Maps.Unbounded</tt> declares <tt>Map</tt>.
+
+<p>The concrete Lists are now declared as plain <tt>List</tt> rather
+than <tt>Single_List</tt>, <tt>Double_List</tt> (there is no
+<tt>Abstract_List</tt>, perhaps there should be!).
+
+<p>The concrete Graphs, Vertices and Arcs are now declared as plain
+<tt>Graph</tt>, <tt>Vertex</tt> and <tt>Arc</tt> (and the abstract
+types in <tt>BC.Graphs</tt> are <tt>Abstract_Graph</tt>,
+<tt>Abstract_Vertex</tt>, and <tt>Abstract_Arc</tt>).
+
+<p>Maps now have the standard Container generic type <tt>Item</tt> as
+the range, and the Map generic type <tt>Key</tt> as the domain. If you
+are a Map user, you'll have to change your code's logic (as well as
+the type names, see above).
+
+<p>Added generic <tt>Copy</tt>, <tt>Filter</tt> functions to
+<tt>BC.Containers</tt>.
+
+<h3>Implementation changes</h3>
+
+<p>Hash functions (for Bags, Maps, Sets) now expected to return
+<tt>Natural</tt> rather than <tt>Positive</tt>.
+
+<p>The Map comments used to claim that Maps cache references. This was
+not true.
+
+<p>Removed Dynamic Queues' Create(Size) operation (now a generic
+parameter); for use with synchronized Queues. The problem is that this
+was a function, so derived types would have had to override it.<br>
+This change will have to apply to other Dynamic forms.
+
+<p>Added a Pop_Value operation for Queues; semantically necessary for
+synchronized Queues.
+
+<p>Removed the unnecessary (illegal?) Initialize(Ring_Iterator) operation.
+
+<p>Iterators are visibly Controlled. The Controlled bit is because of
+work on synchronized forms, and the visible bit is because of a GNAT
+3.13 problem with finalization when using a function return value to
+initialize a classwide value.
+
+<p>Lots of work on <tt>BC.Support.Synchronization</tt>.
+
+<p>
+
+</dd>
+
 <dt>30 September 2000</dt>
 
 <dd>
 
-Implemented the remaining Bounded and Dynamic forms (Collections,
+<p>Implemented the remaining Bounded and Dynamic forms (Collections,
 Deques, Ordered Collections, Ordered Queues, Queues and Rings).<p>
 
 Added a <tt>Null_Container</tt> operation, so users can initialize
@@ -58,7 +115,7 @@ was visited repeatedly. This has changed
 
 <dd>
 
-Added Deques (in the Unbounded form only so far).<p>
+<p>Added Deques (in the Unbounded form only so far).<p>
 
 In AVL Trees and Lists, removed the <tt>aliased</tt> specification on
 elements, which forces the element to be constrained even if the
@@ -98,7 +155,7 @@ subdirectories.<p>
 
 <dd>
 
-Uses signature-based Hash Tables (for Bags, Maps, Sets).<p>
+<p>Uses signature-based Hash Tables (for Bags, Maps, Sets).<p>
 
 Includes Guarded and Synchronized Maps.<p>
 
@@ -108,7 +165,7 @@ Includes Guarded and Synchronized Maps.<p>
 
 <dd>
 
-Added the ability to delete the item an <tt>Iterator</tt> is currently
+<p>Added the ability to delete the item an <tt>Iterator</tt> is currently
 indicating
 (<tt>Delete_Item_At&nbsp;(It&nbsp;:&nbsp;Iterator)</tt>). Note, this
 feature doesn't yet work for Bags, Maps, Rings or Sets.<p>
@@ -145,7 +202,7 @@ Continued the renaming of <tt>Container</tt> parameters from
 
 <dd>
 
-Added Unbounded Ordered Queues.<p>
+<p>Added Unbounded Ordered Queues.<p>
 
 AVL Trees are no longer limited.<p>
 
@@ -159,7 +216,7 @@ Collection, <tt>Append</tt> from the rear.<p>
 
 <dd>
 
-Added Unbounded Collections and Unbounded Ordered Collections.<p>
+<p>Added Unbounded Collections and Unbounded Ordered Collections.<p>
 
 <tt>BC.Support.Bounded</tt>, <tt>BC.Support.Unbounded</tt> subprogram
 specs were confused about whether indexing was from 0 (as in the C++)
@@ -178,7 +235,7 @@ href="compiler-problems.html#29jan1999">compiler problems</a>).<p>
 
 <dd>
 
-Included the accidentally-omitted Bounded and Dynamic Bag sources.<p>
+<p>Included the accidentally-omitted Bounded and Dynamic Bag sources.<p>
 
 <dd>
 
@@ -198,7 +255,8 @@ Semaphores.<p>
 <dt>14th March 1999</dt>
 
 <dd>
-Eliminated a problem where a function call, used only for its side
+
+<p>Eliminated a problem where a function call, used only for its side
 effect and not for its result, was deleted by high optimisation
 levels (<tt>-O3</tt>).<p>
 
@@ -221,7 +279,8 @@ Further <a href="contrib/">contributions</a>.<p>
 <dt>21st February 1999</dt>
 
 <dd>
-Containers require a (defaultable) <tt>"="</tt> operation for
+
+<p>Containers require a (defaultable) <tt>"="</tt> operation for
 Items.<p>
 
 Added Bags (only in the Unbounded form so far).<p>
@@ -259,7 +318,8 @@ href="mailto:Daniel.Gaudry@wanadoo.fr">Daniel Gaudry</a>.<p>
 <dt>29 January 1999</dt>
 
 <dd>
-Corrected an error in AVL trees (only the second one that is an error
+
+<p>Corrected an error in AVL trees (only the second one that is an error
 in the original C++ and not in the translation!).<p>
 
 Added ObjectAda-special versions of test drivers (avoiding <a
@@ -275,7 +335,7 @@ Removed a couple of badly-placed <tt>pragma Inline</tt>s.<p>
 
 <dd>
 
-Added Maps.<p>
+<p>Added Maps.<p>
 
 Added AVL Trees.<p>
 
@@ -305,7 +365,7 @@ appropriate; eg, a directed Vertex becomes
 
 <dd>
 
-Added Graphs. There are more <a
+<p>Added Graphs. There are more <a
 href="compiler-problems.html#20oct1998">compiler problems</a>, I'm
 afraid, though we have found a workround for one of the old ones.<p>
 
@@ -317,7 +377,7 @@ Internal changes in Storage Management.<p>
 
 <dd>
 
-Updated notes on <a href="compiler-problems.html#6oct1998">compiler
+<p>Updated notes on <a href="compiler-problems.html#6oct1998">compiler
 problems</a> to give a workround for users of ObjectAda 7.1 Special
 Edition.<p>
 
@@ -327,7 +387,7 @@ Edition.<p>
 
 <dd>
 
-Storage Management added, thanks to <a
+<p>Storage Management added, thanks to <a
 href="mailto:pat@classwide.com">Pat Rogers</a>. This has tickled some
 <em><font color="red">compiler problems</font></em>, <a
 href="compiler-problems.html">please check to see if you're
@@ -351,9 +411,11 @@ Added some minor demo code (<tt>storage</tt>, <tt>time_lists</tt> and
 
 <dt>24 August 1998</dt>
 
-<dd>Bugfix release.<p>
+<dd>
 
-There were several storage leaks.<p>
+<p>Bugfix release.<p>
+
+<p>There were several storage leaks.<p>
 
 It's illegal to declare abstract subprograms in a private part.<p>
 
@@ -365,7 +427,7 @@ The Stack and Queue iterators were broken (by sjw).<p>
 
 <dd>
 
-First release by <a href="mailto:simon@pogner.demon.co.uk">Simon
+<p>First release by <a href="mailto:simon@pogner.demon.co.uk">Simon
 Wright</a>. Added Binary and Multiway Trees, Smart Pointers.<p>
 
 </dd>
