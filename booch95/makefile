@@ -29,7 +29,7 @@ all::
 
 MEMORY_CHECK = \
   -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
-GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu
+GNATMAKE_FLAGS = -O3 -g -gnata -gnatwu
 
 test: testable
 	for t in $(TESTABLE); do \
