@@ -156,4 +156,12 @@ package body BC.Containers.Rings is
     end;
   end Current_Item;
 
+  procedure Delete_Item_At (It : Ring_Iterator) is
+  begin
+    if Is_Done (It) then
+      raise BC.Not_Found;
+    end if;
+    raise BC.Not_Yet_Implemented;
+  end Delete_Item_At;
+
 end BC.Containers.Rings;
