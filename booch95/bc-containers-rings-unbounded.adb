@@ -21,46 +21,11 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Rings.Unbounded is
 
-  ---------
-  -- "=" --
-  ---------
-
   function "=" (Left, Right : in Unbounded_Ring) return Boolean is
     use Unbounded_Ring_Nodes;
   begin
     return Left.Top = Right.Top and then Left.Rep.all = Right.Rep.all;
   end "=";
-
-  ---------
-  -- Add --
-  ---------
-
-  procedure Add (R : in out Unbounded_Ring; Elem : Item) is
-  begin
-    Unbounded_Ring_Nodes.Append (R.Rep.all, Elem);
-  end Add;
-
-  ------------
-  -- Adjust --
-  ------------
-
-  procedure Adjust (R : in out Unbounded_Ring) is
-  begin
-    R.Rep := Unbounded_Ring_Nodes.Create (From => R.Rep.all);
-  end Adjust;
-
-  -----------------
-  -- Cardinality --
-  -----------------
-
-  function Cardinality (R : Unbounded_Ring) return Natural is
-  begin
-    return Unbounded_Ring_Nodes.Length (R.Rep.all);
-  end Cardinality;
-
-  -----------
-  -- Clear --
-  -----------
 
   procedure Clear (R : in out Unbounded_Ring) is
   begin
@@ -68,37 +33,6 @@ package body BC.Containers.Rings.Unbounded is
     R.Top := 0;
     R.Mark := 0;
   end Clear;
-
-  ------------
-  -- Extent --
-  ------------
-
-  function Extent (R : Unbounded_Ring) return Natural is
-  begin
-    return Unbounded_Ring_Nodes.Length (R.Rep.all);
-  end Extent;
-
-  --------------
-  -- Finalize --
-  --------------
-
-  procedure Finalize (R : in out Unbounded_Ring) is
-  begin
-    Unbounded_Ring_Nodes.Free (R.Rep);
-  end Finalize;
-
-  ----------------
-  -- Initialize --
-  ----------------
-
-  procedure Initialize (R : in out Unbounded_Ring) is
-  begin
-    Initialize (Ring (R));
-  end Initialize;
-
-  ------------
-  -- Insert --
-  ------------
 
   procedure Insert (R : in out Unbounded_Ring; Elem : Item) is
   begin
@@ -111,42 +45,6 @@ package body BC.Containers.Rings.Unbounded is
       R.Mark := R.Mark + 1;
     end if;
   end Insert;
-
-  --------------
-  -- Is_Empty --
-  --------------
-
-  function Is_Empty (R : Unbounded_Ring) return Boolean is
-  begin
-    return Unbounded_Ring_Nodes.Length (R.Rep.all) = 0;
-  end Is_Empty;
-
-  -------------
-  -- Item_At --
-  -------------
-
-  function Item_At (R : Unbounded_Ring; Index : Positive) return Item_Ptr is
-  begin
-    return Unbounded_Ring_Nodes.Item_At (R.Rep.all, Index);
-  end Item_At;
-
-  ------------------
-  -- New_Iterator --
-  ------------------
-
-  package Address_Conversions
-  is new System.Address_To_Access_Conversions (Unbounded_Ring);
-
-  function New_Iterator (For_The_Ring : Unbounded_Ring) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Ring'Address);
-  begin
-    return Iterator (SP.Create (new Ring_Iterator (P)));
-  end New_Iterator;
-
-  ---------
-  -- Pop --
-  ---------
 
   procedure Pop (R : in out Unbounded_Ring) is
     Size : Natural;
@@ -168,21 +66,6 @@ package body BC.Containers.Rings.Unbounded is
     end if;
   end Pop;
 
-  -----------
-  -- Purge --
-  -----------
-
-  procedure Purge (R : in out Unbounded_Ring) is
-  begin
-    Unbounded_Ring_Nodes.Clear (R.Rep.all);
-    R.Top := 0;
-    R.Mark := 0;
-  end Purge;
-
-  ------------
-  -- Rotate --
-  ------------
-
   procedure Rotate (R : in out Unbounded_Ring; Dir : Direction := Forward) is
   begin
     if Dir = Forward then
@@ -199,13 +82,66 @@ package body BC.Containers.Rings.Unbounded is
     end if;
   end Rotate;
 
-  ---------
-  -- Top --
-  ---------
+  function Extent (R : Unbounded_Ring) return Natural is
+  begin
+    return Unbounded_Ring_Nodes.Length (R.Rep.all);
+  end Extent;
+
+  function Is_Empty (R : Unbounded_Ring) return Boolean is
+  begin
+    return Unbounded_Ring_Nodes.Length (R.Rep.all) = 0;
+  end Is_Empty;
 
   function Top (R : Unbounded_Ring) return Item is
   begin
     return Unbounded_Ring_Nodes.Item_At (R.Rep.all, R.Top);
   end Top;
+
+  package Address_Conversions
+  is new System.Address_To_Access_Conversions (Unbounded_Ring);
+
+  function New_Iterator (For_The_Ring : Unbounded_Ring) return Iterator is
+    P : Address_Conversions.Object_Pointer
+       := Address_Conversions.To_Pointer (For_The_Ring'Address);
+  begin
+    return Iterator (SP.Create (new Ring_Iterator (P)));
+  end New_Iterator;
+
+  procedure Add (R : in out Unbounded_Ring; Elem : Item) is
+  begin
+    Unbounded_Ring_Nodes.Append (R.Rep.all, Elem);
+  end Add;
+
+  function Cardinality (R : Unbounded_Ring) return Natural is
+  begin
+    return Unbounded_Ring_Nodes.Length (R.Rep.all);
+  end Cardinality;
+
+  function Item_At (R : Unbounded_Ring; Index : Positive) return Item_Ptr is
+  begin
+    return Unbounded_Ring_Nodes.Item_At (R.Rep.all, Index);
+  end Item_At;
+
+  procedure Purge (R : in out Unbounded_Ring) is
+  begin
+    Unbounded_Ring_Nodes.Clear (R.Rep.all);
+    R.Top := 0;
+    R.Mark := 0;
+  end Purge;
+
+  procedure Initialize (R : in out Unbounded_Ring) is
+  begin
+    Initialize (Ring (R));
+  end Initialize;
+
+  procedure Adjust (R : in out Unbounded_Ring) is
+  begin
+    R.Rep := Unbounded_Ring_Nodes.Create (From => R.Rep.all);
+  end Adjust;
+
+  procedure Finalize (R : in out Unbounded_Ring) is
+  begin
+    Unbounded_Ring_Nodes.Free (R.Rep);
+  end Finalize;
 
 end BC.Containers.Rings.Unbounded;
