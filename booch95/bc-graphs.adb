@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -26,15 +26,9 @@
 --  $Author$
 
 with Ada.Unchecked_Deallocation;
-with BC.Support.Exceptions;
-
 with Ada.Text_IO;
 
 package body BC.Graphs is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Graphs");
 
    procedure Delete is new Ada.Unchecked_Deallocation
      (Vertex_Node, Vertex_Node_Ptr);
@@ -81,10 +75,9 @@ package body BC.Graphs is
    procedure Destroy_Vertex (G : in out Abstract_Graph;
                              V : in out Abstract_Vertex'Class) is
    begin
-      Assert (Is_Member (G, V),
-              BC.Not_Found'Identity,
-              "Destroy_Vertex",
-              BSE.Disjoint);
+      if not Is_Member (G, V) then
+         raise BC.Not_Found;
+      end if;
       if V.Rep /= null then
          --  The C++ had the body of what is now Clear_Vertex_Node
          --  here, because it had the iterators available for the
@@ -100,10 +93,9 @@ package body BC.Graphs is
                           A : in out Abstract_Arc'Class) is
       Prev, Curr : Arc_Node_Ptr;
    begin
-      Assert (Is_Member (G, A),
-              BC.Not_Found'Identity,
-              "Destroy_Arc",
-              BSE.Disjoint);
+      if not Is_Member (G, A) then
+         raise BC.Not_Found;
+      end if;
       if A.Rep /= null then
          if A.Rep.To /= null then
             Prev := null;
@@ -218,10 +210,9 @@ package body BC.Graphs is
 
    procedure Set_Item (V : in out Abstract_Vertex; I : Vertex_Item) is
    begin
-      Assert (V.Rep /= null,
-              BC.Is_Null'Identity,
-              "Set_Item(Vertex)",
-              BSE.Is_Null);
+      if V.Rep = null then
+         raise BC.Is_Null;
+      end if;
       V.Rep.Item := I;
    end Set_Item;
 
@@ -240,30 +231,27 @@ package body BC.Graphs is
 
    function Item (V : Abstract_Vertex) return Vertex_Item is
    begin
-      Assert (V.Rep /= null,
-              BC.Is_Null'Identity,
-              "Item(Vertex)",
-              BSE.Is_Null);
+      if V.Rep = null then
+         raise BC.Is_Null;
+      end if;
       return V.Rep.Item;
    end Item;
 
 
    procedure Access_Vertex_Item (V : Abstract_Vertex'Class) is
    begin
-      Assert (V.Rep /= null,
-              BC.Is_Null'Identity,
-              "Access_Vertex_Item",
-              BSE.Is_Null);
+      if V.Rep = null then
+         raise BC.Is_Null;
+      end if;
       Process (V.Rep.Item);
    end Access_Vertex_Item;
 
 
    function Enclosing_Graph (V : Abstract_Vertex) return Graph_Ptr is
    begin
-      Assert (V.Rep /= null,
-              BC.Is_Null'Identity,
-              "Enclosing_Graph(Vertex)",
-              BSE.Is_Null);
+      if V.Rep = null then
+         raise BC.Is_Null;
+      end if;
       return V.Rep.Enclosing;
    end Enclosing_Graph;
 
@@ -293,10 +281,9 @@ package body BC.Graphs is
 
    procedure Set_Item (A : in out Abstract_Arc; I : Arc_Item) is
    begin
-      Assert (A.Rep /= null,
-              BC.Is_Null'Identity,
-              "Set_Item(Arc)",
-              BSE.Is_Null);
+      if A.Rep = null then
+         raise BC.Is_Null;
+      end if;
       A.Rep.Item := I;
    end Set_Item;
 
@@ -315,30 +302,27 @@ package body BC.Graphs is
 
    function Item (A : Abstract_Arc) return Arc_Item is
    begin
-      Assert (A.Rep /= null,
-              BC.Is_Null'Identity,
-              "Item(Arc)",
-              BSE.Is_Null);
+      if A.Rep = null then
+         raise BC.Is_Null;
+      end if;
       return A.Rep.Item;
    end Item;
 
 
    procedure Access_Arc_Item (A : Abstract_Arc'Class) is
    begin
-      Assert (A.Rep /= null,
-              BC.Is_Null'Identity,
-              "Access_Arc_Item",
-              BSE.Is_Null);
+      if A.Rep = null then
+         raise BC.Is_Null;
+      end if;
       Process (A.Rep.Item);
    end Access_Arc_Item;
 
 
    function Enclosing_Graph (A : Abstract_Arc) return Graph_Ptr is
    begin
-      Assert (A.Rep /= null,
-              BC.Is_Null'Identity,
-              "Enclosing_Graph(Arc)",
-              BSE.Is_Null);
+      if A.Rep = null then
+         raise BC.Is_Null;
+      end if;
       return A.Rep.Enclosing;
    end Enclosing_Graph;
 

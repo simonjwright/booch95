@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -25,14 +25,9 @@
 --  $Date$
 --  $Author$
 
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Graphs.Undirected is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Graphs.Undirected");
 
 
    ----------------------
@@ -77,10 +72,9 @@ package body BC.Graphs.Undirected is
       Count : Natural := 0;
       Curr : Arc_Node_Ptr;
    begin
-      Assert (V.Rep /= null,
-              BC.Is_Null'Identity,
-              "Arity",
-              BSE.Is_Null);
+      if V.Rep = null then
+         raise BC.Is_Null;
+      end if;
       Curr := V.Rep.Incoming;
       while Curr /= null loop
          Count := Count + 1;
@@ -105,10 +99,9 @@ package body BC.Graphs.Undirected is
                                V : access Vertex'Class) is
       Prev, Curr : Arc_Node_Ptr;
    begin
-      Assert (A.Rep /= null,
-              BC.Is_Null'Identity,
-              "Set_First_Vertex",
-              BSE.Is_Null);
+      if A.Rep = null then
+         raise BC.Is_Null;
+      end if;
       if A.Rep.From /= null then
          Prev := null;
          Curr := A.Rep.From.Outgoing;
@@ -138,10 +131,9 @@ package body BC.Graphs.Undirected is
                                 V : access Vertex'Class) is
       Prev, Curr : Arc_Node_Ptr;
    begin
-      Assert (A.Rep /= null,
-              BC.Is_Null'Identity,
-              "Set_From_Vertex",
-              BSE.Is_Null);
+      if A.Rep = null then
+         raise BC.Is_Null;
+      end if;
       if A.Rep.To /= null then
          Prev := null;
          Curr := A.Rep.To.Incoming;
@@ -170,10 +162,9 @@ package body BC.Graphs.Undirected is
    procedure First_Vertex (A : Arc;
                            V : in out Vertex'Class) is
    begin
-      Assert (A.Rep /= null,
-              BC.Is_Null'Identity,
-              "First_Vertex",
-              BSE.Is_Null);
+      if A.Rep = null then
+         raise BC.Is_Null;
+      end if;
       Clear (V);
       V.Rep := A.Rep.From;
       if V.Rep /= null then
@@ -185,10 +176,9 @@ package body BC.Graphs.Undirected is
    procedure Second_Vertex (A : Arc;
                             V : in out Vertex'Class) is
    begin
-      Assert (A.Rep /= null,
-              BC.Is_Null'Identity,
-              "Second_Vertex",
-              BSE.Is_Null);
+      if A.Rep = null then
+         raise BC.Is_Null;
+      end if;
       Clear (V);
       V.Rep := A.Rep.To;
       if V.Rep /= null then
@@ -258,10 +248,9 @@ package body BC.Graphs.Undirected is
    function Current_Vertex
      (It : Undirected_Graph_Iterator) return Abstract_Vertex'Class is
    begin
-      Assert (It.Index /= null,
-              BC.Is_Null'Identity,
-              "Current_Vertex(Graph_Iterator)",
-              BSE.Is_Null);
+      if It.Index = null then
+         raise BC.Is_Null;
+      end if;
       It.Index.Count := It.Index.Count + 1;
       return Vertex'
         (Ada.Finalization.Controlled with Rep => It.Index);
@@ -325,10 +314,9 @@ package body BC.Graphs.Undirected is
    function Current_Arc (It : Undirected_Vertex_Iterator)
                         return Abstract_Arc'Class is
    begin
-      Assert (It.Index /= null,
-              BC.Is_Null'Identity,
-              "Current_Arc(Arc_Iterator)",
-              BSE.Is_Null);
+      if It.Index = null then
+         raise BC.Is_Null;
+      end if;
       It.Index.Count := It.Index.Count + 1;
       return Arc'(Ada.Finalization.Controlled with Rep => It.Index);
    end Current_Arc;
