@@ -30,8 +30,6 @@ package BC is
 
    --  This is the top level package in the Booch Component Hierarchy.
 
-   pragma Pure;
-
    --  The following exceptions may be raised by improper use of the
    --  Components.
 
