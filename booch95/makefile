@@ -58,7 +58,7 @@ test: testable
 concurrent_test: concurrent_testable
 	for t in $(CONCURRENT_TESTABLE); do \
 	  echo running $$t; \
-	  ./$$t 2>$$t.log; \
+	  ./$$t 2>&1 \
 	done
 
 TEST_SRC = global_heap.ad[bs]
