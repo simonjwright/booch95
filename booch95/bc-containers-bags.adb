@@ -39,7 +39,7 @@ package body BC.Containers.Bags is
         return False;
       end if;
       if Count (L, Current_Item (It)) /= Count (R, Current_Item (It)) then
-	return False;
+        return False;
       end if;
       Next (It);
     end loop;
@@ -60,12 +60,12 @@ package body BC.Containers.Bags is
     while not Is_Done (It) loop
       declare
         This_Item : Item renames Current_Item (It);
-	This_Count : Positive := Count (O, This_Item);
+        This_Count : Positive := Count (O, This_Item);
       begin
         if not Is_Member (B, This_Item) then
           Attach (B, This_Item, This_Count);
-	else
-	  Set_Value (B, This_Item, Count (B, This_Item) + This_Count);
+        else
+          Set_Value (B, This_Item, Count (B, This_Item) + This_Count);
         end if;
       end;
       Next (It);
@@ -80,18 +80,18 @@ package body BC.Containers.Bags is
     while not Is_Done (It) loop
       declare
         This_Item : Item renames Current_Item (It);
-	B_Count : Positive := Count (B, This_Item);
+        B_Count : Positive := Count (B, This_Item);
       begin
         if not Exists (O, This_Item) then
           Detach (B, This_Item);
         else
-	  declare
-	    O_Count : Positive := Count (O, This_Item);
-	  begin
-	    if B_Count > O_Count then
-	      Set_Value (B, This_Item, O_Count);
-	    end if;
-	  end;
+          declare
+            O_Count : Positive := Count (O, This_Item);
+          begin
+            if B_Count > O_Count then
+              Set_Value (B, This_Item, O_Count);
+            end if;
+          end;
           Next (It);
         end if;
       end;
@@ -108,16 +108,16 @@ package body BC.Containers.Bags is
         This_Item : Item renames Current_Item (It);
       begin
         if Exists (B, This_Item) then
-	  declare
-	    B_Count : Positive := Count (B, This_Item);
-	    O_Count : Positive := Count (O, This_Item);
-	  begin
-	    if B_Count <= O_Count then
-	      Detach (B, This_Item);
-	    else
-	      Set_Value (B, This_Item, B_Count - O_Count);
-	    end if;
-	  end;
+          declare
+            B_Count : Positive := Count (B, This_Item);
+            O_Count : Positive := Count (O, This_Item);
+          begin
+            if B_Count <= O_Count then
+              Detach (B, This_Item);
+            else
+              Set_Value (B, This_Item, B_Count - O_Count);
+            end if;
+          end;
         end if;
       end;
       Next (It);
@@ -130,6 +130,7 @@ package body BC.Containers.Bags is
   begin
     while not Is_Done (It) loop
       Result := Result + Count (B, Current_Item (It));
+      Next (It);
     end loop;
     return Result;
   end Total_Size;
@@ -146,21 +147,21 @@ package body BC.Containers.Bags is
       declare
         This_Item : Item := Current_Item (It);
       begin
-	-- why don't I just do "or else Count (B, This_Item) > Count (O,
-	-- This_Item)"? .. because it triggered a compiler bug in GNAT
-	-- 3.11p
-	if not Exists (O, This_Item) then
-	  return False;
-	else
-	  declare
-	    B_Count : Positive := Count (B, This_Item);
-	    O_Count : Positive := Count (O, This_Item);
-	  begin
-	    if B_Count > O_Count then
-	      return False;
-	    end if;
-	  end;
-	end if;
+        -- why don't I just do "or else Count (B, This_Item) > Count (O,
+        -- This_Item)"? .. because it triggered a compiler bug in GNAT
+        -- 3.11p (or was it 3.11b2?)
+        if not Exists (O, This_Item) then
+          return False;
+        else
+          declare
+            B_Count : Positive := Count (B, This_Item);
+            O_Count : Positive := Count (O, This_Item);
+          begin
+            if B_Count > O_Count then
+              return False;
+            end if;
+          end;
+        end if;
       end;
       Next (It);
     end loop;
@@ -169,35 +170,35 @@ package body BC.Containers.Bags is
 
   function Is_Proper_Subset (B : Bag'Class; O : Bag'Class) return Boolean is
     It : Iterator := New_Iterator (B);
+    Is_Proper : Boolean := False;
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
-    if Cardinality (B) >= Cardinality (O) then
+    if Cardinality (B) > Cardinality (O) then
       return False;
     end if;
     while not Is_Done (It) loop
       declare
         This_Item : Item renames Current_Item (It);
       begin
-	-- why don't I just do "or else Count (B, This_Item) >= Count (O,
-	-- This_Item)"? .. because it triggered a compiler bug in GNAT
-	-- 3.11p
-	if not Exists (O, This_Item) then
-	  return False;
-	else
-	  declare
-	    B_Count : Positive := Count (B, This_Item);
-	    O_Count : Positive := Count (O, This_Item);
-	  begin
-	    if B_Count >= O_Count then
-	      return False;
-	    end if;
-	  end;
-	end if;
+        if not Exists (O, This_Item) then
+          return False;
+        else
+          declare
+            B_Count : Positive := Count (B, This_Item);
+            O_Count : Positive := Count (O, This_Item);
+          begin
+            if B_Count > O_Count then
+              return False;
+            elsif B_Count < O_Count then
+                Is_Proper := True;
+            end if;
+          end;
+        end if;
       end;
       Next (It);
     end loop;
-    return True;
+    return Is_Proper or else Cardinality (B) < Cardinality (O);
   end Is_Proper_Subset;
 
   procedure Initialize (It : in out Bag_Iterator) is
@@ -320,6 +321,7 @@ package body BC.Containers.Bags is
   begin
     while not Is_Done (It) loop
       Result := Result + Count (B, Current_Item (It));
+      Next (It);
     end loop;
     return Result;
   end Multiplicity;
