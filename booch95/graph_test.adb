@@ -97,12 +97,12 @@ procedure Graph_Test is
     Assertion (Is_Member (G, V3),
                "** D14: Vertex is not a member of the graph");
     --| assertion((v1.EnclosingGraph().NumberOfVertices() == 7), "** D15: Number of vertices is not correct");
-    Assertion (Number_Of_Vertices (DG.Graph (Enclosing_Graph (V1).all)) =7,
+    Assertion (Number_Of_Vertices (DG.Graph (Enclosing_Graph (V1).all)) = 7,
                "** D15: Number of vertices is not correct");
     --| v3 = v1;
     V3 := V1;
     --| assertion((v3.EnclosingGraph().NumberOfVertices() == 7), "** D16: Number of vertices is not correct");
-    Assertion (Number_Of_Vertices (DG.Graph (Enclosing_Graph (V3).all)) =7,
+    Assertion (Number_Of_Vertices (DG.Graph (Enclosing_Graph (V3).all)) = 7,
                "** D16: Number of vertices is not correct");
     --| v3.Clear();
     Clear (V3);
@@ -370,12 +370,12 @@ procedure Graph_Test is
     Assertion (Is_Member (G, V3),
                "** U14: Vertex is not a member of the graph");
     --| assertion((v1.EnclosingGraph().NumberOfVertices() == 7), "** U15: Number of vertices is not correct");
-    Assertion (Number_Of_Vertices (UG.Graph (Enclosing_Graph (V1).all)) =7,
+    Assertion (Number_Of_Vertices (UG.Graph (Enclosing_Graph (V1).all)) = 7,
                "** U15: Number of vertices is not correct");
     --| v3 = v1;
     V3 := V1;
     --| assertion((v3.EnclosingGraph().NumberOfVertices() == 7), "** U16: Number of vertices is not correct");
-    Assertion (Number_Of_Vertices (UG.Graph (Enclosing_Graph (V3).all)) =7,
+    Assertion (Number_Of_Vertices (UG.Graph (Enclosing_Graph (V3).all)) = 7,
                "** U16: Number of vertices is not correct");
     --| v3.Clear();
     Clear (V3);
@@ -573,6 +573,129 @@ procedure Graph_Test is
     Set_First_Vertex (A4, V1'Access);
   end Test_Undirected;
 
+  procedure Process_Arc (A : DG.Arc; OK : out Boolean) is
+    V1, V2 : DG.Vertex;
+    use DG;
+  begin
+    From_Vertex (A, V1);
+    To_Vertex (A, V2);
+    Put ("        Arc: " & Item (A));
+    if Is_Null (V1) then
+      Put (" from: <none>");
+    else
+      Put (" from: " & Item (V1));
+    end if;
+    if Is_Null (V2) then
+      Put (" to: <none>");
+    else
+      Put (" to: " & Item (V2));
+    end if;
+    New_Line;
+    OK := True;
+  end Process_Arc;
+
+  procedure Process_Vertex (V : DG.Vertex; OK : out Boolean) is
+    Local_V : aliased DG.Vertex := V;
+    A : DG.Arc;
+    Dummy : Boolean;
+    Iter : DG.Vertex_Iterator (Local_V'Access);
+    use Ag;
+    use DG;
+  begin
+    Put_Line ("    Vertex: " & Item (V)
+              & " (" & Integer'Image (Number_Of_Incoming_Arcs (V))
+              & "," & Integer'Image (Number_Of_Outgoing_Arcs (V)) & " )");
+    while not Is_Done (Iter) loop
+      Current_Item (Iter, A);
+      Process_Arc (A, Dummy);
+      Next (Iter);
+    end loop;
+    OK := True;
+  end Process_Vertex;
+
+  procedure Test_Directed_Active_Iterator (G : in out DG.Graph) is
+    V : DG.Vertex;
+    Dummy : Boolean;
+    Iter : AG.Graph_Iterator (G'Access);
+    use AG;
+    use DG;
+  begin
+    while not Is_Done (Iter) loop
+      Current_Item (Iter, V);
+      Process_Vertex (V, Dummy);
+      Next (Iter);
+    end loop;
+  end Test_Directed_Active_Iterator;
+
+  procedure Test_Directed_Passive_Iterator (G : in out DG.Graph) is
+    function Visit is new DG.Visit_Vertices (Apply => Process_Vertex);
+    Dummy : Boolean;
+    Iter : aliased DG.Passive_Graph_Iterator (G'Access);
+  begin
+    Dummy := Visit (Iter'Access);
+  end Test_Directed_Passive_Iterator;
+
+  procedure Process_Arc (A : UG.Arc; OK : out Boolean) is
+    V1, V2 : UG.Vertex;
+    use UG;
+  begin
+    First_Vertex (A, V1);
+    Second_Vertex (A, V2);
+    Put ("        Arc: " & Item (A));
+    if Is_Null (V1) then
+      Put (" first: <none>");
+    else
+      Put (" first: " & Item (V1));
+    end if;
+    if Is_Null (V2) then
+      Put (" second: <none>");
+    else
+      Put (" second: " & Item (V2));
+    end if;
+    New_Line;
+    OK := True;
+  end Process_Arc;
+
+  procedure Process_Vertex (V : UG.Vertex; OK : out Boolean) is
+    Local_V : aliased UG.Vertex := V;
+    A : UG.Arc;
+    Dummy : Boolean;
+    Iter : UG.Vertex_Iterator (Local_V'Access);
+    use Ag;
+    use UG;
+  begin
+    Put_Line ("    Vertex: " & Item (V)
+              & " (" & Integer'Image (Arity (V)) & " )");
+    while not Is_Done (Iter) loop
+      Current_Item (Iter, A);
+      Process_Arc (A, Dummy);
+      Next (Iter);
+    end loop;
+    OK := True;
+  end Process_Vertex;
+
+  procedure Test_Undirected_Active_Iterator (G : in out UG.Graph) is
+    V : UG.Vertex;
+    Dummy : Boolean;
+    Iter : AG.Graph_Iterator (G'Access);
+    use AG;
+    use UG;
+  begin
+    while not Is_Done (Iter) loop
+      Current_Item (Iter, V);
+      Process_Vertex (V, Dummy);
+      Next (Iter);
+    end loop;
+  end Test_Undirected_Active_Iterator;
+
+  procedure Test_Undirected_Passive_Iterator (G : in out UG.Graph) is
+    function Visit is new UG.Visit_Vertices (Apply => Process_Vertex);
+    Dummy : Boolean;
+    Iter : aliased UG.Passive_Graph_Iterator (G'Access);
+  begin
+    Dummy := Visit (Iter'Access);
+  end Test_Undirected_Passive_Iterator;
+
   D_G : DG.Graph;
   D_V1, D_V2, D_V3 : DG.Vertex;
   D_A1, D_A2, D_A3 : DG.Arc;
@@ -589,6 +712,18 @@ begin
 
   Put_Line ("...Undirected Graph");
   Test_Undirected (U_G, U_V1, U_V2, U_V3, U_A1, U_A2, U_A3);
+
+  Put_Line ("...Graph Active Iterator");
+  Put_Line ("   Directed:");
+  Test_Directed_Active_Iterator (D_G);
+  Put_Line ("   Undirected:");
+  Test_Undirected_Active_Iterator (U_G);
+
+  Put_Line ("...Graph Passive Iterator");
+  Put_Line ("   Directed:");
+  Test_Directed_Passive_Iterator (D_G);
+  Put_Line ("   Undirected:");
+  Test_Undirected_Passive_Iterator (U_G);
 
   Put_Line ("Completed graph tests");
 
