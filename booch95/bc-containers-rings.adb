@@ -93,16 +93,6 @@ package body BC.Containers.Rings is
     raise Should_Have_Been_Overridden;
   end Add;
 
-  procedure Lock (R : in out Ring) is
-  begin
-    null;
-  end Lock;
-
-  procedure Unlock (R : in out Ring) is
-  begin
-    null;
-  end Unlock;
-
   procedure Initialize (It : in out Ring_Iterator) is
   begin
     Reset (It);
