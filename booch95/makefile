@@ -293,18 +293,13 @@ bc-$(DATE).src \
 bc-html-$(DATE).zip \
 COPYING
 
-dist: $(DISTRIBUTION_FILES)
-	-@rm -rf distribution
-	mkdir distribution
-	(cd distribution; \
-	 ln -s $(HOME)/exported-booch-components download; \
-	 ln -s $(HOME)/wavefront-booch-components wavefront; \
-	 ln -s ../contrib)
-	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
-	cp -p README distribution/download/
-	cp -p WAVEFRONT-README distribution/wavefront/README
-	cp -p COPYING html/*.{html,gif,jpg,png} html/x.ada \
-	  html/coldframe-hash.{tgz,zip} distribution/
+dist: README $(DISTRIBUTION_FILES)
+	-@rm -rf dist
+	mkdir -p dist/download dist/contrib
+	cp -p README $(DISTRIBUTION_FILES) dist/download/
+	cp -pR contrib dist/contrib/
+	cp -p html/*.{html,gif,jpg,png} html/x.ada \
+	  html/coldframe-hash.{tgz,zip} dist/
 
 SOURCE = makefile COPYING README $(ADA_SOURCE)
 
