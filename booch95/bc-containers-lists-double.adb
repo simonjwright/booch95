@@ -73,12 +73,12 @@ package body Bc.Containers.Lists.Double is
 
   procedure Insert (Obj : in out Double_List;
                     Elem : Item;
-                    Before : Natural) is
+                    Before : Positive) is
     Prev : Double_Node_Ref;
     Curr : Double_Node_Ref := Obj.Rep;
-    Index: Natural := 0;
+    Index : Positive := 1;
   begin
-    if Curr = null or else Before = 0 then
+    if Curr = null or else Before = 1 then
       Insert (Obj, Elem);
     else
       while Curr /= null and then Index < Before loop
@@ -93,14 +93,14 @@ package body Bc.Containers.Lists.Double is
 
   procedure Insert (Obj : in out Double_List;
                     From_List: in out Double_List;
-                    Before : Natural) is
+                    Before : Positive) is
     Prev : Double_Node_Ref;
     Curr : Double_Node_Ref := Obj.Rep;
     Ptr : Double_Node_Ref := From_List.Rep;
-    Index: Natural := 0;
+    Index : Positive := 1;
   begin
     if Ptr /= null then
-      if Curr = null or else Before = 0 then
+      if Curr = null or else Before = 1 then
         Insert (Obj, From_List);
       else
         pragma Assert (Ptr /= null or else Ptr.Previous = null,
@@ -161,9 +161,9 @@ package body Bc.Containers.Lists.Double is
     end if;
   end Append;
 
-  procedure Append (Obj : in out Double_List; Elem : Item; After : Natural) is
+  procedure Append (Obj : in out Double_List; Elem : Item; After : Positive) is
     Curr : Double_Node_Ref := Obj.Rep;
-    Index : Natural := 0;
+    Index : Positive := 1;
   begin
     if Curr = null then
       Append (Obj, ELem);
@@ -179,10 +179,10 @@ package body Bc.Containers.Lists.Double is
 
   procedure Append (Obj : in out Double_List;
                     From_List : in Double_List;
-                    After : Natural) is
+                    After : Positive) is
     Curr : Double_Node_Ref := Obj.Rep;
     Ptr : Double_Node_Ref := From_List.Rep;
-    Index : Natural := 0;
+    Index : Positive := 1;
   begin
     if Ptr /= null then
       if Curr = null then
@@ -210,10 +210,10 @@ package body Bc.Containers.Lists.Double is
     end if;
   end Append;
 
-  procedure Remove (Obj : in out Double_List; From : Natural) is
+  procedure Remove (Obj : in out Double_List; From : Positive) is
     Prev : Double_Node_Ref;
     Curr : Double_Node_Ref := Obj.Rep;
-    Index : Natural := 0;
+    Index : Positive := 1;
   begin
     while Curr /= null and then Index < From loop
       Prev := Curr;
@@ -238,11 +238,11 @@ package body Bc.Containers.Lists.Double is
     end if;
   end Remove;
 
-  procedure Purge (Obj : in out Double_LIst; From : Natural) is
+  procedure Purge (Obj : in out Double_LIst; From : Positive) is
     Prev : Double_Node_Ref;
     Curr : Double_Node_Ref := Obj.Rep;
     Ptr : Double_Node_Ref;
-    Index : Natural := 0;
+    Index : Positive := 1;
   begin
     while Curr /= null and then Index < From loop
       Prev := Curr;
@@ -269,11 +269,11 @@ package body Bc.Containers.Lists.Double is
   end Purge;
 
   procedure Purge (Obj : in out Double_List;
-                   From : Natural;
+                   From : Positive;
                    Count : Positive) is
     Prev, Ptr : Double_Node_Ref;
     Curr : Double_Node_Ref := Obj.Rep;
-    Index : Natural := 0;
+    Index : Positive := 1;
     Cut : Boolean := True;
   begin
     while Curr /= null and then Index < From loop
@@ -287,8 +287,8 @@ package body Bc.Containers.Lists.Double is
     else
       Obj.Rep := null;
     end if;
-    Index := 0;
-    while Curr /= null and then Index < Count loop
+    Index := 1;
+    while Curr /= null and then Index <= Count loop
       Ptr := Curr;
       Curr := Curr.Next;
       if Cut then
@@ -315,7 +315,7 @@ package body Bc.Containers.Lists.Double is
     end if;
   end Purge;
 
-  procedure Preserve (Obj : in out Double_List; From : Natural) is
+  procedure Preserve (Obj : in out Double_List; From : Positive) is
     Temp : Double_List;
   begin
     Share (Temp, Obj, From);
@@ -323,20 +323,20 @@ package body Bc.Containers.Lists.Double is
   end Preserve;
 
   procedure Preserve (Obj: in out Double_List;
-                      From : Natural;
+                      From : Positive;
                       Count : Positive) is
   begin
     Preserve (Obj, From);
     if Length (Obj) > Count then
-      Purge (Obj, Count);
+      Purge (Obj, Count + 1); -- we start at 1, remember!
     end if;
   end Preserve;
 
   procedure Share (Obj : in out Double_List;
                    With_List: Double_List;
-                   Starting_At : Natural) is
+                   Starting_At : Positive) is
     Ptr : Double_Node_Ref := With_List.Rep;
-    Index : Natural := 0;
+    Index : Positive := 1;
   begin
     pragma Assert (Ptr /= null, "Attempt to Share with NULL pointer");
     while Ptr /= null and then Index < Starting_At loop
@@ -424,9 +424,9 @@ package body Bc.Containers.Lists.Double is
 
   procedure Set_Item (Obj : in out Double_List;
                       Elem : Item;
-                      At_Loc : Natural) is
+                      At_Loc : Positive) is
     Curr : Double_Node_Ref := Obj.Rep;
-    Index : Natural := 0;
+    Index : Positive := 1;
   begin
     while Curr /= null and then Index < At_Loc loop
       Curr := Curr.Next;
@@ -438,13 +438,13 @@ package body Bc.Containers.Lists.Double is
 
   function Length (Obj : Double_List) return Natural is
     Curr : Double_Node_Ref := Obj.Rep;
-    Index : Natural := 0;
+    Count : Natural := 0;
   begin
     while Curr /= null loop
       Curr := Curr.Next;
-      Index := Index + 1;
+      Count := Count + 1;
     end loop;
-    return Index;
+    return Count;
   end Length;
 
   function Is_Null (Obj : Double_List) return Boolean is
@@ -498,9 +498,9 @@ package body Bc.Containers.Lists.Double is
     return Curr.Element'access;
   end Foot;
 
-  function Item_At (Obj : Double_List; Index : Natural) return Item is
+  function Item_At (Obj : Double_List; Index : Positive) return Item is
     Curr : Double_Node_Ref := Obj.Rep;
-    Loc : Natural := 0;
+    Loc : Positive := 1;
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to get Item with NULL tree");
     while Curr /= null and then Loc < Index loop
@@ -513,7 +513,7 @@ package body Bc.Containers.Lists.Double is
 
   function Item_At (Obj : Double_List; Index : Natural) return Item_Ptr is
     Curr : Double_Node_Ref := Obj.Rep;
-    Loc : Natural := 0;
+    Loc : Positive := 1;
   begin
     pragma Assert (Obj.Rep /= null, "Attempt to get Item with NULL tree");
     while Curr /= null and then Loc < Index loop
