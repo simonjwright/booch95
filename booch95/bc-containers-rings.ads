@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,110 +15,113 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 generic
 package BC.Containers.Rings is
 
-  pragma Elaborate_Body;
+   pragma Elaborate_Body;
 
-  type Abstract_Ring is abstract new Container with private;
+   type Abstract_Ring is abstract new Container with private;
 
-  -- A ring denotes a sequence in which items may be added and removed
-  -- from the top of a circular structure. Since this structure has no
-  -- beginning or ending, a client can mark one particular item to
-  -- designate a point of reference in the structure.
+   --  A ring denotes a sequence in which items may be added and
+   --  removed from the top of a circular structure. Since this
+   --  structure has no beginning or ending, a client can mark one
+   --  particular item to designate a point of reference in the
+   --  structure.
 
-  type Direction is (Forward, Backward);
+   type Direction is (Forward, Backward);
 
-  function Are_Equal (Left, Right : Abstract_Ring'Class) return Boolean;
-  -- Return True if and only if both rings have the same extent and the
-  -- same items in the same order; return False otherwise. The
-  -- identity of the top and mark of both rings does not participate
-  -- in this test of equality.
-  -- Can't call this "=" because of the standard one for Ring.
+   function Are_Equal (Left, Right : Abstract_Ring'Class) return Boolean;
+   --  Return True if and only if both rings have the same extent and
+   --  the same items in the same order; return False otherwise. The
+   --  identity of the top and mark of both rings does not participate
+   --  in this test of equality.
+   --  Can't call this "=" because of the standard one for Ring.
 
-  procedure Copy (From : Abstract_Ring'Class; To : in out Abstract_Ring'Class);
-  -- This operation MUST be called for dissimilar Rings in place of
-  -- assignment.
+   procedure Copy (From : Abstract_Ring'Class;
+                   To : in out Abstract_Ring'Class);
+   --  This operation MUST be called for dissimilar Rings in place of
+   --  assignment.
 
-  procedure Clear (R : in out Abstract_Ring) is abstract;
-  -- Empty the ring of all items. The mark is cleared.
+   procedure Clear (R : in out Abstract_Ring) is abstract;
+   --  Empty the ring of all items. The mark is cleared.
 
-  procedure Insert (R : in out Abstract_Ring; Elem : Item) is abstract;
-  -- If the ring was empty, set the ring's mark and top to designate
-  -- this item.
-  -- Otherwise,
-  --   this item becomes the new top;
-  --   the previous top is located one place forward of the new top;
-  --   the mark remains on the previously marked item.
+   procedure Insert (R : in out Abstract_Ring; Elem : Item) is abstract;
+   --  If the ring was empty, set the ring's mark and top to designate
+   --  this item.
+   --  Otherwise,
+   --    this item becomes the new top;
+   --    the previous top is located one place forward of the new top;
+   --    the mark remains on the previously marked item.
 
-  procedure Pop (R : in out Abstract_Ring) is abstract;
-  -- Remove the top item from the ring.
-  -- If the ring is still not empty, the new top is the item that was
-  -- previously one place forward from the top.
-  -- If the removed item was the marked item, the mark now designates
-  -- the new top.
+   procedure Pop (R : in out Abstract_Ring) is abstract;
+   --  Remove the top item from the ring.
+   --  If the ring is still not empty, the new top is the item that was
+   --  previously one place forward from the top.
+   --  If the removed item was the marked item, the mark now designates
+   --  the new top.
 
-  procedure Rotate (R : in out Abstract_Ring;
-                    Dir : Direction := Forward) is abstract;
-  -- Rotate the top of the ring in the given direction. The ring's
-  -- mark is unaffected. If there is exactly one item in the ring,
-  -- rotating either direction always returns to the same item.
+   procedure Rotate (R : in out Abstract_Ring;
+                     Dir : Direction := Forward) is abstract;
+   --  Rotate the top of the ring in the given direction. The ring's
+   --  mark is unaffected. If there is exactly one item in the ring,
+   --  rotating either direction always returns to the same item.
 
-  procedure Mark (R : in out Abstract_Ring);
-  -- Designate the item at the top of the ring (if not empty) as
-  -- marked.
+   procedure Mark (R : in out Abstract_Ring);
+   --  Designate the item at the top of the ring (if not empty) as
+   --  marked.
 
-  procedure Rotate_To_Mark (R : in out Abstract_Ring);
-  -- Rotate the ring so that the ring's mark is at the top.
+   procedure Rotate_To_Mark (R : in out Abstract_Ring);
+   --  Rotate the ring so that the ring's mark is at the top.
 
-  function Available (R : in Abstract_Ring) return Natural;
-  -- Indicates number of empty "Item slots" left in Ring
+   function Available (R : in Abstract_Ring) return Natural;
+   --  Indicates number of empty "Item slots" left in Ring
 
-  function Extent (R : Abstract_Ring) return Natural is abstract;
-  -- Return the number of items in the ring.
+   function Extent (R : Abstract_Ring) return Natural is abstract;
+   --  Return the number of items in the ring.
 
-  function Is_Empty (R : Abstract_Ring) return Boolean is abstract;
-  -- Return True if and only if there are no items in the ring.
+   function Is_Empty (R : Abstract_Ring) return Boolean is abstract;
+   --  Return True if and only if there are no items in the ring.
 
-  function Top (R : Abstract_Ring) return Item is abstract;
-  -- Return a copy of the item at the top of the ring.
+   function Top (R : Abstract_Ring) return Item is abstract;
+   --  Return a copy of the item at the top of the ring.
 
-  function At_Mark (R : Abstract_Ring) return Boolean;
-  -- Return True if and only if the item at the top of the ring is
-  -- marked; otherwise, return False. This member function will return
-  -- True if the ring is empty, since the ring's top and mark both do
-  -- not designate any item.
+   function At_Mark (R : Abstract_Ring) return Boolean;
+   --  Return True if and only if the item at the top of the ring is
+   --  marked; otherwise, return False. This member function will
+   --  return True if the ring is empty, since the ring's top and mark
+   --  both do not designate any item.
 
 private
 
-  type Abstract_Ring is abstract new Container with record
-    Top : Natural;      -- 0 implies not set
-    Mark : Natural;     -- 0 implies not set
-  end record;
+   type Abstract_Ring is abstract new Container with record
+      Top : Natural;      --  0 implies not set
+      Mark : Natural;     --  0 implies not set
+   end record;
 
-  procedure Initialize (R : in out Abstract_Ring);
-  -- derivations will need to call this
+   procedure Initialize (R : in out Abstract_Ring);
+   --  Derivations will need to call this.
 
-  procedure Add (R : in out Abstract_Ring; Elem : Item);
+   procedure Add (R : in out Abstract_Ring; Elem : Item);
 
-  type Ring_Iterator is new Iterator with record
-    Index : Natural;
-  end record;
+   type Ring_Iterator is new Iterator with record
+      Index : Natural;
+   end record;
 
-  -- Overriding primitive supbrograms of the concrete actual Iterator.
+   --  Overriding primitive supbrograms of the concrete actual
+   --  Iterator.
 
-  procedure Reset (It : in out Ring_Iterator);
+   procedure Reset (It : in out Ring_Iterator);
 
-  procedure Next (It : in out Ring_Iterator);
+   procedure Next (It : in out Ring_Iterator);
 
-  function Is_Done (It : Ring_Iterator) return Boolean;
+   function Is_Done (It : Ring_Iterator) return Boolean;
 
-  function Current_Item (It : Ring_Iterator) return Item;
+   function Current_Item (It : Ring_Iterator) return Item;
 
-  function Current_Item_Ptr (It : Ring_Iterator) return Item_Ptr;
+   function Current_Item_Ptr (It : Ring_Iterator) return Item_Ptr;
 
-  procedure Delete_Item_At (It : in out Ring_Iterator);
+   procedure Delete_Item_At (It : in out Ring_Iterator);
 
 end BC.Containers.Rings;
