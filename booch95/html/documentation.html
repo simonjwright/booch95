@@ -50,15 +50,15 @@ lists, directed and undirected graphs, and binary, multiway, and AVL trees.
 <H2><A NAME="patterns">The Patterns of the BCs</A></H2>
 <P>The BCs cover several issues: </P>
 <UL>
-<LI>Time and Space semantics 
-<LI>Storage Management policies 
-<LI>Exceptions 
-<LI>Idioms for iteration 
-<LI>Synchronization forms 
+<LI>Time and Space semantics
+<LI>Storage Management policies
+<LI>Exceptions
+<LI>Idioms for iteration
+<LI>Synchronization forms
 </UL>
 <P>These patterns have evolved in a way that each language feature is used
 in an efficient and appropriate manner, with the overall goal of balancing
-usability and extensibility. 
+usability and extensibility.
 
 
 <!---------------------------------------------------------------------->
@@ -81,7 +81,7 @@ available in C++ and other languages.</P>
 
 <P>The BCs take advantage of several critical forms of structuring: inheritance,
 parameterization, modularity, concurrency, and aggregation. Of these forms,
-parameterization is the form most often used. 
+parameterization is the form most often used.
 
 
 <!---------------------------------------------------------------------->
@@ -96,7 +96,7 @@ or extend existing ones. </P>
 <P>An example:<BR>
  A Mail_Queue is an instance of a Priority_Event_Queue, which itself is
 a generic instantiated with Network_Event as the item it contains. The Priority_Event_Queue
-is derived from Queue. 
+is derived from Queue.
 
 
 <!---------------------------------------------------------------------->
@@ -115,16 +115,16 @@ Its performance lies between that of a bounded and unbounded structure.
 The array can grow or shrink in multiples of a chunk_size. </P>
 <P>The selection rules are: </P>
 <DL>
-<DT><B>Bounded</B> 
-<DD>Use where size is statically known or allocation from the heap is prohibited. 
-<DT><B>Dynamic</B> 
+<DT><B>Bounded</B>
+<DD>Use where size is statically known or allocation from the heap is prohibited.
+<DT><B>Dynamic</B>
 <DD>Average storage size of each instance must be considered when setting chunk_size.
 Indexing is as efficient as bounded, but insertion other than at the front
-or back of a structure is less efficient than the unbounded form. 
-<DT><B>Unbounded</B> 
+or back of a structure is less efficient than the unbounded form.
+<DT><B>Unbounded</B>
 <DD>Space efficient, but requires memory allocation for each new item added
 (unless the storage management policy is &quot;Managed&quot;, see later discussions).
-The most recently accessed item is cached. 
+The most recently accessed item is cached.
 </DL>
 <P>There is also variations for the presence of multiple threads of control.
 A component can take on a form of Sequential, Guarded, or Synchronous. These
@@ -146,7 +146,7 @@ Guarded  Synchronized   Guarded  Synchronized   Guarded  Synchronized
 
 </PRE>
 <P>(Each level is a derivation via inheritance. Each class is a generic using
-Item as the container parameter) 
+Item as the container parameter)
 
 
 <!---------------------------------------------------------------------->
@@ -213,7 +213,7 @@ behaviour of the BCs is standard and portable, unlike other languages. </p>
 implementor has forgotten to override a private subprogram of an
 abstract class (such subprograms can't be abstract, see RM95 3.9.3(10)).</p>
 
-<!----------------------------------------------------------------------> 
+<!---------------------------------------------------------------------->
 
 
 <H2><a name="iteration">Iteration<a/></H2>
@@ -242,7 +242,7 @@ access to the actual contained object rather than just to its
 value.<p>
 
 There are many different approaches to iteration in Ada 95. The current
-mechanism was selected for its direct simplicity and efficiency. 
+mechanism was selected for its direct simplicity and efficiency.
 
 
 <!---------------------------------------------------------------------->
@@ -302,6 +302,7 @@ atomic transaction, the Guarded protocol should be used.
 <PRE>
 Bags        : UBDGS
 Collections : UBDGS
+  (ordered) : UBDGS
 Dequeues    : UBDGS
 Graphs
   Directed  : U
@@ -311,6 +312,7 @@ Lists
   Double    : U
 Maps        : UBDGS
 Queues      : UBDGS
+  (ordered) : UBDGS
 Rings       : UBDGS
 Sets        : UBDGS
 Stacks      : UBDGS
@@ -327,6 +329,7 @@ Trees
 <pre>
 Bags        : UBD
 Collections : U
+  (ordered) : U
 Graphs
   Directed  : U
   Undir     : U
@@ -335,6 +338,7 @@ Lists
   Double    : U
 Maps        : UBD
 Queues      : UBD
+  (ordered) : U
 Rings       : UGS
 Sets        : UBD
 Stacks      : UBD
