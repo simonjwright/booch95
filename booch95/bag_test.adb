@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -44,7 +44,7 @@ procedure Bag_Test is
       OK := True;
     end Print;
     procedure Visitor is new Containers.Visit (Print);
-    Iter : Containers.Iterator := Containers.New_Iterator (B);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (B);
   begin
     Put ("Bag " & Named);
     Visitor (Iter);
@@ -197,7 +197,7 @@ procedure Bag_Test is
 
   procedure Test_Active_Iterator (B : in out Bags.Bag'Class) is
     use Containers; use Bags;
-    Iter : Containers.Iterator := New_Iterator (B);
+    Iter : Containers.Iterator'Class := New_Iterator (B);
   begin
     while not Containers.Is_Done (Iter) loop
       Put_Line
@@ -220,7 +220,7 @@ procedure Bag_Test is
       OK := True;
     end Process;
     procedure Visitor is new Containers.Visit (Process);
-    Iter : Containers.Iterator := Containers.New_Iterator (B);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (B);
   begin
     Visitor (Iter);
   end Test_Passive_Iterator;
@@ -237,7 +237,7 @@ procedure Bag_Test is
       OK := True;
     end Process_Modifiable;
     procedure Modifier is new Containers.Modify (Process_Modifiable);
-    Iter : Containers.Iterator := Containers.New_Iterator (B);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (B);
   begin
     Modifier (Iter);
   end Test_Passive_Modifying_Iterator;

@@ -115,11 +115,14 @@ package body BC.Containers.Bags.Dynamic is
   package Address_Conversions
   is new System.Address_To_Access_Conversions (Dynamic_Bag);
 
-  function New_Iterator (For_The_Bag : Dynamic_Bag) return Iterator is
-    P : Address_Conversions.Object_Pointer
-       := Address_Conversions.To_Pointer (For_The_Bag'Address);
+  function New_Iterator
+     (For_The_Bag : Dynamic_Bag) return Iterator'Class is
+    Result : Bag_Iterator;
   begin
-    return Iterator (SP.Create (new Dynamic_Bag_Iterator (P)));
+    Result.For_The_Container :=
+       Address_Conversions.To_Pointer (For_The_Bag'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Iterator;
 
   -- Private implementations
