@@ -14,7 +14,7 @@
 
 <dl>
 
-<dt>4 October 1998</dt>
+<dt>6 October 1998</dt>
 
 <dd>When <a href="mailto:progers@acm.org">Pat Rogers</a> added Storage
 Management, we found problems with different compilers. I guess this is
@@ -31,17 +31,19 @@ an area of the language that's not been very heavily used up to now.
 <dt><b>GNAT 3.11b</b></dt>
 <dd><tt>BC.Support.Unmanaged_Storage</tt> failed to compile.
 <br>We've worked round the problem by a (nugatory) view conversion
-from what should have been a classwide attribute already.
+from what should have been a classwide attribute value already
+(<tt>'Storage_Pool</tt>).
 </dd>
 
 <dt><b>ObjectAda Special Edition Version 7.1</b></dt>
-<dd><tt>BC.Support.Unmanaged_Storage</tt> fails to compile.
-<br><tt>BC.Support.Managed_Storage</tt> compiles but the resulting
-programs generate exceptions during elaboration.
+<dd><tt>BC.Support.Managed_Storage</tt> fails to compile.
+<br><tt>BC.Support.Unmanaged_Storage</tt> compiles but the resulting
+programs generate exceptions during elaboration of Dynamic forms
+of Stacks, Queues.
 <br>We don't yet have workrounds for these, so for the time being
-<font color="red">ObjectAda users should avoid this release</font>
-(if you want to help find a solution/our mistake, though, please
-feel free!) 
+ObjectAda users should avoid using Managed Storage and Dynamic forms
+with this release (if you want to help find a solution/our mistake,
+though, please feel free!) 
 </dd>
 
 </dl>
@@ -52,7 +54,7 @@ feel free!)
 
 <P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4" ></P>
 
-<p><i>Last update: 4.x.98</i></p>
+<p><i>Last update: 6.x.98</i></p>
 
 </BODY>
 </HTML>
