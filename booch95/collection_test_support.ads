@@ -20,6 +20,7 @@ with BC.Containers.Collections;
 with BC.Containers.Collections.Bounded;
 with BC.Containers.Collections.Dynamic;
 with BC.Containers.Collections.Unbounded;
+with BC.Containers.Collections.Unmanaged;
 with BC.Support.Standard_Storage;
 with Global_Heap;
 
@@ -37,5 +38,7 @@ package Collection_Test_Support is
 
    package CU is new Collections.Unbounded
      (Storage => BC.Support.Standard_Storage.Pool);
+
+   package CUM is new Collections.Unmanaged;
 
 end Collection_Test_Support;

@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -24,6 +24,7 @@ with BC.Containers.Collections.Ordered;
 with BC.Containers.Collections.Ordered.Bounded;
 with BC.Containers.Collections.Ordered.Dynamic;
 with BC.Containers.Collections.Ordered.Unbounded;
+with BC.Containers.Collections.Ordered.Unmanaged;
 with BC.Support.Standard_Storage;
 with Global_Heap;
 
@@ -43,5 +44,7 @@ package Ordered_Collection_Test_Support is
 
    package CU is new Collections.Unbounded
      (Storage => BC.Support.Standard_Storage.Pool);
+
+   package CUM is new Collections.Unmanaged;
 
 end Ordered_Collection_Test_Support;
