@@ -110,6 +110,8 @@ DEMOS += lists_traversal
 DEMOS += time_lists
 DEMOS += time_queues
 DEMOS += unmanaged_storage
+DEMOS += user_set
+DEMOS += word_count
 
 ada_units: force
 	gnatmake $(GNATMAKE_FLAGS) $@
@@ -127,6 +129,10 @@ unmanaged_storage: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
 user_set: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+word_count: bcwords.ada
+	gnatchop -w bcwords.ada
 	gnatmake $(GNATMAKE_FLAGS) $@
 
 demos: $(DEMOS)
@@ -207,6 +213,7 @@ bc-support-unbounded.ad[bs] \
 bc-support-unmanaged_storage.ad[bs] \
 bc-support.ad[bs] \
 bc.ad[bs] \
+bcwords.ada \
 chunks.ad[bs] \
 global_heap.ad[bs] \
 graph_test.ad[bs] \
