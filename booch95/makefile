@@ -36,7 +36,6 @@ GNATMAKE_FLAGS += $(GCOV_FLAGS)
 ADA_SOURCE = \
 bc.ad[bs] \
 bc-containers.ad[bs] \
-bc-containers-guarded.ad[bs] \
 bc-copy.ad[bs] \
 bc-filter.ad[bs]
 
@@ -60,14 +59,6 @@ test: testable
 	done
 clean::
 	rm -f $(TESTABLE)
-
-concurrent_test: concurrent_testable
-	for t in $(CONCURRENT_TESTABLE); do \
-	  echo running $$t; \
-	  ./$$t 2>&1; \
-	done
-clean::
-	rm -f $(CONCURRENT_TESTABLE)
 
 TEST_SRC = assertions.ad[bs] global_heap.ad[bs]
 
@@ -122,15 +113,11 @@ ADA_SOURCE += \
 bc-containers-maps-bounded.ad[bs] \
 bc-containers-maps-dynamic.ad[bs] \
 bc-containers-maps-unbounded.ad[bs] \
-bc-containers-maps-synchronized.ad[bs] \
 bc-containers-maps.ad[bs] \
 bc-containers-maps-hash_statistics.ad[bs]
 TESTABLE += map_test
 TEST_SRC += map_test.ad[bs] map_test_support.ad[bs] chunks.ad[bs]
 map_test: force
-CONCURRENT_TESTABLE += map_test_concurrent
-TEST_SRC += map_test_concurrent.ad[bs] map_test_concurrent_support.ad[bs]
-map_test_concurrent: force
 
 ADA_SOURCE += \
 bc-containers-collections-ordered-bounded.ad[bs] \
@@ -154,14 +141,10 @@ ADA_SOURCE += \
 bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
 bc-containers-queues-unbounded.ad[bs] \
-bc-containers-queues-synchronized.ad[bs] \
 bc-containers-queues.ad[bs]
 TESTABLE += queue_test
 TEST_SRC += queue_test.ad[bs] queue_test_support.ad[bs]
 queue_test: force
-CONCURRENT_TESTABLE += queue_test_concurrent
-TEST_SRC += queue_test_concurrent.ad[bs] queue_test_support_concurrent.ad[bs]
-queue_test_concurrent: force
 
 ADA_SOURCE += \
 bc-containers-rings.ad[bs] \
@@ -225,8 +208,6 @@ TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs]
 tree_test: force
 
 testable: $(TESTABLE)
-
-concurrent_testable: $(CONCURRENT_TESTABLE)
 
 ########
 # Demos
@@ -292,7 +273,7 @@ clean::
 # Distribution construction
 
 # Create the current date, in the form yyyymmdd. This certainly works in Linux.
-DATE = $(shell date +%Y%m%d)
+DATE = $(shell date +%Y%m%d)$(SUBRELEASE)
 
 DISTRIBUTION_FILES = \
 bc-$(DATE).tgz \
