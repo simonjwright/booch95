@@ -30,6 +30,7 @@ test:: $(TESTABLE)
 
 TESTABLE += list_test
 TESTABLE += queue_test
+TESTABLE += smart_test
 TESTABLE += stack_test
 TESTABLE += tree_test
 
