@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller, Pat Rogers and
+-- Copyright (C) 1994-2001 Grady Booch, David Weller, Pat Rogers and
 -- Simon Wright.
 -- All Rights Reserved.
 --
@@ -28,21 +28,13 @@ generic
   type Storage_Manager(<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
+  Initial_Size : Positive := 10;
 package BC.Support.Dynamic is
 
   pragma Elaborate_Body;
 
   type Dyn_Node is private;
   -- An optimally-packed dynamic container whose items are stored on the heap
-
-  type Dyn_Node_Ref is access all Dyn_Node;
-
-  function Create (From : Dyn_Node) return Dyn_Node_Ref;
-  -- Construct a new dynamic container that is identical to the given container
-
-  function Create (Size : Positive := 10) return Dyn_Node_Ref;
-  -- Construct a new dynamic container that has a chunk_Size set to the
-  -- passed-in value
 
   function "=" (Left, Right : Dyn_Node) return Boolean;
 
@@ -87,7 +79,8 @@ package BC.Support.Dynamic is
   -- Returns the first index in which the given item is found. Returns 0
   -- if unsuccessful.
 
-  procedure Preallocate (Obj : in out Dyn_Node; New_Length : Natural := 10);
+  procedure Preallocate (Obj : in out Dyn_Node;
+                         New_Length : Natural := Initial_Size);
   -- Preallocate New_Length number of unused items for the container
 
   procedure Set_Chunk_Size (Obj: in out Dyn_Node; Size : Natural);
@@ -95,9 +88,6 @@ package BC.Support.Dynamic is
 
   function Chunk_Size (Obj : in Dyn_Node) return Natural;
   -- Returns the current Chunk_Size
-
-  procedure Free (Obj : in out Dyn_Node_Ref);
-  -- Dispose of the Node referred to, having first Cleared it
 
 private
 
@@ -109,10 +99,8 @@ private
   type Dyn_Node is new Ada.Finalization.Controlled with record
     Ref        : Dyn_Arr_Ref;
     Size       : Natural := 0;
-    Chunk_Size : Natural := 10;
+    Chunk_Size : Natural := Initial_Size;
   end record;
-
-  for Dyn_Node_Ref'Storage_Pool use Storage;
 
   procedure Initialize (D : in out Dyn_Node);
   procedure Adjust (D : in out Dyn_Node);

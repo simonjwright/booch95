@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -35,27 +35,6 @@ package body BC.Support.Dynamic is
 
   procedure Delete_Arr is
      new Ada.Unchecked_Deallocation (Dyn_Arr, Dyn_Arr_Ref);
-  procedure Delete_Node is
-     new Ada.Unchecked_Deallocation (Dyn_Node, Dyn_Node_Ref);
-
-  function Create (From : Dyn_Node) return Dyn_Node_Ref is
-    New_Node: Dyn_Node_Ref :=
-        new Dyn_Node'(Ada.Finalization.Controlled with
-                      Ref => new Dyn_Arr (1 .. From.Size + From.Chunk_Size),
-                      Size => From.Size,
-                      Chunk_Size => From.Chunk_Size);
-  begin
-    New_Node.Ref (1 .. New_Node.Size) := From.Ref (1 .. From.Size);
-    return New_Node;
-  end Create;
-
-  function Create (Size : Positive := 10) return Dyn_Node_Ref is
-  begin
-    return new Dyn_Node'(Ada.Finalization.Controlled with
-                         Ref => new Dyn_Arr (1 .. Size),
-                         Size => 0,
-                         Chunk_Size => Size);
-  end Create;
 
   function "=" (Left, Right : Dyn_Node) return Boolean is
   begin
@@ -248,7 +227,8 @@ package body BC.Support.Dynamic is
     return 0;  -- Not located
   end Location;
 
-  procedure Preallocate (Obj : in out Dyn_Node; New_Length : Natural := 10) is
+  procedure Preallocate (Obj : in out Dyn_Node;
+                         New_Length : Natural := Initial_Size) is
     Temp : Dyn_Arr_Ref;
     Last : Natural;
   begin
@@ -279,16 +259,11 @@ package body BC.Support.Dynamic is
     return Obj.Chunk_Size;
   end Chunk_Size;
 
-  procedure Free (Obj : in out Dyn_Node_Ref) is
-  begin
-    Delete_Node (Obj);
-  end Free;
-
   procedure Initialize (D : in out Dyn_Node) is
   begin
-    D.Ref := new Dyn_Arr (1 .. 10);
+    D.Ref := new Dyn_Arr (1 .. Initial_Size);
     D.Size := 0;
-    D.Chunk_Size := 10;
+    D.Chunk_Size := Initial_Size;
   end Initialize;
 
   procedure Adjust (D : in out Dyn_Node) is
