@@ -319,6 +319,11 @@ flavours:
 
 <dl>
 
+<dt><tt>High_Resolution_Time</tt><dd>Supports high resolution
+(sub-microsecond) time measurements.
+<br>The only implementation provided is for GNAT on Intel x86 targets
+(Linux, Windows).
+
 <dt><tt>Managed_Storage</tt><dd>A storage pool by <a
 href="mailto:pat@classwide.com">Pat Rogers</a>, which can allocate
 objects up to a user-defined size (supplied as a constraint).
@@ -329,6 +334,10 @@ objects up to a user-defined size (supplied as a constraint).
 
 <dt><tt>Standard_Storage</tt><dd>Interface to the standard storage
 pool (works for GNAT, ObjectAda, may work on others).
+
+<dt><tt>Statistics</tt><dd>Supports on-the-fly calculation of
+mean, minimum and maximum values, variance, and standard deviation of
+sets of values.
 
 <dt><tt>Synchronization</tt><dd>The Components don't provide forms
 that are directly suitable for use in concurrent programs. This is
