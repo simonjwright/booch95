@@ -328,6 +328,6 @@ bc-$(DATE).src: $(ADA_SOURCE) $(TEST_SRC) $(DEMO_SRC)
 	cat $(ADA_SOURCE) $(TEST_SRC) $(DEMO_SRC) > $@
 
 bc-html-$(DATE).zip: force
-	(cd html; zip ../$@ *.gif *.jpg *.html coldframe-hash.{tgz,zip})
+	(cd html; zip ../$@ x.ada *.gif *.jpg *.html coldframe-hash.{tgz,zip})
 
 .PHONY: force
