@@ -1,0 +1,21 @@
+with BC.Containers;
+with BC.Containers.Queues;
+with BC.Containers.Queues.Bounded;
+with BC.Containers.Queues.Dynamic;
+with BC.Containers.Queues.Unbounded;
+with BC.Support.Bounded;
+with BC.Support.Dynamic;
+with BC.Support.Managed_Storage;
+with BC.Support.Unmanaged_Storage;
+package Queues_For_Timing is
+  P : BC.Support.Managed_Storage.Pool (1357);
+--   P : BC.Support.Unmanaged_Storage.Pool;
+  Size : constant := 10_000;
+  type Integer_P is access all Integer;
+  package C is new BC.Containers (Integer, Integer_P);
+  package Q is new C.Queues;
+  package N is new BC.Support.Bounded (Integer, Integer_P, Size);
+  package B is new Q.Bounded (Size, N);
+  package D is new Q.Dynamic (BC.Support.Managed_Storage.Pool, P);
+  package U is new Q.Unbounded (BC.Support.Managed_Storage.Pool, P);
+end Queues_For_Timing;
