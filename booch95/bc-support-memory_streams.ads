@@ -37,7 +37,7 @@ package BC.Support.Memory_Streams is
    --  from Stream. Last is updated to the final index in Item that
    --  was updated (normally, Item'Last). When Stream was already
    --  empty, Item will be unchanged and Last will be set to
-   --  Item'First.
+   --  Item'First - 1.
 
    procedure Write
      (Stream : in out Stream_Type;
