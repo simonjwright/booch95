@@ -130,7 +130,7 @@ package BC.Graphs is
 
   generic
     with procedure Process (I : in out Vertex_Item);
-  procedure Access_Vertex_Item (V : Vertex);
+  procedure Access_Vertex_Item (V : Vertex'Class);
   -- Process has read-write access to the item associated with the vertex.
 
   function Enclosing_Graph (V : Vertex) return Graph_Ptr;
@@ -161,7 +161,7 @@ package BC.Graphs is
 
   generic
     with procedure Process (I : in out Arc_Item);
-  procedure Access_Arc_Item (A : Arc);
+  procedure Access_Arc_Item (A : Arc'Class);
   -- Process has read-write access to the item associated with the arc.
 
   function Enclosing_Graph (A : Arc) return Graph_Ptr;
