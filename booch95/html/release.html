@@ -30,7 +30,7 @@
 
 <dl>
 
-<dt>xxx May 2001</dt>
+<dt>13 May 2001</dt>
 
 <dd>
 
@@ -54,6 +54,14 @@ and Unbounded forms (in which case it returns <tt>Natural'Last</tt>;
 just don't believe it!
 
 
+<p>Added Synchronized forms for Dynamic and Unbounded Maps.
+
+
+<p>Added <tt>BC.Containers.Maps.Hash_Statistics</tt> to report how
+well the hashing algorithm is doing. Easy enough to do the same for
+Bags, Sets ..
+
+
 <h3>Implementation changes</h3>
 
 
@@ -73,7 +81,20 @@ fixed.
 <p>Synchronized Maps didn't override <tt>"="</tt>.
 
 
+<p>The GNAT <a href="compiler-problems.html#29may1999">compiler
+problem</a> (GNAT was too permissive) noted in the June 1999 release
+is still there .. fixed, I hope, in
+<tt>BC.Support.Synchronization</tt>.<br/>
+
+I think the reason I've not seen this problem is that I've never been
+able to get the concurrency support working with the free versions of
+the Aonix compiler. The least I can do is to try compiling
+synchronization support on its own! .. and OA 7.2 would have found
+it. Apologies.
+
+
 <p>
+
 
 </dd>
 
