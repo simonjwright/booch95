@@ -78,16 +78,15 @@ package BC.Containers.Maps is
 
    function Item_Of (M : Abstract_Map; K : Key) return Item
       is abstract;
-   --  If the key does not exist in the map, raises
-   --  BC.Not_Found. Otherwise, return a copy of the item bound to the
-   --  given key.
+   --  If the key does not exist in the map, raises BC.Not_Found.
+   --  Otherwise, returns a copy of the item bound to the given key.
 
    --  Additional Iterator support
 
    type Map_Iterator is new Iterator with private;
 
    function Current_Key (It : Map_Iterator'Class) return Key;
-   --  Return a copy of the current Key.
+   --  Returns a copy of the current Key.
 
    generic
       with procedure Apply (K : Key; I : Item; OK : out Boolean);
