@@ -32,12 +32,12 @@
 
 
 <H2><A NAME="abstractions">Key Abstractions</A></H2>
-<P>The Ada 95 verison of the components will contain the same key abstractions
+<P>The Ada 95 version of the components will contain the same key abstractions
 as the C++ form (Tools, Support, and Structs). However, the organization
 will be slightly different, particularly in the Support domain. This is
 because Ada 95 provides several special forms of memory management that
 are quite different from C++. </P>
-<P>The Booch Components (BCs) are organized in three major areas: <B>Tools</B>, <B>Support</B>, and <B>Structs</B>. The <B>Tools</B> category, which hasn't yet been addressed in the Ada 95 version, provides algorithmic abstractions (Searching, Sorting, etc.).
+<P>The Booch Components (BCs) are organized in three major areas: <B>Tools</B>, <B>Support</B>, and <B>Structs</B>. The <B>Tools</B> category provides algorithmic abstractions (Searching, Sorting, etc.).
 The <B>Structs</B> category provides an array of structural abstractions (Bags, Collections,
 Deques, Graphs, Lists, Maps, Queues, Rings, Sets, Stacks, and
 Trees). The <B>Support</B> category contains all the &quot;concrete&quot; forms, plus structures to create the
@@ -164,7 +164,7 @@ not very space efficient. The bounded form uses a packed array base class,
 which is space efficient, but can become time inefficient if adding items
 into the middle of the array. </P>
 <P>Bounded forms have two parameters for their generics: Item and Maximum_Size. Dynamic
-and Unbounded forms have Item, Storage_Manager and the actual Storage poolfor parameters. </P>
+and Unbounded forms have Item and the actual Storage pool for parameters. </P>
 <P>
 
 
