@@ -332,6 +332,86 @@ package body BC.Graphs is
   end Enclosing_Graph;
 
 
+  --------------------------------------------
+  -- Iteration over the Vertices in a Graph --
+  --------------------------------------------
+
+  procedure Reset (Obj : in out Graph_Iterator) is
+  begin
+    Reset (GSP.Value (GSP.Pointer (Obj)).all);
+  end Reset;
+
+
+  procedure Next (Obj : in out Graph_Iterator) is
+  begin
+    Next (GSP.Value (GSP.Pointer (Obj)).all);
+  end Next;
+
+
+  function Is_Done (Obj : Graph_Iterator) return Boolean is
+  begin
+    return Is_Done (GSP.Value (GSP.Pointer (Obj)).all);
+  end Is_Done;
+
+
+  function Current_Vertex (Obj : Graph_Iterator) return Vertex'Class is
+  begin
+    return Current_Vertex (GSP.Value (GSP.Pointer (Obj)).all);
+  end Current_Vertex;
+
+
+  procedure Visit_Vertices (Over_The_Graph : Graph'Class) is
+    It : Graph_Iterator := New_Graph_Iterator (Over_The_Graph);
+    Success : Boolean;
+  begin
+    while not Is_Done (It) loop
+      Apply (Current_Vertex (It), Success);
+      exit when not Success;
+      Next (It);
+    end loop;
+  end Visit_Vertices;
+
+
+  ---------------------------------------------------
+  -- Iteration over the Arcs connected to a Vertex --
+  ---------------------------------------------------
+
+  procedure Reset (Obj : in out Vertex_Iterator) is
+  begin
+    Reset (VSP.Value (VSP.Pointer (Obj)).all);
+  end Reset;
+
+
+  procedure Next (Obj : in out Vertex_Iterator) is
+  begin
+    Next (VSP.Value (VSP.Pointer (Obj)).all);
+  end Next;
+
+
+  function Is_Done (Obj : Vertex_Iterator) return Boolean is
+  begin
+    return Is_Done (VSP.Value (VSP.Pointer (Obj)).all);
+  end Is_Done;
+
+
+  function Current_Arc (Obj : Vertex_Iterator) return Arc'Class is
+  begin
+    return Current_Arc (VSP.Value (VSP.Pointer (Obj)).all);
+  end Current_Arc;
+
+
+  procedure Visit_Arcs (Over_The_Vertex : Vertex'Class) is
+    It : Vertex_Iterator := New_Vertex_Iterator (Over_The_Vertex);
+    Success : Boolean;
+  begin
+    while not Is_Done (It) loop
+      Apply (Current_Arc (It), Success);
+      exit when not Success;
+      Next (It);
+    end loop;
+  end Visit_Arcs;
+
+
   ----------------------------------------------
   -- Utilities, controlled storage management --
   ----------------------------------------------

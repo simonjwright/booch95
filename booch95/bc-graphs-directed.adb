@@ -18,6 +18,7 @@
 -- $Id$
 
 with BC.Support.Exceptions;
+with System.Address_To_Access_Conversions;
 
 package body BC.Graphs.Directed is
 
@@ -103,7 +104,7 @@ package body BC.Graphs.Directed is
   -----------------------------
 
   procedure Set_From_Vertex (A : in out Directed_Arc;
-			     V : access Directed_Vertex'Class) is
+                             V : access Directed_Vertex'Class) is
     Prev, Curr : Arc_Node_Ptr;
   begin
     Assert (A.Rep /= null,
@@ -136,7 +137,7 @@ package body BC.Graphs.Directed is
 
 
   procedure Set_To_Vertex (A : in out Directed_Arc;
-			   V : access Directed_Vertex'Class) is
+                           V : access Directed_Vertex'Class) is
     Prev, Curr : Arc_Node_Ptr;
   begin
     Assert (A.Rep /= null,
@@ -200,9 +201,43 @@ package body BC.Graphs.Directed is
   -- Directed_Graph iterators --
   ------------------------------
 
+  package Graph_Address_Conversions
+  is new System.Address_To_Access_Conversions (Directed_Graph);
+
+  function New_Graph_Iterator
+     (For_The_Graph : Directed_Graph) return Graph_Iterator is
+    P : Graph_Address_Conversions.Object_Pointer
+       := Graph_Address_Conversions.To_Pointer (For_The_Graph'Address);
+  begin
+    return Graph_Iterator (GSP.Create (new Directed_Graph_Iterator (P)));
+  end New_Graph_Iterator;
+
+
+  package Vertex_Address_Conversions
+  is new System.Address_To_Access_Conversions (Directed_Vertex);
+
+  function New_Vertex_Iterator
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator is
+    P : Vertex_Address_Conversions.Object_Pointer
+       := Vertex_Address_Conversions.To_Pointer (For_The_Vertex'Address);
+  begin
+    return Vertex_Iterator (VSP.Create (new Directed_Vertex_Iterator (P)));
+  end New_Vertex_Iterator;
+
+
+  -------------------------------
+  -- Private iteration support --
+  -------------------------------
+
+  procedure Initialize (It : in out Directed_Graph_Iterator) is
+  begin
+    Reset (It);
+  end Initialize;
+
+
   procedure Reset (It : in out Directed_Graph_Iterator) is
   begin
-    It.Index := It.G.Rep;
+    It.Index := It.D.Rep;
   end Reset;
 
 
@@ -220,43 +255,31 @@ package body BC.Graphs.Directed is
   end Is_Done;
 
 
-  procedure Current_Item (It : Directed_Graph_Iterator;
-			  V : in out Directed_Vertex) is
+  function Current_Vertex (It : Directed_Graph_Iterator) return Vertex'Class is
   begin
     Assert (It.Index /= null,
             BC.Is_Null'Identity,
             "Current_Item(Directed_Graph_Iterator)",
             BSE.Is_Null);
-    Clear (V);
-    V.Rep := It.Index;
-    V.Rep.Count := V.Rep.Count + 1;
-  end Current_Item;
-
-
-  function Visit_Vertices
-     (It : access Passive_Directed_Graph_Iterator) return Boolean is
-    Iter : Directed_Graph_Iterator (It.G);
-    V : Directed_Vertex;
-    Result : Boolean := True;
-  begin
-    while not Is_Done (Iter) loop
-      Current_Item (Iter, V);
-      Apply (V, Result);
-      exit when not Result;
-      Next (Iter);
-    end loop;
-    return Result;
-  end Visit_Vertices;
+    It.Index.Count := It.Index.Count + 1;
+    return Directed_Vertex'(Ada.Finalization.Controlled with Rep => It.Index);
+  end Current_Vertex;
 
 
   -------------------------------
   -- Directed_Vertex iterators --
   -------------------------------
 
+  procedure Initialize (It : in out Directed_Vertex_Iterator) is
+  begin
+    Reset (It);
+  end Initialize;
+
+
   procedure Reset (It : in out Directed_Vertex_Iterator) is
   begin
-    if It.V.Rep /= null then
-      It.Index := It.V.Rep.Outgoing;
+    if It.D.Rep /= null then
+      It.Index := It.D.Rep.Outgoing;
     else
       It.Index := null;
     end if;
@@ -277,45 +300,15 @@ package body BC.Graphs.Directed is
   end Is_Done;
 
 
-  procedure Current_Item (It : Directed_Vertex_Iterator;
-			  A : in out Directed_Arc'Class) is
+  function Current_Arc (It : Directed_Vertex_Iterator) return Arc'Class is
   begin
     Assert (It.Index /= null,
             BC.Is_Null'Identity,
-            "Current_Item(Directed_Vertex_Iterator)",
+            "Current_Item(Directed_Arc_Iterator)",
             BSE.Is_Null);
-    Clear (A);
-    A.Rep := It.Index;
-    A.Rep.Count := A.Rep.Count + 1;
-  end Current_Item;
-
-
-  function Visit_Arcs
-     (It : access Passive_Directed_Vertex_Iterator) return Boolean is
-    Iter : Directed_Vertex_Iterator (It.V);
-    A : Directed_Arc;
-    Result : Boolean := True;
-  begin
-    while not Is_Done (Iter) loop
-      Current_Item (Iter, A);
-      Apply (A, Result);
-      exit when not Result;
-      Next (Iter);
-    end loop;
-    return Result;
-  end Visit_Arcs;
-
-
-  ----------------------------------------------
-  -- Utilities, controlled storage management --
-  ----------------------------------------------
-
-  procedure Initialize (It : in out Directed_Vertex_Iterator) is
-  begin
-    if It.V.Rep /= null then
-      It.Index := It.V.Rep.Outgoing;
-    end if;
-  end Initialize;
+    It.Index.Count := It.Index.Count + 1;
+    return Directed_Arc'(Ada.Finalization.Controlled with Rep => It.Index);
+  end Current_Arc;
 
 
 end BC.Graphs.Directed;
