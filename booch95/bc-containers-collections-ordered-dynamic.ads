@@ -104,14 +104,11 @@ private
   is new BC.Support.Dynamic (Item => Item,
                              Item_Ptr => Item_Ptr,
                              Storage_Manager => Storage_Manager,
-                             Storage => Storage);
+                             Storage => Storage,
+                             Initial_Size => Initial_Size);
 
   type Collection is new Abstract_Ordered_Collection with record
-    Rep : Collection_Nodes.Dyn_Node_Ref;
+    Rep : Collection_Nodes.Dyn_Node;
   end record;
-
-  procedure Initialize (C : in out Collection);
-  procedure Adjust (C : in out Collection);
-  procedure Finalize (C : in out Collection);
 
 end BC.Containers.Collections.Ordered.Dynamic;
