@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -69,7 +69,7 @@ private
    package Stack_Nodes
    is new BC.Support.Bounded (Item => Item,
                               Item_Ptr => Item_Ptr,
-                              Maximum_Size => Maximum_Size);
+                              Default_Maximum_Size => Maximum_Size);
    use Stack_Nodes;
 
    type Stack is new Abstract_Stack with record
