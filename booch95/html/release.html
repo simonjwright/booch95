@@ -14,6 +14,29 @@
 
 <dl>
 
+<dt>(23 Jan 2003)
+
+<h3>Interface changes</h3>
+
+<p>None.
+
+<h3>Implementation changes</h3>
+
+<p>In <tt>BC.Support.Memory_Streams</tt>, <tt>Write_Contents</tt> did
+the actual writing one storage element at a
+time. <tt>Read_Contents</tt> requires a supplier <tt>Stream</tt> that
+has datagram properties (unlike, it turns out, <tt>GNAT.Sockets</tt>
+streams, even if based on a datagram protocol).
+
+<h3>Documentation changes</h3>
+
+<p>None.
+
+<h3>New contributions</h3>
+
+<p>None.
+
+
 <dt>11 Jan 2003
 
 <dd>
