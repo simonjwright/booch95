@@ -1,5 +1,5 @@
--- Copyright (C) 1999-2001 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1999-2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,23 +15,23 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with Ada.Characters.Handling;
 
 package body User_Set_Support is
 
-  package ACH renames Ada.Characters.Handling;
+   package ACH renames Ada.Characters.Handling;
 
-  function "=" (L, R : User_Character) return Boolean is
-  begin
-    return ACH.To_Upper (Character (L)) = ACH.To_Upper (Character (R));
-  end "=";
+   function "=" (L, R : User_Character) return Boolean is
+   begin
+      return ACH.To_Upper (Character (L)) = ACH.To_Upper (Character (R));
+   end "=";
 
-  function User_Char_Hash (C : User_Character) return Natural is
-  begin
-    return Character'Pos (ACH.To_Upper (Character (C)));
-  end User_Char_Hash;
+   function User_Char_Hash (C : User_Character) return Natural is
+   begin
+      return Character'Pos (ACH.To_Upper (Character (C)));
+   end User_Char_Hash;
 
 end User_Set_Support;
 

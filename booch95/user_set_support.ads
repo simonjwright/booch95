@@ -1,5 +1,5 @@
--- Copyright (C) 1999-2001 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1999-2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,10 +15,10 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
--- This package defines sets of characters where equality is
--- case-independent.
+--  This package defines sets of characters where equality is
+--  case-independent.
 
 with BC.Containers;
 with BC.Containers.Sets;
@@ -29,27 +29,27 @@ with Global_Heap;
 
 package User_Set_Support is
 
-  type User_Character is new Character;
-  function "=" (L, R : User_Character) return Boolean;
+   type User_Character is new Character;
+   function "=" (L, R : User_Character) return Boolean;
 
-  package Containers is new BC.Containers (Item => User_Character);
+   package Containers is new BC.Containers (Item => User_Character);
 
-  package Sets is new Containers.Sets;
+   package Sets is new Containers.Sets;
 
-  function User_Char_Hash (C : User_Character) return Natural;
+   function User_Char_Hash (C : User_Character) return Natural;
 
-  package SB is new Sets.Bounded (Hash => User_Char_Hash,
-                                  Buckets => 3,
-                                  Maximum_Size => 100);
+   package SB is new Sets.Bounded (Hash => User_Char_Hash,
+                                   Buckets => 3,
+                                   Maximum_Size => 100);
 
-  package SD is new Sets.Dynamic (Hash => User_Char_Hash,
-                                  Buckets => 3,
-                                  Storage_Manager => Global_Heap.Pool,
-                                  Storage => Global_Heap.Storage);
+   package SD is new Sets.Dynamic (Hash => User_Char_Hash,
+                                   Buckets => 3,
+                                   Storage_Manager => Global_Heap.Pool,
+                                   Storage => Global_Heap.Storage);
 
-  package SU is new Sets.Unbounded (Hash => User_Char_Hash,
-                                    Buckets => 3,
-                                    Storage_Manager => Global_Heap.Pool,
-                                    Storage => Global_Heap.Storage);
+   package SU is new Sets.Unbounded (Hash => User_Char_Hash,
+                                     Buckets => 3,
+                                     Storage_Manager => Global_Heap.Pool,
+                                     Storage => Global_Heap.Storage);
 
 end User_Set_Support;

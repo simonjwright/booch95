@@ -1,5 +1,5 @@
--- Copyright (C) 1998-1999 Pat Rogers and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1998-1999,2001 Pat Rogers and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,35 +15,38 @@
 --      for a copy.
 --
 
--- $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with System.Storage_Pools;
 with System.Storage_Elements;
 
 package BC.Support.Unmanaged_Storage is
 
-  pragma Elaborate_Body;
+   pragma Elaborate_Body;
 
-  package SSE renames System.Storage_Elements;
-  package SSP renames System.Storage_Pools;
+   package SSE renames System.Storage_Elements;
+   package SSP renames System.Storage_Pools;
 
-  type Pool is new SSP.Root_Storage_Pool with private;
+   type Pool is new SSP.Root_Storage_Pool with private;
 
 
-  procedure Allocate( The_Pool                 : in out Pool;
-                      Storage_Address          :    out System.Address;
-                      Size_In_Storage_Elements : in     SSE.Storage_Count;
-                      Alignment                : in     SSE.Storage_Count );
+   procedure Allocate (The_Pool : in out Pool;
+                       Storage_Address : out System.Address;
+                       Size_In_Storage_Elements : SSE.Storage_Count;
+                       Alignment : SSE.Storage_Count);
 
-  procedure Deallocate( The_Pool                 : in out Pool;
-                        Storage_Address          : in     System.Address;
-                        Size_In_Storage_Elements : in     SSE.Storage_Count;
-                        Alignment                : in     SSE.Storage_Count );
+   procedure Deallocate (The_Pool : in out Pool;
+                         Storage_Address : System.Address;
+                         Size_In_Storage_Elements : SSE.Storage_Count;
+                         Alignment : SSE.Storage_Count);
 
-  function Storage_Size( This : Pool ) return SSE.Storage_Count;
+   function Storage_Size (This : Pool) return SSE.Storage_Count;
 
 private
 
-  type Pool is new SSP.Root_Storage_Pool with null record;
+   type Pool is new SSP.Root_Storage_Pool with null record;
 
 end BC.Support.Unmanaged_Storage;

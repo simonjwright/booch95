@@ -1,5 +1,5 @@
--- Copyright (C) 1998-1999 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1998-1999,2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,7 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with Ada.Finalization;
 with BC.Containers;
@@ -24,19 +24,19 @@ with BC.Containers.Lists.Single;
 with BC.Containers.Lists.Double;
 with BC.Smart;
 with BC.Support.Managed_Storage;
-with BC.Support.Unmanaged_Storage;
+--  with BC.Support.Unmanaged_Storage;
 package Lists_For_Traversal is
-  type T is new Ada.Finalization.Controlled with record
-    V : Integer;
-  end record;
-  type T_P is access T;
-  procedure Finalize (The_T : in out T);
-  package Smart is new BC.Smart (T, T_P);
-  subtype P is Smart.Pointer;
-  function "=" (L, R : P) return Boolean;
-  package C is new BC.Containers (P);
-  package L is new C.Lists;
-  Pool : BC.Support.Managed_Storage.Pool (10_000);
-  package S is new L.Single (BC.Support.Managed_Storage.Pool, Pool);
-  package D is new L.Double (BC.Support.Managed_Storage.Pool, Pool);
+   type T is new Ada.Finalization.Controlled with record
+      V : Integer;
+   end record;
+   type T_P is access T;
+   procedure Finalize (The_T : in out T);
+   package Smart is new BC.Smart (T, T_P);
+   subtype P is Smart.Pointer;
+   function "=" (L, R : P) return Boolean;
+   package C is new BC.Containers (P);
+   package L is new C.Lists;
+   Pool : BC.Support.Managed_Storage.Pool (10_000);
+   package S is new L.Single (BC.Support.Managed_Storage.Pool, Pool);
+   package D is new L.Double (BC.Support.Managed_Storage.Pool, Pool);
 end Lists_For_Traversal;
