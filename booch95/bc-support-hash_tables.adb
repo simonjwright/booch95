@@ -139,19 +139,6 @@ package body BC.Support.Hash_Tables is
       end Value_Of;
 
 
-      function Access_Value_Of (T : Table;
-                                I : Items.Item) return Values.Value_Ptr is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
-         Index : constant Natural := Items.Location (T.Items (Bucket), I, 1);
-      begin
-         Assert (Index /= 0,
-                 BC.Not_Found'Identity,
-                 "Access_Value_Of",
-                 BSE.Missing);
-         return Values.Item_At (T.Values (Bucket), Index);
-      end Access_Value_Of;
-
-
    end Tables;
 
 

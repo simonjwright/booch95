@@ -210,26 +210,6 @@ package body BC.Support.Bounded_Hash_Tables is
       --  We can't take 'Access of non-aliased components. But if we
       --  alias discriminated objects they become constrained - even
       --  if the discriminant has a default.
-      package Allow_Value_Access
-      is new System.Address_To_Access_Conversions (Values.Value);
-
-      function Access_Value_Of (T : Table;
-                                I : Items.Item) return Values.Value_Ptr is
-         Bucket : constant Positive := (Items.Hash (I) mod Buckets) + 1;
-         C : constant Index := Location (T, T.Buckets (Bucket), I);
-      begin
-         Assert (C /= 0,
-                 BC.Not_Found'Identity,
-                 "Access_Value_Of",
-                 BSE.Missing);
-         return Values.Value_Ptr
-           (Allow_Value_Access.To_Pointer (T.Contents (C).Value'Address));
-      end Access_Value_Of;
-
-
-      --  We can't take 'Access of non-aliased components. But if we
-      --  alias discriminated objects they become constrained - even
-      --  if the discriminant has a default.
       package Allow_Item_Access
       is new System.Address_To_Access_Conversions (Items.Item);
 
@@ -241,6 +221,12 @@ package body BC.Support.Bounded_Hash_Tables is
             (T.Contents (Position).Item'Address));
       end Access_Item_At;
 
+
+      --  We can't take 'Access of non-aliased components. But if we
+      --  alias discriminated objects they become constrained - even
+      --  if the discriminant has a default.
+      package Allow_Value_Access
+      is new System.Address_To_Access_Conversions (Values.Value);
 
       function Access_Value_At (T : Table; Position : Cell_Index)
                                return Values.Value_Ptr is

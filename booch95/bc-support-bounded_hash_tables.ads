@@ -131,12 +131,6 @@ package BC.Support.Bounded_Hash_Tables is
       --  BC.Not_Found; otherwise, return the value corresponding to
       --  this item.
 
-      function Access_Value_Of (T : Table;
-                                I : Items.Item) return Values.Value_Ptr;
-      --  If the item does not have a binding in the hash table, raise
-      --  BC.Not_Found; otherwise, return a pointer to the value
-      --  corresponding to this item.
-
       function Access_Item_At (T : Table; Position : Cell_Index)
                               return Items.Item_Ptr;
       --  Support for iteration.
