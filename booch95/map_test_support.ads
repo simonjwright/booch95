@@ -28,8 +28,8 @@ with Global_Heap;
 
 package Map_Test_Support is
 
-   package Containers is new BC.Containers (Item => Chunks.Chunk_Ptr,
-                                              "=" => Chunks."=");
+   package Containers is new BC.Containers
+     (Item => Chunks.Chunk_Ptr, "=" => Chunks."=");
 
    package Maps is new Containers.Maps (Key => Character);
 
@@ -50,6 +50,6 @@ package Map_Test_Support is
       Buckets => 3,
       Storage => BC.Support.Standard_Storage.Pool);
 
-   Gitems : array (0 .. 9) of aliased Chunks.Chunk;
+   Gitems : array (1 .. 7) of aliased Chunks.Chunk;
 
 end Map_Test_Support;
