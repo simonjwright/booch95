@@ -37,7 +37,17 @@ package body BC.Support.Synchronization is
     entry Seize when True is
       use type Ada.Task_Identification.Task_Id;
     begin
-      if Owner = Seize'Caller then
+      -- Why do I say Semaphore_Type.Seize rather than just Seize?
+      --
+      -- Jean-Pascal Cozic <Jean-Pascal.Cozic@ingsud.dga.fr> says:
+      -- You have to write Semaphore_Type.Seize'Caller because there
+      -- are two homographs Seize in the scope (the entry and the
+      -- procedure). Using the context, there is no ambiguity because
+      -- Caller deals with a prefix that denotes an entry_declaration,
+      -- but the compiler cannot use context in this case.
+      --
+      -- See LRM 4.1.4(14).
+      if Owner = Semaphore_Type.Seize'Caller then
         Count := Count + 1;
       else
         requeue Waiting with abort;
