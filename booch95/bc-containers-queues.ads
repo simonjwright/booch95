@@ -30,36 +30,37 @@ package Bc.Containers.Queues is
   -- all Queue forms
 
   procedure Clear   (Obj : in out Queue) is abstract;
-  -- Empty the Queue of all items
+  -- Empty the queue of all items.
 
   procedure Append  (Obj : in out Queue; Elem : Item) is abstract;
-  -- Add the item to the back of the Queue; the Item itself is copied
+  -- Add the item to the back of the queue; the item itself is copied.
 
   procedure Pop     (Obj : in out Queue) is abstract;
-  -- Remove the Item from the front of the Queue
+  -- Remove the item from the front of the queue.
 
   procedure Remove  (Obj : in out Queue; From : Natural) is abstract;
-  -- Remove the Item at the given Index (balking operation)
+  -- Remove the item at the given index (may be a balking operation).
 
   function Length   (Obj : in Queue) return Natural is abstract;
-  -- Returns total items in the Queue
+  -- Return the number of items in the queue.
 
   function Is_Empty (Obj : in Queue) return Boolean is abstract;
-  -- Returns true iff no items are in the queue
+  -- Return True if and only if there are no items in the queue.
 
   function Front    (Obj : in Queue) return Item is abstract;
-  -- Return the item at the front of the Queue; the Item is _not_ removed
+  -- Return a copy of the item at the front of the queue.
 
   function Front    (Obj : in Queue) return Item_Ptr is abstract;
-  -- Return reference to item at the front of the Queue;
-  -- the Item is _not_ removed
+  -- Return a pointer to the item at the front of the queue.
 
   function Location (Obj : in Queue; Elem : in Item) return Natural
     is abstract;
-  -- Returns the Index number where the Item is found.  A zero is
-  -- returned on failure
+  -- Return the first index at which the item is found; return 0 if the
+  -- item does not exist in the queue.
 
   function "=" (Left, Right : access Queue'Class) return Boolean;
+  -- Return True if and only if both queues have the same length and the same
+  -- items in the same order; return False otherwise.
 
   procedure Copy (From : access Queue'Class; To : access Queue'Class);
   -- This operation MUST be called for dissimilar Queues in place of
