@@ -237,7 +237,7 @@ package body BC.Graphs is
   end Item;
 
 
-  procedure Access_Vertex_Item (V : Vertex) is
+  procedure Access_Vertex_Item (V : Vertex'Class) is
   begin
     Assert (V.Rep /= null,
             BC.Is_Null'Identity,
@@ -312,7 +312,7 @@ package body BC.Graphs is
   end Item;
 
 
-  procedure Access_Arc_Item (A : Arc) is
+  procedure Access_Arc_Item (A : Arc'Class) is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
