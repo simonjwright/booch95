@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -223,7 +223,7 @@ package body BC.Graphs.Directed is
        := Vertex_Address_Conversions.To_Pointer (For_The_Vertex'Address);
   begin
     return Vertex_Iterator
-       (VSP.Create (new Directed_Vertex_Outgoing_Iterator (P)));
+       (VSP.Create (new Directed_Vertex_Bothways_Iterator (P)));
   end New_Vertex_Iterator;
 
 
@@ -237,16 +237,15 @@ package body BC.Graphs.Directed is
   end New_Vertex_Incoming_Iterator;
 
 
-  procedure Visit_Incoming_Arcs (Over_The_Vertex : Directed_Vertex) is
-    It : Vertex_Iterator := New_Vertex_Incoming_Iterator (Over_The_Vertex);
-    Success : Boolean;
+  function New_Vertex_Outgoing_Iterator
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator is
+    P : Vertex_Address_Conversions.Object_Pointer
+       := Vertex_Address_Conversions.To_Pointer (For_The_Vertex'Address);
   begin
-    while not Is_Done (It) loop
-      Apply (Current_Arc (It), Success);
-      exit when not Success;
-      Next (It);
-    end loop;
-  end Visit_Incoming_Arcs;
+    return Vertex_Iterator
+       (VSP.Create (new Directed_Vertex_Outgoing_Iterator (P)));
+  end New_Vertex_Outgoing_Iterator;
+
 
   -------------------------------
   -- Private iteration support --
@@ -294,6 +293,76 @@ package body BC.Graphs.Directed is
   -------------------------------
 
   --------------
+  -- Abstract --
+  --------------
+
+  function Is_Done (It : Directed_Vertex_Abstract_Iterator) return Boolean is
+  begin
+    return It.Index = null;
+  end Is_Done;
+
+
+  function Current_Arc (It : Directed_Vertex_Abstract_Iterator)
+                        return Arc'Class is
+  begin
+    Assert (It.Index /= null,
+            BC.Is_Null'Identity,
+            "Current_Item(Directed_Vertex_Outgoing_Iterator)",
+            BSE.Is_Null);
+    It.Index.Count := It.Index.Count + 1;
+    return Directed_Arc'(Ada.Finalization.Controlled with Rep => It.Index);
+  end Current_Arc;
+
+
+  --------------
+  -- Bothways --
+  --------------
+
+  procedure Initialize (It : in out Directed_Vertex_Bothways_Iterator) is
+  begin
+    Reset (It);
+  end Initialize;
+
+
+  procedure Reset (It : in out Directed_Vertex_Bothways_Iterator) is
+  begin
+    It.First := True;
+    if It.D.Rep /= null then
+      It.Index := It.D.Rep.Outgoing;
+      if It.Index = null then
+        It.First := False;
+        It.Index := It.D.Rep.Incoming;
+        while It.Index /= null and then (It.Index.From = It.Index.To) loop
+          It.Index := It.Index.Next_Incoming;
+        end loop;
+      end if;
+    else
+      It.Index := null;
+    end if;
+  end Reset;
+
+
+  procedure Next (It : in out Directed_Vertex_Bothways_Iterator) is
+  begin
+    if It.First then
+      It.Index := It.Index.Next_Outgoing;
+      if It.Index = null then
+        It.First := False;
+        It.Index := It.D.Rep.Incoming;
+        while It.Index /= null and then (It.Index.From = It.Index.To) loop
+          It.Index := It.Index.Next_Incoming;
+        end loop;
+      end if;
+    elsif It.Index /= null then
+      It.Index := It.Index.Next_Incoming;
+      while It.Index /= null and then (It.Index.From = It.Index.To) loop
+        It.Index := It.Index.Next_Incoming;
+      end loop;
+    end if;
+  end Next;
+
+
+  --------------
   -- Outgoing --
   --------------
 
@@ -319,24 +388,6 @@ package body BC.Graphs.Directed is
       It.Index := It.Index.Next_Outgoing;
     end if;
   end Next;
-
-
-  function Is_Done (It : Directed_Vertex_Outgoing_Iterator) return Boolean is
-  begin
-    return It.Index = null;
-  end Is_Done;
-
-
-  function Current_Arc (It : Directed_Vertex_Outgoing_Iterator)
-                        return Arc'Class is
-  begin
-    Assert (It.Index /= null,
-            BC.Is_Null'Identity,
-            "Current_Item(Directed_Vertex_Outgoing_Iterator)",
-            BSE.Is_Null);
-    It.Index.Count := It.Index.Count + 1;
-    return Directed_Arc'(Ada.Finalization.Controlled with Rep => It.Index);
-  end Current_Arc;
 
 
   --------------
@@ -365,24 +416,6 @@ package body BC.Graphs.Directed is
       It.Index := It.Index.Next_Incoming;
     end if;
   end Next;
-
-
-  function Is_Done (It : Directed_Vertex_Incoming_Iterator) return Boolean is
-  begin
-    return It.Index = null;
-  end Is_Done;
-
-
-  function Current_Arc (It : Directed_Vertex_Incoming_Iterator)
-                        return Arc'Class is
-  begin
-    Assert (It.Index /= null,
-            BC.Is_Null'Identity,
-            "Current_Item(Directed_Vertex_Incoming_Iterator)",
-            BSE.Is_Null);
-    It.Index.Count := It.Index.Count + 1;
-    return Directed_Arc'(Ada.Finalization.Controlled with Rep => It.Index);
-  end Current_Arc;
 
 
 end BC.Graphs.Directed;

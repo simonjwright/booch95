@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -75,16 +75,18 @@ package BC.Graphs.Directed is
   -- Iteration support --
   -----------------------
 
-  -- Standard iteration over a Vertex only visits outgoing Arcs.
-
   function New_Graph_Iterator (For_The_Graph : Directed_Graph)
                                return Graph_Iterator;
   -- Return a reset Iterator bound to the specific Graph.
 
+  ------------------------------------------------------
+  -- Vertex iteration over incoming and outgoing arcs --
+  ------------------------------------------------------
+
   function New_Vertex_Iterator (For_The_Vertex : Directed_Vertex)
                                 return Vertex_Iterator;
-  -- Return a reset Iterator bound to the specific Vertex; only outgoing
-  -- Arcs are visited.
+  -- Return a reset Iterator bound to the specific Vertex; both outgoing
+  -- and incoming Arcs are visited.
 
   -----------------------------------------
   -- Vertex iteration over incoming arcs --
@@ -95,11 +97,14 @@ package BC.Graphs.Directed is
   -- Return a reset Iterator bound to the specific Vertex; only incoming
   -- Arcs are visited.
 
-  generic
-    with procedure Apply (Elem : in Arc'Class; OK : out Boolean);
-  procedure Visit_Incoming_Arcs (Over_The_Vertex : Directed_Vertex);
-  -- Call Apply with a handle on each incoming Arc in the Vertex. The iteration
-  -- will terminate early if Apply sets OK to False.
+  -----------------------------------------
+  -- Vertex iteration over outgoing arcs --
+  -----------------------------------------
+
+  function New_Vertex_Outgoing_Iterator
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator;
+  -- Return a reset Iterator bound to the specific Vertex; only outgoing
+  -- Arcs are visited.
 
 private
 
@@ -122,10 +127,28 @@ private
 
   function Current_Vertex (It : Directed_Graph_Iterator) return Vertex'Class;
 
-  type Directed_Vertex_Outgoing_Iterator (D : access Directed_Vertex'Class)
-     is new Actual_Vertex_Iterator (D) with record
-    Index : Arc_Node_Ptr;
+  type Directed_Vertex_Abstract_Iterator (D : access Directed_Vertex'Class)
+    is abstract new Actual_Vertex_Iterator (D) with record
+      Index : Arc_Node_Ptr;
+    end record;
+
+  function Is_Done (It : Directed_Vertex_Abstract_Iterator) return Boolean;
+
+  function Current_Arc (It : Directed_Vertex_Abstract_Iterator) return Arc'Class;
+
+  type Directed_Vertex_Bothways_Iterator (D : access Directed_Vertex'Class)
+  is new Directed_Vertex_Abstract_Iterator (D) with record
+    First : Boolean;
   end record;
+
+  procedure Initialize (It : in out Directed_Vertex_Bothways_Iterator);
+
+  procedure Reset (It : in out Directed_Vertex_Bothways_Iterator);
+
+  procedure Next (It : in out Directed_Vertex_Bothways_Iterator);
+
+  type Directed_Vertex_Outgoing_Iterator (D : access Directed_Vertex'Class)
+     is new Directed_Vertex_Abstract_Iterator (D) with null record;
 
   procedure Initialize (It : in out Directed_Vertex_Outgoing_Iterator);
 
@@ -133,23 +156,13 @@ private
 
   procedure Next (It : in out Directed_Vertex_Outgoing_Iterator);
 
-  function Is_Done (It : Directed_Vertex_Outgoing_Iterator) return Boolean;
-
-  function Current_Arc (It : Directed_Vertex_Outgoing_Iterator) return Arc'Class;
-
   type Directed_Vertex_Incoming_Iterator (D : access Directed_Vertex'Class)
-     is new Actual_Vertex_Iterator (D) with record
-    Index : Arc_Node_Ptr;
-  end record;
+     is new Directed_Vertex_Abstract_Iterator (D) with null record;
 
   procedure Initialize (It : in out Directed_Vertex_Incoming_Iterator);
 
   procedure Reset (It : in out Directed_Vertex_Incoming_Iterator);
 
   procedure Next (It : in out Directed_Vertex_Incoming_Iterator);
-
-  function Is_Done (It : Directed_Vertex_Incoming_Iterator) return Boolean;
-
-  function Current_Arc (It : Directed_Vertex_Incoming_Iterator) return Arc'Class;
 
 end BC.Graphs.Directed;
