@@ -90,6 +90,7 @@ ADA_SOURCE += \
 bc-containers-deques-bounded.ad[bs] \
 bc-containers-deques-dynamic.ad[bs] \
 bc-containers-deques-unbounded.ad[bs] \
+bc-containers-deques-unmanaged.ad[bs] \
 bc-containers-deques.ad[bs]
 TESTABLE += deque_test
 TEST_SRC += deque_test.ad[bs] deque_test_support.ad[bs]
@@ -155,7 +156,8 @@ ADA_SOURCE += \
 bc-containers-rings.ad[bs] \
 bc-containers-rings-bounded.ad[bs] \
 bc-containers-rings-dynamic.ad[bs] \
-bc-containers-rings-unbounded.ad[bs]
+bc-containers-rings-unbounded.ad[bs] \
+bc-containers-rings-unmanaged.ad[bs]
 TESTABLE += ring_test
 TEST_SRC += ring_test.ad[bs] ring_test_support.ad[bs]
 ring_test: force
@@ -164,6 +166,7 @@ ADA_SOURCE += \
 bc-containers-sets-bounded.ad[bs] \
 bc-containers-sets-dynamic.ad[bs] \
 bc-containers-sets-unbounded.ad[bs] \
+bc-containers-sets-unmanaged.ad[bs] \
 bc-containers-sets.ad[bs]
 TESTABLE += set_test
 TEST_SRC += set_test.ad[bs] set_test_support.ad[bs]
