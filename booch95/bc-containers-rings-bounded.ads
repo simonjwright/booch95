@@ -79,11 +79,10 @@ private
 
    package Ring_Nodes
    is new BC.Support.Bounded (Item => Item,
-                              Item_Ptr => Item_Ptr,
-                              Default_Maximum_Size => Maximum_Size);
+                              Item_Ptr => Item_Ptr);
 
    type Ring is new Abstract_Ring with record
-      Rep : Ring_Nodes.Bnd_Node;
+      Rep : Ring_Nodes.Bnd_Node (Maximum_Size => Maximum_Size);
    end record;
 
    procedure Initialize (R : in out Ring);

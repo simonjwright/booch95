@@ -77,11 +77,10 @@ private
 
    package Deque_Nodes
    is new BC.Support.Bounded (Item => Item,
-                              Item_Ptr => Item_Ptr,
-                              Default_Maximum_Size => Maximum_Size);
+                              Item_Ptr => Item_Ptr);
 
    type Deque is new Abstract_Deque with record
-      Rep : Deque_Nodes.Bnd_Node;
+      Rep : Deque_Nodes.Bnd_Node (Maximum_Size => Maximum_Size);
    end record;
 
    function Item_At (D : Deque; Index : Positive) return Item_Ptr;
