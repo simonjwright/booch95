@@ -24,6 +24,7 @@ generic
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
+  Initial_Size : Positive := 10;
 package BC.Containers.Queues.Ordered.Dynamic is
 
   pragma Elaborate_Body;
@@ -83,16 +84,13 @@ private
   is new BC.Support.Dynamic (Item => Item,
                              Item_Ptr => Item_Ptr,
                              Storage_Manager => Storage_Manager,
-                             Storage => Storage);
+                             Storage => Storage,
+                             Initial_Size => Initial_Size);
 
   type Queue is new Abstract_Ordered_Queue with record
-    Rep : Queue_Nodes.Dyn_Node_Ref;
+    Rep : Queue_Nodes.Dyn_Node;
   end record;
 
   function Item_At (Q : Queue; Index : Positive) return Item_Ptr;
-
-  procedure Initialize (Q : in out Queue);
-  procedure Adjust (Q : in out Queue);
-  procedure Finalize (Q : in out Queue);
 
 end BC.Containers.Queues.Ordered.Dynamic;

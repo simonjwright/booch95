@@ -24,68 +24,68 @@ package body BC.Containers.Collections.Dynamic is
   function "=" (Left, Right : in Collection) return Boolean is
     use Collection_Nodes;
   begin
-    return Left.Rep.all = Right.Rep.all;
+    return Left.Rep = Right.Rep;
   end "=";
 
   procedure Clear (C : in out Collection) is
   begin
-    Collection_Nodes.Clear (C.Rep.all);
+    Collection_Nodes.Clear (C.Rep);
   end Clear;
 
   procedure Insert (C : in out Collection; Elem : Item) is
   begin
-    Collection_Nodes.Insert (C.Rep.all, Elem);
+    Collection_Nodes.Insert (C.Rep, Elem);
   end Insert;
 
   procedure Insert (C : in out Collection;
                     Elem : Item;
                     Before : Positive) is
   begin
-    Collection_Nodes.Insert (C.Rep.all, Elem, Before);
+    Collection_Nodes.Insert (C.Rep, Elem, Before);
   end Insert;
 
   procedure Append (C : in out Collection; Elem : Item) is
   begin
-    Collection_Nodes.Append (C.Rep.all, Elem);
+    Collection_Nodes.Append (C.Rep, Elem);
   end Append;
 
   procedure Append (C : in out Collection;
                     Elem : Item;
                     After : Positive) is
   begin
-    Collection_Nodes.Append (C.Rep.all, Elem, After);
+    Collection_Nodes.Append (C.Rep, Elem, After);
   end Append;
 
   procedure Remove (C : in out Collection; At_Index : Positive) is
   begin
-    Collection_Nodes.Remove (C.Rep.all, At_Index);
+    Collection_Nodes.Remove (C.Rep, At_Index);
   end Remove;
 
   procedure Replace (C : in out Collection;
                      At_Index : Positive;
                      Elem : Item) is
   begin
-    Collection_Nodes.Replace (C.Rep.all, At_Index, Elem);
+    Collection_Nodes.Replace (C.Rep, At_Index, Elem);
   end Replace;
 
   function Length (C : Collection) return Natural is
   begin
-    return Collection_Nodes.Length (C.Rep.all);
+    return Collection_Nodes.Length (C.Rep);
   end Length;
 
   function Is_Empty (C : Collection) return Boolean is
   begin
-    return Collection_Nodes.Length (C.Rep.all) = 0;
+    return Collection_Nodes.Length (C.Rep) = 0;
   end Is_Empty;
 
   function First (C : Collection) return Item is
   begin
-    return Collection_Nodes.First (C.Rep.all);
+    return Collection_Nodes.First (C.Rep);
   end First;
 
   function Last (C : Collection) return Item is
   begin
-    return Collection_Nodes.Last (C.Rep.all);
+    return Collection_Nodes.Last (C.Rep);
   end Last;
 
   function Item_At
@@ -96,22 +96,22 @@ package body BC.Containers.Collections.Dynamic is
 
   function Location (C : Collection; Elem : Item) return Natural is
   begin
-    return Collection_Nodes.Location (C.Rep.all, Elem);
+    return Collection_Nodes.Location (C.Rep, Elem);
   end Location;
 
   procedure Preallocate (C : in out Collection; Size : Natural) is
   begin
-    Collection_Nodes.Preallocate (C.Rep.all, Size);
+    Collection_Nodes.Preallocate (C.Rep, Size);
   end Preallocate;
 
   procedure Set_Chunk_Size (C : in out Collection; Size : Natural) is
   begin
-    Collection_Nodes.Set_Chunk_Size (C.Rep.all, Size);
+    Collection_Nodes.Set_Chunk_Size (C.Rep, Size);
   end Set_Chunk_Size;
 
   function Chunk_Size (C : Collection) return Natural is
   begin
-    return Collection_Nodes.Chunk_Size (C.Rep.all);
+    return Collection_Nodes.Chunk_Size (C.Rep);
   end Chunk_Size;
 
   package Address_Conversions
@@ -130,25 +130,11 @@ package body BC.Containers.Collections.Dynamic is
   function Item_At
      (C : Collection; Index : Positive) return Item_Ptr is
   begin
-    return Collection_Nodes.Item_At (C.Rep.all, Index);
+    return Collection_Nodes.Item_At (C.Rep, Index);
   end Item_At;
 
-  procedure Initialize (C : in out Collection) is
-  begin
-    C.Rep := Collection_Nodes.Create (Initial_Size);
-  end Initialize;
-
-  procedure Adjust (C : in out Collection) is
-  begin
-    C.Rep := Collection_Nodes.Create (From => C.Rep.all);
-  end Adjust;
-
-  procedure Finalize (C : in out Collection) is
-  begin
-    Collection_Nodes.Free (C.Rep);
-  end Finalize;
-
   Empty_Container : Collection;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Collection is
   begin

@@ -24,6 +24,7 @@ generic
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
+  Initial_Size : Positive := 10;
 package BC.Containers.Deques.Dynamic is
 
   pragma Elaborate_Body;
@@ -34,9 +35,6 @@ package BC.Containers.Deques.Dynamic is
   -- grows in a linear fashion (based on Chunk_Size).
 
   function Null_Container return Deque;
-
-  function Create (Size : Positive) return Deque;
-  -- Creates a new Dynamic Deque that is preallocated for 'Size' elements
 
   procedure Clear (D : in out Deque);
   -- Empty the deque of all items.
@@ -92,16 +90,13 @@ private
   is new BC.Support.Dynamic (Item => Item,
                              Item_Ptr => Item_Ptr,
                              Storage_Manager => Storage_Manager,
-                             Storage => Storage);
+                             Storage => Storage,
+                             Initial_Size => Initial_Size);
 
   type Deque is new Abstract_Deque with record
-    Rep : Deque_Nodes.Dyn_Node_Ref;
+    Rep : Deque_Nodes.Dyn_Node;
   end record;
 
   function Item_At (D : Deque; Index : Positive) return Item_Ptr;
-
-  procedure Initialize (D : in out Deque);
-  procedure Adjust (D : in out Deque);
-  procedure Finalize (D : in out Deque);
 
 end BC.Containers.Deques.Dynamic;

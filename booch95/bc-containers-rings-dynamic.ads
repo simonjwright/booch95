@@ -24,6 +24,7 @@ generic
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
+  Initial_Size : Positive := 10;
 package BC.Containers.Rings.Dynamic is
 
   pragma Elaborate_Body;
@@ -88,14 +89,11 @@ private
   is new BC.Support.Dynamic (Item => Item,
                              Item_Ptr => Item_Ptr,
                              Storage_Manager => Storage_Manager,
-                             Storage => Storage);
+                             Storage => Storage,
+                             Initial_Size => Initial_Size);
 
   type Ring is new Abstract_Ring with record
-    Rep : Ring_Nodes.Dyn_Node_Ref;
+    Rep : Ring_Nodes.Dyn_Node;
   end record;
-
-  procedure Initialize (R : in out Ring);
-  procedure Adjust (R : in out Ring);
-  procedure Finalize (R : in out Ring);
 
 end BC.Containers.Rings.Dynamic;

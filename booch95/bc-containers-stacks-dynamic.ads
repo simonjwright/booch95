@@ -24,6 +24,7 @@ generic
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
+  Initial_Size : Positive := 10;
 package BC.Containers.Stacks.Dynamic is
 
   pragma Elaborate_Body;
@@ -35,9 +36,6 @@ package BC.Containers.Stacks.Dynamic is
   -- no support for linear collapsing of the Stack.
 
   function Null_Container return Stack;
-
-  function Create (Size : Positive) return Stack;
-  -- Creates a new Dynamic Stack that is preallocated for 'Size' elements
 
   function "=" (Left, Right : Stack) return Boolean;
   -- Return True if and only if both stacks have the same depth and the
@@ -85,14 +83,11 @@ private
   is new BC.Support.Dynamic (Item => Item,
                              Item_Ptr => Item_Ptr,
                              Storage_Manager => Storage_Manager,
-                             Storage => Storage);
+                             Storage => Storage,
+                             Initial_Size => Initial_Size);
 
   type Stack is new Abstract_Stack with record
-    Rep : Stack_Nodes.Dyn_Node_Ref;
+    Rep : Stack_Nodes.Dyn_Node;
   end record;
-
-  procedure Initialize (S : in out Stack);
-  procedure Adjust (S : in out Stack);
-  procedure Finalize (S : in out Stack);
 
 end BC.Containers.Stacks.Dynamic;
