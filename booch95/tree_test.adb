@@ -67,7 +67,7 @@ procedure Tree_Test is
             Put ("(root) ");
          end if;
          Put_Line (":= " & Item_At (T));
-         if (Has_Children (T)) then
+         if Has_Children (T) then
             Indent;
             Put ("L ");
             Print_Tree (Left_Child (T), Depth => Depth + 1);
