@@ -7,11 +7,11 @@
 
 <H1><IMG SRC="ada95lgo.gif" ALT="The Ada 95 Booch Components"></H1>
 
-<P><I>Documentation</I> </P>
+<p><I>Documentation</I> 
 
-<p><img src="greenline.gif" alt="--" width="600" height="4"> </p>
+<p><img src="greenline.gif" alt="--" width="600" height="4"> 
 
-<P><A HREF="#abstractions">Key Abstractions</A><BR>
+<p><A HREF="#abstractions">Key Abstractions</A><BR>
  <A HREF="#patterns">The Patterns of the BCs</A><BR>
  <A HREF="#tactical">Tactical Issues</A><BR>
  <A HREF="#macro">Macro Organization</A><BR>
@@ -23,44 +23,59 @@
  <A HREF="#iteration">Iteration</A><BR>
  <A HREF="#synchronization">Synchronization</A><BR>
  <A HREF="#conclusion">Conclusion</A><BR>
- </P>
-<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
-<P>
+ 
+
+<p><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> 
+
 
 
 <!---------------------------------------------------------------------->
 
 
 <H2><A NAME="abstractions">Key Abstractions</A></H2>
-<P>The Ada 95 version of the components will contain the same key abstractions
-as the C++ form (Tools, Support, and Structs). However, the organization
-will be slightly different, particularly in the Support domain. This is
-because Ada 95 provides several special forms of memory management that
-are quite different from C++. </P>
-<P>The Booch Components (BCs) are organized in three major areas: <B>Tools</B>, <B>Support</B>, and <B>Structs</B>. The <B>Tools</B> category provides algorithmic abstractions (Searching, Sorting, etc.).
-The <B>Structs</B> category provides an array of structural abstractions (Bags, Collections,
-Deques, Graphs, Lists, Maps, Queues, Rings, Sets, Stacks, and
-Trees). The <B>Support</B> category contains all the &quot;concrete&quot; forms, plus structures to create the
-components. </P>
-<P>Some of the structures permit structural sharing (graphs, lists, and trees).
-Some structures may also be ordered (collections, dequeues, and queues).
-There are also multiple forms for some structures: single and double linked
-lists, directed and undirected graphs, and binary, multiway, and AVL trees.
+
+<p>The Ada 95 version of the components will contain the same key
+abstractions as the C++ form (Structs, Tools and Support). However,
+the organization will be slightly different, particularly in the
+Support domain. This is because Ada 95 provides several special forms
+of memory management that are quite different from C++.
+
+<p>The <B>Structs</B> category provides an array of structural
+abstractions (Bags, Collections, Deques, Graphs, Lists, Maps, Queues,
+Rings, Sets, Stacks, and Trees). The <B>Tools</B> category provides
+algorithmic abstractions (Searching, Sorting, etc.). The
+<B>Support</B> category contains all the &quot;concrete&quot; forms,
+plus structures to create the components.
+
+<p>Some of the structures permit structural sharing (graphs, lists,
+and trees).  Some structures may also be ordered (collections,
+dequeues, and queues).  There are also multiple forms for some
+structures: single and double linked lists, directed and undirected
+graphs, and binary, multiway, and AVL trees.
 
 
 <!---------------------------------------------------------------------->
 
 
 <H2><A NAME="patterns">The Patterns of the BCs</A></H2>
-<P>The BCs cover several issues: </P>
+
+<p>The BCs cover several issues: 
+
 <UL>
+
 <LI>Time and Space semantics
+
 <LI>Storage Management policies
+
 <LI>Exceptions
+
 <LI>Idioms for iteration
+
 <LI>Synchronization forms
+
 </UL>
-<P>These patterns have evolved in a way that each language feature is used
+
+<p>These patterns have evolved in a way that each language feature is used
 in an efficient and appropriate manner, with the overall goal of balancing
 usability and extensibility.
 
@@ -69,166 +84,202 @@ usability and extensibility.
 
 
 <H2><A NAME="tactical">Tactical Issues</A></H2>
-<P></P>
-<BLOCKQUOTE>The particular semantics of a given programming language influence our architectural
-decisions. To ignore these influences leaves us with abstractions that do
-not take advantage of the language's unique features, or with mechanisms
-that cannot be efficiently implemented. -- <I>G. Booch</I> </BLOCKQUOTE>
 
-<P>Ada 95 inherently provides several features not present in C++:
+<BLOCKQUOTE>The particular semantics of a given programming language
+influence our architectural decisions. To ignore these influences
+leaves us with abstractions that do not take advantage of the
+language's unique features, or with mechanisms that cannot be
+efficiently implemented. -- <I>G. Booch</I> </BLOCKQUOTE>
+
+<p>Ada 95 inherently provides several features not present in C++:
 safe generics, safe object-oriented programming (no silent "object
 slicing"), general access types and access discriminants, and
 concurrency support.  All this as well as user-definable storage
 management, automatic reclamation of resources (garbage collection
 &quot;lite&quot;), aggregation, inheritance, and parameterization
-available in C++ and other languages.</P>
+available in C++ and other languages.
 
-<P>The BCs take advantage of several critical forms of structuring: inheritance,
-parameterization, modularity, concurrency, and aggregation. Of these forms,
-parameterization is the form most often used.
+<p>The BCs take advantage of several critical forms of structuring:
+inheritance, parameterization, modularity, concurrency, and
+aggregation. Of these forms, parameterization is the form most often
+used.
 
 
 <!---------------------------------------------------------------------->
 
 
 <H2><A NAME="macro">Macro Organization</A></H2>
-<P>The BCs emphasize separation of policy from implementation. For this reason,
-abstract classes are declared for every major component type. Also, the
-Support category provides the same low-level features used in constructing
-the different components, in order to help the &quot;power user&quot; create new components
-or extend existing ones. </P>
-<P>An example:<BR>
- A Mail_Queue is an instance of a Priority_Event_Queue, which itself is
-a generic instantiated with Network_Event as the item it contains. The Priority_Event_Queue
-is derived from Queue.
+
+<p>The BCs emphasize separation of policy from implementation. For
+this reason, abstract classes are declared for every major component
+type. Also, the Support category provides the common low-level
+features used in constructing the different components, in order to
+help the &quot;power user&quot; create new components or extend
+existing ones.
+
+<p>An example:<BR>
+
+A Mail_Queue is an instance of a Priority_Event_Queue, which itself is
+a generic instantiated with Network_Event as the item it contains. The
+Priority_Event_Queue is derived from Queue.
 
 
 <!---------------------------------------------------------------------->
 
 
 <H2><a name="families">Class Families</a></H2>
-<P>Each abstract base class has several derived concrete forms, each designed
-to support specific needs for time and space semantics. The user selects
-the concrete form most appropriate to their needs. The net result is that
-copy, assignment, and equality operations work between each different form
-of the components. </P>
-<P>There are two very common variations of structure management: bounded and
-unbounded. A third form was added to the latest BCs: dynamic. This form
-represents a heap structure which behaves (basically) as a dynamic array.
-Its performance lies between that of a bounded and unbounded structure.
-The array can grow or shrink in multiples of a chunk_size. </P>
-<P>The selection rules are: </P>
+
+<p>Each abstract base class has several derived concrete forms, each
+designed to support specific needs for time and space semantics. The
+user selects the concrete form most appropriate to their needs. The
+net result is that copy, assignment, and equality operations work
+between each different form of the components. 
+
+<p>There are two very common variations of structure management:
+bounded and unbounded. A third form was added to the latest BCs:
+dynamic. This form represents a heap structure which behaves
+(basically) as a dynamic array.  Its performance lies between that of
+a bounded and unbounded structure.  The array can grow or shrink in
+multiples of a chunk_size. <i>[Note, this becomes less valuable given
+Ada's support for user-defined storage pools.]</i>
+
+<p>The selection rules are: 
+
 <DL>
+
 <DT><B>Bounded</B>
-<DD>Use where size is statically known or allocation from the heap is prohibited.
+
+<DD>Use where size is statically known or allocation from the heap is
+prohibited.
+
 <DT><B>Dynamic</B>
-<DD>Average storage size of each instance must be considered when setting chunk_size.
-Indexing is as efficient as bounded, but insertion other than at the front
-or back of a structure is less efficient than the unbounded form.
+
+<DD>Average storage size of each instance must be considered when
+setting chunk_size.  Indexing is as efficient as bounded, but
+insertion other than at the front or back of a structure is less
+efficient than the unbounded form.
+
 <DT><B>Unbounded</B>
-<DD>Space efficient, but requires memory allocation for each new item added
-(unless the storage management policy is &quot;Managed&quot;, see later discussions).
-The most recently accessed item is cached.
+
+<DD>Space efficient, but requires memory allocation for each new item
+added (unless the storage management policy is &quot;Managed&quot;,
+see later discussions).  The most recently accessed item is cached.
+
 </DL>
-<P>There is also variations for the presence of multiple threads of control.
-A component can take on a form of Sequential, Guarded, or Synchronous. These
-forms will be discussed later.
+
+<p>There is also variations for the presence of multiple threads of
+control.  A component can take on a form of Sequential, Guarded, or
+Synchronous. These forms will be discussed later.
 
 
 <!---------------------------------------------------------------------->
 
 
 <H2><A NAME="micro">Micro Organization</A></H2>
-<P>Each Abstract Base Class generally follows the same form of derivation: </P>
-<PRE>
-                         Abstract Base Class
-                                 |
-             +-------------------+----------------------+
-     Bounded Form           Dynamic Form          Unbounded Form
-     /       \                /      \              /        \
-Guarded  Synchronized   Guarded  Synchronized   Guarded  Synchronized
 
-</PRE>
-<P>(Each level is a derivation via inheritance. Each class is a generic using
-Item as the container parameter)
+<p>Each Abstract Base Class generally follows the same form of
+derivation:
+
+<img src="organization.jpg" alt="Picture of organisation of classes">
+
+<p>(Each level is a derivation via inheritance. Each class is a
+generic using Item as the container parameter)
+
+<p>The Guarded forms are created by instantiating <tt>BC.Guarded</tt>
+with the concrete form, whereas the Synchronized forms have to be
+provided individually.
 
 
 <!---------------------------------------------------------------------->
 
 
- </P>
+ 
 <H2><A NAME="timeandspace">Time and Space Semantics</A></H2>
-<P>The fundamental difference between the Unbounded and Bounded forms is that
-the unbounded form is essentially an time efficient linked-list, but is
-not very space efficient. The bounded form uses a packed array base class,
-which is space efficient, but can become time inefficient if adding items
-into the middle of the array. </P>
-<P>Bounded forms have two parameters for their generics: Item and Maximum_Size. Dynamic
-and Unbounded forms have Item and the actual Storage pool for parameters. </P>
-<P>
+
+<p>The fundamental difference between the Unbounded and Bounded forms
+is that the unbounded form is essentially an time efficient
+linked-list, but is not very space efficient. The bounded form uses a
+packed array base class, which is space efficient, but can become time
+inefficient if adding items into the middle of the array. 
+
+<p>Bounded forms have two parameters for their generics: Item and
+Maximum_Size. Dynamic and Unbounded forms have Item and the actual
+Storage Pool for parameters. 
+
 
 
 <!---------------------------------------------------------------------->
 
 
 <H2><A NAME="storage">Storage Management</A></H2>
-<P>Storage management on certain architectures can be complex, and so requires
-that all of our classes use a policy tailored to the platform, rather than
-using a general one assumed by the library designer to work in all circumstances.
-By clearly isolating these patterns of storage management, we can provide
-a robust, adaptable library. </P>
-<P>By treating the storage manager as an argument to all the dynamic and unbounded
-concrete structures, we effectively decouple storage management policy from
-its implementation, and make it possible for library users to insert their
-own storage management policy without changing the library. This is a classic
-example of extensibility through instantiation instead of inheritance. </P>
 
-<P>The only requirement we place upon storage managers is that they provide
-the same well-defined protocol. This is defined by the standard package
-Ada.Storage_Pools.</p>
+<p>Storage management on certain architectures can be complex, and so
+requires that all of our classes use a policy tailored to the
+platform, rather than using a general one assumed by the library
+designer to work in all circumstances.  By clearly isolating these
+patterns of storage management, we can provide a robust, adaptable
+library. 
+
+<p>By treating the storage manager as an argument to all the dynamic
+and unbounded concrete structures, we effectively decouple storage
+management policy from its implementation, and make it possible for
+library users to insert their own storage management policy without
+changing the library. This is a classic example of extensibility
+through instantiation instead of inheritance. 
+
+<p>The only requirement we place upon storage managers is that they
+provide the same well-defined protocol. This is defined by the
+standard package Ada.Storage_Pools.
 
 <p>Two predefined managers are available:
+
 <dl>
 
-<dt><tt>BC.Support.Unmanaged_Storage</tt></dt>
+<dt><tt>BC.Support.Standard_Storage.Pool</tt></dt>
+
 <dd>is effectively the default heap manager.</dd>
 
-<dt><tt>BC.Support.Managed_Storage</tt></dt>
+<dt><tt>BC.Support.Managed_Storage.Pool (Chunk_Size)</tt></dt>
+
 <dd>provides management of store within a pool whose unit (chunk) size
 is specified when the pool is created.</dd>
 
 </dl>
-</p>
+
+
 
 <p>Note that the supplied <tt>BC.Support.Managed_Storage</tt> will
 <strong>not</strong> support allocation of items larger than its chunk
-size.</p>
+size.
 
 <!---------------------------------------------------------------------->
 
 
 <H2><A NAME="exceptions">Exceptions</A></H2>
-<P>All exceptions for the BCs are placed in the topmost package, BC. This precludes
-the user from having to include a separate &quot;Exceptions&quot; package. Exception
-behaviour of the BCs is standard and portable, unlike other languages. </p>
+
+<p>All exceptions for the BCs are placed in the topmost package,
+BC. This precludes the user from having to include a separate
+&quot;Exceptions&quot; package. Exception behaviour of the BCs is
+standard and portable, unlike other languages. 
 
 <p>As well as the exceptions from the C++ Components, an exception
-<tt>Should_Have_Been_Overridden</tt> is possible. It will only be raised if the
-implementor has forgotten to override a private subprogram of an
-abstract class (such subprograms can't be abstract, see RM95 3.9.3(10)).</p>
+<tt>Should_Have_Been_Overridden</tt> is possible. It will only be
+raised if the implementor has forgotten to override a private
+subprogram of an abstract class (such subprograms can't be abstract,
+see RM95 3.9.3(10)).
 
 <!---------------------------------------------------------------------->
 
 
 <H2><a name="iteration">Iteration<a/></H2>
 
-Separate types act as agents responsible for iterating across a structure.
+<p>Separate types act as agents responsible for iterating across a structure.
 This was done for two reasons:
 
 <UL>
 
-<LI>By providing separate iterator types, we make it possible to
-have several iterator objects working upon the same object.
+<LI>By providing separate iterator types, we make it possible to have
+several iterator objects working upon the same object.
 
 <LI>Iteration slightly breaks the encapsulation of an object's state;
 by separating the behaviour of iteration from the rest of an
@@ -237,16 +288,18 @@ two.
 
 </UL>
 
-There are two forms: active and passive. Active iteration requires the client
-explicitly advance the iterator. For passive, the client supplies a single
-procedure <tt>Apply</tt> to work across the structure.<p>
+<p>There are two forms: active and passive. Active iteration requires
+the client explicitly advance the iterator. For passive, the client
+supplies a single procedure <tt>Apply</tt> to work across the
+structure.
 
-In both forms, mechanisms are provided (where appropriate) to allow
+<p>In both forms, mechanisms are provided (where appropriate) to allow
 access to the actual contained object rather than just to its
-value.<p>
+value.
 
-There are many different approaches to iteration in Ada 95. The current
-mechanism was selected for its direct simplicity and efficiency.
+<p>There are many different approaches to iteration in Ada 95. The
+current mechanism was selected for its direct simplicity and
+efficiency.
 
 
 <!---------------------------------------------------------------------->
@@ -254,17 +307,20 @@ mechanism was selected for its direct simplicity and efficiency.
 
 <H2><A NAME="synchronization">Synchronization</A></H2>
 
+<p>Those components that provide structural sharing
+("<i>polylithic</i>") exist only in unprotected forms. Concurrent
+access by multiple tasks requires the user to provide her own access
+control.
 
-<p>Those components that provide structural sharing ("<i>polylithic</i>")
-exist only in unprotected forms. Concurrent access by multiple tasks
-requires the user to provide her own access control.
-
-<p>Other components provide access control, when required, in one of two
-forms:
+<p>Other components provide access control, when required, in one of
+two forms:
 
 <ul>
+
 <li>guarded
+
 <li>synchronized
+
 </ul>
 
 <h3>Guarded forms</h3>
@@ -318,7 +374,7 @@ atomic transaction, the Guarded protocol should be used.
 
 <H2><A NAME="conclusion">Conclusion</A></H2>
 
-<P>Here's a table of the components and the forms to be supported
+<p>Here's a table of the components and the forms to be supported
 (U=Unbounded, B=Bounded, D=Dynamic, G=Guarded, S=Synchronized).  The
 available components are shown in <font color="red">red</font>. Those
 for which it's appropriate to use the standard Guard are marked <font
@@ -346,22 +402,21 @@ Trees
   Binary     : <font color="red">U</font>
   Multiway   : <font color="red">U</font>
 </PRE>
-<P>
 
 
 <!--footer----------------------------------------------------------->
 
 
-</P>
-<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
-<P><A HREF="index.html">[index]</A></p>
+
+<p><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> 
+<p><A HREF="index.html">[index]</A>
 
 <p><i>
 <script>
 document.write("Last update: ");
 document.write(document.lastModified);
 </script>
-<i></p>
+<i>
 
 <!------------------------------------------------------------------->
 
