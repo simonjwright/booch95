@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -205,11 +205,12 @@ package body BC.Graphs.Directed is
   is new System.Address_To_Access_Conversions (Directed_Graph);
 
   function New_Graph_Iterator
-     (For_The_Graph : Directed_Graph) return Graph_Iterator is
-    P : Graph_Address_Conversions.Object_Pointer
-       := Graph_Address_Conversions.To_Pointer (For_The_Graph'Address);
+     (For_The_Graph : Directed_Graph) return Graph_Iterator'Class is
   begin
-    return Graph_Iterator (GSP.Create (new Directed_Graph_Iterator (P)));
+    return Directed_Graph_Iterator'
+       (For_The_Graph => Graph_Address_Conversions.To_Pointer
+        (For_The_Graph'Address).all'Access,
+        Index => For_The_Graph.Rep);
   end New_Graph_Iterator;
 
 
@@ -218,32 +219,38 @@ package body BC.Graphs.Directed is
 
 
   function New_Vertex_Iterator
-     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator is
-    P : Vertex_Address_Conversions.Object_Pointer
-       := Vertex_Address_Conversions.To_Pointer (For_The_Vertex'Address);
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator'Class is
+    Result : Directed_Vertex_Bothways_Iterator;
   begin
-    return Vertex_Iterator
-       (VSP.Create (new Directed_Vertex_Bothways_Iterator (P)));
+    Result.For_The_Vertex :=
+       Vertex_Address_Conversions.To_Pointer
+          (For_The_Vertex'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Vertex_Iterator;
 
 
   function New_Vertex_Incoming_Iterator
-     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator is
-    P : Vertex_Address_Conversions.Object_Pointer
-       := Vertex_Address_Conversions.To_Pointer (For_The_Vertex'Address);
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator'Class is
+    Result : Directed_Vertex_Incoming_Iterator;
   begin
-    return Vertex_Iterator
-       (VSP.Create (new Directed_Vertex_Incoming_Iterator (P)));
-  end New_Vertex_Incoming_Iterator;
+    Result.For_The_Vertex :=
+       Vertex_Address_Conversions.To_Pointer
+          (For_The_Vertex'Address).all'Access;
+    Reset (Result);
+    return Result;
+   end New_Vertex_Incoming_Iterator;
 
 
   function New_Vertex_Outgoing_Iterator
-     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator is
-    P : Vertex_Address_Conversions.Object_Pointer
-       := Vertex_Address_Conversions.To_Pointer (For_The_Vertex'Address);
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator'Class is
+    Result : Directed_Vertex_Outgoing_Iterator;
   begin
-    return Vertex_Iterator
-       (VSP.Create (new Directed_Vertex_Outgoing_Iterator (P)));
+    Result.For_The_Vertex :=
+       Vertex_Address_Conversions.To_Pointer
+          (For_The_Vertex'Address).all'Access;
+    Reset (Result);
+    return Result;
   end New_Vertex_Outgoing_Iterator;
 
 
@@ -251,15 +258,9 @@ package body BC.Graphs.Directed is
   -- Private iteration support --
   -------------------------------
 
-  procedure Initialize (It : in out Directed_Graph_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
-
   procedure Reset (It : in out Directed_Graph_Iterator) is
   begin
-    It.Index := It.D.Rep;
+    It.Index := It.For_The_Graph.Rep;
   end Reset;
 
 
@@ -318,21 +319,18 @@ package body BC.Graphs.Directed is
   -- Bothways --
   --------------
 
-  procedure Initialize (It : in out Directed_Vertex_Bothways_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
-
   procedure Reset (It : in out Directed_Vertex_Bothways_Iterator) is
   begin
-    It.First := True;
-    if It.D.Rep /= null then
-      It.Index := It.D.Rep.Outgoing;
+    It.Do_Outgoing := True;
+    if It.For_The_Vertex.Rep /= null then
+      It.Index := It.For_The_Vertex.Rep.Outgoing;
       if It.Index = null then
-        It.First := False;
-        It.Index := It.D.Rep.Incoming;
+        It.Do_Outgoing := False;
+        It.Index := It.For_The_Vertex.Rep.Incoming;
+        -- skip self-directed arcs, already seen in outgoing side
+        -- XXX hmm, wouldn't .Outgoing have been non-null?
         while It.Index /= null and then (It.Index.From = It.Index.To) loop
+          pragma Assert (False);
           It.Index := It.Index.Next_Incoming;
         end loop;
       end if;
@@ -344,17 +342,19 @@ package body BC.Graphs.Directed is
 
   procedure Next (It : in out Directed_Vertex_Bothways_Iterator) is
   begin
-    if It.First then
+    if It.Do_Outgoing then
       It.Index := It.Index.Next_Outgoing;
       if It.Index = null then
-        It.First := False;
-        It.Index := It.D.Rep.Incoming;
+        It.Do_Outgoing := False;
+        It.Index := It.For_The_Vertex.Rep.Incoming;
+        -- skip self-directed arcs, already seen in outgoing side
         while It.Index /= null and then (It.Index.From = It.Index.To) loop
           It.Index := It.Index.Next_Incoming;
         end loop;
       end if;
     elsif It.Index /= null then
       It.Index := It.Index.Next_Incoming;
+      -- skip self-directed arcs, already seen in outgoing side
       while It.Index /= null and then (It.Index.From = It.Index.To) loop
         It.Index := It.Index.Next_Incoming;
       end loop;
@@ -366,16 +366,10 @@ package body BC.Graphs.Directed is
   -- Outgoing --
   --------------
 
-  procedure Initialize (It : in out Directed_Vertex_Outgoing_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
-
   procedure Reset (It : in out Directed_Vertex_Outgoing_Iterator) is
   begin
-    if It.D.Rep /= null then
-      It.Index := It.D.Rep.Outgoing;
+    if It.For_The_Vertex.Rep /= null then
+      It.Index := It.For_The_Vertex.Rep.Outgoing;
     else
       It.Index := null;
     end if;
@@ -394,16 +388,10 @@ package body BC.Graphs.Directed is
   -- Incoming --
   --------------
 
-  procedure Initialize (It : in out Directed_Vertex_Incoming_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
-
-
   procedure Reset (It : in out Directed_Vertex_Incoming_Iterator) is
   begin
-    if It.D.Rep /= null then
-      It.Index := It.D.Rep.Incoming;
+    if It.For_The_Vertex.Rep /= null then
+      It.Index := It.For_The_Vertex.Rep.Incoming;
     else
       It.Index := null;
     end if;

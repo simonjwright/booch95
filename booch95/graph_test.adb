@@ -607,7 +607,7 @@ procedure Graph_Test is
 
   procedure Process_Directed_Vertex (V : AG.Vertex'Class; OK : out Boolean) is
     DV : DG.Directed_Vertex := DG.Directed_Vertex (V);
-    Iter : AG.Vertex_Iterator := DG.New_Vertex_Outgoing_Iterator (DV);
+    Iter : AG.Vertex_Iterator'Class := DG.New_Vertex_Outgoing_Iterator (DV);
   begin
     Put_Line ("    Vertex: " & DG.Item (DV)
               & " (" & Integer'Image (DG.Number_Of_Incoming_Arcs (DV))
@@ -625,7 +625,7 @@ procedure Graph_Test is
   end Process_Directed_Vertex;
 
   procedure Test_Directed_Active_Iterator (G : in out DG.Directed_Graph) is
-    Iter : AG.Graph_Iterator := DG.New_Graph_Iterator (G);
+    Iter : AG.Graph_Iterator'Class := DG.New_Graph_Iterator (G);
   begin
     while not AG.Is_Done (Iter) loop
       declare
@@ -640,7 +640,7 @@ procedure Graph_Test is
 
   procedure Test_Directed_Passive_Iterator (G : in out DG.Directed_Graph) is
     procedure Visit is new AG.Visit_Vertices (Apply => Process_Directed_Vertex);
-    It : AG.Graph_Iterator := DG.New_Graph_Iterator (G);
+    It : AG.Graph_Iterator'Class := DG.New_Graph_Iterator (G);
   begin
     Visit (It);
   end Test_Directed_Passive_Iterator;
@@ -668,7 +668,7 @@ procedure Graph_Test is
 
   procedure Process_Undirected_Vertex (V : AG.Vertex'Class; OK : out Boolean) is
     UV : UG.Undirected_Vertex := UG.Undirected_Vertex (V);
-    Iter : AG.Vertex_Iterator := UG.New_Vertex_Iterator (UV);
+    Iter : AG.Vertex_Iterator'Class := UG.New_Vertex_Iterator (UV);
   begin
     Put_Line ("    Vertex: " & UG.Item (UV)
               & " (" & Integer'Image (UG.Arity (UV)) & " )");
@@ -685,7 +685,7 @@ procedure Graph_Test is
   end Process_Undirected_Vertex;
 
   procedure Test_Undirected_Active_Iterator (G : in out UG.Undirected_Graph) is
-    Iter : AG.Graph_Iterator := UG.New_Graph_Iterator (G);
+    Iter : AG.Graph_Iterator'Class := UG.New_Graph_Iterator (G);
   begin
     while not AG.Is_Done (Iter) loop
       declare
@@ -702,7 +702,7 @@ procedure Graph_Test is
   procedure Test_Undirected_Passive_Iterator (G : in out UG.Undirected_Graph) is
     procedure Visit is new AG.Visit_Vertices
        (Apply => Process_Undirected_Vertex);
-    It : AG.Graph_Iterator := UG.New_Graph_Iterator (G);
+    It : AG.Graph_Iterator'Class := UG.New_Graph_Iterator (G);
   begin
     Visit (It);
   end Test_Undirected_Passive_Iterator;
