@@ -1,19 +1,17 @@
---  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
 
 --  $Id$
 
@@ -263,6 +261,7 @@ procedure Bag_Test is
    Bag_B_P1, Bag_B_P2 : BB.Bag;
    Bag_D_P1, Bag_D_P2 : BD.Bag;
    Bag_U_P1, Bag_U_P2 : BU.Bag;
+   Bag_UM_P1, Bag_UM_P2 : BUM.Bag;
 
 begin
    Put_Line ("Starting bag tests");
@@ -273,6 +272,8 @@ begin
    Test (Bag_D_P1, Bag_D_P2);
    Put_Line ("...Unbounded Bag");
    Test (Bag_U_P1, Bag_U_P2);
+   Put_Line ("...Unmanaged Bag");
+   Test (Bag_UM_P1, Bag_UM_P2);
 
    Put_Line ("...Bag Active Iterator");
    Put_Line ("   Bounded:");
@@ -281,6 +282,9 @@ begin
    Test_Active_Iterator (Bag_D_P1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (Bag_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Bag_UM_P1);
+
    Put_Line ("...Bag Passive Iterator");
    Put_Line ("   Bounded:");
    Test_Passive_Iterator (Bag_B_P1);
@@ -291,16 +295,23 @@ begin
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (Bag_U_P1);
    Test_Passive_Modifying_Iterator (Bag_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Bag_UM_P1);
+   Test_Passive_Modifying_Iterator (Bag_UM_P1);
 
    Assertion (Bags.Total_Size (Bag_D_P1) = 2,
               "** M05: Bag Total_Size is not correct");
-   --    Assertion (BD.Count (Bag_D_P2. '8') = 2,
-   --               "** M06: Bag Count is not correct");
+   Assertion (BD.Count (Bag_D_P2, '8') = 2,
+              "** M06: Bag Count is not correct");
    --  the statement above triggers a bug box in GNAT 3.11b2 and 3.11p
    Assertion (Bags.Total_Size (Bag_U_P1) = 2,
               "** M07: Bag Total_Size is not correct");
+   Assertion (Bags.Total_Size (Bag_U_P1) = 2,
+              "** M07u: Bag Total_Size is not correct");
    Assertion (BU.Count (Bag_U_P2, '8') = 2,
               "** M10: Bag Count is not correct");
+   Assertion (BUM.Count (Bag_UM_P2, '8') = 2,
+              "** M10u: Bag Count is not correct");
 
    Put_Line ("Completed bag tests");
 

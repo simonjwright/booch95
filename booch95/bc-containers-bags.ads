@@ -1,19 +1,24 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
+
+--  As a special exception, if other files instantiate generics from
+--  this unit, or you link this unit with other files to produce an
+--  executable, this unit does not by itself cause the resulting
+--  executable to be covered by the GNU General Public License.  This
+--  exception does not however invalidate any other reasons why the
+--  executable file might be covered by the GNU Public License.
 
 --  $RCSfile$
 --  $Revision$
@@ -67,17 +72,17 @@ package BC.Containers.Bags is
    --  operation, the bag B contains the items and counts found in its
    --  original state combined with the bag O. For each item in the
    --  bag O, if the item is not already a distinct member of the bag
-   --  S, copy the item and add it and its count to the bag S. If the
-   --  item already is a member, increment its count in S.
+   --  B, copy the item and add it and its count to the bag B. If the
+   --  item already is a member, increment its count in B.
 
    procedure Intersection (B : in out Abstract_Bag'Class;
                            O : Abstract_Bag'Class);
    --  Perform a logical bag intersection; at the completion of this
    --  operation, the bag B contains the items found both in its
    --  original state and in the bag O. For each item in the bag O, if
-   --  the item is not already a distinct member of the bag S, do
-   --  nothing. If the item already is a member of S, set its count to
-   --  the lower of the two counts. Items in the bag S but not in the
+   --  the item is not already a distinct member of the bag B, do
+   --  nothing. If the item already is a member of B, set its count to
+   --  the lower of the two counts. Items in the bag B but not in the
    --  bag O are also removed.
 
    procedure Difference (B : in out Abstract_Bag'Class;
@@ -85,11 +90,11 @@ package BC.Containers.Bags is
    --  Perform a logical bag difference; at the completion of this
    --  operation, the bag B contains the items found in its original
    --  state, less those found in the bag O. For each item in the bag
-   --  O, if the item is not already a distinct member of the bag S,
-   --  do nothing. If the item is a member of the bag S with a count
-   --  less than that in the bag O, remove the item from the bag S. If
-   --  the item is a member of the bag S with a count more than that
-   --  in the bag O, decrement the count in the bag S by the count in
+   --  O, if the item is not already a distinct member of the bag B,
+   --  do nothing. If the item is a member of the bag B with a count
+   --  less than that in the bag O, remove the item from the bag B. If
+   --  the item is a member of the bag B with a count more than that
+   --  in the bag O, decrement the count in the bag B by the count in
    --  the bag O.
 
    function Available (B : Abstract_Bag) return Natural;
@@ -128,41 +133,21 @@ private
 
    type Abstract_Bag is abstract new Container with null record;
 
+   --  These subprograms are used in the implementation of the Bag
+   --  operations above. They would be abstract but that the ALRM
+   --  forbids that for private operations.
+   --
+   --  These implementatiosm raise Should_Have_Been_Overridden.
+
    procedure Attach (B : in out Abstract_Bag; I : Item; C : Positive);
 
    procedure Detach (B : in out Abstract_Bag; I : Item);
 
    procedure Set_Value (B : in out Abstract_Bag; I : Item; C : Positive);
 
-   function Multiplicity (B : Abstract_Bag'Class) return Natural;
-
-   function Number_Of_Buckets (B : Abstract_Bag) return Natural;
-
-   function Length (B : Abstract_Bag; Bucket : Positive) return Natural;
-
-   function Item_At
-     (B : Abstract_Bag; Bucket, Index : Positive) return Item_Ptr;
-
-   function Value_At
-     (B : Abstract_Bag; Bucket, Index : Positive) return Positive;
-
-   type Bag_Iterator is new Iterator with record
+   type Bag_Iterator is abstract new Iterator with record
       Bucket_Index : Natural := 0;
       Index : Natural := 0;
    end record;
-
-   --  Overriding primitive supbrograms of the concrete actual Iterator.
-
-   procedure Reset (It : in out Bag_Iterator);
-
-   procedure Next (It : in out Bag_Iterator);
-
-   function Is_Done (It : Bag_Iterator) return Boolean;
-
-   function Current_Item (It : Bag_Iterator) return Item;
-
-   function Current_Item_Ptr (It : Bag_Iterator) return Item_Ptr;
-
-   procedure Delete_Item_At (It : in out Bag_Iterator);
 
 end BC.Containers.Bags;

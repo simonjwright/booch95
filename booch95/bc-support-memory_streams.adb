@@ -1,19 +1,23 @@
---  Copyright (C) 2002 Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 2002-2003 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
+
+--  As a special exception, if other files instantiate generics from
+--  this unit, or you link this unit with other files to produce an
+--  executable, this unit does not by itself cause the resulting
+--  executable to be covered by the GNU General Public License.  This
+--  exception does not however invalidate any other reasons why the
+--  executable file might be covered by the GNU Public License.
 
 --  $RCSfile$
 --  $Revision$
@@ -22,7 +26,7 @@
 
 with Ada.IO_Exceptions;
 
-package body  BC.Support.Memory_Streams is
+package body BC.Support.Memory_Streams is
 
 
    procedure Read
@@ -65,12 +69,51 @@ package body  BC.Support.Memory_Streams is
    end Write;
 
 
+   function Length (Stream : Stream_Type) return Natural is
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      return Integer (Stream.Next_Write - Stream.Buffer'First);
+   end Length;
+
+
    function Contents (Stream : Stream_Type)
                      return Ada.Streams.Stream_Element_Array is
       use type Ada.Streams.Stream_Element_Offset;
    begin
       return Stream.Buffer (Stream.Buffer'First .. Stream.Next_Write - 1);
    end Contents;
+
+
+   procedure Write_Contents (To : access Ada.Streams.Root_Stream_Type'Class;
+                             Stream : Stream_Type) is
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      Ada.Streams.Write
+        (To.all, Stream.Buffer (Stream.Buffer'First .. Stream.Next_Write - 1));
+   end Write_Contents;
+
+
+   procedure Read_Contents (From : access Ada.Streams.Root_Stream_Type'Class;
+                            Stream : in out Stream_Type) is
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      Reset (Stream);
+      Ada.Streams.Read (From.all, Stream.Buffer, Stream.Next_Write);
+      Stream.Next_Write := Stream.Next_Write + 1;
+   end Read_Contents;
+
+
+   procedure Set_Contents (From : Ada.Streams.Stream_Element_Array;
+                           Stream : in out Stream_Type) is
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      Reset (Stream);
+      if From'Length > Stream.Capacity then
+         raise Ada.IO_Exceptions.End_Error;
+      end if;
+      Stream.Buffer (1 .. From'Length) := From;
+      Stream.Next_Write := From'Length + 1;
+   end Set_Contents;
 
 
    procedure Reset (Stream : out Stream_Type) is

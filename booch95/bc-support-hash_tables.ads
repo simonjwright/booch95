@@ -1,19 +1,24 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
+
+--  As a special exception, if other files instantiate generics from
+--  this unit, or you link this unit with other files to produce an
+--  executable, this unit does not by itself cause the resulting
+--  executable to be covered by the GNU General Public License.  This
+--  exception does not however invalidate any other reasons why the
+--  executable file might be covered by the GNU Public License.
 
 --  $RCSfile$
 --  $Revision$
@@ -40,6 +45,7 @@ package BC.Support.Hash_Tables is
    generic
 
       type Item is private;
+      type Item_Ptr is access all Item;
       with function "=" (L, R : Item) return Boolean is <>;
       with function Hash (V : Item) return Natural is <>;
 
@@ -57,6 +63,8 @@ package BC.Support.Hash_Tables is
       with function Length (C : Item_Container) return Natural is <>;
       with function Item_At
         (C : Item_Container; Index : Positive) return Item is <>;
+      with function Item_At
+        (C : Item_Container; Index : Positive) return Item_Ptr is <>;
       with function Location
         (C : Item_Container; I : Item; Start : Positive) return Natural is <>;
 
@@ -98,7 +106,6 @@ package BC.Support.Hash_Tables is
 
       with package Items is new Item_Signature (<>);
       with package Values is new Value_Signature (<>);
-      Buckets : Natural;
 
    package Tables is
 
@@ -115,15 +122,12 @@ package BC.Support.Hash_Tables is
       --  for the order in which items may be added and removed from
       --  the container. This class is not intended to be subclassed.
 
-      --  The parameter Buckets signifies the static number of buckets
-      --  in the hash table.
+      type Item_Array is array (Positive range <>) of Items.Item_Container;
+      type Value_Array is array (Positive range <>) of Values.Value_Container;
 
-      type Item_Array is array (1 .. Buckets) of Items.Item_Container;
-      type Value_Array is array (1 .. Buckets) of Values.Value_Container;
-
-      type Table is record
-         Items : Item_Array;
-         Values : Value_Array;
+      type Table (Number_Of_Buckets : Positive) is record
+         Items : Item_Array (1 .. Number_Of_Buckets);
+         Values : Value_Array (1 .. Number_Of_Buckets);
          Size : Natural := 0;
       end record;
 
@@ -159,6 +163,32 @@ package BC.Support.Hash_Tables is
       --  If the item does not have a binding in the hash table, raise
       --  BC.Not_Found; otherwise, return the value corresponding to
       --  this item.
+
+      --  Iterator support
+
+      procedure Reset (T : Table;
+                       Bucket : out Positive;
+                       Index : out Positive);
+
+      function Is_Done (T : Table;
+                        Bucket : Positive;
+                        Index : Positive) return Boolean;
+
+      function Current_Item_Ptr (T : Table;
+                                 Bucket : Positive;
+                                 Index : Positive) return Items.Item_Ptr;
+
+      function Current_Value_Ptr (T : Table;
+                                  Bucket : Positive;
+                                  Index : Positive) return Values.Value_Ptr;
+
+      procedure Delete_Item_At (T : in out Table;
+                                Bucket : in out Positive;
+                                Index : in out  Positive);
+
+      procedure Next (T : Table;
+                      Bucket : in out Positive;
+                      Index : in out  Positive);
 
    end Tables;
 

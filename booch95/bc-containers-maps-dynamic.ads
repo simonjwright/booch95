@@ -1,19 +1,24 @@
---  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
+
+--  As a special exception, if other files instantiate generics from
+--  this unit, or you link this unit with other files to produce an
+--  executable, this unit does not by itself cause the resulting
+--  executable to be covered by the GNU General Public License.  This
+--  exception does not however invalidate any other reasons why the
+--  executable file might be covered by the GNU Public License.
 
 --  $RCSfile$
 --  $Revision$
@@ -105,12 +110,15 @@ package BC.Containers.Maps.Dynamic is
 private
 
    package KC is new BC.Support.Dynamic (Item => Key,
+                                         "=" => Maps."=",
                                          Item_Ptr => Key_Ptr,
                                          Storage => Storage,
                                          Initial_Size => Initial_Size);
    use KC;
    package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
+      Item_Ptr => Key_Ptr,
+      "=" => Maps."=",
       Item_Container => KC.Dyn_Node);
 
    package IC is new BC.Support.Dynamic (Item => Item,
@@ -125,23 +133,28 @@ private
 
    package Tables is new BC.Support.Hash_Tables.Tables
      (Items => Keys,
-      Values => Items,
-      Buckets => Buckets);
+      Values => Items);
 
    type Map is new Abstract_Map with record
-      Rep : Tables.Table;
+      Rep : Tables.Table (Number_Of_Buckets => Buckets);
    end record;
 
-   procedure Attach (M : in out Map; K : Key; I : Item);
+   --  Iterators
 
-   function Number_Of_Buckets (M : Map) return Natural;
+   type Dynamic_Map_Iterator is new Map_Iterator with null record;
 
-   function Length (M : Map; Bucket : Positive) return Natural;
+   procedure Reset (It : in out Dynamic_Map_Iterator);
 
-   function Item_At
-     (M : Map; Bucket, Index : Positive) return Item_Ptr;
+   procedure Next (It : in out Dynamic_Map_Iterator);
 
-   function Key_At
-     (M : Map; Bucket, Index : Positive) return Key_Ptr;
+   function Is_Done (It : Dynamic_Map_Iterator) return Boolean;
+
+   function Current_Key (It : Dynamic_Map_Iterator) return Key;
+
+   function Current_Item (It : Dynamic_Map_Iterator) return Item;
+
+   function Current_Item_Ptr (It : Dynamic_Map_Iterator) return Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Dynamic_Map_Iterator);
 
 end BC.Containers.Maps.Dynamic;

@@ -1,19 +1,17 @@
---  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
 
 --  $Id$
 
@@ -42,6 +40,7 @@ procedure Map_Test is
    procedure Test_Passive_Iterator (M : in out Abstract_Map'Class);
    procedure Test_Passive_Modifying_Iterator (M : in out Abstract_Map'Class);
    procedure Test_Simple_Active_Iterator (M : in out Abstract_Map'Class);
+   procedure Test_Iterator_Deletion (M : in out Abstract_Map'Class);
 
    package Iteration_Check is
       type Result is record
@@ -280,6 +279,43 @@ procedure Map_Test is
                              "I04: passive modifying map iterator");
    end Test_Passive_Modifying_Iterator;
 
+   procedure Test_Iterator_Deletion (M : in out Abstract_Map'Class) is
+      Iter : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (M));
+   begin
+      Iteration_Check.Reset;
+      Clear (M);
+      Maps.Bind (M, '1', Gitems (1)'Access);
+      Maps.Bind (M, '2', Gitems (2)'Access);
+      Maps.Bind (M, '3', Gitems (3)'Access);
+      Maps.Bind (M, '4', Gitems (4)'Access);
+      Maps.Bind (M, '5', Gitems (5)'Access);
+      Maps.Bind (M, '6', Gitems (6)'Access);
+      Maps.Bind (M, '7', Gitems (7)'Access);
+      Reset (Iter);
+      while not Is_Done (Iter) loop
+         case Maps.Current_Key (Iter) is
+            when '1' | '3' | '5' | '7' =>
+               Next (Iter);
+            when others =>
+               Delete_Item_At (Iter);
+         end case;
+      end loop;
+      begin
+         Delete_Item_At (Iter);
+         Assertion (False, "** IS01: Deletion succeeded");
+      exception
+         when BC.Not_Found => null;
+         when others =>
+            Assertion (False, "** IS02: Unexpected exception");
+      end;
+      Assertion (Maps.Extent (M) = 4,
+                 "IS03: incorrect length" & Integer'Image (Maps.Extent (M)));
+      Assertion (Maps.Is_Bound (M, '1'), "IS04a : incorrect membership");
+      Assertion (Maps.Is_Bound (M, '3'), "IS04b : incorrect membership");
+      Assertion (Maps.Is_Bound (M, '5'), "IS04c : incorrect membership");
+      Assertion (Maps.Is_Bound (M, '7'), "IS04d : incorrect membership");
+   end Test_Iterator_Deletion;
+
    type B is record
       Map_B_Pu1 : MB.Map;
       Map_B_Pu2 : MB.Map;
@@ -298,6 +334,12 @@ procedure Map_Test is
    end record;
    The_U : U := (MU.Null_Container, MU.Null_Container);
 
+   type UM is record
+      Map_UM_Pu1 : MUM.Map;
+      Map_UM_Pu2 : MUM.Map;
+   end record;
+   The_UM : UM := (MUM.Null_Container, MUM.Null_Container);
+
 begin
 
    Put_Line ("Starting map tests");
@@ -308,6 +350,8 @@ begin
    Test (The_D.Map_D_Pu1, The_D.Map_D_Pu2);
    Put_Line ("...Unbounded Map");
    Test (The_U.Map_U_Pu1, The_U.Map_U_Pu2);
+   Put_Line ("...Unmanaged Map");
+   Test (The_UM.Map_UM_Pu1, The_UM.Map_UM_Pu2);
 
    Put_Line ("...Map Simple Active Iterator");
    Put_Line ("   Bounded:");
@@ -316,6 +360,8 @@ begin
    Test_Simple_Active_Iterator (The_D.Map_D_Pu1);
    Put_Line ("   Unbounded:");
    Test_Simple_Active_Iterator (The_U.Map_U_Pu1);
+   Put_Line ("   Unmanaged:");
+   Test_Simple_Active_Iterator (The_UM.Map_UM_Pu1);
 
    Put_Line ("...Map Active Iterator");
    Put_Line ("   Bounded:");
@@ -324,6 +370,8 @@ begin
    Test_Active_Iterator (The_D.Map_D_Pu1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (The_U.Map_U_Pu1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (The_UM.Map_UM_Pu1);
 
    Put_Line ("...Map Passive Iterator");
    Put_Line ("   Bounded:");
@@ -335,6 +383,35 @@ begin
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (The_U.Map_U_Pu1);
    Test_Passive_Modifying_Iterator (The_U.Map_U_Pu1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (The_UM.Map_UM_Pu1);
+   Test_Passive_Modifying_Iterator (The_UM.Map_UM_Pu1);
+
+   Put_Line ("...Map Iterator Deletion");
+   Put_Line ("   Bounded:");
+   declare
+      M : MB.Map;
+   begin
+      Test_Iterator_Deletion (M);
+   end;
+   Put_Line ("   Dynamic:");
+   declare
+      M : MD.Map;
+   begin
+      Test_Iterator_Deletion (M);
+   end;
+   Put_Line ("   Unbounded:");
+   declare
+      M : MU.Map;
+   begin
+      Test_Iterator_Deletion (M);
+   end;
+   Put_Line ("   Unmanaged:");
+   declare
+      M : MUM.Map;
+   begin
+      Test_Iterator_Deletion (M);
+   end;
 
    Assertion (MB.Is_Bound (The_B.Map_B_Pu1, '6'),
               "** M01: Map binding is not correct");

@@ -1,18 +1,16 @@
-# Copyright (C) 1998-2001 Simon Wright. All Rights Reserved.
-#
-#      This program is free software; you can redistribute it
-#      and/or modify it under the terms of the Ada Community
-#      License which comes with this Library.
-#
-#      This program is distributed in the hope that it will be
-#      useful, but WITHOUT ANY WARRANTY; without even the implied
-#      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-#      PURPOSE. See the Ada Community License for more details.
-#      You should have received a copy of the Ada Community
-#      License with this library, in the file named "Ada Community
-#      License" or "ACL". If not, contact the author of this library
-#      for a copy.
-#
+# Copyright 1998-2003 Simon Wright <simon@pushface.org>
+
+# This package is free software; you can redistribute it and/or
+# modify it under terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2, or
+# (at your option) any later version. This package is distributed in
+# the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU General Public License for more
+# details. You should have received a copy of the GNU General Public
+# License distributed with this package; see file COPYING.  If not,
+# write to the Free Software Foundation, 59 Temple Place - Suite
+# 330, Boston, MA 02111-1307, USA.
 
 # $Id$
 
@@ -30,13 +28,12 @@ all::
 
 #GCOV_FLAGS = -ftest-coverage -fprofile-arcs
 
-GNATMAKE_FLAGS = -O2 -g -gnatqQafy -gnatwaL -j2 -m
+GNATMAKE_FLAGS = -O2 -g -gnatqQafoy -gnatwaL -j2 -m -k
 GNATMAKE_FLAGS += $(GCOV_FLAGS)
 
 ADA_SOURCE = \
 bc.ad[bs] \
 bc-containers.ad[bs] \
-bc-containers-guarded.ad[bs] \
 bc-copy.ad[bs] \
 bc-filter.ad[bs]
 
@@ -47,9 +44,11 @@ bc-support-dynamic.ad[bs] \
 bc-support-exceptions.ad[bs] \
 bc-support-hash_tables.ad[bs] \
 bc-support-managed_storage.ad[bs] \
+bc-support-memory_streams.ad[bs] \
 bc-support-standard_storage.ads \
 bc-support-synchronization.ad[bs] \
 bc-support-unbounded.ad[bs] \
+bc-support-unmanaged.ad[bs] \
 bc-support-unmanaged_storage.ad[bs] \
 bc-support.ad[bs]
 
@@ -61,14 +60,6 @@ test: testable
 clean::
 	rm -f $(TESTABLE)
 
-concurrent_test: concurrent_testable
-	for t in $(CONCURRENT_TESTABLE); do \
-	  echo running $$t; \
-	  ./$$t 2>&1; \
-	done
-clean::
-	rm -f $(CONCURRENT_TESTABLE)
-
 TEST_SRC = assertions.ad[bs] global_heap.ad[bs]
 
 TESTABLE += avl_test
@@ -79,6 +70,7 @@ ADA_SOURCE += \
 bc-containers-bags-bounded.ad[bs] \
 bc-containers-bags-dynamic.ad[bs] \
 bc-containers-bags-unbounded.ad[bs] \
+bc-containers-bags-unmanaged.ad[bs] \
 bc-containers-bags.ad[bs]
 TESTABLE += bag_test
 TEST_SRC += bag_test.ad[bs] bag_test_support.ad[bs]
@@ -88,6 +80,7 @@ ADA_SOURCE += \
 bc-containers-collections-bounded.ad[bs] \
 bc-containers-collections-dynamic.ad[bs] \
 bc-containers-collections-unbounded.ad[bs] \
+bc-containers-collections-unmanaged.ad[bs] \
 bc-containers-collections.ad[bs]
 TESTABLE += collection_test
 TEST_SRC += collection_test.ad[bs] collection_test_support.ad[bs]
@@ -97,6 +90,7 @@ ADA_SOURCE += \
 bc-containers-deques-bounded.ad[bs] \
 bc-containers-deques-dynamic.ad[bs] \
 bc-containers-deques-unbounded.ad[bs] \
+bc-containers-deques-unmanaged.ad[bs] \
 bc-containers-deques.ad[bs]
 TESTABLE += deque_test
 TEST_SRC += deque_test.ad[bs] deque_test_support.ad[bs]
@@ -122,20 +116,17 @@ ADA_SOURCE += \
 bc-containers-maps-bounded.ad[bs] \
 bc-containers-maps-dynamic.ad[bs] \
 bc-containers-maps-unbounded.ad[bs] \
-bc-containers-maps-synchronized.ad[bs] \
-bc-containers-maps.ad[bs] \
-bc-containers-maps-hash_statistics.ad[bs]
+bc-containers-maps-unmanaged.ad[bs] \
+bc-containers-maps.ad[bs]
 TESTABLE += map_test
 TEST_SRC += map_test.ad[bs] map_test_support.ad[bs] chunks.ad[bs]
 map_test: force
-CONCURRENT_TESTABLE += map_test_concurrent
-TEST_SRC += map_test_concurrent.ad[bs] map_test_concurrent_support.ad[bs]
-map_test_concurrent: force
 
 ADA_SOURCE += \
 bc-containers-collections-ordered-bounded.ad[bs] \
 bc-containers-collections-ordered-dynamic.ad[bs] \
 bc-containers-collections-ordered-unbounded.ad[bs] \
+bc-containers-collections-ordered-unmanaged.ad[bs] \
 bc-containers-collections-ordered.ad[bs]
 TESTABLE += ordered_collection_test
 TEST_SRC += ordered_collection_test.ad[bs] ordered_collection_test_support.ad[bs]
@@ -145,7 +136,8 @@ ADA_SOURCE += \
 bc-containers-queues-ordered.ad[bs] \
 bc-containers-queues-ordered-bounded.ad[bs] \
 bc-containers-queues-ordered-dynamic.ad[bs] \
-bc-containers-queues-ordered-unbounded.ad[bs]
+bc-containers-queues-ordered-unbounded.ad[bs] \
+bc-containers-queues-ordered-unmanaged.ad[bs]
 TESTABLE += ordered_queue_test
 TEST_SRC += ordered_queue_test.ad[bs] ordered_queue_test_support.ad[bs]
 ordered_queue_test: force
@@ -154,20 +146,18 @@ ADA_SOURCE += \
 bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
 bc-containers-queues-unbounded.ad[bs] \
-bc-containers-queues-synchronized.ad[bs] \
+bc-containers-queues-unmanaged.ad[bs] \
 bc-containers-queues.ad[bs]
 TESTABLE += queue_test
 TEST_SRC += queue_test.ad[bs] queue_test_support.ad[bs]
 queue_test: force
-CONCURRENT_TESTABLE += queue_test_concurrent
-TEST_SRC += queue_test_concurrent.ad[bs] queue_test_support_concurrent.ad[bs]
-queue_test_concurrent: force
 
 ADA_SOURCE += \
 bc-containers-rings.ad[bs] \
 bc-containers-rings-bounded.ad[bs] \
 bc-containers-rings-dynamic.ad[bs] \
-bc-containers-rings-unbounded.ad[bs]
+bc-containers-rings-unbounded.ad[bs] \
+bc-containers-rings-unmanaged.ad[bs]
 TESTABLE += ring_test
 TEST_SRC += ring_test.ad[bs] ring_test_support.ad[bs]
 ring_test: force
@@ -176,13 +166,14 @@ ADA_SOURCE += \
 bc-containers-sets-bounded.ad[bs] \
 bc-containers-sets-dynamic.ad[bs] \
 bc-containers-sets-unbounded.ad[bs] \
+bc-containers-sets-unmanaged.ad[bs] \
 bc-containers-sets.ad[bs]
 TESTABLE += set_test
 TEST_SRC += set_test.ad[bs] set_test_support.ad[bs]
 set_test: force
 
 ADA_SOURCE += \
-bc-smart.ad[bs]
+bc-smart.ad[bs] bc-support-smart_pointers.ad[bs]
 TESTABLE += smart_test
 TEST_SRC += smart_test.ad[bs] smart_test_support.ad[bs]
 smart_test: force
@@ -198,6 +189,7 @@ ADA_SOURCE += \
 bc-containers-stacks-bounded.ad[bs] \
 bc-containers-stacks-dynamic.ad[bs] \
 bc-containers-stacks-unbounded.ad[bs] \
+bc-containers-stacks-unmanaged.ad[bs] \
 bc-containers-stacks.ad[bs]
 TESTABLE += stack_test
 TEST_SRC += stack_test.ad[bs] stack_test_support.ad[bs]
@@ -225,8 +217,6 @@ TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs]
 tree_test: force
 
 testable: $(TESTABLE)
-
-concurrent_testable: $(CONCURRENT_TESTABLE)
 
 ########
 # Demos
@@ -292,14 +282,14 @@ clean::
 # Distribution construction
 
 # Create the current date, in the form yyyymmdd. This certainly works in Linux.
-DATE = $(shell date +%Y%m%d)
+DATE = $(shell date +%Y%m%d)$(SUBRELEASE)
 
 DISTRIBUTION_FILES = \
 bc-$(DATE).tgz \
 bc-$(DATE).zip \
 bc-$(DATE).src \
 bc-html-$(DATE).zip \
-ACL
+COPYING
 
 dist: $(DISTRIBUTION_FILES)
 	-@rm -rf distribution
@@ -311,10 +301,10 @@ dist: $(DISTRIBUTION_FILES)
 	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
 	cp -p README distribution/download/
 	cp -p WAVEFRONT-README distribution/wavefront/README
-	cp -p ACL html/*.html html/x.ada html/*.gif html/*.jpg \
+	cp -p COPYING html/*.{html,gif,jpg,png} html/x.ada \
 	  html/coldframe-hash.{tgz,zip} distribution/
 
-SOURCE = makefile ACL README $(ADA_SOURCE)
+SOURCE = makefile COPYING README $(ADA_SOURCE)
 
 bc-$(DATE): force
 	-rm -rf $@

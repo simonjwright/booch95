@@ -1,19 +1,16 @@
---  Copyright (C) 2002 Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 2002-2003 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
 
 --  $Id$
 
@@ -421,12 +418,47 @@ begin
       Collection'Output (Str'Access, C1);
       C2 := Collection'Input (Str'Access);
       Assertion (C1 = C2, "TCUM2: Collections are unequal");
-      declare
-         S : constant Ada.Streams.Stream_Element_Array
-           := BC.Support.Memory_Streams.Contents (Str);
-      begin
-         Put_Line ("buffer length is" & Integer'Image (S'Length));
-      end;
+      Put_Line ("buffer length is" &
+                  Integer'Image (BC.Support.Memory_Streams.Length (Str)));
+
+   exception
+      when E : others =>
+         Assertion (False, "TCUMX: Exception occurred");
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
+   end;
+
+   declare
+      C1, C2, C3 : TCU.Collection;
+      use TCU;
+      Str1, Str3 : aliased BC.Support.Memory_Streams.Stream_Type (78);
+      Str2 : aliased BC.Support.Memory_Streams.Stream_Type (1024);
+   begin
+
+      Put_Line ("...Memory stream to memory stream");
+
+      BC.Support.Memory_Streams.Reset (Str1);
+      Append (C1, new Brother'(I => 16#aabb#));
+      Append (C1, new Sister'(B => True));
+      Append (C2, new Brother'(I => 16#5555#));
+      Append (C2, new Sister'(B => False));
+      C3 := C2;
+      Assertion (C1 /= C2, "TCUM1: Collections are equal");
+      Collection'Output (Str1'Access, C1);
+      BC.Support.Memory_Streams.Write_Contents (Str2'Access, Str1);
+      C2 := Collection'Input (Str2'Access);
+      Assertion (C1 = C2, "TCUM2: Collections are unequal");
+      Assertion (C1 /= C3, "TCUM3: Collections are equal");
+      BC.Support.Memory_Streams.Reset (Str2);
+      BC.Support.Memory_Streams.Write_Contents (Str2'Access, Str1);
+      BC.Support.Memory_Streams.Read_Contents (Str2'Access, Str3);
+      C3 := Collection'Input (Str3'Access);
+      Assertion (C1 = C3, "TCUM4: Collections are unequal");
+      Put_Line ("first buffer length is" &
+                  Integer'Image (BC.Support.Memory_Streams.Length (Str1)));
+      Put_Line ("second buffer length is" &
+                  Integer'Image (BC.Support.Memory_Streams.Length (Str2)));
 
    exception
       when E : others =>

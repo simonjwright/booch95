@@ -102,7 +102,7 @@ made above:
 
 <p>You now have to choose the representation to be used for the
 concrete Collection. To start with, assume that you'll never have more
-than 30 Cars to deal with. This means that you can use the Bounded
+than 30 Cars to deal with. This means that you can use the <i>Bounded</i>
 form. Again, what you instantiate is the child of the newly
 instantiated <tt>Abstract_Car_Collections</tt>.
 
@@ -277,10 +277,11 @@ there's the generic <tt>Modify</tt>, which takes the element as an
 
 <p>Suppose you want to find all the Cars in our Fleet that were
 registered before some date. You could imagine a function
-<tt>Before</tt>:
+<tt>Registered_Before</tt>:
 
 <pre>
-   function Before (Date : Ada.Calendar.Time) return Fleets.Collection;
+   function Registered_Before
+     (Date : Ada.Calendar.Time) return Fleets.Collection;
 </pre>
 
 which you'd probably declare in the public part of <a
@@ -288,7 +289,8 @@ href="#fleet-combined"><tt>My_Fleet_Combined</tt></a>. Its body might
 look like
  
 <pre>
-   function Before (Date : Ada.Calendar.Time) return Fleets.Collection is
+   function Registered_Before
+     (Date : Ada.Calendar.Time) return Fleets.Collection is
 
       function Wanted (C : Car) return Boolean;
 
@@ -313,7 +315,7 @@ look like
    begin
       Choose (The_Fleet, Result);
       return Result;
-   end Before;
+   end Registered_Before;
 </pre>
 
 which is a bit of a mouthful.
@@ -470,8 +472,68 @@ performance aspects.
 
 <h2><a name="forms">What are these "Forms"?</a></h2>
 
-<p><i>This will be a discussion of Bounded vs Dynamic vs Unbounded. I
-guess it should cover Storage Management as well.</i>
+<p>Most of the Containers come in four <i>concrete forms</i>,
+distinguished by the approach to storage management. The forms are
+
+<ul>
+
+<li><i>Bounded</i>,
+
+<li><i>Dynamic</i> (deprecated),
+
+<li><i>Unbounded</i>, and
+
+<li><i>Unmanaged</i>.
+
+</ul>
+
+<h3>Bounded</h3>
+
+<p>We've already come across the Bounded form; you can use it if you know
+the maximum number of items you'll need to store.
+
+<p><i>Note on unconstrainedness.</i>
+
+<p>The bounded form doesn't allocate memory of itself (of course, you
+can use it to hold items that are allocated), so it may be appropriate
+for systems where allocation is frowned upon. However, it can be
+slower, especially for insertion or deletion "in the middle".
+
+<p>There is an issue with deletion of items that need finalizing: the
+finalization will only occur when the item's storage slot is
+overwritten or when the container itself is finalized. Also, if the
+item is an access type, <i>you</i> have to manage deallocation.
+
+<h3>Dynamic</h3>
+
+<p>This form was designed before storage pools were properly
+understood. You're probably best off not using it.
+
+<h3>Unbounded</h3>
+
+<p>
+
+<h3>Unmanaged</h3>
+
+<p>The unmanaged form allocates space for each item held from the
+system memory pool and returns it when the item is removed. It's by
+far the simplest form to use.
+
+<p>The Mapped_Fleets example above would become
+
+<pre>
+   with Abstract_Car_Maps;
+   with BC.Containers.Maps.Unmanaged;
+   with Plate_Hash;
+   package Mapped_Fleets is new Abstract_Car_Maps.Unmanaged
+     (Hash => Plate_Hash,
+      Buckets => 5);
+</pre>
+
+
+<p>
+
+<p><i>I guess this should cover Storage Management as well.</i>
 
 <p><img src="greenline.gif" alt="--" width="600" height="4"> </p>
 

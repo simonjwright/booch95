@@ -1,19 +1,17 @@
---  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
 
 --  $Id$
 
@@ -266,8 +264,10 @@ procedure Set_Test is
    Set_B_Pu1, Set_B_Pu2 : SB.Set;
    Set_D_Pu1, Set_D_Pu2 : SD.Set;
    Set_U_Pu1, Set_U_Pu2 : SU.Set;
+   Set_UM_Pu1, Set_UM_Pu2 : SUM.Set;
 
 begin
+
    Put_Line ("Starting set tests");
    Put_Line ("...Bounded Set");
    Test (Set_B_Pu1, Set_B_Pu2);
@@ -276,6 +276,8 @@ begin
    Test (Set_D_Pu1, Set_D_Pu2);
    Put_Line ("...Unbounded Set");
    Test (Set_U_Pu1, Set_U_Pu2);
+   Put_Line ("...Unmanaged Set");
+   Test (Set_UM_Pu1, Set_UM_Pu2);
 
    Put_Line ("...Set Active Iterator");
    Put_Line ("   Bounded:");
@@ -284,6 +286,8 @@ begin
    Test_Active_Iterator (Set_D_Pu1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (Set_U_Pu1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Set_UM_Pu1);
    Put_Line ("...Set Passive Iterator");
    Put_Line ("   Bounded:");
    Test_Passive_Iterator (Set_B_Pu1);
@@ -294,6 +298,9 @@ begin
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (Set_U_Pu1);
    Test_Passive_Modifying_Iterator (Set_U_Pu1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Set_UM_Pu1);
+   Test_Passive_Modifying_Iterator (Set_UM_Pu1);
 
    Assertion (SB.Is_Member (Set_B_Pu1, '1'),
               "** M01: Set membership is not correct");

@@ -1,19 +1,18 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
---  All Rights Reserved.
---
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
---
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library
---      for a copy.
---
+--  Copyright 1994 Grady Booch
+--  Copyright 1994-1997 David Weller
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+
+--  This package is free software; you can redistribute it and/or
+--  modify it under terms of the GNU General Public License as
+--  published by the Free Software Foundation; either version 2, or
+--  (at your option) any later version. This package is distributed in
+--  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+--  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+--  PARTICULAR PURPOSE. See the GNU General Public License for more
+--  details. You should have received a copy of the GNU General Public
+--  License distributed with this package; see file COPYING.  If not,
+--  write to the Free Software Foundation, 59 Temple Place - Suite
+--  330, Boston, MA 02111-1307, USA.
 
 --  $Id$
 
@@ -27,7 +26,6 @@ procedure Deque_Test is
    use Deque_Test_Support;
    use Containers;
    use Deques;
-   use DB, DD, DU;
 
    procedure Process (C : Character; OK : out Boolean);
    procedure Process (C : Character; OK : out Boolean) is
@@ -214,6 +212,7 @@ procedure Deque_Test is
    Deque_B_P1, Deque_B_P2 : DB.Deque;
    Deque_D_P1, Deque_D_P2 : DD.Deque;
    Deque_U_P1, Deque_U_P2 : DU.Deque;
+   Deque_UM_P1, Deque_UM_P2 : DUM.Deque;
 
 begin
    Put_Line ("Starting deque tests");
@@ -228,6 +227,9 @@ begin
    Put_Line ("...Unbounded Deque");
    Test_Primitive (Deque_U_P1, Deque_U_P2);
 
+   Put_Line ("...Unmanaged Deque");
+   Test_Primitive (Deque_UM_P1, Deque_UM_P2);
+
    Put_Line ("...Deque Active Iterator");
    Put_Line ("   Bounded:");
    Test_Active_Iterator (Deque_B_P1);
@@ -235,6 +237,8 @@ begin
    Test_Active_Iterator (Deque_D_P1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (Deque_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Deque_UM_P1);
 
    Put_Line ("...Deque Passive Iterator");
    Put_Line ("   Bounded:");
@@ -243,24 +247,30 @@ begin
    Test_Passive_Iterator (Deque_D_P1);
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (Deque_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Deque_UM_P1);
 
-   Assertion ((Front (Deque_B_P1) = '9'),
+   Assertion (DB.Front (Deque_B_P1) = '9',
               "** M01: Deque front is not correct");
-   Assertion ((Length (Deque_B_P2) = 0),
+   Assertion (DB.Length (Deque_B_P2) = 0,
               "** M02: Deque length is not correct");
-   Assertion ((Front (Deque_D_P1) = '9'),
+   Assertion (DD.Front (Deque_D_P1) = '9',
               "** M05: Deque front is not correct");
-   Assertion ((Length (Deque_D_P2) = 0),
+   Assertion (DD.Length (Deque_D_P2) = 0,
               "** M06: Deque length is not correct");
-   Assertion ((Front (Deque_U_P1) = '9'),
+   Assertion (DU.Front (Deque_U_P1) = '9',
               "** M09: Deque front is not correct");
-   Assertion ((Length (Deque_U_P2) = 0),
+   Assertion (DUM.Front (Deque_UM_P1) = '9',
+              "** M09a: Deque front is not correct");
+   Assertion (DU.Length (Deque_U_P2) = 0,
               "** M10: Deque length is not correct");
+   Assertion (DUM.Length (Deque_UM_P2) = 0,
+              "** M10a: Deque length is not correct");
 
-   Assertion (Available (Deque_B_P1) = 98,
+   Assertion (DB.Available (Deque_B_P1) = 98,
               "** M13: Available space not correct");
    Assertion
-     (Available (Deque_B_P2) = 100, "** M14: Available space not correct");
+     (DB.Available (Deque_B_P2) = 100, "** M14: Available space not correct");
 
    Put_Line ("...Deque Iterator Deletion");
    Put_Line ("   Bounded:");
@@ -269,6 +279,8 @@ begin
    Test_Iterator_Deletion (Deque_D_P1);
    Put_Line ("   Unbounded:");
    Test_Iterator_Deletion (Deque_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Iterator_Deletion (Deque_UM_P1);
 
    Put_Line ("Completed deque tests");
 
