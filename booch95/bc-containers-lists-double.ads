@@ -18,8 +18,12 @@
 -- $Id$
 
 with Bc.Support.Nodes;
+with System.Storage_Pools;
 
 generic
+  type Storage_Manager (<>)
+  is new System.Storage_Pools.Root_Storage_Pool with private;
+  Storage : in out Storage_Manager;
 package Bc.Containers.Lists.Double is
 
   -- Doubly-linked list
@@ -79,7 +83,8 @@ private
   function Item_At (Obj : Double_List; Index : Natural) return Item_Ptr;
   function Cardinality (Obj : Double_List) return Integer;
 
-  package Double_Nodes is new Bc.Support.Nodes (Item);
+  package Double_Nodes
+  is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
 
   type Double_List is new Container with record
     Rep : Double_Nodes.Double_Node_Ref;

@@ -17,9 +17,14 @@
 
 -- $Id$
 
+with Ada.Finalization;
 with BC.Support.Nodes;
+with System.Storage_Pools;
 
 generic
+  type Storage_Manager (<>)
+  is new System.Storage_Pools.Root_Storage_Pool with private;
+  Storage : in out Storage_Manager;
 package BC.Containers.Trees.Multiway is
 
   type Multiway_Tree is private;
@@ -60,11 +65,10 @@ package BC.Containers.Trees.Multiway is
 
 private
 
-  package Nodes is new Bc.Support.Nodes (Item);
-  use Nodes;
+  package Nodes is new Bc.Support.Nodes (Item, Storage_Manager, Storage);
 
   type Multiway_Tree is new Ada.Finalization.Controlled with record
-    Rep : Multiway_Node_Ref;
+    Rep : Nodes.Multiway_Node_Ref;
   end record;
 
   procedure Initialize (Obj : in out Multiway_Tree);

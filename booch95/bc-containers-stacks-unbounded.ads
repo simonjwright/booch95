@@ -18,9 +18,12 @@
 -- $Id$
 
 with BC.Support.Unbounded;
+with System.Storage_Pools;
 
 generic
-  with package Unb_Stack_Nodes is new BC.Support.Unbounded (Item,Item_Ptr);
+  type Storage_Manager (<>)
+  is new System.Storage_Pools.Root_Storage_Pool with private;
+  Storage : in out Storage_Manager;
 package BC.Containers.Stacks.Unbounded is
 
   type Unb_Stack is new Stack with private;
@@ -42,6 +45,9 @@ private
   function Cardinality (Obj : in Unb_Stack) return Integer;
   procedure Purge (Obj : in out Unb_Stack);
   procedure Add (Obj : in out Unb_Stack; Elem : in out Item);
+
+  package Unb_Stack_Nodes
+  is new BC.Support.Unbounded (Item, Item_Ptr, Storage_Manager, Storage);
 
   type Unb_Stack is new Stack with record
     Rep : Unb_Stack_Nodes.Unb_Node_Ref := new Unb_Stack_Nodes.Unb_Node;
