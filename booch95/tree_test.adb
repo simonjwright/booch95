@@ -18,9 +18,12 @@
 -- $Id$
 
 with Ada.Text_Io;
+with BC.Containers.Trees.Binary.In_Order;
+with BC.Containers.Trees.Binary.Pre_Order;
+with BC.Containers.Trees.Binary.Post_Order;
+with BC.Containers.Trees.Multiway.Pre_Order;
+with BC.Containers.Trees.Multiway.Post_Order;
 with Tree_Test_Support;
-
--- with BC.Containers.Trees.AVL.Print;
 
 procedure Tree_Test is
 
@@ -33,10 +36,11 @@ procedure Tree_Test is
       Put_Line (Message);
     end if;
   end Assertion;
-  pragma Inline (Assertion);
 
-  -- I used this while trying to figure out my booboos. An example
-  -- (not particularly good) of how to approach tree traversal.
+  -- I used this while trying to figure out my booboos. An example (not
+  -- particularly good) of how to approach tree traversal, using the
+  -- functional interfaces Left_Child, Right_Child rather than the
+  -- procedural ones.
   procedure Print_Tree (T : TB.Binary_Tree;
                         Message : String := "";
                         Depth : Natural := 0) is
@@ -59,22 +63,12 @@ procedure Tree_Test is
       end if;
       Put_Line (":= " & Item_At (T));
       if (Has_Children (T)) then
-        declare
-          L : Binary_Tree := T;
-        begin
-          Left_Child (L);
-          Indent;
-          Put ("L ");
-          Print_Tree (L, Depth => Depth + 1);
-        end;
-        declare
-          R : Binary_Tree := T;
-        begin
-          Right_Child (R);
-          Indent;
-          Put ("R ");
-          Print_Tree (R, Depth => Depth + 1);
-        end;
+        Indent;
+        Put ("L ");
+        Print_Tree (Left_Child (T), Depth => Depth + 1);
+        Indent;
+        Put ("R ");
+        Print_Tree (Right_Child (T), Depth => Depth + 1);
       end if;
     end if;
   end Print_Tree;
@@ -320,7 +314,6 @@ procedure Tree_Test is
     Assertion (Result, "** A15: Tree insertion not correct");
     Insert (T, 'B', Result);
     Assertion (Result, "** A16: Tree insertion not correct");
-    -- Print_Tree (T);
     declare
       procedure Process (C : Character; Result : out Boolean) is
       begin
@@ -339,7 +332,6 @@ procedure Tree_Test is
     Assertion (Result, "** A19: Tree deletion is not correct");
     Delete (T, 'A', Result);
     Assertion (Result, "** A20: Tree deletion is not correct");
-    -- Print_Tree (T);
     Delete (T, 'A', Result);
     Assertion (not Result, "** A21: Tree deletion is not correct");
     Delete (T, '8', Result);
@@ -373,15 +365,107 @@ procedure Tree_Test is
 
   A_Tree_P1 : TA.Avl_Tree;
 
+  procedure Test_Binary_Iteration is
+    T, T1, T2 : TB.Binary_Tree;
+    procedure Process_Item (C : Character; Success : out Boolean) is
+    begin
+      Put_Line ("      Visit " & C);
+      Success := True;
+    end Process_Item;
+    procedure Binary_Pre_Order is new TB.Pre_Order (Process_Item);
+    procedure Binary_In_Order is new TB.In_Order (Process_Item);
+    procedure Binary_Post_Order is new TB.Post_Order (Process_Item);
+    Success : Boolean;
+    use TB;
+  begin
+    Insert (T1, 'h', Right);
+    Insert (T1, 'g', Right);
+    Insert (T1, 'e', Right);
+    Insert (T2, 'f', Left);
+    Swap_Child (T1, T2, Left);
+    Insert (T, 'd', Left);
+    Insert (T, 'c', Left);
+    Insert (T, 'b', Left);
+    Swap_Child (T, T1, Right);
+    Insert (T, 'a', Left);
+    Insert (T1, 'k', Right);
+    Insert (T1, 'i', Right);
+    Insert (T2, 'j', Left);
+    Swap_Child (T1, T2, Left);
+    Swap_Child (T, T1, Right);
+    Put_Line ("...Binary Pre-Order Scan");
+    Binary_Pre_Order (T, Success);
+    Put_Line ("...Binary In-Order Scan");
+    Binary_In_Order (T, Success);
+    Put_Line ("...Binary Post-Order Scan");
+    Binary_Post_Order (T, Success);
+  end Test_Binary_Iteration;
+
+  procedure Test_Multiway_Iteration is
+    T, T1, T2 : TM.Multiway_Tree;
+    procedure Process_Item (C : Character; Success : out Boolean) is
+    begin
+      Put_Line ("      Visit " & C);
+      Success := True;
+    end Process_Item;
+    procedure Multiway_Pre_Order is new TM.Pre_Order (Process_Item);
+    procedure Multiway_Post_Order is new TM.Post_Order (Process_Item);
+    Success : Boolean;
+    use TM;
+  begin
+
+    Insert (T, 'd');
+    Insert (T, 'c');
+    Insert (T1, 'e');
+    Append (T, T1);
+    Clear (T1);
+    Insert (T1, 'f');
+    Append (T, T1);
+    Clear (T1);
+    Insert (T, 'b');
+    Insert (T1, 'g');
+    Append (T, T1);
+    Clear (T1);
+    Insert (T1, 'h');
+    Append (T, T1);
+    Clear (T1);
+    Insert (T1, 'i');
+    Append (T, T1);
+    Clear (T1);
+    Insert (T, 'a');
+    Insert (T1, 'l');
+    Insert (T1, 'k');
+    Insert (T2, 'm');
+    Append (T1, T2);
+    Clear (T2);
+    Insert (T1, 'j');
+    Insert (T2, 'n');
+    Append (T1, T2);
+    Clear (T2);
+    Insert (T2, 'p');
+    Insert (T2, 'o');
+    Append (T1, T2);
+    Clear (T2);
+    Append (T, T1);
+    Clear (T1);
+    Put_Line ("...Multiway Pre-Order Scan");
+    Multiway_Pre_Order (T, Success);
+    Put_Line ("...Multiway Post-Order Scan");
+    Multiway_Post_Order (T, Success);
+  end Test_Multiway_Iteration;
+
 begin
 
   Put_Line ("Starting Tree tests");
 
   Put_Line ("...Binary Tree");
   Test_Primitive (B_Tree_P1, B_Tree_P2);
+  Test_Binary_Iteration;
+  Print_Tree (B_Tree_P1);
 
   Put_Line ("...Multiway Tree");
   Test_Primitive (M_Tree_P1, M_Tree_P2);
+  Test_Multiway_Iteration;
 
   Put_Line ("...AVL Tree");
   Test_Primitive (A_Tree_P1);
