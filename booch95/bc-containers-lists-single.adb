@@ -510,7 +510,6 @@ package body BC.Containers.Lists.Single is
   end New_Iterator;
 
   function Item_At (Obj : Single_List; Index : Positive) return Item_Ptr is
-    Prev : Single_Nodes.Single_Node_Ref;  -- XXX what's this for?
     Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Loc : Positive := 1;
   begin
