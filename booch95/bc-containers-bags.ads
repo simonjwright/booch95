@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -128,9 +128,9 @@ private
 
   function Length (B : Bag; Bucket : Positive) return Natural;
 
-  function Exists (B : Bag; I : Item) return Boolean;
+--   function Exists (B : Bag; I : Item) return Boolean;
 
---    function Value_Of (B : Bag; I : Item) return Positive;
+--   function Value_Of (B : Bag; I : Item) return Positive;
 
   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr;
 

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -98,20 +98,10 @@ package body BC.Containers.Maps.Unbounded is
     Free (M.Rep);
   end Finalize;
 
-  procedure Purge (M : in out Unbounded_Map) is
-  begin
-    Tables.Clear (M.Rep.all);
-  end Purge;
-
   procedure Attach (M : in out Unbounded_Map; I : Item; V : Value) is
   begin
     Tables.Bind (M.Rep.all, I, V);
   end Attach;
-
-  function Cardinality (M : Unbounded_Map) return Natural is
-  begin
-    return Tables.Extent (M.Rep.all);
-  end Cardinality;
 
   function Number_Of_Buckets (M : Unbounded_Map) return Natural is
   begin
@@ -122,11 +112,6 @@ package body BC.Containers.Maps.Unbounded is
   begin
     return IC.Length (Tables.Item_Bucket (M.Rep.all, Bucket).all);
   end Length;
-
-  function Exists (M : Unbounded_Map; I : Item) return Boolean is
-  begin
-    return Tables.Is_Bound (M.Rep.all, I);
-  end Exists;
 
   function Item_At
      (M : Unbounded_Map; Bucket, Index : Positive) return Item_Ptr is

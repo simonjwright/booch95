@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -83,20 +83,10 @@ package body BC.Containers.Queues.Bounded is
     return Iterator (SP.Create (new Queue_Iterator (P)));
   end New_Iterator;
 
-  function Cardinality (Q : Bounded_Queue) return Natural is
-  begin
-    return Bounded_Queue_Nodes.Length (Q.Rep.all);
-  end Cardinality;
-
   function Item_At (Q : Bounded_Queue; Index : Positive) return Item_Ptr is
   begin
     return Bounded_Queue_Nodes.Item_At (Q.Rep.all, Index);
   end Item_at;
-
-  procedure Purge (Q : in out Bounded_Queue) is
-  begin
-    Bounded_Queue_Nodes.Clear (Q.Rep.all);
-  end Purge;
 
   procedure Adjust (Q : in out Bounded_Queue) is
   begin

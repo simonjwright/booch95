@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -74,9 +74,7 @@ package BC.Containers.Stacks.Dynamic is
 
 private
 
-  function Cardinality (S : Dynamic_Stack) return Natural;
   function Item_At (S : Dynamic_Stack; Index : Positive) return Item_Ptr;
-  procedure Purge (S : in out Dynamic_Stack);
 
   procedure Add (S : in out Dynamic_Stack; Elem : Item);
   procedure Remove (S : in out Dynamic_Stack; From : Positive);

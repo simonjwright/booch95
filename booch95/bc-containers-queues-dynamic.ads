@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -81,9 +81,7 @@ package BC.Containers.Queues.Dynamic is
 
 private
 
-  function Cardinality (Q : Dynamic_Queue) return Natural;
   function Item_At (Q : Dynamic_Queue; Index : Positive) return Item_Ptr;
-  procedure Purge (Q : in out Dynamic_Queue);
 
   package Dynamic_Queue_Nodes
   is new BC.Support.Dynamic (Item => Item,

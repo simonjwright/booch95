@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -52,7 +52,7 @@ package body BC.Containers.Rings.Unbounded is
     Size : Natural;
   begin
     Unbounded_Ring_Nodes.Remove (R.Rep.all, R.Top);
-    Size := Cardinality (R);
+    Size := Extent (R);
     if Size = 0 then
       R.Top := 0;
       R.Mark := 0;
@@ -72,12 +72,12 @@ package body BC.Containers.Rings.Unbounded is
   begin
     if Dir = Forward then
       R.Top := R.Top + 1;
-      if R.Top > Cardinality (R) then
+      if R.Top > Extent (R) then
         R.Top := 1;
       end if;
     else
       if R.Top = 1 then
-        R.Top := Cardinality (R);
+        R.Top := Extent (R);
       else
         R.Top := R.Top - 1;
       end if;
@@ -114,22 +114,10 @@ package body BC.Containers.Rings.Unbounded is
     Unbounded_Ring_Nodes.Append (R.Rep.all, Elem);
   end Add;
 
-  function Cardinality (R : Unbounded_Ring) return Natural is
-  begin
-    return Unbounded_Ring_Nodes.Length (R.Rep.all);
-  end Cardinality;
-
   function Item_At (R : Unbounded_Ring; Index : Positive) return Item_Ptr is
   begin
     return Unbounded_Ring_Nodes.Item_At (R.Rep.all, Index);
   end Item_At;
-
-  procedure Purge (R : in out Unbounded_Ring) is
-  begin
-    Unbounded_Ring_Nodes.Clear (R.Rep.all);
-    R.Top := 0;
-    R.Mark := 0;
-  end Purge;
 
   procedure Initialize (R : in out Unbounded_Ring) is
   begin

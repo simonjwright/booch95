@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -161,7 +161,6 @@ package BC.Containers.Lists.Single is
 
 private
 
-  function Cardinality (L : Single_List) return Natural;
   function Item_At (L : Single_List; Index : Positive) return Item_Ptr;
 
   package Single_Nodes

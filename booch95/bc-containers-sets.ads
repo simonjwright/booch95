@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -101,8 +101,6 @@ private
   function Number_Of_Buckets (S : Set) return Natural;
 
   function Length (S : Set; Bucket : Positive) return Natural;
-
-  function Exists (S : Set; I : Item) return Boolean;
 
   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr;
 

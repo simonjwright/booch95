@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -99,22 +99,12 @@ package body BC.Containers.Queues.Dynamic is
     return Iterator (SP.Create (new Queue_Iterator (P)));
   end New_Iterator;
 
- function Cardinality (Q : Dynamic_Queue) return Natural is
-  begin
-    return Dynamic_Queue_Nodes.Length (Q.Rep.all);
-  end Cardinality;
-
   function Item_At (Q : Dynamic_Queue; Index : Positive) return Item_Ptr is
   begin
     return Dynamic_Queue_Nodes.Item_At (Q.Rep.all, Index);
   end Item_At;
 
-  procedure Purge (Q : in out Dynamic_Queue) is
-  begin
-    Dynamic_Queue_Nodes.Clear (Q.Rep.all);
-  end Purge;
-
-   procedure Initialize (Q : in out Dynamic_Queue) is
+  procedure Initialize (Q : in out Dynamic_Queue) is
   begin
     Q.Rep := Dynamic_Queue_Nodes.Create;
   end Initialize;

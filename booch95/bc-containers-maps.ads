@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -117,7 +117,7 @@ private
 
   function Length (M : Map; Bucket : Positive) return Natural;
 
-  function Exists (M : Map; I : Item) return Boolean;
+--   function Exists (M : Map; I : Item) return Boolean;
 
   function Item_At (M : Map; Bucket, Index : Positive) return Item_Ptr;
 

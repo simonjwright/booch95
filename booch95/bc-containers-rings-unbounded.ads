@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -70,9 +70,7 @@ package BC.Containers.Rings.Unbounded is
 private
 
   procedure Add (R : in out Unbounded_Ring; Elem : Item);
-  function Cardinality (R : Unbounded_Ring) return Natural;
   function Item_At (R : Unbounded_Ring; Index : Positive) return Item_Ptr;
-  procedure Purge (R : in out Unbounded_Ring);
 
   package Unbounded_Ring_Nodes
   is new BC.Support.Unbounded (Item => Item,

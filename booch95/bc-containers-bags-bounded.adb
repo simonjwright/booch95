@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -102,11 +102,6 @@ package body BC.Containers.Bags.Bounded is
 
   -- Private implementations
 
-  procedure Purge (B : in out Bounded_Bag) is
-  begin
-    Tables.Clear (B.Rep);
-  end Purge;
-
   procedure Attach (B : in out Bounded_Bag; I : Item; C : Positive) is
   begin
     Tables.Bind (B.Rep, I, C);
@@ -122,11 +117,6 @@ package body BC.Containers.Bags.Bounded is
     Tables.Rebind (B.Rep, I, C);
   end Set_Value;
 
-  function Cardinality (B : Bounded_Bag) return Natural is
-  begin
-    return Tables.Extent (B.Rep);
-  end Cardinality;
-
   function Number_Of_Buckets (B : Bounded_Bag) return Natural is
   begin
     return Buckets;
@@ -136,17 +126,6 @@ package body BC.Containers.Bags.Bounded is
   begin
     return IC.Length (Tables.Item_Bucket (B.Rep, Bucket).all);
   end Length;
-
-  function Exists (B : Bounded_Bag; I : Item) return Boolean is
-  begin
-    return Tables.Is_Bound (B.Rep, I);
-  end Exists;
-
-  function Value_Of (B : Bounded_Bag; I : Item) return Positive is
-  begin
-    raise Program_Error;
-    return 1;
-  end Value_Of;
 
   function Item_At
      (B : Bounded_Bag; Bucket, Index : Positive) return Item_Ptr is

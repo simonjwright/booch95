@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -59,9 +59,7 @@ package BC.Containers.Stacks.Unbounded is
 
 private
 
-  function Cardinality (S : Unbounded_Stack) return Natural;
   function Item_At (S : Unbounded_Stack; Index : Positive) return Item_Ptr;
-  procedure Purge (S : in out Unbounded_Stack);
 
   procedure Add (S : in out Unbounded_Stack; Elem : Item);
   procedure Remove (S : in out Unbounded_Stack; From : Positive);

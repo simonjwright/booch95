@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -144,21 +144,11 @@ package body BC.Containers.Collections.Ordered.Unbounded is
     return Iterator (SP.Create (new Collection_Iterator (P)));
   end New_Iterator;
 
-  function Cardinality (C : Unbounded_Ordered_Collection) return Natural is
-  begin
-    return Unbounded_Ordered_Collection_Nodes.Length (C.Rep.all);
-  end Cardinality;
-
   function Item_At
      (C : Unbounded_Ordered_Collection; Index : Positive) return Item_Ptr is
   begin
     return Unbounded_Ordered_Collection_Nodes.Item_At (C.Rep.all, Index);
   end Item_At;
-
-  procedure Purge (C : in out Unbounded_Ordered_Collection) is
-  begin
-    Unbounded_Ordered_Collection_Nodes.Clear (C.Rep.all);
-  end Purge;
 
   procedure Initialize (C : in out Unbounded_Ordered_Collection) is
   begin

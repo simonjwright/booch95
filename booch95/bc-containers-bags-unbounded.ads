@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -112,23 +112,15 @@ private
     Rep : Tables.Table;
   end record;
 
-  procedure Purge (B : in out Unbounded_Bag);
-
   procedure Attach (B : in out Unbounded_Bag; I : Item; C : Positive);
 
   procedure Detach (B : in out Unbounded_Bag; I : Item);
 
   procedure Set_Value (B : in out Unbounded_Bag; I : Item; C : Positive);
 
-  function Cardinality (B : Unbounded_Bag) return Natural;
-
   function Number_Of_Buckets (B : Unbounded_Bag) return Natural;
 
   function Length (B : Unbounded_Bag; Bucket : Positive) return Natural;
-
-  function Exists (B : Unbounded_Bag; I : Item) return Boolean;
-
---    function Value_Of (B : Unbounded_Bag; I : Item) return Positive;
 
   function Item_At
      (B : Unbounded_Bag; Bucket, Index : Positive) return Item_Ptr;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -86,10 +86,7 @@ package BC.Containers.Collections.Unbounded is
 
 private
 
-  procedure Add (C : in out Unbounded_Collection; Elem : Item);
-  function Cardinality (C : Unbounded_Collection) return Natural;
   function Item_At (C : Unbounded_Collection; Index : Positive) return Item_Ptr;
-  procedure Purge (C : in out Unbounded_Collection);
 
   package Unbounded_Collection_Nodes
   is new BC.Support.Unbounded (Item => Item,

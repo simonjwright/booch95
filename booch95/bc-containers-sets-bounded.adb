@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -86,11 +86,6 @@ package body BC.Containers.Sets.Bounded is
 
   -- Private implementations
 
-  procedure Purge (S : in out Bounded_Set) is
-  begin
-    Tables.Clear (S.Rep);
-  end Purge;
-
   -- XXX there is another Attach() which I don't understand
 
   procedure Attach (S : in out Bounded_Set; I : Item) is
@@ -103,11 +98,6 @@ package body BC.Containers.Sets.Bounded is
     Tables.Unbind (S.Rep, I);
   end Detach;
 
-  function Cardinality (S : Bounded_Set) return Natural is
-  begin
-    return Tables.Extent (S.Rep);
-  end Cardinality;
-
   function Number_Of_Buckets (S : Bounded_Set) return Natural is
   begin
     return Buckets;
@@ -117,11 +107,6 @@ package body BC.Containers.Sets.Bounded is
   begin
     return IC.Length (Tables.Item_Bucket (S.Rep, Bucket).all);
   end Length;
-
-  function Exists (S : Bounded_Set; I : Item) return Boolean is
-  begin
-    return Tables.Is_Bound (S.Rep, I);
-  end Exists;
 
   function Item_At
      (S : Bounded_Set; Bucket, Index : Positive) return Item_Ptr is
