@@ -616,6 +616,7 @@ package body BC.Containers.Lists.Single is
   end Delete_Item_At;
 
   Empty_Container : List;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return List is
   begin
