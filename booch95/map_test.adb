@@ -183,90 +183,119 @@ procedure Map_Test is
     Modifier (Using => Map_Iter);
   end Test_Passive_Modifying_Iterator;
 
-  Map_B_Pu1, Map_B_Pu2 : MB.Bounded_Map;
-  Map_D_Pu1, Map_D_Pu2 : MD.Dynamic_Map;
-  Map_U_Pu1, Map_U_Pu2 : MU.Unbounded_Map;
-  Map_UG_Pu1, Map_UG_Pu2 : MUG.Guarded_Unbounded_Map;
-  Map_US_Pu1, Map_US_Pu2 : MUS.Synchronized_Unbounded_Map;
+  type B is record
+    Map_B_Pu1 : MB.Bounded_Map;
+    Map_B_Pu2 : MB.Bounded_Map;
+  end record;
+  The_B: B := (MB.Null_Container, MB.Null_Container);
+
+  type D is record
+    Map_D_Pu1 : MD.Dynamic_Map;
+    Map_D_Pu2 : MD.Dynamic_Map;
+  end record;
+  The_D: D := (MD.Null_Container, MD.Null_Container);
+
+  type U is record
+    Map_U_Pu1 : MU.Unbounded_Map;
+    Map_U_Pu2 : MU.Unbounded_Map;
+  end record;
+  The_U: U := (MU.Null_Container, MU.Null_Container);
+
+  type GU is record
+    Map_UG_Pu1 : MUG.Guarded_Unbounded_Map;
+    Map_UG_Pu2 : MUG.Guarded_Unbounded_Map;
+  end record;
+  The_GU : GU := (MUG.Null_Container, MUG.Null_Container);
+
+  type SU is record
+    Map_US_Pu1 : Synchronized_Unbounded_Map;
+    Map_US_Pu2 : Synchronized_Unbounded_Map;
+  end record;
+  The_SU: SU := (MUS.Null_Container, MUS.Null_Container);
 
 begin
   Put_Line ("Starting map tests");
   Put_Line ("...Bounded Map");
-  Test (Map_B_Pu1, Map_B_Pu2);
+  Test (The_B.Map_B_Pu1, The_B.Map_B_Pu2);
   Put_Line ("...Dynamic Map");
-  MD.Preallocate (Map_D_Pu1, 50);
-  Test (Map_D_Pu1, Map_D_Pu2);
+  MD.Preallocate (The_D.Map_D_Pu1, 50);
+  Test (The_D.Map_D_Pu1, The_D.Map_D_Pu2);
   Put_Line ("...Unbounded Map");
-  Test (Map_U_Pu1, Map_U_Pu2);
+  Test (The_U.Map_U_Pu1, The_U.Map_U_Pu2);
   Put_Line ("...Guarded Unbounded Map");
-  Test (Map_UG_Pu1, Map_UG_Pu2);
+  Test (The_GU.Map_UG_Pu1, The_GU.Map_UG_Pu2);
   Put_Line ("...Synchronized Unbounded Map");
-  Test (Map_US_Pu1, Map_US_Pu2);
+  Test (The_SU.Map_US_Pu1, The_SU.Map_US_Pu2);
 
   Put_Line ("...Map Simple Active Iterator");
   Put_Line ("   Bounded:");
-  Test_Simple_Active_Iterator (Map_B_Pu1);
+  Test_Simple_Active_Iterator (The_B.Map_B_Pu1);
   Put_Line ("   Dynamic:");
-  Test_Simple_Active_Iterator (Map_D_Pu1);
+  Test_Simple_Active_Iterator (The_D.Map_D_Pu1);
   Put_Line ("   Unbounded:");
-  Test_Simple_Active_Iterator (Map_U_Pu1);
+  Test_Simple_Active_Iterator (The_U.Map_U_Pu1);
   Put_Line ("   Guarded Unbounded:");
-  Test_Simple_Active_Iterator (Map_UG_Pu1);
+  Test_Simple_Active_Iterator (The_GU.Map_UG_Pu1);
   Put_Line ("   Synchronized Unbounded:");
-  Test_Simple_Active_Iterator (Map_US_Pu1);
+  Test_Simple_Active_Iterator (The_SU.Map_US_Pu1);
 
   Put_Line ("...Map Active Iterator");
   Put_Line ("   Bounded:");
-  Test_Active_Iterator (Map_B_Pu1);
+  Test_Active_Iterator (The_B.Map_B_Pu1);
   Put_Line ("   Dynamic:");
-  Test_Active_Iterator (Map_D_Pu1);
+  Test_Active_Iterator (The_D.Map_D_Pu1);
   Put_Line ("   Unbounded:");
-  Test_Active_Iterator (Map_U_Pu1);
+  Test_Active_Iterator (The_U.Map_U_Pu1);
   Put_Line ("   Guarded Unbounded:");
-  Test_Active_Iterator (Map_UG_Pu1);
+  Test_Active_Iterator (The_GU.Map_UG_Pu1);
   Put_Line ("   Synchronized Unbounded:");
-  Test_Active_Iterator (Map_US_Pu1);
+  Test_Active_Iterator (The_SU.Map_US_Pu1);
 
   Put_Line ("...Map Passive Iterator");
   Put_Line ("   Bounded:");
-  Test_Passive_Iterator (Map_B_Pu1);
-  Test_Passive_Modifying_Iterator (Map_B_Pu1);
+  Test_Passive_Iterator (The_B.Map_B_Pu1);
+  Test_Passive_Modifying_Iterator (The_B.Map_B_Pu1);
   Put_Line ("   Dynamic:");
-  Test_Passive_Iterator (Map_D_Pu1);
-  Test_Passive_Modifying_Iterator (Map_D_Pu1);
+  Test_Passive_Iterator (The_D.Map_D_Pu1);
+  Test_Passive_Modifying_Iterator (The_D.Map_D_Pu1);
   Put_Line ("   Unbounded:");
-  Test_Passive_Iterator (Map_U_Pu1);
-  Test_Passive_Modifying_Iterator (Map_U_Pu1);
+  Test_Passive_Iterator (The_U.Map_U_Pu1);
+  Test_Passive_Modifying_Iterator (The_U.Map_U_Pu1);
   Put_Line ("   Guarded Unbounded:");
-  Test_Passive_Iterator (Map_UG_Pu1);
-  Test_Passive_Modifying_Iterator (Map_UG_Pu1);
+  Test_Passive_Iterator (The_GU.Map_UG_Pu1);
+  Test_Passive_Modifying_Iterator (The_GU.Map_UG_Pu1);
   Put_Line ("   Synchronized Unbounded:");
-  Test_Passive_Iterator (Map_US_Pu1);
-  Test_Passive_Modifying_Iterator (Map_US_Pu1);
+  Test_Passive_Iterator (The_SU.Map_US_Pu1);
+  Test_Passive_Modifying_Iterator (The_SU.Map_US_Pu1);
 
-  Assertion (MB.Is_Bound (Map_B_Pu1, '6'),
+  Assertion (MB.Is_Bound (The_B.Map_B_Pu1, '6'),
              "** M01: Map binding is not correct");
-  Assertion (MB.Extent (Map_B_Pu2) = 0, "** M02: Map Extent is not correct");
-  Assertion (MD.Is_Bound (Map_D_Pu1, '6'),
+  Assertion (MB.Extent (The_B.Map_B_Pu2) = 0,
+             "** M02: Map Extent is not correct");
+  Assertion (MD.Is_Bound (The_D.Map_D_Pu1, '6'),
              "** M03: Map binding is not correct");
-  Assertion (MD.Extent (Map_D_Pu2) = 0, "** M04: Map Extent is not correct");
-  Assertion (MU.Is_Bound (Map_U_Pu1, '6'),
+  Assertion (MD.Extent (The_D.Map_D_Pu2) = 0,
+             "** M04: Map Extent is not correct");
+  Assertion (MU.Is_Bound (The_U.Map_U_Pu1, '6'),
              "** M05: Map binding is not correct");
-  Assertion (MU.Extent (Map_U_Pu2) = 0, "** M06: Map Extent is not correct");
+  Assertion (MU.Extent (The_U.Map_U_Pu2) = 0,
+             "** M06: Map Extent is not correct");
   -- I don't understand this one ..
   declare
-    Map_D_Pu3 : MD.Dynamic_Map := Map_D_Pu1;
+    Map_D_Pu3 : MD.Dynamic_Map := The_D.Map_D_Pu1;
   begin
-    Assertion (MD."=" (Map_D_Pu1, Map_D_Pu3), "** M08: Maps are not equal");
+    Assertion (MD."=" (The_D.Map_D_Pu1, Map_D_Pu3),
+               "** M08: Maps are not equal");
   end;
   declare
-    Map_U_Pu3 : MU.Unbounded_Map := Map_U_Pu1;
+    Map_U_Pu3 : MU.Unbounded_Map := The_U.Map_U_Pu1;
   begin
-    Assertion (MU."=" (Map_U_Pu1, Map_U_Pu3), "** M09: Maps are not equal");
+    Assertion (MU."=" (The_U.Map_U_Pu1, Map_U_Pu3),
+               "** M09: Maps are not equal");
   end;
-  Assertion (MB.Available (Map_B_Pu1) = 297,
+  Assertion (MB.Available (The_B.Map_B_Pu1) = 297,
              "** M10: Available space is not correct");
-  Assertion (MB.Available (Map_B_Pu2) = 300,
+  Assertion (MB.Available (The_B.Map_B_Pu2) = 300,
              "** M11: Available space is not correct");
   Put_Line ("Completed map tests");
 end Map_Test;
