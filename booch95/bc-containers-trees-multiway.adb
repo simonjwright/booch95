@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -27,14 +27,9 @@
 --  $Author$
 
 with Ada.Unchecked_Deallocation;
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Trees.Multiway is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Containers.Trees.Multiway");
 
    function Create
      (I : Item; Parent, Child, Sibling : Multiway_Node_Ref)
@@ -115,10 +110,9 @@ package body BC.Containers.Trees.Multiway is
 
    procedure Insert (T : in out Multiway_Tree; Elem : in Item) is
    begin
-      Assert (T.Rep = null or else T.Rep.Parent = null,
-              BC.Not_Root'Identity,
-              "Insert",
-              BSE.Not_Root);
+      if T.Rep /= null and then T.Rep.Parent /= null then
+         raise BC.Not_Root;
+      end if;
       T.Rep := Create (Elem,
                        Parent => null,
                        Child => T.Rep,
@@ -166,10 +160,9 @@ package body BC.Containers.Trees.Multiway is
                      Curr := Curr.Sibling;
                      I := I + 1;
                   end loop;
-                  Assert (Curr /= null,
-                          BC.Range_Error'Identity,
-                          "Append",
-                          BSE.Invalid_Index);
+                  if Curr = null then
+                     raise BC.Range_Error;
+                  end if;
                   Curr.Sibling := Create (Elem,
                                           Parent => T.Rep,
                                           Child => null,
@@ -186,10 +179,9 @@ package body BC.Containers.Trees.Multiway is
       if From_Tree.Rep = null then
          return;
       end if;
-      Assert (From_Tree.Rep.Parent = null,
-              BC.Not_Root'Identity,
-              "Append",
-              BSE.Not_Root);
+      if From_Tree.Rep.Parent /= null then
+         raise BC.Not_Root;
+      end if;
       if T.Rep = null then
          T.Rep := From_Tree.Rep;
          T.Rep.Count := T.Rep.Count + 1;
@@ -203,10 +195,9 @@ package body BC.Containers.Trees.Multiway is
 
    procedure Remove (T : in out Multiway_Tree; Index : Positive) is
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Remove",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       declare
          I : Positive := 1;
          Prev : Multiway_Node_Ref;
@@ -217,10 +208,9 @@ package body BC.Containers.Trees.Multiway is
             Curr := Curr.Sibling;
             I := I + 1;
          end loop;
-         Assert (Curr /= null,
-                 BC.Range_Error'Identity,
-                 "Remove",
-                 BSE.Invalid_Index);
+         if Curr = null then
+            raise BC.Range_Error;
+         end if;
          if Prev = null then
             T.Rep.Child := Curr.Sibling;
          else
@@ -238,19 +228,17 @@ package body BC.Containers.Trees.Multiway is
       Ptr : Multiway_Node_Ref := Share_With.Rep;
       I : Positive := 1;
    begin
-      Assert (Ptr /= null,
-              BC.Is_Null'Identity,
-              "Share",
-              BSE.Is_Null);
+      if Ptr = null then
+         raise BC.Is_Null;
+      end if;
       Ptr := Ptr.Child;
       while Ptr /= null and then I < Child loop
          Ptr := Ptr.Sibling;
          I := I + 1;
       end loop;
-      Assert (Ptr /= null,
-              BC.Range_Error'Identity,
-              "Share",
-              BSE.Invalid_Index);
+      if Ptr = null then
+         raise BC.Range_Error;
+      end if;
       Clear (T);
       T.Rep := Ptr;
       T.Rep.Count := T.Rep.Count + 1;
@@ -263,24 +251,21 @@ package body BC.Containers.Trees.Multiway is
       Curr : Multiway_Node_Ref := T.Rep;
       I : Positive := 1;
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Swap_Child",
-              BSE.Is_Null);
-      Assert (Swap_With.Rep = null or else Swap_With.Rep.Parent = null,
-              BC.Not_Root'Identity,
-              "Swap_Child",
-              BSE.Not_Root);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
+      if Swap_With.Rep /= null and then Swap_With.Rep.Parent /= null then
+         raise BC.Not_Root;
+      end if;
       Curr := Curr.Child;
       while Curr /= null and then I < Child loop
          Prev := Curr;
          Curr := Curr.Sibling;
          I := I + 1;
       end loop;
-      Assert (Curr /= null,
-              BC.Range_Error'Identity,
-              "Swap_Child",
-              BSE.Invalid_Index);
+      if Curr = null then
+         raise BC.Range_Error;
+      end if;
       Swap_With.Rep.Sibling := Curr.Sibling;
       if Prev = null then
          T.Rep.Child := Swap_With.Rep;
@@ -300,19 +285,17 @@ package body BC.Containers.Trees.Multiway is
       Curr : Multiway_Node_Ref := T.Rep;
       I : Positive := 1;
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Child",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       Curr := Curr.Child;
       while Curr /= null and then I < Child loop
          Curr := Curr.Sibling;
          I := I + 1;
       end loop;
-      Assert (Curr /= null,
-              BC.Range_Error'Identity,
-              "Child",
-              BSE.Invalid_Index);
+      if Curr = null then
+         raise BC.Range_Error;
+      end if;
       Curr.Count := Curr.Count + 1;
       Purge (T.Rep);
       T.Rep := Curr;
@@ -320,10 +303,9 @@ package body BC.Containers.Trees.Multiway is
 
    procedure Parent (T : in out Multiway_Tree) is
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Parent",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       if T.Rep.Parent = null then
          Clear (T);
       else
@@ -335,19 +317,17 @@ package body BC.Containers.Trees.Multiway is
 
    procedure Set_Item (T : in out Multiway_Tree; Elem : in Item) is
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Set_Item",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       T.Rep.Element := Elem;
    end Set_Item;
 
    function Arity (T : Multiway_Tree) return Natural is
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Arity",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       declare
          Count : Natural := 0;
          Ptr : Multiway_Node_Ref := T.Rep.Child;
@@ -382,19 +362,17 @@ package body BC.Containers.Trees.Multiway is
 
    function Item_At (T : in Multiway_Tree) return Item is
    begin
-      Assert (T.Rep /= null,
-              BC.Is_Null'Identity,
-              "Item_At",
-              BSE.Is_Null);
+      if T.Rep = null then
+         raise BC.Is_Null;
+      end if;
       return T.Rep.Element;
    end Item_At;
 
    --     function Item_At (T : in Multiway_Tree) return Item_Ptr is
    --     begin
-   --        Assert (T.Rep /= null,
-   --            BC.Is_Null'Identity,
-   --            "Item_At",
-   --            BSE.Is_Null);
+   --        if T.Rep = null then
+   --           raise BC.Is_Null;
+   --        end if;
    --        return Item_Ptr
    --      (Allow_Element_Access.To_Pointer (T.Rep.Element'Address));
    --     end Item_At;
