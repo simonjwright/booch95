@@ -124,4 +124,6 @@ private
 
   function Current_Item (It : Set_Iterator) return Item_Ptr;
 
+  procedure Delete_Item_At (It : Set_Iterator);
+
 end BC.Containers.Sets;
