@@ -26,6 +26,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Stacks.Unbounded is
 
+  pragma Elaborate_Body;
+
   type Unbounded_Stack is new Stack with private;
   -- This Stack exhibits unlimited growth and collapsing, limited only by
   -- available memory.  Assignment is "deep".
@@ -34,35 +36,35 @@ package BC.Containers.Stacks.Unbounded is
   -- Return True if and only if both stacks have the same depth and the
   -- same items in the same order; return False otherwise.
 
-  procedure Clear (Obj : in out Unbounded_Stack);
+  procedure Clear (S : in out Unbounded_Stack);
   -- Empty the Stack of all items.
 
-  procedure Push (Obj : in out Unbounded_Stack; Elem : Item);
+  procedure Push (S : in out Unbounded_Stack; Elem : Item);
   -- Add a copy of the item to the top of the Stack.
 
-  procedure Pop (Obj : in out Unbounded_Stack);
+  procedure Pop (S : in out Unbounded_Stack);
   -- Remove the item from the top of the Stack.
 
-  function Depth (Obj : in Unbounded_Stack) return Natural;
+  function Depth (S : in Unbounded_Stack) return Natural;
   -- Returns the number of items in the Stack
 
-  function Is_Empty (Obj : in Unbounded_Stack) return Boolean;
+  function Is_Empty (S : in Unbounded_Stack) return Boolean;
   -- Returns True if and only if no items are in the stack
 
-  function Top (Obj : in Unbounded_Stack) return Item;
+  function Top (S : in Unbounded_Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
-
-  -- XXX need accessor generic
 
   function New_Iterator (For_The_Stack : Unbounded_Stack) return Iterator;
   -- Return a reset Iterator bound to the specific Stack.
 
 private
 
-  function Item_At (Obj : Unbounded_Stack; Index : Positive) return Item_Ptr;
-  function Cardinality (Obj : Unbounded_Stack) return Natural;
-  procedure Purge (Obj : in out Unbounded_Stack);
-  procedure Add (Obj : in out Unbounded_Stack; Elem : Item);
+  function Cardinality (S : Unbounded_Stack) return Natural;
+  function Item_At (S : Unbounded_Stack; Index : Positive) return Item_Ptr;
+  procedure Purge (S : in out Unbounded_Stack);
+
+  procedure Add (S : in out Unbounded_Stack; Elem : Item);
+  procedure Remove (S : in out Unbounded_Stack; From : Positive);
 
   package Unbounded_Stack_Nodes
   is new BC.Support.Unbounded (Item => Item,
@@ -75,8 +77,8 @@ private
        := new Unbounded_Stack_Nodes.Unb_Node;
   end record;
 
-  procedure Initialize (Obj : in out Unbounded_Stack);
-  procedure Adjust (Obj : in out Unbounded_Stack);
-  procedure Finalize (Obj : in out Unbounded_Stack);
+  procedure Initialize (S : in out Unbounded_Stack);
+  procedure Adjust (S : in out Unbounded_Stack);
+  procedure Finalize (S : in out Unbounded_Stack);
 
 end BC.Containers.Stacks.Unbounded;

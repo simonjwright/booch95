@@ -42,88 +42,88 @@ package body BC.Containers.Trees.Binary is
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Clear (Obj : in out Binary_Tree) is
+  procedure Clear (T : in out Binary_Tree) is
   begin
-    Purge (Obj.Rep);
-    Obj.Rep := null;
+    Purge (T.Rep);
+    T.Rep := null;
   end Clear;
 
-  procedure Insert (Obj : in out Binary_Tree;
+  procedure Insert (T : in out Binary_Tree;
                     Elem : in Item;
                     Child : in Child_Branch) is
   begin
-    Assert (Obj.Rep = null or else Obj.Rep.Parent = null,
-            BC.Not_Root'Identity,
-            "Insert",
-            BSE.Not_Root);
+    Assert (T.Rep = null or else T.Rep.Parent = null,
+       BC.Not_Root'Identity,
+       "Insert",
+       BSE.Not_Root);
     if Child = Left then
-      Obj.Rep := Nodes.Create (Elem,
-                               Parent => null,
-                               Left => Obj.Rep,
-                               Right => null);
+      T.Rep := Nodes.Create (Elem,
+                             Parent => null,
+                             Left => T.Rep,
+                             Right => null);
     else
-      Obj.Rep := Nodes.Create (Elem,
-                               Parent => null,
-                               Left => null,
-                               Right => Obj.Rep);
+      T.Rep := Nodes.Create (Elem,
+                             Parent => null,
+                             Left => null,
+                             Right => T.Rep);
     end if;
   end Insert;
 
-  procedure Append (Obj : in out Binary_Tree;
+  procedure Append (T : in out Binary_Tree;
                     Elem : in Item;
                     Child : in Child_Branch;
                     After : in Child_Branch) is
   begin
-    if Obj.Rep = null then
-      Obj.Rep := Nodes.Create (Elem,
-                               Parent => null,
-                               Left => null,
-                               Right => null);
+    if T.Rep = null then
+      T.Rep := Nodes.Create (Elem,
+                             Parent => null,
+                             Left => null,
+                             Right => null);
     else
       if After = Left then
         if Child = Left then
-          Obj.Rep.Left := Nodes.Create (Elem,
-                                        Parent => Obj.Rep,
-                                        Left => Obj.Rep.Left,
-                                        Right => null);
+          T.Rep.Left := Nodes.Create (Elem,
+                                      Parent => T.Rep,
+                                      Left => T.Rep.Left,
+                                      Right => null);
         else
-          Obj.Rep.Left := Nodes.Create (Elem,
-                                        Parent => Obj.Rep,
-                                        Left => null,
-                                        Right => Obj.Rep.Left);
+          T.Rep.Left := Nodes.Create (Elem,
+                                      Parent => T.Rep,
+                                      Left => null,
+                                      Right => T.Rep.Left);
         end if;
       else
         if Child = Left then
-          Obj.Rep.Right := Nodes.Create (Elem,
-                                         Parent => Obj.Rep,
-                                         Left => Obj.Rep.Right,
-                                         Right => null);
+          T.Rep.Right := Nodes.Create (Elem,
+                                       Parent => T.Rep,
+                                       Left => T.Rep.Right,
+                                       Right => null);
         else
-          Obj.Rep.Right := Nodes.Create (Elem,
-                                         Parent => Obj.Rep,
-                                         Left => null,
-                                         Right => Obj.Rep.Right);
+          T.Rep.Right := Nodes.Create (Elem,
+                                       Parent => T.Rep,
+                                       Left => null,
+                                       Right => T.Rep.Right);
         end if;
       end if;
     end if;
   end Append;
 
-  procedure Remove (Obj : in out Binary_Tree; Child : in Child_Branch) is
+  procedure Remove (T : in out Binary_Tree; Child : in Child_Branch) is
   begin
-    Assert (Obj.Rep /= null,
+    Assert (T.Rep /= null,
             BC.Is_Null'Identity,
             "Remove",
             BSE.Is_Null);
     if Child = Left then
-      Purge (Obj.Rep.Left);
-      Obj.Rep.Left := null;
+      Purge (T.Rep.Left);
+      T.Rep.Left := null;
     else
-      Purge (Obj.Rep.Right);
-      Obj.Rep.Right := null;
+      Purge (T.Rep.Right);
+      T.Rep.Right := null;
     end if;
   end Remove;
 
-  procedure Share (Obj : in out Binary_Tree;
+  procedure Share (T : in out Binary_Tree;
                    Share_With : in Binary_Tree;
                    Child : in Child_Branch) is
     Temp : Nodes.Binary_Node_Ref :=  Share_With.Rep;
@@ -137,33 +137,33 @@ package body BC.Containers.Trees.Binary is
     else
       Temp := Share_With.Rep.Right;
     end if;
-    Clear (Obj);
-    Obj.Rep := Temp;
-    Obj.Rep.Count := Obj.Rep.Count + 1;
+    Clear (T);
+    T.Rep := Temp;
+    T.Rep.Count := T.Rep.Count + 1;
   end Share;
 
-  procedure Swap_Child (Obj : in out Binary_Tree;
+  procedure Swap_Child (T : in out Binary_Tree;
                         Swap_With : in out Binary_Tree;
                         Child : in Child_Branch) is
     Curr : Nodes.Binary_Node_Ref;
   begin
-    Assert (Obj.Rep /= null,
+    Assert (T.Rep /= null,
             BC.Is_Null'Identity,
             "Swap_Child",
             BSE.Is_Null);
     Assert (Swap_With.Rep = null or else Swap_With.Rep.Parent = null,
-            BC.Not_Root'Identity,
-            "Swap_Child",
-            BSE.Not_Root);
+       BC.Not_Root'Identity,
+       "Swap_Child",
+       BSE.Not_Root);
     if Child = Left then
-      Curr := Obj.Rep.Left;
-      Obj.Rep.Left := Swap_With.Rep;
+      Curr := T.Rep.Left;
+      T.Rep.Left := Swap_With.Rep;
     else
-      Curr := Obj.Rep.Right;
-      Obj.Rep.Right := Swap_With.Rep;
+      Curr := T.Rep.Right;
+      T.Rep.Right := Swap_With.Rep;
     end if;
     if Swap_With.Rep /= null then
-      Swap_With.Rep.Parent := Obj.Rep;
+      Swap_With.Rep.Parent := T.Rep;
     end if;
     Swap_With.Rep := Curr;
     if Swap_With.Rep /= null then
@@ -171,32 +171,32 @@ package body BC.Containers.Trees.Binary is
     end if;
   end Swap_Child;
 
-  procedure Child (Obj : in out Binary_Tree; Child : in Child_Branch) is
+  procedure Child (T : in out Binary_Tree; Child : in Child_Branch) is
   begin
     if Child = Left then
-      Left_Child (Obj);
+      Left_Child (T);
     else
-      Right_Child (Obj);
+      Right_Child (T);
     end if;
   end Child;
 
-  procedure Left_Child (Obj : in out Binary_Tree) is
+  procedure Left_Child (T : in out Binary_Tree) is
     Curr : Nodes.Binary_Node_Ref;
   begin
-    Assert (Obj.Rep /= null,
+    Assert (T.Rep /= null,
             BC.Is_Null'Identity,
             "Left_Child",
             BSE.Is_Null);
-    Curr := Obj.Rep;
-    Obj.Rep := Obj.Rep.Left;
+    Curr := T.Rep;
+    T.Rep := T.Rep.Left;
     if Curr.Count > 1 then
       Curr.Count := Curr.Count - 1;
-      if Obj.Rep /= null then
-        Obj.Rep.Count := Obj.Rep.Count + 1;
+      if T.Rep /= null then
+        T.Rep.Count := T.Rep.Count + 1;
       end if;
     else
-      if Obj.Rep /= null then
-        Obj.Rep.Parent := null;
+      if T.Rep /= null then
+        T.Rep.Parent := null;
       end if;
       if Curr.Right /= null then
         Curr.Right.Parent := null;
@@ -205,31 +205,31 @@ package body BC.Containers.Trees.Binary is
     end if;
   end Left_Child;
 
-  function Left_Child (Obj : Binary_Tree) return Binary_Tree is
+  function Left_Child (T : Binary_Tree) return Binary_Tree is
     Result : Binary_Tree;
   begin
-    Result := Obj;
+    Result := T;
     Left_Child (Result);
     return Result;
   end Left_Child;
 
-  procedure Right_Child (Obj : in out Binary_Tree) is
+  procedure Right_Child (T : in out Binary_Tree) is
     Curr : Nodes.Binary_Node_Ref;
   begin
-    Assert (Obj.Rep /= null,
+    Assert (T.Rep /= null,
             BC.Is_Null'Identity,
             "Right_Child",
             BSE.Is_Null);
-    Curr := Obj.Rep;
-    Obj.Rep := Obj.Rep.Right;
+    Curr := T.Rep;
+    T.Rep := T.Rep.Right;
     if Curr.Count > 1 then
       Curr.Count := Curr.Count - 1;
-      if Obj.Rep /= null then
-        Obj.Rep.Count := Obj.Rep.Count + 1;
+      if T.Rep /= null then
+        T.Rep.Count := T.Rep.Count + 1;
       end if;
     else
-      if Obj.Rep /= null then
-        Obj.Rep.Parent := null;
+      if T.Rep /= null then
+        T.Rep.Parent := null;
       end if;
       if Curr.Left /= null then
         Curr.Left.Parent := null;
@@ -238,68 +238,68 @@ package body BC.Containers.Trees.Binary is
     end if;
   end Right_Child;
 
-  function Right_Child (Obj : Binary_Tree) return Binary_Tree is
+  function Right_Child (T : Binary_Tree) return Binary_Tree is
     Result : Binary_Tree;
   begin
-    Result := Obj;
+    Result := T;
     Right_Child (Result);
     return Result;
   end Right_Child;
 
-  procedure Parent (Obj : in out Binary_Tree) is
+  procedure Parent (T : in out Binary_Tree) is
   begin
-    Assert (Obj.Rep /= null,
+    Assert (T.Rep /= null,
             BC.Is_Null'Identity,
             "Parent",
             BSE.Is_Null);
-    if Obj.Rep.Parent = null then
-      Clear (Obj);
+    if T.Rep.Parent = null then
+      Clear (T);
     else
-      Obj.Rep.Count := Obj.Rep.Count - 1;
-      Obj.Rep := Obj.Rep.Parent;
-      if Obj.Rep /= null then
-        Obj.Rep.Count := Obj.Rep.Count + 1;
+      T.Rep.Count := T.Rep.Count - 1;
+      T.Rep := T.Rep.Parent;
+      if T.Rep /= null then
+        T.Rep.Count := T.Rep.Count + 1;
       end if;
     end if;
   end Parent;
 
-  procedure Set_Item (Obj : in out Binary_Tree; Elem : in Item) is
+  procedure Set_Item (T : in out Binary_Tree; Elem : in Item) is
   begin
-    Assert (Obj.Rep /= null,
+    Assert (T.Rep /= null,
             BC.Is_Null'Identity,
             "Set_Item",
             BSE.Is_Null);
-    Obj.Rep.Element := Elem;
+    T.Rep.Element := Elem;
   end Set_Item;
 
-  function Has_Children (Obj : in Binary_Tree) return Boolean is
+  function Has_Children (T : in Binary_Tree) return Boolean is
   begin
-    return (Obj.Rep /= null and then
-            (Obj.Rep.Left /= null or else Obj.Rep.Right /= null));
+    return (T.Rep /= null and then
+       (T.Rep.Left /= null or else T.Rep.Right /= null));
   end Has_Children;
 
-  function Is_Null (Obj : in Binary_Tree) return Boolean is
+  function Is_Null (T : in Binary_Tree) return Boolean is
   begin
-    return Obj.Rep = null;
+    return T.Rep = null;
   end Is_Null;
 
-  function Is_Shared (Obj : in Binary_Tree) return Boolean is
+  function Is_Shared (T : in Binary_Tree) return Boolean is
   begin
-    return Obj.Rep /= null and then Obj.Rep.Count > 1;
+    return T.Rep /= null and then T.Rep.Count > 1;
   end Is_Shared;
 
-  function Is_Root (Obj : in Binary_Tree) return Boolean is
+  function Is_Root (T : in Binary_Tree) return Boolean is
   begin
-    return Obj.Rep = null or else Obj.Rep.Parent = null;
+    return T.Rep = null or else T.Rep.Parent = null;
   end Is_Root;
 
-  function Item_At (Obj : in Binary_Tree) return Item is
+  function Item_At (T : in Binary_Tree) return Item is
   begin
-    Assert (Obj.Rep /= null,
+    Assert (T.Rep /= null,
             BC.Is_Null'Identity,
             "Item_At",
             BSE.Is_Null);
-    return Obj.Rep.Element;
+    return T.Rep.Element;
   end Item_At;
 
   procedure Purge (Node : in out Nodes.Binary_Node_Ref) is
@@ -321,21 +321,21 @@ package body BC.Containers.Trees.Binary is
     end if;
   end Purge;
 
-  procedure Initialize (Obj : in out Binary_Tree) is
+  procedure Initialize (T : in out Binary_Tree) is
   begin
     null;
   end Initialize;
 
-  procedure Adjust (Obj : in out Binary_Tree) is
+  procedure Adjust (T : in out Binary_Tree) is
   begin
-    if Obj.Rep /= null then
-      Obj.Rep.Count := Obj.Rep.Count + 1;
+    if T.Rep /= null then
+      T.Rep.Count := T.Rep.Count + 1;
     end if;
   end Adjust;
 
-  procedure Finalize (Obj : in out Binary_Tree) is
+  procedure Finalize (T : in out Binary_Tree) is
   begin
-    Clear (Obj);
+    Clear (T);
   end;
 
 end BC.Containers.Trees.Binary;

@@ -17,50 +17,56 @@
 
 -- $Id$
 
+with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Maps.Unbounded is
 
+  function "=" (L, R : Unbounded_Map) return Boolean is
+  begin
+    return Tables."=" (L.Rep.all, R.Rep.all);
+  end "=";
+
   procedure Clear (M : in out Unbounded_Map) is
   begin
-    Tables.Clear (M.Rep);
+    Tables.Clear (M.Rep.all);
   end Clear;
 
   procedure Bind
      (M : in out Unbounded_Map; I : Item; V : Value) is
   begin
-    Tables.Bind (M.Rep, I, V);
+    Tables.Bind (M.Rep.all, I, V);
   end Bind;
 
   procedure Rebind
      (M : in out Unbounded_Map; I : Item; V : Value) is
   begin
-    Tables.Rebind (M.Rep, I, V);
+    Tables.Rebind (M.Rep.all, I, V);
   end Rebind;
 
   procedure Unbind (M : in out Unbounded_Map; I : Item) is
   begin
-    Tables.Unbind (M.Rep, I);
+    Tables.Unbind (M.Rep.all, I);
   end Unbind;
 
   function Extent (M : Unbounded_Map) return Natural is
   begin
-    return Tables.Extent (M.Rep);
+    return Tables.Extent (M.Rep.all);
   end Extent;
 
   function Is_Empty (M : Unbounded_Map) return Boolean is
   begin
-    return Tables.Extent (M.Rep) = 0;
+    return Tables.Extent (M.Rep.all) = 0;
   end Is_Empty;
 
   function Is_Bound (M : Unbounded_Map; I : Item) return Boolean is
   begin
-    return Tables.Is_Bound (M.Rep, I);
+    return Tables.Is_Bound (M.Rep.all, I);
   end Is_Bound;
 
   function Value_Of (M : Unbounded_Map; I : Item) return Value is
   begin
-    return Tables.Value_Of (M.Rep, I);
+    return Tables.Value_Of (M.Rep.all, I);
   end Value_Of;
 
   package Address_Conversions
@@ -75,19 +81,36 @@ package body BC.Containers.Maps.Unbounded is
 
   -- Private implementations
 
+  procedure Initialize (M : in out Unbounded_Map) is
+  begin
+    M.Rep := new Tables.Table;
+  end Initialize;
+
+  procedure Adjust (M : in out Unbounded_Map) is
+    P : Table_P := M.Rep;
+  begin
+    M.Rep := new Tables.Table'(P.all);
+  end Adjust;
+
+  procedure Finalize (M : in out Unbounded_Map) is
+    procedure Free is new Ada.Unchecked_Deallocation (Tables.Table, Table_P);
+  begin
+    Free (M.Rep);
+  end Finalize;
+
   procedure Purge (M : in out Unbounded_Map) is
   begin
-    Tables.Clear (M.Rep);
+    Tables.Clear (M.Rep.all);
   end Purge;
 
   procedure Attach (M : in out Unbounded_Map; I : Item; V : Value) is
   begin
-    Tables.Bind (M.Rep, I, V);
+    Tables.Bind (M.Rep.all, I, V);
   end Attach;
 
   function Cardinality (M : Unbounded_Map) return Natural is
   begin
-    return Tables.Extent (M.Rep);
+    return Tables.Extent (M.Rep.all);
   end Cardinality;
 
   function Number_Of_Buckets (M : Unbounded_Map) return Natural is
@@ -97,24 +120,24 @@ package body BC.Containers.Maps.Unbounded is
 
   function Length (M : Unbounded_Map; Bucket : Positive) return Natural is
   begin
-    return IC.Length (Tables.Item_Bucket (M.Rep, Bucket).all);
+    return IC.Length (Tables.Item_Bucket (M.Rep.all, Bucket).all);
   end Length;
 
   function Exists (M : Unbounded_Map; I : Item) return Boolean is
   begin
-    return Tables.Is_Bound (M.Rep, I);
+    return Tables.Is_Bound (M.Rep.all, I);
   end Exists;
 
   function Item_At
      (M : Unbounded_Map; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (Tables.Item_Bucket (M.Rep, Bucket).all, Index);
+    return IC.Item_At (Tables.Item_Bucket (M.Rep.all, Bucket).all, Index);
   end Item_At;
 
   function Value_At
      (M : Unbounded_Map; Bucket, Index : Positive) return Value_Ptr is
   begin
-    return VC.Item_At (Tables.Value_Bucket (M.Rep, Bucket).all, Index);
+    return VC.Item_At (Tables.Value_Bucket (M.Rep.all, Bucket).all, Index);
   end Value_At;
 
 end BC.Containers.Maps.Unbounded;

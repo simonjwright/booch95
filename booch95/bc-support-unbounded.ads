@@ -30,8 +30,11 @@ generic
   Storage : in out Storage_Manager;
 package BC.Support.Unbounded is
 
+  pragma Elaborate_Body;
+
   type Unb_Node is private;
   -- An unpacked container whose items are stored on the heap.
+  -- Items are effectively indexed from 1.
 
   type Unb_Node_Ref is access all Unb_Node;
 
@@ -47,27 +50,27 @@ package BC.Support.Unbounded is
   procedure Insert (Obj : in out Unb_Node; Elem : Item);
   -- Add an item to the front of the container
 
-  procedure Insert (Obj : in out Unb_Node; Elem : Item; Before : Natural);
+  procedure Insert (Obj : in out Unb_Node; Elem : Item; Before : Positive);
   -- Add an item to the container, before the given index
 
   procedure Append (Obj : in out Unb_Node; Elem : Item);
   -- Add an item to the end of the container
 
-  procedure Append (Obj : in out Unb_Node; Elem : Item; After : Natural);
-  -- Add an item to the end of the container, after the given index
+  procedure Append (Obj : in out Unb_Node; Elem : Item; After : Positive);
+  -- Add an item to the container, after the given index
 
-  procedure Remove (Obj : in out Unb_Node; From : Natural);
-  -- Remove the item at a given index
+  procedure Remove (Obj : in out Unb_Node; From : Positive);
+  -- Remove the item at the given index
 
   procedure Replace (Obj : in out Unb_Node; Index : Positive; Elem : Item);
-  -- Replace the Item at Index with the new Elem
+  -- Replace the item at index with the new elem
 
   function Length (Obj : Unb_Node) return Natural;
   -- Returns the number of items in the container
 
   function First (Obj : Unb_Node) return Item;
   function First (Obj : Unb_Node) return Item_Ptr;
-  -- Returns the Item at the front of the container
+  -- Returns the item at the front of the container
 
   function Last (Obj : Unb_Node) return Item;
   function Last (Obj : Unb_Node) return Item_Ptr;
@@ -83,7 +86,7 @@ package BC.Support.Unbounded is
   -- if unsuccessful.
 
   procedure Free (Obj : in out Unb_Node_Ref);
-  -- Dispose of the Node referred to, having first Cleared it
+  -- Dispose of the node referred to, having first cleared it
 
 private
 
@@ -94,7 +97,7 @@ private
     Last : Nodes.Node_Ref;
     Size : Natural := 0;
     Cache : Nodes.Node_Ref;
-    Cache_Index : Natural := 0;
+    Cache_Index : Natural := 0; -- 0 means invalid
   end record;
   -- We make this type tagged solely so that it's a "by-reference" type (we
   -- don't want a copy to be passed, we want the actual node).

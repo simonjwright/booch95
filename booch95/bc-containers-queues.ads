@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -20,39 +20,40 @@
 generic
 package BC.Containers.Queues is
 
+  pragma Elaborate_Body;
+
   type Queue is abstract new Container with private;
 
-  -- A sequence in which items may be added from one end and removed from
-  -- the opposite end.  This class is abstract and serves only to enforce
-  -- the interfaces among classes.
+  -- A queue denotes a sequence of items, in which items may be added
+  -- from one end and removed from the opposite end of the sequence.
 
-  -- Operations of equality, inequality, and assignment are "deep" for
-  -- all Queue forms
-
-  procedure Clear (Obj : in out Queue) is abstract;
+  procedure Clear (Q : in out Queue) is abstract;
   -- Empty the queue of all items.
 
-  procedure Append (Obj : in out Queue; Elem : Item) is abstract;
+  procedure Append (Q : in out Queue; Elem : Item) is abstract;
   -- Add the item to the back of the queue; the item itself is copied.
 
-  procedure Pop (Obj : in out Queue) is abstract;
+  procedure Pop (Q : in out Queue) is abstract;
   -- Remove the item from the front of the queue.
 
-  procedure Remove (Obj : in out Queue; From : Natural) is abstract;
+  procedure Remove (Q : in out Queue; From : Positive) is abstract;
   -- Remove the item at the given index (may be a balking operation).
 
-  function Length (Obj : in Queue) return Natural is abstract;
+  function Length (Q : in Queue) return Natural is abstract;
   -- Return the number of items in the queue.
 
-  function Is_Empty (Obj : in Queue) return Boolean is abstract;
+  function Is_Empty (Q : in Queue) return Boolean is abstract;
   -- Return True if and only if there are no items in the queue.
 
-  function Front (Obj : in Queue) return Item is abstract;
+  function Front (Q : in Queue) return Item is abstract;
   -- Return a copy of the item at the front of the queue.
 
-  -- XXX need accessor generic
+  generic
+    with procedure Process (Elem : in out Item);
+  procedure Process_Front (Q : in out Queue'Class);
+  -- Access the item at the front of the queue.
 
-  function Location (Obj : in Queue; Elem : in Item) return Natural
+  function Location (Q : in Queue; Elem : in Item) return Natural
     is abstract;
   -- Return the first index at which the item is found; return 0 if the
   -- item does not exist in the queue.
@@ -68,8 +69,6 @@ package BC.Containers.Queues is
 private
 
   type Queue is abstract new Container with null record;
-
-  procedure Add (Obj : in out Queue; Elem : Item);
 
   type Queue_Iterator (Q : access Queue'Class)
   is new Actual_Iterator (Q) with record
@@ -89,5 +88,7 @@ private
   function Current_Item (It : Queue_Iterator) return Item;
 
   function Current_Item (It : Queue_Iterator) return Item_Ptr;
+
+  procedure Delete_Item_At (It : Queue_Iterator);
 
 end BC.Containers.Queues;

@@ -1,4 +1,4 @@
--- Copyright (C) 1999 Simon Wright.
+-- Copyright (C) 1999-2000 Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -20,3 +20,4 @@
 generic
   with function Image (E : Item) return String;
 procedure BC.Containers.Trees.AVL.Print (T : AVL_Tree);
+pragma Elaborate_Body (BC.Containers.Trees.AVL.Print);

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -17,11 +17,18 @@
 
 -- $Id$
 
+-- XXX contains traces of work on alternative approach to
+-- Synchronization, which doesn't work in GNAT 3.11p, 3.12a2.
+
 with BC.Containers;
 with BC.Containers.Maps;
 with BC.Containers.Maps.Bounded;
 with BC.Containers.Maps.Dynamic;
 with BC.Containers.Maps.Unbounded;
+with BC.Containers.Maps.Unbounded.Guarded;
+with BC.Containers.Maps.Unbounded.Synchronized;
+-- with BC.Containers.Maps.Synchronized;
+with BC.Support.Synchronization;
 with Chunks;
 with Global_Heap;
 
@@ -46,6 +53,18 @@ package Map_Test_Support is
                                     Buckets => 3,
                                     Storage_Manager => Global_Heap.Pool,
                                     Storage => Global_Heap.Storage);
+
+  package MUG is new MU.Guarded
+     (Semaphore =>  BC.Support.Synchronization.Semaphore);
+
+--   package MUSA is new Maps.Synchronized
+--      (Map_Base => MU.Unbounded_Map,
+--       Monitor => BC.Support.Synchronization.Single_Monitor);
+
+  package MUSC is new MU.Synchronized
+     (Monitor => BC.Support.Synchronization.Single_Monitor);
+
+  package MUS renames MUSC;
 
   Gitems : array (0 .. 9) of aliased Chunks.Chunk;
 

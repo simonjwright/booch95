@@ -30,6 +30,107 @@
 
 <dl>
 
+<dt>19 February 2000</dt>
+
+<dd>
+
+Uses signature-based Hash Tables (for Bags, Maps, Sets).<p>
+
+Includes Guarded and Synchronized Maps.<p>
+
+</dd>
+
+<dt>3 January 2000</dt>
+
+<dd>
+
+Added the ability to delete the item an <tt>Iterator</tt> is currently
+indicating
+(<tt>Delete_Item_At&nbsp;(It&nbsp;:&nbsp;Iterator)</tt>). Note, this
+feature doesn't yet work for Bags, Maps, Rings or Sets.<p>
+
+The C++ code offers two variants of accessors such as
+<tt>Queues.Front</tt>, one of which returns a value while the other
+returns a reference. The second case is now supported by generics such
+as eg <tt>Queues.Process_Front</tt>.<p>
+
+The <tt>Copy</tt> operation of Collections, Queues, Rings and Stacks
+checks for self-assignment before proceeding.<p>
+
+Synchronized Unbounded Rings now support blocking (balking); eg, an
+attempt to <tt>Pop</tt> will block until the Ring has something in it
+to pop. For related reasons, the <tt>Pop_Value</tt> operation is
+provided.<p>
+
+AVL Trees had an error (inherited from the C++) which would sometimes
+corrupt the Tree on deletion.<p>
+
+Containers have new versions of the <tt>Visit</tt> and <tt>Modify</tt>
+generics that include a parameter as an argument to <tt>Visit</tt> and
+<tt>Modify</tt> that is passed to the <tt>Apply</tt> routine. Thanks
+to <a href="mailto:SteveD@WOODLAND.USNR.com">Steve Doiel</a>.<p>
+
+Added <tt>pragma Elaborate_Body</tt> throughout.<p>
+
+Continued the renaming of <tt>Container</tt> parameters from
+<tt>Obj</tt> to something slightly more mnemonic.<p>
+
+</dd>
+
+<dt>31st October 1999</dt>
+
+<dd>
+
+Added Unbounded Ordered Queues.<p>
+
+AVL Trees are no longer limited.<p>
+
+Corrected ordering problem with Unbounded Ordered Collections when
+keys are equal. <tt>Insert</tt> now adds from the front of the
+Collection, <tt>Append</tt> from the rear.<p>
+
+</dd>
+
+<dt>21st June 1999</dt>
+
+<dd>
+
+Added Unbounded Collections and Unbounded Ordered Collections.<p>
+
+<tt>BC.Support.Bounded</tt>, <tt>BC.Support.Unbounded</tt> subprogram
+specs were confused about whether indexing was from 0 (as in the C++)
+or 1 (in the Ada). <tt>BC.Support.Unbounded.Append(2)</tt> had an
+error when appending after the first element.<p>
+
+Corrected a GNAT <a href="compiler-problems.html#29may1999">compiler
+problem</a> (GNAT was too permissive).<p>
+
+Added ObjectAda-special versions of the Bag test driver (avoiding <a
+href="compiler-problems.html#29jan1999">compiler problems</a>).<p>
+
+</dd>
+
+<dt>7th May 1999</dt>
+
+<dd>
+
+Included the accidentally-omitted Bounded and Dynamic Bag sources.<p>
+
+<dd>
+
+<dt>4th May 1999</dt>
+
+<dd>
+
+Added Bounded and Dynamic Bags.<p>
+
+Added Unbounded Rings in standard, Guarded and Synchronized forms.<p>
+
+ObjectAda <a href="compiler-problems.html#4may1999">problems</a> with
+Semaphores.<p>
+
+</dd>
+
 <dt>14th March 1999</dt>
 
 <dd>
@@ -66,7 +167,7 @@ Added Sets.<p>
 Reworked Iteration; passive iteration now obtains the Container over
 which to iterate via an Iterator bound to the container. This allows
 different styles of iteration with one interface.<p>
- 
+
 Graphs have three Vertex iterators: incoming only, outgoing only, both
 ways.<p>
 

@@ -29,6 +29,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Maps.Unbounded is
 
+  pragma Elaborate_Body;
+
   -- A map denotes a collection forming a dictionary of domain/range
   -- pairs. Maps are cached, so that the most recently accessed
   -- domain/range pair can be found on the order of O(1).
@@ -45,6 +47,10 @@ package BC.Containers.Maps.Unbounded is
   -- significant impact upon performance.
 
   type Unbounded_Map is new Map with private;
+
+  function "=" (L, R : Unbounded_Map) return Boolean;
+  -- Return True if the two Maps contain the same items bound to the
+  -- same values.
 
   procedure Clear (M : in out Unbounded_Map);
   -- Empty the map of all item/value pairs. The cached item/value pair is
@@ -93,26 +99,39 @@ private
                                           Storage_Manager => Storage_Manager,
                                           Storage => Storage);
   use IC;
+  package Items is new BC.Support.Hash_Tables.Item_Signature
+     (Item => Item,
+      Item_Container => IC.Unb_Node,
+      Item_Container_Ptr => IC.Unb_Node_Ref);
 
   package VC is new BC.Support.Unbounded (Item => Value,
                                           Item_Ptr => Value_Ptr,
                                           Storage_Manager => Storage_Manager,
                                           Storage => Storage);
   use VC;
-
-  package Tables is new BC.Support.Hash_Tables
-     (Item => Item,
-      Value => Value,
+  package Values is new BC.Support.Hash_Tables.Value_Signature
+     (Value => Value,
       Value_Ptr => Value_Ptr,
-      Buckets => Buckets,
-      Item_Container => IC.Unb_Node,
-      Item_Container_Ptr => IC.Unb_Node_Ref,
       Value_Container => VC.Unb_Node,
       Value_Container_Ptr => VC.Unb_Node_Ref);
 
+  package Tables is new BC.Support.Hash_Tables.Tables
+     (Items => Items,
+      Values => Values,
+      Buckets => Buckets);
+
+  type Table_P is access Tables.Table;
+  for Table_P'Storage_Pool use Storage;
+
   type Unbounded_Map is new Map with record
-    Rep : Tables.Table;
+    Rep : Table_P;
   end record;
+
+  procedure Initialize (M : in out Unbounded_Map);
+
+  procedure Adjust (M : in out Unbounded_Map);
+
+  procedure Finalize (M : in out Unbounded_Map);
 
   procedure Purge (M : in out Unbounded_Map);
 

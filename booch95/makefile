@@ -9,7 +9,7 @@
 #      PURPOSE. See the Ada Community License for more details.
 #      You should have received a copy of the Ada Community
 #      License with this library, in the file named "Ada Community
-#      License" or "ACL". If not, contact the author of this library 
+#      License" or "ACL". If not, contact the author of this library
 #      for a copy.
 #
 
@@ -26,10 +26,19 @@ all::
 # (armin@ira.uka.de + armin+@cs.cmu.edu, http://iseran.ira.uka.de/~armin)
 # The -Wl,-u,malloc forces the malloc symbol to be required so as to ensure
 # that it's satisfied from libccmalloc.a.
-
 MEMORY_CHECK = \
   -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
-GNATMAKE_FLAGS = -O3 -g -gnata -gnatwu
+
+# Note, this strategy does _not_ work if the program to be checked
+# uses tasking, because both libpthread and ccmalloc wrap the standard
+# malloc(), free() etc calls. Instead, we need to use a special
+# version of libpthread.so with ccmalloc's functionality buit
+# in. ccmalloc has to be able to find main(), so we link with the flag
+# that exports the program's symbol table to dynamic libraries that
+# need access.
+DYNAMIC_MEMORY_CHECK = -largs -rdynamic
+
+GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu -gnatwl
 
 test: testable
 	for t in $(TESTABLE); do \
@@ -37,8 +46,16 @@ test: testable
 	  ./$$t 2>$$t.log; \
 	done
 
+TESTABLE += avl_test
+avl_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
 TESTABLE += bag_test
 bag_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+TESTABLE += collection_test
+collection_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += graph_test
@@ -51,11 +68,23 @@ list_test: force
 
 TESTABLE += map_test
 map_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
+
+TESTABLE += ordered_collection_test
+ordered_collection_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+TESTABLE += ordered_queue_test
+ordered_queue_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 TESTABLE += queue_test
 queue_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+TESTABLE += ring_test
+ring_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK) 
 
 TESTABLE += smart_test
 smart_test: force
@@ -84,9 +113,25 @@ aonix_test: aonix_testable
 	  ./$$t 2>$$t.log; \
 	done
 
+AONIX_TESTABLE += bag_test_aonix
+bag_test_aonix: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+#AONIX_TESTABLE += collection_test_aonix
+#collection_test_aonix: force
+#	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
 AONIX_TESTABLE += map_test_aonix
 map_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
+
+#AONIX_TESTABLE += ordered_collection_test_aonix
+#ordered_collection_test_aonix: force
+#       gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+#AONIX_TESTABLE += ordered_queue_test_aonix
+#ordered_queue_test_aonix: force
+#       gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
 AONIX_TESTABLE += queue_test_aonix
 queue_test_aonix: force
@@ -107,6 +152,8 @@ aonix_testable: $(AONIX_TESTABLE)
 
 DEMOS += ada_units
 DEMOS += lists_traversal
+DEMOS += ordering_test
+DEMOS += test_synchronization
 DEMOS += time_lists
 DEMOS += time_queues
 DEMOS += unmanaged_storage
@@ -118,6 +165,12 @@ ada_units: force
 
 lists_traversal: force
 	gnatmake $(GNATMAKE_FLAGS) $@
+
+ordering_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
+test_synchronization: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
 
 time_lists: force
 	gnatmake $(GNATMAKE_FLAGS) $@
@@ -154,8 +207,8 @@ dist: $(DISTRIBUTION_FILES)
 	-@rm -rf distribution
 	mkdir distribution
 	(cd distribution; \
-	 ln -s ../../exported-booch-components download; \
-	 ln -s ../../wavefront-booch-components wavefront; \
+	 ln -s $(HOME)/exported-booch-components download; \
+	 ln -s $(HOME)/wavefront-booch-components wavefront; \
 	 ln -s ../contrib)
 	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
 	cp -p README distribution/download/
@@ -165,21 +218,38 @@ dist: $(DISTRIBUTION_FILES)
 ADA_SOURCE = \
 ada_units.ad[bs] \
 ada_unit_support.ad[bs] \
+avl_test.ad[bs] \
+avl_test_support.ad[bs] \
 bag_test.ad[bs] \
+bag_test_aonix.ad[bs] \
 bag_test_support.ad[bs] \
+bc-containers-bags-bounded.ad[bs] \
+bc-containers-bags-dynamic.ad[bs] \
 bc-containers-bags-unbounded.ad[bs] \
 bc-containers-bags.ad[bs] \
+bc-containers-collections-ordered-unbounded.ad[bs] \
+bc-containers-collections-ordered.ad[bs] \
+bc-containers-collections-unbounded.ad[bs] \
+bc-containers-collections.ad[bs] \
 bc-containers-lists-double.ad[bs] \
 bc-containers-lists-single.ad[bs] \
 bc-containers-lists.ad[bs] \
 bc-containers-maps-bounded.ad[bs] \
 bc-containers-maps-dynamic.ad[bs] \
 bc-containers-maps-unbounded.ad[bs] \
+bc-containers-maps-unbounded-guarded.ad[bs] \
+bc-containers-maps-unbounded-synchronized.ad[bs] \
 bc-containers-maps.ad[bs] \
 bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
+bc-containers-queues-ordered.ad[bs] \
+bc-containers-queues-ordered-unbounded.ad[bs] \
 bc-containers-queues-unbounded.ad[bs] \
 bc-containers-queues.ad[bs] \
+bc-containers-rings.ad[bs] \
+bc-containers-rings-unbounded.ad[bs] \
+bc-containers-rings-unbounded-guarded.ad[bs] \
+bc-containers-rings-unbounded-synchronized.ad[bs] \
 bc-containers-sets-bounded.ad[bs] \
 bc-containers-sets-dynamic.ad[bs] \
 bc-containers-sets-unbounded.ad[bs] \
@@ -190,6 +260,7 @@ bc-containers-stacks-unbounded.ad[bs] \
 bc-containers-stacks.ad[bs] \
 bc-containers-trees-avl.ad[bs] \
 bc-containers-trees-avl-print.ad[bs] \
+bc-containers-trees-avl-validate.ad[bs] \
 bc-containers-trees-binary.ad[bs] \
 bc-containers-trees-binary-in_order.ad[bs] \
 bc-containers-trees-binary-post_order.ad[bs] \
@@ -209,12 +280,15 @@ bc-support-exceptions.ad[bs] \
 bc-support-hash_tables.ad[bs] \
 bc-support-managed_storage.ad[bs] \
 bc-support-nodes.ad[bs] \
+bc-support-synchronization.ad[bs] \
 bc-support-unbounded.ad[bs] \
 bc-support-unmanaged_storage.ad[bs] \
 bc-support.ad[bs] \
 bc.ad[bs] \
 bcwords.ada \
 chunks.ad[bs] \
+collection_test.ad[bs] \
+collection_test_support.ad[bs] \
 global_heap.ad[bs] \
 graph_test.ad[bs] \
 graph_test_support.ad[bs] \
@@ -226,10 +300,18 @@ list_test_support.ad[bs] \
 map_test.ad[bs] \
 map_test_aonix.ad[bs] \
 map_test_support.ad[bs] \
+ordered_collection_test.ad[bs] \
+ordered_collection_test_support.ad[bs] \
+ordered_queue_test.ad[bs] \
+ordered_queue_test_support.ad[bs] \
+ordering_support.ad[bs] \
+ordering_test.ad[bs] \
 queues_for_timing.ad[bs] \
 queue_test.ad[bs] \
 queue_test_aonix.ad[bs] \
 queue_test_support.ad[bs] \
+ring_test.ad[bs] \
+ring_test_support.ad[bs] \
 smart_test.ad[bs] \
 smart_test_support.ad[bs] \
 set_test.ad[bs] \
@@ -239,6 +321,7 @@ stack_test.ad[bs] \
 stack_test_aonix.ad[bs] \
 stack_test_support.ad[bs] \
 storage.ad[bs] \
+test_synchronization.ad[bs] \
 time_lists.ad[bs] \
 time_queues.ad[bs] \
 tree_test.ad[bs] \

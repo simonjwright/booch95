@@ -26,33 +26,34 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Queues.Unbounded is
 
+  pragma Elaborate_Body;
+
   type Unbounded_Queue is new Queue with private;
   -- This Queue exhibits unlimited growth and collapsing, limited only by
   -- available memory.  Assignment is "deep".
 
-  procedure Clear (Obj : in out Unbounded_Queue);
+  procedure Clear (Q : in out Unbounded_Queue);
   -- Empty the queue of all items.
 
-  procedure Append (Obj : in out Unbounded_Queue; Elem : Item);
+  procedure Append (Q : in out Unbounded_Queue; Elem : Item);
   -- Add the item to the back of the queue; the item itself is copied.
 
-  procedure Pop (Obj : in out Unbounded_Queue);
+  procedure Pop (Q : in out Unbounded_Queue);
   -- Remove the item from the front of the queue.
 
-  procedure Remove (Obj : in out Unbounded_Queue; From : Natural);
+  procedure Remove (Q : in out Unbounded_Queue; From : Positive);
   -- Remove the item at the given index.
 
-  function Length (Obj : in Unbounded_Queue) return Natural;
+  function Length (Q : in Unbounded_Queue) return Natural;
   -- Return the number of items in the queue.
 
-  function Is_Empty (Obj : in Unbounded_Queue) return Boolean;
+  function Is_Empty (Q : in Unbounded_Queue) return Boolean;
   -- Return True if and only if there are no items in the queue.
 
-  function Front (Obj : in Unbounded_Queue) return Item;
+  function Front (Q : in Unbounded_Queue) return Item;
   -- Return a copy of the item at the front of the queue.
 
-  -- XXX need accessor generic
-  function Location (Obj : in Unbounded_Queue; Elem : Item) return Natural;
+  function Location (Q : in Unbounded_Queue; Elem : Item) return Natural;
   -- Return the first index at which the item is found; return 0 if the
   -- item does not exist in the queue.
 
@@ -76,13 +77,12 @@ private
        := new Unbounded_Queue_Nodes.Unb_Node;
   end record;
 
-  function Item_At (Obj : Unbounded_Queue; Index : Positive) return Item_Ptr;
-  function Cardinality (Obj : Unbounded_Queue) return Natural;
-  procedure Purge (Obj : in out Unbounded_Queue);
-  procedure Add (Obj : in out Unbounded_Queue; Elem : Item);
+  function Cardinality (Q : Unbounded_Queue) return Natural;
+  function Item_At (Q : Unbounded_Queue; Index : Positive) return Item_Ptr;
+  procedure Purge (Q : in out Unbounded_Queue);
 
-  procedure Initialize (Obj : in out Unbounded_Queue);
-  procedure Adjust (Obj : in out Unbounded_Queue);
-  procedure Finalize (Obj : in out Unbounded_Queue);
+  procedure Initialize (Q : in out Unbounded_Queue);
+  procedure Adjust (Q : in out Unbounded_Queue);
+  procedure Finalize (Q : in out Unbounded_Queue);
 
 end BC.Containers.Queues.Unbounded;

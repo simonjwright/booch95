@@ -51,12 +51,15 @@ dramatically between releases over the next few iterations. You'll
 probably need to change your source at each issue; you'll certainly
 need to recompile).</p>
 
-<!-- The current version has the following components available (the
-<font color=red>red</font> parts are new since the last release):<p> -->
-The current version has the following components available:<p>
+The current version has the following components available (the
+<font color=red>red</font> parts are new since the last release):<p>
 
 <UL>
+<li>Bounded Bags
+<li>Dynamic Bags
 <li>Unbounded Bags
+<li>Unbounded Collections
+<li>Unbounded Ordered Collections
 <li>Directed Graphs
 <li>Undirected Graphs
 <LI>Single Lists 
@@ -67,6 +70,10 @@ The current version has the following components available:<p>
 <LI>Bounded Queues 
 <LI>Dynamic Queues
 <LI>Unbounded Queues
+<LI>Unbounded Ordered Queues
+<LI>Unbounded Rings
+<LI>Unbounded Guarded Rings
+<LI>Unbounded Synchronized Rings
 <li>Bounded Sets
 <li>Dynamic Sets
 <li>Unbounded Sets
@@ -170,6 +177,37 @@ Containers.  This is largely because of the difficulty of supporting
 standard Iterators in a non-linear structure like a Tree.<p>
 
 That said, I've tried to use a common style throughout.<p>
+
+</dd>
+
+<dt>Synchronization</dt>
+
+<dd>
+
+As discussed <a href="documentation.html#synchronization">elsewhere</a>,
+there are two forms of support for concurrency:
+
+<dl>
+<dt>guarded<dd>where objects must be locked by the client, and
+<dt>synchronized<dd>where each operation provides its own internal locking
+</dl>
+
+Some <em>synchronized</em> objects additionally provide a form of
+queuing control; an attempt to read from an empty Container will
+result in blocking until an entry is added to the Container.<p>
+
+</dd>
+
+<dt>Compilers</dt>
+
+<dd>
+
+I've been looking at adding concurrency support to Maps. This has
+turned up some GNAT problems, which I've reported, and has pretty well
+blown the Aonix ObjectAda 7.1 demo compiler out of the water (it has
+trouble with AVL Trees too). I understand from Aonix that they're
+considering a demo version of the latest compiler release; until then,
+support for newer BC features under OA will be low-priority.<p>
 
 </dd>
 

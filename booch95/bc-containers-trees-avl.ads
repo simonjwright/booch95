@@ -23,18 +23,22 @@ with System.Storage_Pools;
 
 generic
   with function "<" (L, R : Item) return Boolean is <>;
-  with function "=" (L, R : Item) return Boolean is <>;
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;
   Storage : in out Storage_Manager;
 package BC.Containers.Trees.AVL is
 
-  type AVL_Tree is limited private;
+  pragma Elaborate_Body;
 
-  procedure Clear (Obj : in out AVL_Tree);
+  type AVL_Tree is private;
+
+  function "=" (L, R : AVL_Tree) return Boolean;
+  -- return True if both trees contain the same Elements.
+
+  procedure Clear (T : in out AVL_Tree);
   -- Make the tree null and reclaim the storage associated with its items.
 
-  procedure Insert (Obj : in out AVL_Tree;
+  procedure Insert (T : in out AVL_Tree;
                     Element : Item;
                     Not_Found : out Boolean);
   -- Add the item to the tree, preserving the tree's balance. Not_Found is
@@ -42,18 +46,18 @@ package BC.Containers.Trees.AVL is
   -- to False otherwise.
 
   procedure Delete
-     (Obj : in out AVL_Tree; Element : Item; Found : out Boolean);
+     (T : in out AVL_Tree; Element : Item; Found : out Boolean);
   -- Remove the item from the tree, preserving the tree's balance. Found is
   -- set to True if the item was in fact found in the tree and removed, and
   -- to False otherwise.
 
-  function Extent (Obj : AVL_Tree) return Natural;
+  function Extent (T : AVL_Tree) return Natural;
   -- Return the number of items in the tree.
 
-  function Is_Null (Obj : AVL_Tree) return Boolean;
+  function Is_Null (T : AVL_Tree) return Boolean;
   -- Return True if and only if the tree has no items.
 
-  function Is_Member (Obj : AVL_Tree; Element : Item) return Boolean;
+  function Is_Member (T : AVL_Tree; Element : Item) return Boolean;
   -- Return True if and only if the item exists in the tree.
 
   generic
@@ -82,13 +86,15 @@ private
 
   package Nodes is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
-  type AVL_Tree is new Ada.Finalization.Limited_Controlled with record
+  type AVL_Tree is new Ada.Finalization.Controlled with record
     Rep : Nodes.AVL_Node_Ref;
     Size : Natural := 0;
   end record;
 
-  procedure Initialize (Obj : in out AVL_Tree);
+  procedure Initialize (T : in out AVL_Tree);
 
-  procedure Finalize (Obj : in out AVL_Tree);
+  procedure Adjust (T : in out AVL_Tree);
+
+  procedure Finalize (T : in out AVL_Tree);
 
 end BC.Containers.Trees.AVL;

@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -161,18 +161,20 @@ procedure Map_Test is
   procedure Test_Passive_Iterator (M : in out Maps.Map'Class) is
     procedure Visitor is new Maps.Visit (Process);
   begin
-    Visitor (M);
+    Visitor (Over_The_Container => M);
   end Test_Passive_Iterator;
 
   procedure Test_Passive_Modifying_Iterator (M : in out Maps.Map'Class) is
     procedure Modifier is new Maps.Modify (Process_Modifiable);
   begin
-    Modifier (M);
+    Modifier (Over_The_Container => M);
   end Test_Passive_Modifying_Iterator;
 
   Map_B_Pu1, Map_B_Pu2 : MB.Bounded_Map;
   Map_D_Pu1, Map_D_Pu2 : MD.Dynamic_Map;
   Map_U_Pu1, Map_U_Pu2 : MU.Unbounded_Map;
+  Map_UG_Pu1, Map_UG_Pu2 : MUG.Guarded_Unbounded_Map;
+  Map_US_Pu1, Map_US_Pu2 : MUS.Synchronized_Unbounded_Map;
 
 begin
   Put_Line ("Starting map tests");
@@ -183,6 +185,10 @@ begin
   Test (Map_D_Pu1, Map_D_Pu2);
   Put_Line ("...Unbounded Map");
   Test (Map_U_Pu1, Map_U_Pu2);
+  Put_Line ("...Guarded Unbounded Map");
+  Test (Map_UG_Pu1, Map_UG_Pu2);
+  Put_Line ("...Synchronized Unbounded Map");
+  Test (Map_US_Pu1, Map_US_Pu2);
 
   Put_Line ("...Map Active Iterator");
   Put_Line ("   Bounded:");
@@ -191,6 +197,11 @@ begin
   Test_Active_Iterator (Map_D_Pu1);
   Put_Line ("   Unbounded:");
   Test_Active_Iterator (Map_U_Pu1);
+  Put_Line ("   Guarded Unbounded:");
+  Test_Active_Iterator (Map_UG_Pu1);
+  Put_Line ("   Synchronized Unbounded:");
+  Test_Active_Iterator (Map_US_Pu1);
+
   Put_Line ("...Map Passive Iterator");
   Put_Line ("   Bounded:");
   Test_Passive_Iterator (Map_B_Pu1);
@@ -201,6 +212,13 @@ begin
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Map_U_Pu1);
   Test_Passive_Modifying_Iterator (Map_U_Pu1);
+  Put_Line ("   Guarded Unbounded:");
+  Test_Passive_Iterator (Map_UG_Pu1);
+  Test_Passive_Modifying_Iterator (Map_UG_Pu1);
+  Put_Line ("   Synchronized Unbounded:");
+  Test_Passive_Iterator (Map_US_Pu1);
+  Test_Passive_Modifying_Iterator (Map_US_Pu1);
+
   Assertion (MB.Is_Bound (Map_B_Pu1, '6'),
              "** M01: Map binding is not correct");
   Assertion (MB.Extent (Map_B_Pu2) = 0, "** M02: Map Extent is not correct");

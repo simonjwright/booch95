@@ -26,6 +26,8 @@ generic
   Size : Positive;
 package BC.Containers.Maps.Bounded is
 
+  pragma Elaborate_Body;
+
   -- A map denotes a collection forming a dictionary of domain/range
   -- pairs. Maps are cached, so that the most recently accessed
   -- domain/range pair can be found on the order of O(1).
@@ -94,21 +96,25 @@ private
                                         Item_Ptr => Item_Ptr,
                                         Maximum_Size => Size);
   use IC;
+  package Items is new BC.Support.Hash_Tables.Item_Signature
+     (Item => Item,
+      Item_Container => IC.Bnd_Node,
+      Item_Container_Ptr => IC.Bnd_Node_Ref);
 
   package VC is new BC.Support.Bounded (Item => Value,
                                         Item_Ptr => Value_Ptr,
                                         Maximum_Size => Size);
   use VC;
-
-  package Tables is new BC.Support.Hash_Tables
-     (Item => Item,
-      Value => Value,
+  package Values is new BC.Support.Hash_Tables.Value_Signature
+     (Value => Value,
       Value_Ptr => Value_Ptr,
-      Buckets => Buckets,
-      Item_Container => IC.Bnd_Node,
-      Item_Container_Ptr => IC.Bnd_Node_Ref,
       Value_Container => VC.Bnd_Node,
       Value_Container_Ptr => VC.Bnd_Node_Ref);
+
+  package Tables is new BC.Support.Hash_Tables.Tables
+     (Items => Items,
+      Values => Values,
+      Buckets => Buckets);
 
   type Bounded_Map is new Map with record
     Rep : Tables.Table;

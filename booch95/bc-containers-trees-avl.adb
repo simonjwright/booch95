@@ -31,7 +31,7 @@ package body BC.Containers.Trees.AVL is
     end if;
   end Purge;
 
-  procedure Search_Insert (Obj : in out AVL_Tree;
+  procedure Search_Insert (T : in out AVL_Tree;
                            Element : Item;
                            Node : in out Nodes.AVL_Node_Ref;
                            Increased : in out Boolean;
@@ -48,7 +48,7 @@ package body BC.Containers.Trees.AVL is
                                   Balance => Nodes.Middle);
       Increased := True;
     elsif Element < Node.Element then
-      Search_Insert (Obj, Element, Node.Left, Increased, Inserted);
+      Search_Insert (T, Element, Node.Left, Increased, Inserted);
       if Increased then
         case Node.Balance is
           when Nodes.Right =>
@@ -86,7 +86,7 @@ package body BC.Containers.Trees.AVL is
         end case;
       end if;
     elsif Node.Element < Element then
-      Search_Insert (Obj, Element, Node.Right, Increased, Inserted);
+      Search_Insert (T, Element, Node.Right, Increased, Inserted);
       if Increased then
         case Node.Balance is
           when Nodes.Left =>
@@ -228,27 +228,52 @@ package body BC.Containers.Trees.AVL is
     end case;
   end Balance_Right;
 
-  procedure Delete (T1, T2 : in out Nodes.AVL_Node_Ref;
-                    Decreased : in out Boolean) is
+  -- On entry, To_Be_Deleted is the node which contains the value that
+  -- is to be deleted. Candidate_Replacement starts off as the left
+  -- child of To_Be_Deleted, but the procedure recurses until
+  -- Candidate_Replacement is the rightmost (largest) child of the
+  -- left subtree of To_Be_Deleted.
+  --
+  -- The value at Candidate_Replacement is then transferred to the
+  -- node To_Be_Deleted, and the pointer To_Be_Deleted is made to
+  -- point to the rightmost child (so that that what eventually gets
+  -- deleted is that rightmost child).
+  --
+  -- The tree is rebalanced as the recursion unwinds.
+  procedure Delete
+     (To_Be_Deleted, Candidate_Replacement : in out Nodes.AVL_Node_Ref;
+      Decreased : in out Boolean) is
     use type Nodes.AVL_Node_Ref;
   begin
-    if T2.Right /= null then
-      Delete (T1, T2.Right, Decreased);
-      if T2.Left = null and then T2.Right = null then
-        T2.Balance := Nodes.Middle;
-      end if;
-      if Decreased then
-        Balance_Right (T2, Decreased);
+    if Candidate_Replacement.Right /= null then
+      -- Recurse down the right branch
+      Delete (To_Be_Deleted, Candidate_Replacement.Right, Decreased);
+      if Candidate_Replacement.Left = null
+         and then Candidate_Replacement.Right = null then
+        Candidate_Replacement.Balance := Nodes.Middle;
+      elsif Decreased then
+        Balance_Right (Candidate_Replacement, Decreased);
       end if;
     else
-      T1.Element := T2.Element;
-      T1 := T2;
-      T2 := T2.Left;
+      -- We've found the rightmost child.
+      -- Copy the value there to the node that contained the value
+      -- to be deleted.
+      To_Be_Deleted.Element := Candidate_Replacement.Element;
+      -- Replace the pointer to the node that contained the value to
+      -- be deleted with a pointer to the rightmost child of the left
+      -- subtree (no longer needed, and to be deleted by the caller).
+      To_Be_Deleted := Candidate_Replacement;
+      -- Candidate_Replacement is the actual pointer in the parent
+      -- node; it needs to point to the left subtree, if any, of the
+      -- node that was the rightmost child and which we are about to
+      -- delete.
+      Candidate_Replacement := Candidate_Replacement.Left;
+      -- We've definitely reduced the depth.
       Decreased := True;
     end if;
   end Delete;
 
-  procedure Search_Delete (Obj: in out AVL_Tree;
+  procedure Search_Delete (T: in out AVL_Tree;
                            Element : Item;
                            Node : in out Nodes.AVL_Node_Ref;
                            Decreased : in out Boolean;
@@ -259,12 +284,12 @@ package body BC.Containers.Trees.AVL is
     Deleted := False;
     if Node /= null then
       if Element < Node.Element then
-        Search_Delete (Obj, Element, Node.Left, Decreased, Deleted);
+        Search_Delete (T, Element, Node.Left, Decreased, Deleted);
         if Decreased then
           Balance_Left (Node, Decreased);
         end if;
       elsif Node.Element < Element then
-        Search_Delete (Obj, Element, Node.Right, Decreased, Deleted);
+        Search_Delete (T, Element, Node.Right, Decreased, Deleted);
         if Decreased then
           Balance_Right (Node, Decreased);
         end if;
@@ -288,7 +313,7 @@ package body BC.Containers.Trees.AVL is
     end if;
   end Search_Delete;
 
-  function Search (Obj: AVL_Tree;
+  function Search (T: AVL_Tree;
                    Element: Item;
                    Node: Nodes.AVL_Node_Ref) return Boolean is
     use type Nodes.AVL_Node_Ref;
@@ -297,9 +322,9 @@ package body BC.Containers.Trees.AVL is
       if Node.Element = Element then
         return True;
       elsif Element < Node.Element then
-        return Search (Obj, Element, Node.Left);
+        return Search (T, Element, Node.Left);
       else
-        return Search (Obj, Element, Node.Right);
+        return Search (T, Element, Node.Right);
       end if;
     else
       return False;
@@ -308,21 +333,43 @@ package body BC.Containers.Trees.AVL is
 
   --end supporting functions
 
-  procedure Clear (Obj : in out AVL_Tree) is
+  function "=" (L, R : AVL_Tree) return Boolean is
+    -- Once we know that the sizes are the same, we only need to check
+    -- that all members of L are in R, because we don't allow
+    -- duplicate members.
+    procedure Check_In_Right (Elem : in Item; Found : out Boolean);
+    procedure Compare is new Visit (Apply => Check_In_Right);
+    Are_Equal : Boolean := True;
+    procedure Check_In_Right (Elem : in Item; Found : out Boolean) is
+    begin
+      Found := Is_Member (R, Elem); -- to terminate early
+      if not Found then
+        Are_Equal := False;
+      end if;
+    end Check_In_Right;
   begin
-    Purge (Obj.Rep);
-    Obj.Size := 0;
+    if L.Size /= R.Size then
+      return False;
+    end if;
+    Compare (Over_The_Tree => L);
+    return Are_Equal;
+  end "=";
+
+  procedure Clear (T : in out AVL_Tree) is
+  begin
+    Purge (T.Rep);
+    T.Size := 0;
   end Clear;
 
-  procedure Insert (Obj : in out AVL_Tree;
+  procedure Insert (T : in out AVL_Tree;
                     Element : Item;
                     Not_Found : out Boolean) is
     Increased : Boolean := False;
     Result : Boolean;
   begin
-    Search_Insert (Obj, Element, Obj.Rep, Increased, Result);
+    Search_Insert (T, Element, T.Rep, Increased, Result);
     if Result then
-      Obj.Size := Obj.Size + 1;
+      T.Size := T.Size + 1;
       Not_Found := True;
     else
       Not_Found := False;
@@ -330,33 +377,33 @@ package body BC.Containers.Trees.AVL is
   end Insert;
 
   procedure Delete
-     (Obj : in out AVL_Tree; Element : Item; Found : out Boolean) is
+     (T : in out AVL_Tree; Element : Item; Found : out Boolean) is
     Decreased : Boolean := False;
     Result : Boolean;
   begin
-    Search_Delete (Obj, Element, Obj.Rep, Decreased, Result);
+    Search_Delete (T, Element, T.Rep, Decreased, Result);
     if Result then
-      Obj.Size := Obj.Size - 1;
+      T.Size := T.Size - 1;
       Found := True;
     else
       Found := False;
     end if;
   end Delete;
 
-  function Extent (Obj : in AVL_Tree) return Natural is
+  function Extent (T : in AVL_Tree) return Natural is
   begin
-    return Obj.Size;
+    return T.Size;
   end Extent;
 
-  function Is_Null (Obj : in AVL_Tree) return Boolean is
+  function Is_Null (T : in AVL_Tree) return Boolean is
     use type Nodes.AVL_Node_Ref;
   begin
-    return Obj.Rep = null;
+    return T.Rep = null;
   end Is_Null;
 
-  function Is_Member (Obj : in AVL_Tree; Element : Item) return Boolean is
+  function Is_Member (T : in AVL_Tree; Element : Item) return Boolean is
   begin
-    return Search (Obj, Element, Obj.Rep);
+    return Search (T, Element, T.Rep);
   end Is_Member;
 
 --    function Item_Of (Node : AVL_Node_Ref;
@@ -462,14 +509,38 @@ package body BC.Containers.Trees.AVL is
     Modify (Over_The_Tree.Rep);
   end Modify;
 
-  procedure Initialize (Obj : in out AVL_Tree) is
+  procedure Initialize (T : in out AVL_Tree) is
   begin
     null;
   end Initialize;
 
-  procedure Finalize (Obj : in out AVL_Tree) is
+  procedure Adjust (T : in out AVL_Tree) is
+    New_Tree : AVL_Tree;
+    procedure Add (Elem : in Item; OK : out Boolean);
+    procedure Copy is new Visit (Apply => Add);
+    procedure Add (Elem : in Item; OK : out Boolean) is
+      Inserted : Boolean;
+    begin
+      Insert (T => New_Tree, Element => Elem, Not_Found => Inserted);
+      -- XXX should test Inserted?
+      OK := True;
+    end Add;
   begin
-    Clear (Obj);
+    -- Create a deep copy of the representation
+    Copy (Over_The_Tree => T);
+    -- Replace the original representation with the copy
+    T.Rep := New_Tree.Rep;
+    -- Null out the spare reference to the copy (so that when New_Tree
+    -- gets finalized on exit from this procedure, we don't Clear it
+    -- down). NB, mustn't do a whole-record assignment here or we'll
+    -- end up with a recursive disaster).
+    New_Tree.Rep := null;
+    New_Tree.Size := 0;
+  end Adjust;
+
+  procedure Finalize (T : in out AVL_Tree) is
+  begin
+    Clear (T);
   end;
 
 end BC.Containers.Trees.AVL;

@@ -55,14 +55,14 @@ package body BC.Support.Bounded is
     Obj.Size := Obj.Size + 1;
   end Insert;
 
-  procedure Insert (Obj : in out Bnd_Node; Elem : Item; Before : Natural) is
+  procedure Insert (Obj : in out Bnd_Node; Elem : Item; Before : Positive) is
   begin
     Assert (Obj.Size < Max_Size,
             BC.Overflow'Identity,
             "Insert",
             BSE.Full);
-    if (Obj.Size = 0) or else (Before = 1) then
-      Insert (Obj,Elem);
+    if Obj.Size = 0 or else Before = 1 then
+      Insert (Obj, Elem);
     else
       Obj.Elems (Before + 1 .. Obj.Size + 1) := Obj.Elems (Before .. Obj.Size);
       Obj.Elems (Before) := Elem;
@@ -80,7 +80,7 @@ package body BC.Support.Bounded is
     Obj.Elems (Obj.Size) := Elem;
   end Append;
 
-  procedure Append (Obj : in out Bnd_Node; Elem : Item; After : Natural) is
+  procedure Append (Obj : in out Bnd_Node; Elem : Item; After : Positive) is
   begin
     Assert (After <= Obj.Size,
             BC.Range_Error'Identity,
@@ -100,7 +100,7 @@ package body BC.Support.Bounded is
     end if;
   end Append;
 
-  procedure Remove (Obj : in out Bnd_Node; From : Natural) is
+  procedure Remove (Obj : in out Bnd_Node; From : Positive) is
   begin
     Assert (From <= Obj.Size,
             BC.Range_Error'Identity,
@@ -118,7 +118,7 @@ package body BC.Support.Bounded is
     end if;
   end Remove;
 
-  procedure Replace (Obj : in out Bnd_Node; Index : Natural; Elem : Item) is
+  procedure Replace (Obj : in out Bnd_Node; Index : Positive; Elem : Item) is
   begin
     Assert (Index <= Obj.Size,
             BC.Range_Error'Identity,

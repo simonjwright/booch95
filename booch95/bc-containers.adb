@@ -1,4 +1,5 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller, Steve Doiel
+-- and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -36,24 +37,24 @@ package body BC.Containers is
     return null;
   end Item_At;
 
-  procedure Reset (Obj : in out Iterator) is
+  procedure Reset (It : in out Iterator) is
   begin
-    Reset (SP.Value (SP.Pointer (Obj)).all);
+    Reset (SP.Value (SP.Pointer (It)).all);
   end Reset;
 
-  procedure Next (Obj : in out Iterator) is
+  procedure Next (It : in out Iterator) is
   begin
-    Next (SP.Value (SP.Pointer (Obj)).all);
+    Next (SP.Value (SP.Pointer (It)).all);
   end Next;
 
-  function Is_Done (Obj : Iterator) return Boolean is
+  function Is_Done (It : Iterator) return Boolean is
   begin
-    return Is_Done (SP.Value (SP.Pointer (Obj)).all);
+    return Is_Done (SP.Value (SP.Pointer (It)).all);
   end Is_Done;
 
-  function Current_Item (Obj : Iterator) return Item is
+  function Current_Item (It : Iterator) return Item is
   begin
-    return Current_Item (SP.Value (SP.Pointer (Obj)).all);
+    return Current_Item (SP.Value (SP.Pointer (It)).all);
   end Current_Item;
 
   procedure Access_Current_Item is
@@ -61,7 +62,12 @@ package body BC.Containers is
     Apply (Current_Item (SP.Value (SP.Pointer (In_The_Iterator)).all).all);
   end Access_Current_Item;
 
-  procedure Visit  (Using : in out Iterator) is
+  procedure Delete_Item_At (It : Iterator) is
+  begin
+    Delete_Item_At (SP.Value (SP.Pointer (It)).all);
+  end Delete_Item_At;
+
+  procedure Visit (Using : in out Iterator) is
     Success : Boolean;
   begin
     Reset (Using);
@@ -71,6 +77,30 @@ package body BC.Containers is
       Next (Using);
     end loop;
   end Visit;
+
+  procedure Visit_With_In_Param (Using : in out Iterator;
+                                 Param : Param_Type) is
+    Success : Boolean;
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Current_Item (Using), Param, Success);
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Visit_With_In_Param;
+
+  procedure Visit_With_In_Out_Param (Using : in out Iterator;
+                                     Param : in out Param_Type) is
+    Success : Boolean;
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Current_Item (Using), Param, Success);
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Visit_With_In_Out_Param;
 
   procedure Modify (Using : in out Iterator) is
     Success : Boolean;
@@ -87,5 +117,39 @@ package body BC.Containers is
       Next (Using);
     end loop;
   end Modify;
+
+  procedure Modify_With_In_Param (Using : in out Iterator;
+                                  Param : in Param_Type ) is
+    Success : Boolean;
+    procedure Caller (I : in out Item) is
+    begin
+      Apply (I, Param, Success);
+    end Caller;
+    procedure Call_Apply is new Access_Current_Item (Caller, Using);
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Call_Apply;
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Modify_With_In_Param;
+
+  procedure Modify_With_In_Out_Param (Using : in out Iterator;
+                                      Param : in out Param_Type) is
+    Success : Boolean;
+    procedure Caller (I : in out Item) is
+    begin
+      Apply (I, Param, Success);
+    end Caller;
+    procedure Call_Apply is new Access_Current_Item (Caller, Using);
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Call_Apply;
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Modify_With_In_Out_Param;
 
 end BC.Containers;
