@@ -27,7 +27,6 @@ project BC is
        (
         "-gnatqQafoy",
         "-gnatwaL",
-        "-fstack-check",
         "-O2"
        );
   end Compiler;
