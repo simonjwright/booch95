@@ -167,9 +167,16 @@ private
   procedure Adjust (L : in out Single_List);
   procedure Finalize (L : in out Single_List);
 
+  -- Here we use the Rosen Trick to allow write access for Delete_Item_At.
+  -- Of course, Delete_Item_At could take the Iterator as "in out" ...
+  type Single_List_Iterator;
+  type Single_List_Iterator_Relay (Reference : access Single_List_Iterator) is
+     limited null record;
+
   type Single_List_Iterator (L : access Single_List'Class)
   is new Actual_Iterator (L) with record
     Index : Single_Nodes.Single_Node_Ref;
+    Relay : Single_List_Iterator_Relay (Single_List_Iterator'Access);
   end record;
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
