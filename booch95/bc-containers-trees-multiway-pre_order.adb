@@ -1,5 +1,5 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,32 +15,35 @@
 --      for a copy.
 --
 
--- $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 procedure BC.Containers.Trees.Multiway.Pre_Order
-   (T : Multiway_Tree; Success : out Boolean) is
-  Subtree : Multiway_Tree;
-  Result : Boolean;
+  (T : Multiway_Tree; Success : out Boolean) is
+   Subtree : Multiway_Tree;
+   Result : Boolean;
 begin
-  Success := True;
-  if not Is_Null (T) then
-    Apply (T.Rep.Element, Result);
-    if not Result then
-      Success := False;
-      return;
-    end if;
-    for I in 1 .. Arity (T) loop
-      declare
-        Subtree : Multiway_Tree := T;
-      begin
-        Child (Subtree, I);
-        Pre_Order (Subtree, Result);
-        if not Result then
-          Success := False;
-          return;
-        end if;
-      end;
-    end loop;
-  end if;
+   Success := True;
+   if not Is_Null (T) then
+      Apply (T.Rep.Element, Result);
+      if not Result then
+         Success := False;
+         return;
+      end if;
+      for I in 1 .. Arity (T) loop
+         declare
+            Subtree : Multiway_Tree := T;
+         begin
+            Child (Subtree, I);
+            Pre_Order (Subtree, Result);
+            if not Result then
+               Success := False;
+               return;
+            end if;
+         end;
+      end loop;
+   end if;
 end BC.Containers.Trees.Multiway.Pre_Order;
 
