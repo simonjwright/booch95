@@ -17,12 +17,20 @@
 
 -- $Id$
 
+with System;
+
 package body BC.Containers.Stacks is
+
+  procedure Process_Top (S : in out Stack'Class) is
+  begin
+    Process (Item_At (S, 1).all);
+  end Process_Top;
 
   function Are_Equal (Left, Right : Stack'Class) return Boolean is
   begin
-    -- XXX left out the optimisation which checks whether L, R are
-    -- identical.
+    if System."=" (Left'Address, Right'Address) then
+      return True;
+    end if;
     if Cardinality (Left) /= Cardinality (Right) then
       return False;
     end if;
@@ -45,12 +53,14 @@ package body BC.Containers.Stacks is
   procedure Copy (From : Stack'Class; To : in out Stack'Class) is
     Iter : Iterator := New_Iterator (From);
   begin
-    Clear (To);
-    Reset (Iter);
-    while not Is_Done (Iter) loop
-      Add (To, Current_Item (Iter));
-      Next (Iter);
-    end loop;
+    if System."/=" (From'Address, To'Address) then
+      Clear (To);
+      Reset (Iter);
+      while not Is_Done (Iter) loop
+        Add (To, Current_Item (Iter));
+        Next (Iter);
+      end loop;
+    end if;
   end Copy;
 
   -- Subprograms to be overridden
