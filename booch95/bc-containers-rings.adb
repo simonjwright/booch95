@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -92,11 +92,6 @@ package body BC.Containers.Rings is
   begin
     raise Should_Have_Been_Overridden;
   end Add;
-
-  procedure Initialize (It : in out Ring_Iterator) is
-  begin
-    Reset (It);
-  end Initialize;
 
   procedure Reset (It : in out Ring_Iterator) is
     R : Ring'Class renames Ring'Class (It.For_The_Container.all);
