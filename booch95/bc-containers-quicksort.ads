@@ -17,6 +17,18 @@
 
 -- $Id$
 
+-- Implements a Quicksort of the given container in place, using the
+-- supplied comparator.
+--
+-- The instantiating Container must fully support the operation
+--
+--   function Item_At (C : Container; Index : Positive) return Item_Ptr;
+--
+-- which is normally private and whose default implementation raises
+-- Should_Have_Been_Overridden. If it's not fully supported, as is the
+-- case for hash-table-based containers (Bags, Maps, Sets),
+-- Container_Error will be raised.
+
 generic
   with function "<" (L, R : Item) return Boolean is <>;
   type Container is new Containers.Container with private;
