@@ -25,6 +25,7 @@ with BC.Containers.Maps;
 with BC.Containers.Maps.Bounded;
 with BC.Containers.Maps.Dynamic;
 with BC.Containers.Maps.Unbounded;
+with BC.Containers.Maps.Unbounded.Guarded;
 with BC.Containers.Maps.Unbounded.Synchronized;
 -- with BC.Containers.Maps.Synchronized;
 with BC.Support.Synchronization;
@@ -52,6 +53,9 @@ package Map_Test_Support is
                                     Buckets => 3,
                                     Storage_Manager => Global_Heap.Pool,
                                     Storage => Global_Heap.Storage);
+
+  package MUG is new MU.Guarded
+     (Semaphore =>  BC.Support.Synchronization.Semaphore);
 
 --   package MUSA is new Maps.Synchronized
 --      (Map_Base => MU.Unbounded_Map,
