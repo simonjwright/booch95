@@ -1,4 +1,4 @@
---  Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-1998,2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -22,15 +22,21 @@
 
 generic package BC.Containers.Lists is
 
-   --  A single list is a rooted sequence of zero or more items, with
-   --  a link from one item to its following item. A double list is a
-   --  rooted sequence of zero or more items, with links from one item
-   --  to its previous and next items.
+   -------------------------------------------------------------------
+   --  WARNING: If  you just want a standard  container to support  --
+   --  iteration, filtering and sorting, use Collections. The List  --
+   --  components are much more complex than you'll need.           --
+   -------------------------------------------------------------------
 
    --  Lists are polylithic structures, and hence the semantics of
    --  copying, assignment, and equality involve structural
    --  sharing. Care must be taken in manipulating the same list named
    --  by more than one alias.
+
+   --  A single list is a rooted sequence of zero or more items, with
+   --  a link from one item to its following item. A double list is a
+   --  rooted sequence of zero or more items, with links from one item
+   --  to its previous and next items.
 
    --  These classes are not intended to be subclassed.
 
