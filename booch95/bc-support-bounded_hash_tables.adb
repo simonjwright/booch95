@@ -302,12 +302,43 @@ package body BC.Support.Bounded_Hash_Tables is
       procedure Delete_Item_At (T : in out Table;
                                 Bucket : in out Positive;
                                 Index : in out  Positive) is
+         Next : Tables.Index;
+         Previous : Tables.Index;
       begin
          Assert (Bucket <= T.Number_Of_Buckets,
                  BC.Not_Found'Identity,
                  "Delete_Item_At",
                  BSE.Missing);
-         raise Not_Yet_Implemented;
+         Next := T.Contents (Index).Next;
+         Previous := T.Buckets (Bucket);
+         if Previous = Index then
+            --  This is the first cell
+            T.Buckets (Bucket) := Next;
+         else
+            --  We have to find the previous Contents cell
+            while T.Contents (Previous).Next /= Index loop
+               Previous := T.Contents (Previous).Next;
+            end loop;
+            T.Contents (Previous).Next := Next;
+         end if;
+         --  Put the released cell on the free list
+         T.Contents (Index).Next := T.Free;
+         T.Free := Index;
+         T.Size := T.Size - 1;
+         --  Adjust Index
+         if Next = 0 then
+            --  That was the last cell in this bucket, on to the next
+            loop
+               Bucket := Bucket + 1;
+               exit when Bucket > T.Number_Of_Buckets;  --  we've done
+               if T.Buckets (Bucket) > 0 then
+                  Index := T.Buckets (Bucket);
+                  exit;
+               end if;
+            end loop;
+         else
+            Index := Next;
+         end if;
       end Delete_Item_At;
 
 
