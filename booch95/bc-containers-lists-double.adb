@@ -308,7 +308,7 @@ package body BC.Containers.Lists.Double is
     Prev, Ptr : Double_Nodes.Double_Node_Ref;
     Curr : Double_Nodes.Double_Node_Ref := Obj.Rep;
     Index : Positive := 1;
-    Cut : Boolean := True;
+    Shared_Node_Found : Boolean := False;
   begin
     while Curr /= null and then Index < From loop
       Prev := Curr;
@@ -328,10 +328,10 @@ package body BC.Containers.Lists.Double is
     while Curr /= null and then Index <= Count loop
       Ptr := Curr;
       Curr := Curr.Next;
-      if Cut then
+      if not Shared_Node_Found then
         if Ptr.Count > 1 then
           Ptr.Count := Ptr.Count - 1;
-          Cut := False;
+          Shared_Node_Found := True;
         else
           if Curr /= null then
             Curr.Previous := null;
@@ -341,7 +341,9 @@ package body BC.Containers.Lists.Double is
       end if;
       Index := Index + 1;
     end loop;
-    Ptr.Next := null;
+    if Shared_Node_Found then
+      Ptr.Next := null;
+    end if;
     if Curr /= null then
       Curr.Previous := Prev;
       if Prev /= null then
