@@ -1,4 +1,4 @@
--- Copyright (C) 1998 Pat Rogers and Simon Wright.
+-- Copyright (C) 1998-1999 Pat Rogers and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
