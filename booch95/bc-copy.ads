@@ -19,11 +19,26 @@
 
 with BC.Containers;
 generic
+
    type Item is private;
+   --  The type to be copied.
+
    with package Source is new BC.Containers (Item);
+   --  A Container instantiation.
+
    type From is new Source.Container with private;
+   --  The Container type which contains the source Items.
+
    with package Target is new BC.Containers (Item);
+   --  A Container instantiation (possibly different from Source).
+
    type To is new Target.Container with private;
+   --  The Container type which is to contain the copied Items.
+
    with procedure Clear (The_Container : in out To) is <>;
+   --  A procedure to clear the destination Container.
+
    with procedure Add (To_The_Container : in out To; I : Item) is <>;
+   --  A procedure to add an Item to the destination Container.
+
 procedure BC.Copy (Input : From; Output : in out To);

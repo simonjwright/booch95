@@ -19,12 +19,30 @@
 
 with BC.Containers;
 generic
+
    type Item is private;
+   --  The type to be filtered.
+
    with package Source is new BC.Containers (Item);
+   --  A Container instantiation.
+
    type From is new Source.Container with private;
+   --  The Container type which contains the source Items.
+
    with package Target is new BC.Containers (Item);
+   --  A Container instantiation (possibly different from Source).
+
    type To is new Target.Container with private;
+   --  The Container type which is to contain the filtered Items.
+
    with function Pass (I : Item) return Boolean is <>;
+   --  The function which determines whether an Item passes the filter
+   --  or not.
+
    with procedure Clear (The_Container : in out To) is <>;
+   --  A procedure to clear the destination Container.
+
    with procedure Add (To_The_Container : in out To; I : Item) is <>;
+   --  A procedure to add an Item to the destination Container.
+
 procedure BC.Filter (Input : From; Output : in out To);
