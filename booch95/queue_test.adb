@@ -28,7 +28,7 @@ with Root_Unbounded_Queues;
 -- with User_Bounded_Queues;
 -- with User_Dynamic_Queues;
 -- with User_Unbounded_Queues;
-with User_Defined;
+-- with User_Defined;
 with Character_References;
 procedure Queue_Test is
   use Text_IO;
@@ -43,9 +43,9 @@ procedure Queue_Test is
   --    use User_Bounded_Queues;
   --    use User_Dynamic_Queues;
   --    use User_Unbounded_Queues;
-  use User_Defined;
+  --    use User_Defined;
 
-  Global_Items : array (1..10) of aliased Chunk;
+  --    Global_Items : array (1..10) of aliased Chunk;
 
   procedure Process (C : in Char_Ptr; OK : out Boolean) is
   begin
