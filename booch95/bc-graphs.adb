@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -38,7 +38,7 @@ package body BC.Graphs is
   -- Graph operations --
   ----------------------
 
-  procedure Clear (G : in out Graph) is
+  procedure Clear (G : in out Abstract_Graph) is
     Curr : Vertex_Node_Ptr := G.Rep;
     Next : Vertex_Node_Ptr;
   begin
@@ -53,8 +53,8 @@ package body BC.Graphs is
   end Clear;
 
 
-  procedure Create_Vertex (G : in out Graph;
-                           V : in out Vertex'Class;
+  procedure Create_Vertex (G : in out Abstract_Graph;
+                           V : in out Abstract_Vertex'Class;
                            I : Vertex_Item) is
   begin
     Clear (V);
@@ -70,8 +70,8 @@ package body BC.Graphs is
   end Create_Vertex;
 
 
-  procedure Destroy_Vertex (G : in out Graph;
-                            V : in out Vertex'Class) is
+  procedure Destroy_Vertex (G : in out Abstract_Graph;
+                            V : in out Abstract_Vertex'Class) is
   begin
     Assert (Is_Member (G, V),
             BC.Not_Found'Identity,
@@ -79,7 +79,7 @@ package body BC.Graphs is
             BSE.Disjoint);
     if V.Rep /= null then
       -- The C++ had the body of what is now Clear_Vertex_Node here,
-      -- because it had the iterators available for thr Clear (Graph)
+      -- because it had the iterators available for the Clear (Graph)
       -- operation.  Also, the type Vertex wasn't abstract (GEB didn't make
       -- much use of inheritance).
       Clear_Vertex_Node (G, V.Rep);
@@ -88,8 +88,8 @@ package body BC.Graphs is
   end Destroy_Vertex;
 
 
-  procedure Destroy_Arc (G : in out Graph;
-                         A : in out Arc'Class) is
+  procedure Destroy_Arc (G : in out Abstract_Graph;
+                         A : in out Abstract_Arc'Class) is
     Prev, Curr : Arc_Node_Ptr;
   begin
     Assert (Is_Member (G, A),
@@ -139,7 +139,7 @@ package body BC.Graphs is
   end Destroy_Arc;
 
 
-  function Number_Of_Vertices (G : Graph) return Natural is
+  function Number_Of_Vertices (G : Abstract_Graph) return Natural is
     Count : Natural := 0;
     Curr : Vertex_Node_Ptr := G.Rep;
   begin
@@ -151,15 +151,16 @@ package body BC.Graphs is
   end Number_Of_Vertices;
 
 
-  function Is_Empty (G : Graph) return Boolean is
+  function Is_Empty (G : Abstract_Graph) return Boolean is
   begin
     return G.Rep = null;
   end Is_Empty;
 
 
-  function Is_Member (G : Graph; V : Vertex'Class) return Boolean is
+  function Is_Member (G : Abstract_Graph;
+                      V : Abstract_Vertex'Class) return Boolean is
     -- Thanks to Tucker Taft for this workround to an access level problem
-    type Graph_Const_Ptr is access constant Graph;
+    type Graph_Const_Ptr is access constant Abstract_Graph;
   begin
     if V.Rep = null then
       return False;
@@ -169,9 +170,10 @@ package body BC.Graphs is
   end Is_Member;
 
 
-  function Is_Member (G : Graph; A : Arc'Class) return Boolean is
+  function Is_Member (G : Abstract_Graph;
+                      A : Abstract_Arc'Class) return Boolean is
     -- Thanks to Tucker Taft for this workround to an access level problem
-    type Graph_Const_Ptr is access constant Graph;
+    type Graph_Const_Ptr is access constant Abstract_Graph;
   begin
     if A.Rep = null then
       return False;
@@ -185,13 +187,13 @@ package body BC.Graphs is
   -- Vertex operations --
   -----------------------
 
-  function "=" (L, R : Vertex) return Boolean is
+  function "=" (L, R : Abstract_Vertex) return Boolean is
   begin
     return L.Rep = R.Rep;
   end "=";
 
 
-  procedure Clear (V : in out Vertex) is
+  procedure Clear (V : in out Abstract_Vertex) is
   begin
     if V.Rep /= null then
       if V.Rep.Count > 1 then
@@ -204,7 +206,7 @@ package body BC.Graphs is
   end Clear;
 
 
-  procedure Set_Item (V : in out Vertex; I : Vertex_Item) is
+  procedure Set_Item (V : in out Abstract_Vertex; I : Vertex_Item) is
   begin
     Assert (V.Rep /= null,
             BC.Is_Null'Identity,
@@ -214,19 +216,19 @@ package body BC.Graphs is
   end Set_Item;
 
 
-  function Is_Null (V : Vertex) return Boolean is
+  function Is_Null (V : Abstract_Vertex) return Boolean is
   begin
     return V.Rep = null;
   end Is_Null;
 
 
-  function Is_Shared (V : Vertex) return Boolean is
+  function Is_Shared (V : Abstract_Vertex) return Boolean is
   begin
     return V.Rep /= null and then V.Rep.Count > 1;
   end Is_Shared;
 
 
-  function Item (V : Vertex) return Vertex_Item is
+  function Item (V : Abstract_Vertex) return Vertex_Item is
   begin
     Assert (V.Rep /= null,
             BC.Is_Null'Identity,
@@ -236,7 +238,7 @@ package body BC.Graphs is
   end Item;
 
 
-  procedure Access_Vertex_Item (V : Vertex'Class) is
+  procedure Access_Vertex_Item (V : Abstract_Vertex'Class) is
   begin
     Assert (V.Rep /= null,
             BC.Is_Null'Identity,
@@ -246,7 +248,7 @@ package body BC.Graphs is
   end Access_Vertex_Item;
 
 
-  function Enclosing_Graph (V : Vertex) return Graph_Ptr is
+  function Enclosing_Graph (V : Abstract_Vertex) return Graph_Ptr is
   begin
     Assert (V.Rep /= null,
             BC.Is_Null'Identity,
@@ -260,13 +262,13 @@ package body BC.Graphs is
   -- Arc operations --
   --------------------
 
-  function "=" (L, R : Arc) return Boolean is
+  function "=" (L, R : Abstract_Arc) return Boolean is
   begin
     return L.Rep = R.Rep;
   end "=";
 
 
-  procedure Clear (A : in out Arc) is
+  procedure Clear (A : in out Abstract_Arc) is
   begin
     if A.Rep /= null then
       if A.Rep.Count > 1 then
@@ -279,7 +281,7 @@ package body BC.Graphs is
   end Clear;
 
 
-  procedure Set_Item (A : in out Arc; I : Arc_Item) is
+  procedure Set_Item (A : in out Abstract_Arc; I : Arc_Item) is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
@@ -289,19 +291,19 @@ package body BC.Graphs is
   end Set_Item;
 
 
-  function Is_Null (A : Arc) return Boolean is
+  function Is_Null (A : Abstract_Arc) return Boolean is
   begin
     return A.Rep = null;
   end Is_Null;
 
 
-  function Is_Shared (A : Arc) return Boolean is
+  function Is_Shared (A : Abstract_Arc) return Boolean is
   begin
     return A.Rep /= null and then A.Rep.Count > 1;
   end Is_Shared;
 
 
-  function Item (A : Arc) return Arc_Item is
+  function Item (A : Abstract_Arc) return Arc_Item is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
@@ -311,7 +313,7 @@ package body BC.Graphs is
   end Item;
 
 
-  procedure Access_Arc_Item (A : Arc'Class) is
+  procedure Access_Arc_Item (A : Abstract_Arc'Class) is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
@@ -321,7 +323,7 @@ package body BC.Graphs is
   end Access_Arc_Item;
 
 
-  function Enclosing_Graph (A : Arc) return Graph_Ptr is
+  function Enclosing_Graph (A : Abstract_Arc) return Graph_Ptr is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
@@ -367,7 +369,7 @@ package body BC.Graphs is
   -- Utilities, controlled storage management --
   ----------------------------------------------
 
-  procedure Clear_Vertex_Node (G : in out Graph'Class;
+  procedure Clear_Vertex_Node (G : in out Abstract_Graph'Class;
                                N : in out Vertex_Node_Ptr) is
     Curr : Arc_Node_Ptr;
     Prev, Index : Vertex_Node_Ptr;
@@ -436,13 +438,13 @@ package body BC.Graphs is
   end Finalize;
 
 
-  procedure Finalize (G : in out Graph) is
+  procedure Finalize (G : in out Abstract_Graph) is
   begin
     Clear (G);
   end Finalize;
 
 
-  procedure Adjust (V : in out Vertex) is
+  procedure Adjust (V : in out Abstract_Vertex) is
   begin
     if V.Rep /= null then
       V.Rep.Count := V.Rep.Count + 1;
@@ -450,7 +452,7 @@ package body BC.Graphs is
   end Adjust;
 
 
-  procedure Finalize (V : in out Vertex) is
+  procedure Finalize (V : in out Abstract_Vertex) is
     Curr : Arc_Node_Ptr;
   begin
     if V.Rep /= null then
@@ -487,7 +489,7 @@ package body BC.Graphs is
   end Finalize;
 
 
-  procedure Adjust (A : in out Arc) is
+  procedure Adjust (A : in out Abstract_Arc) is
   begin
     if A.Rep /= null then
       A.Rep.Count := A.Rep.Count + 1;
@@ -495,7 +497,7 @@ package body BC.Graphs is
   end Adjust;
 
 
-  procedure Finalize (A : in out Arc) is
+  procedure Finalize (A : in out Abstract_Arc) is
     Prev, Curr : Arc_Node_Ptr;
   begin
     if A.Rep /= null then
