@@ -30,6 +30,45 @@
 
 <dl>
 
+<dt>29 May 2000</dt>
+
+<dd>
+
+Added Deques (in the Unbounded form only so far).<p>
+
+In AVL Trees and Lists, removed the <tt>aliased</tt> specification on
+elements, which forces the element to be constrained even if the
+discriminant has a default.<p>
+
+In response to a report from <a href="mailto:dennsion@ssd.fsi.com">T E
+Dennison</a>, speeded up the creation of Iterators. Note, this
+requires that iterators be declared of type
+<tt>Containers.Interator'Class</tt>.<p>
+
+Copying of Ordered Collections using <tt>Collections.Copy</tt> is now
+stable.<p>
+
+Removed unnecessary private operations on some Containers.<p>
+
+Synchronized Unbounded Maps had no <tt>"="</tt> operation.<p>
+
+The added Map iterator features (which allow access to the
+<tt>Value</tt>) have been reworked in the same style as the standard
+Container iterators. They are only available when the
+<tt>Iterator</tt> concerned is viewed as a <tt>Map_Iterator</tt>.<p>
+
+Smart Pointers now have a <tt>Null_Pointer</tt> declaration.<p>
+
+Bounded forms didn't properly implement equality (thanks to <a
+href="mailto:wymbdd@hotmail.com">Mark Bond</a>).<p>
+
+Hash tables now compile with APEX as well as GNAT and ObjectAda 7.1.<p>
+
+Reorganised the source files so that tests and demos go in
+subdirectories.<p>
+
+</dd>
+
 <dt>19 February 2000</dt>
 
 <dd>
