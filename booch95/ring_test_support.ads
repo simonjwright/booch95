@@ -19,8 +19,8 @@
 
 with BC.Containers;
 with BC.Containers.Rings;
--- with BC.Containers.Rings.Bounded;
--- with BC.Containers.Rings.Dynamic;
+with BC.Containers.Rings.Bounded;
+with BC.Containers.Rings.Dynamic;
 with BC.Containers.Rings.Unbounded;
 with BC.Containers.Guarded;
 with BC.Containers.Rings.Unbounded.Synchronized;
@@ -33,10 +33,12 @@ package Ring_Test_Support is
 
   package Rings is new Containers.Rings;
 
---   package RB is new Rings.Bounded (Maximum_Size => 100);
+  package RB is new Rings.Bounded (Maximum_Size => 100);
+  subtype Bounded_Ring is RB.Bounded_Ring;
 
---   package RD is new Rings.Dynamic (Storage_Manager => Global_Heap.Pool,
---                                     Storage => Global_Heap.Storage);
+  package RD is new Rings.Dynamic (Storage_Manager => Global_Heap.Pool,
+                                    Storage => Global_Heap.Storage);
+  subtype Dynamic_Ring is RD.Dynamic_Ring;
 
   package RU is new Rings.Unbounded (Storage_Manager => Global_Heap.Pool,
                                      Storage => Global_Heap.Storage);
