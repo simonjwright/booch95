@@ -90,59 +90,32 @@ package BC.Containers.Maps is
   -- cached item/value pair is used to accelerate the search; if there is a
   -- cache hit, the time complexity of this operation is O(1).
 
-  -- XXX what about the accessor? would be generic, but clearly not for an
-  -- abstract type!
-
-  --XXX experiments with iterators
-
---    -- Define the Iterator protocol
---    type Iterator is abstract tagged limited private;
-
---  --    function Create_Iterator
---  --       (For_The_Container : Container'Access) return Iterator'Class;
-
---    procedure Reset (It : in out Iterator) is abstract;
-
---    procedure Next (It : in out Iterator) is abstract;
-
---    function Is_Done (It : Iterator) return Boolean is abstract;
-
---    function Current_Item (It : Iterator) return Item is abstract;
-
---    -- The concrete iterator
-
---    type Map_Iterator (M : access Map'Class) is new Iterator with private;
-
---    procedure Reset (It : in out Map_Iterator);
-
---    procedure Next (It : in out Map_Iterator);
-
---    function Is_Done (It : Map_Iterator) return Boolean;
-
---    function Current_Item (It : Map_Iterator) return Item;
+  -- Additional Iterator support
 
   function Current_Value (It : Iterator) return Value;
+  -- Return a copy of the current Value.
 
---    function New_Iterator (For_The_Map : Map) return Iterator;
---    -- Return a reset Iterator bound to the specific Map.
+  -- XXX what about the accessor? would be generic, but clearly not for an
+  -- abstract type! use the 'Class?
 
   generic
     with procedure Apply (I : Item; V : Value; OK : out Boolean);
     Over_The_Container : Map'Class;
   procedure Visit;
+  -- Call Apply with a copy of each Item/Value pair in the Container. The
+  -- iteration will terminate early if Apply sets OK to False.
 
-  -- Sorry, you can't modify the Item!
   generic
     with procedure Apply (I : Item; V : in out Value; OK : out Boolean);
     Over_The_Container : Map'Class;
   procedure Modify;
+  -- Call Apply for each Item/Value pair in the Container. The Item is a
+  -- copy, the Value is the actual content. The iteration will terminate
+  -- early if Apply sets OK to False.
 
 private
 
   type Map is abstract new Container with null record;
-
-  type Item_Ptr is access all Item;
-  for Item_Ptr'Storage_Size use 0;
 
   type Value_Ptr is access all Value;
   for Value_Ptr'Storage_Size use 0;
@@ -180,5 +153,7 @@ private
   function Is_Done (It : Map_Iterator) return Boolean;
 
   function Current_Item (It : Map_Iterator) return Item;
+
+  function Current_Item (It : Map_Iterator) return Item_Ptr;
 
 end BC.Containers.Maps;
