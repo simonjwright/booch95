@@ -133,12 +133,12 @@ procedure Queue_Test is
     Delete : Boolean;
   begin
     Clear (Q);
-    Append(Q, '1');
-    Append(Q, '2');
-    Append(Q, '3');
-    Append(Q, '4');
-    Append(Q, '5');
-    Append(Q, '6');
+    Append (Q, '1');
+    Append (Q, '2');
+    Append (Q, '3');
+    Append (Q, '4');
+    Append (Q, '5');
+    Append (Q, '6');
     Delete := False;
     Reset (Iter);
     while not Is_Done (Iter) loop
