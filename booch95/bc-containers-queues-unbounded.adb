@@ -56,12 +56,12 @@ package body BC.Containers.Queues.Unbounded is
 
   function Front (Obj : Unb_Queue) return Item_Ptr is
   begin
-    return Unb_Queue_Nodes.First (Obj.Rep.all'access);
+    return Unb_Queue_Nodes.First (Obj.Rep.all);
   end Front;
 
   function Location (Obj : Unb_Queue; Elem : Item) return Natural is
   begin
-    return Unb_Queue_Nodes.Location (Obj.Rep, Elem);
+    return Unb_Queue_Nodes.Location (Obj.Rep.all, Elem);
   end Location;
 
   function "=" (Left, Right : Unb_Queue) return Boolean is
@@ -87,7 +87,7 @@ package body BC.Containers.Queues.Unbounded is
 
   function Item_At (Obj : in Unb_Queue; Index : in Natural) return Item_Ptr is
   begin
-    return Unb_Queue_Nodes.Item_At (Obj.Rep, Index);
+    return Unb_Queue_Nodes.Item_At (Obj.Rep.all, Index);
   end Item_At;
 
   procedure Initialize (Obj : in out Unb_Queue) is

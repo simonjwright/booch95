@@ -69,12 +69,12 @@ package body BC.Containers.Queues.Dynamic is
 
   function Front (Obj : in Dyn_Queue) return Item_Ptr is
   begin
-    return Dyn_Queue_Nodes.First (Obj.Rep.all'access);
+    return Dyn_Queue_Nodes.First (Obj.Rep.all);
   end Front;
 
   function Location (Obj : Dyn_Queue; Elem : Item) return Natural is
   begin
-    return Dyn_Queue_Nodes.Location (Obj.Rep.all'access, Elem);
+    return Dyn_Queue_Nodes.Location (Obj.Rep.all, Elem);
   end Location;
 
   procedure Preallocate (Obj : in out Dyn_Queue; Size : Natural) is
@@ -109,7 +109,7 @@ package body BC.Containers.Queues.Dynamic is
 
   function Item_At (Obj : in Dyn_Queue; Index : in Natural) return Item_Ptr is
   begin
-    return Dyn_Queue_Nodes.Item_At (Obj.Rep, Index);
+    return Dyn_Queue_Nodes.Item_At (Obj.Rep.all, Index);
   end Item_At;
 
   procedure Initialize (Obj : in out Dyn_Queue) is

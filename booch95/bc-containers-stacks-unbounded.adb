@@ -57,7 +57,7 @@ package body BC.Containers.Stacks.Unbounded is
 
   function Top (Obj : Unb_Stack) return Item_Ptr is
   begin
-    return Unb_Stack_Nodes.First (Obj.Rep.all'access);
+    return Unb_Stack_Nodes.First (Obj.Rep.all);
   end Top;
 
   procedure Purge (Obj : in out Unb_Stack) is
@@ -77,7 +77,7 @@ package body BC.Containers.Stacks.Unbounded is
 
   function Item_At (Obj : in Unb_Stack; Index : in Natural) return Item_Ptr is
   begin
-    return Unb_Stack_Nodes.Item_At (Obj.Rep, Index);
+    return Unb_Stack_Nodes.Item_At (Obj.Rep.all, Index);
   end Item_At;
 
   procedure Initialize (Obj : in out Unb_Stack) is

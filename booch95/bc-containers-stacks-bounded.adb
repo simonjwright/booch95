@@ -56,7 +56,7 @@ package body BC.Containers.Stacks.Bounded is
 
   function Top (Obj : in Bnd_Stack) return Item_Ptr is
   begin
-    return Bnd_Stack_Nodes.First (Obj.Rep.all'access);
+    return Bnd_Stack_Nodes.First (Obj.Rep.all);
   end Top;
 
   function "=" (Left, Right : Bnd_Stack) return Boolean is
@@ -81,7 +81,7 @@ package body BC.Containers.Stacks.Bounded is
 
   function Item_At (Obj : in Bnd_Stack; Index : in Natural) return Item_Ptr is
   begin
-    return Bnd_Stack_Nodes.Item_At (Obj.Rep, Index);
+    return Bnd_Stack_Nodes.Item_At (Obj.Rep.all, Index);
   end Item_at;
 
   procedure Adjust (Obj : in out Bnd_Stack) is

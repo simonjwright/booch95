@@ -63,12 +63,12 @@ package body BC.Containers.Queues.Bounded is
 
   function Front (Obj : in Bnd_Queue) return Item_Ptr is
   begin
-    return Bnd_Queue_Nodes.First (Obj.Rep.all'access);
+    return Bnd_Queue_Nodes.First (Obj.Rep.all);
   end Front;
 
-  function Location(Obj : in Bnd_Queue; Elem : Item) return Natural is
+  function Location (Obj : in Bnd_Queue; Elem : Item) return Natural is
   begin
-    return Bnd_Queue_Nodes.Location (Obj.Rep, Elem);
+    return Bnd_Queue_Nodes.Location (Obj.Rep.all, Elem);
   end Location;
 
   function "=" (Left, Right : Bnd_Queue) return Boolean is
@@ -78,7 +78,7 @@ package body BC.Containers.Queues.Bounded is
 
   function Item_At (Obj : in Bnd_Queue; Index : in Natural) return Item_Ptr is
   begin
-    return Bnd_Queue_Nodes.Item_At (Obj.Rep, Index);
+    return Bnd_Queue_Nodes.Item_At (Obj.Rep.all, Index);
   end Item_at;
 
   function Cardinality (Obj : Bnd_Queue) return Integer is
