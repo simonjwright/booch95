@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -104,12 +104,9 @@ package BC.Containers.Rings is
 private
 
    type Abstract_Ring is abstract new Container with record
-      Top : Natural;      --  0 implies not set
-      Mark : Natural;     --  0 implies not set
+      Top : Natural := 0;      --  0 implies not set
+      Mark : Natural := 0;     --  0 implies not set
    end record;
-
-   procedure Initialize (R : in out Abstract_Ring);
-   --  Derivations will need to call this.
 
    procedure Add (R : in out Abstract_Ring; Elem : Item);
 
