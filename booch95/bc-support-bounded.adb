@@ -40,9 +40,9 @@ package body BC.Support.Bounded is
   package Allow_Element_Access
   is new System.Address_To_Access_Conversions (Item);
 
-  function Create (Obj : in Bnd_Node) return Bnd_Node_Ref is
+  function Create (From : in Bnd_Node) return Bnd_Node_Ref is
   begin
-    return new Bnd_Node'(Elems => Obj.Elems, Size => Obj.Size);
+    return new Bnd_Node'(Elems => From.Elems, Size => From.Size);
   end Create;
 
   function "=" (Left, Right : Bnd_Node) return Boolean is
