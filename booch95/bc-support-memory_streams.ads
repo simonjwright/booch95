@@ -33,22 +33,6 @@ package BC.Support.Memory_Streams is
       is new Ada.Streams.Root_Stream_Type with private;
    --  Provides an in-memory Stream.
 
-   procedure Read
-     (Stream : in out Stream_Type;
-      Item   : out Ada.Streams.Stream_Element_Array;
-      Last   : out Ada.Streams.Stream_Element_Offset);
-   --  Removes Item'Length storage elements (or, as many as remain)
-   --  from Stream. Last is updated to the final index in Item that
-   --  was updated (normally, Item'Last). When Stream was already
-   --  empty, Item will be unchanged and Last will be set to
-   --  Item'First - 1.
-
-   procedure Write
-     (Stream : in out Stream_Type;
-      Item   : in Ada.Streams.Stream_Element_Array);
-   --  Adds Item to Stream. Raises Ada.IO_Exceptions.End_Error on
-   --  overrun.
-
    function Length (Stream : Stream_Type) return Natural;
    --  Returns the number of stream elements in Stream.
 
@@ -71,34 +55,13 @@ package BC.Support.Memory_Streams is
                            Stream : in out Stream_Type);
    --  Sets the contents of Stream to be the contents of array From,
    --  so that values can be read by a 'Input operation on
-   --  Stream. Raises Ada.IO_Exceptions.End_Error on overrun.
-   --  The previous contents of Stream are lost.
+   --  Stream. Raises Ada.IO_Exceptions.End_Error if Stream is not
+   --  large enough to contain From. The previous contents of Stream
+   --  are lost.
    --
    --  Aimed at use with datagram sockets, where you have to take the
    --  contents in one bite and can't know in advance how long the
    --  datagram is.
-
-   --  A possible use of these features might be where an external
-   --  datagram 'stream' requires the length of the data to be written
-   --  before the data: for example,
-   --
-   --     procedure Write (To : access Ada.Streams.Root_Stream_Type'Class;
-   --                      V : Some_Type) is
-   --        M : aliased BC.Support.Memory_Streams.Stream_Type (1024);
-   --     begin
-   --        Some_Type'Output (M, V);
-   --        Integer'Write (To, BC.Support.Memory_Streams.Length (M));
-   --        BC.Support.Memory_Streams.Write_Contents (To, M);
-   --     end Write;
-   --
-   --     procedure Read (From : access Ada.Streams.Root_Stream_Type'Class;
-   --              V : out Some_Type) is
-   --        Size : Natural := Integer'Read (From);
-   --        M : aliased BC.Support.Memory_Streams.Stream_Type (Size);
-   --     begin
-   --        BC.Support.Memory_Streams.Read_Contents (From, M);
-   --        V := Some_Type'Input (M);
-   --     end Read;
 
    procedure Reset (Stream : out Stream_Type);
    --  Clears Stream.
@@ -112,5 +75,21 @@ private
       Next_Read : Ada.Streams.Stream_Element_Count := 1;
       Buffer : Ada.Streams.Stream_Element_Array (1 .. Capacity);
    end record;
+
+   procedure Read
+     (Stream : in out Stream_Type;
+      Item   : out Ada.Streams.Stream_Element_Array;
+      Last   : out Ada.Streams.Stream_Element_Offset);
+   --  Removes Item'Length storage elements (or, as many as remain)
+   --  from Stream. Last is updated to the final index in Item that
+   --  was updated (normally, Item'Last). When Stream was already
+   --  empty, Item will be unchanged and Last will be set to
+   --  Item'First - 1.
+
+   procedure Write
+     (Stream : in out Stream_Type;
+      Item   : in Ada.Streams.Stream_Element_Array);
+   --  Adds Item to Stream. Raises Ada.IO_Exceptions.End_Error on
+   --  overrun.
 
 end BC.Support.Memory_Streams;
