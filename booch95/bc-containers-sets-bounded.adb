@@ -26,9 +26,14 @@ package body BC.Containers.Sets.Bounded is
     Tables.Clear (S.Rep);
   end Clear;
 
-  procedure Add (S : in out Bounded_Set; I : Item) is
+  procedure Add (S : in out Bounded_Set; I : Item; Added : out Boolean) is
   begin
-    Tables.Bind (S.Rep, I, True);
+    if Tables.Is_Bound (S.Rep, I) then
+      Added := False;
+    else
+      Tables.Bind (S.Rep, I, True);
+      Added := True;
+    end if;
   end Add;
 
   procedure Remove (S : in out Bounded_Set; I : Item) is

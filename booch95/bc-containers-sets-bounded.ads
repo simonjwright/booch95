@@ -45,10 +45,10 @@ package BC.Containers.Sets.Bounded is
   procedure Clear (S : in out Bounded_Set);
   -- Empty the set of all items.
 
-  procedure Add (S : in out Bounded_Set; I : Item);
+  procedure Add (S : in out Bounded_Set; I : Item; Added : out Boolean);
   -- Add the item to the set. If the item is not already a distinct member
-  -- of the set, copy the item and add it to the set. If the item already
-  -- exists, then raise BC.Duplicate.
+  -- of the set, copy the item and add it to the set and set Added to
+  -- True. If the item already exists, then set Added to False.
 
   procedure Remove (S : in out Bounded_Set; I : Item);
   -- If the item is not a member of the set, raise BC.Not_Found. Otherwise,

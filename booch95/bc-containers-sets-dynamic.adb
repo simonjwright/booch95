@@ -36,9 +36,14 @@ package body BC.Containers.Sets.Dynamic is
     Tables.Clear (S.Rep);
   end Clear;
 
-  procedure Add (S : in out Dynamic_Set; I : Item) is
+  procedure Add (S : in out Dynamic_Set; I : Item; Added : out Boolean) is
   begin
-    Tables.Bind (S.Rep, I, True);
+    if Tables.Is_Bound (S.Rep, I) then
+      Added := False;
+    else
+      Tables.Bind (S.Rep, I, True);
+      Added := True;
+    end if;
   end Add;
 
   procedure Remove (S : in out Dynamic_Set; I : Item) is

@@ -43,6 +43,12 @@ package body BC.Containers.Sets is
     return True;
   end Are_Equal;
 
+  procedure Add (S : in out Set'Class; I : Item) is
+    Dummy : Boolean;
+  begin
+    Add (S, I, Added => Dummy);
+  end Add;
+
   procedure Union (S : in out Set'Class; O : Set'Class) is
     It : Iterator := New_Iterator (O);
   begin
