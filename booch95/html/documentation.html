@@ -17,6 +17,7 @@
  <A HREF="#storage">Storage Management</A><BR>
  <A HREF="#exceptions">Exceptions</A><BR>
  <A HREF="#iteration">Iteration</A><BR>
+ <A HREF="#synchronization">Synchronization</A><BR>
  <A HREF="#conclusion">Conclusion</A><BR>
  </P>
 <P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
@@ -26,7 +27,6 @@
 <!---------------------------------------------------------------------->
 
 
- </P>
 <H2><A NAME="abstractions">Key Abstractions</A></H2>
 <P>The Ada 95 verison of the components will contain the same key abstractions
 as the C++ form (Tools, Support, and Structs). However, the organization
@@ -47,7 +47,6 @@ lists, directed and undirected graphs, and binary, multiway, and AVL trees.
 <!---------------------------------------------------------------------->
 
 
- </P>
 <H2><A NAME="patterns">The Patterns of the BCs</A></H2>
 <P>The BCs cover several issues: </P>
 <UL>
@@ -65,7 +64,6 @@ usability and extensibility.
 <!---------------------------------------------------------------------->
 
 
- </P>
 <H2><A NAME="tactical">Tactical Issues</A></H2>
 <P></P>
 <BLOCKQUOTE>The particular semantics of a given programming language influence our architectural
@@ -84,7 +82,6 @@ parameterization is the form most often used.
 <!---------------------------------------------------------------------->
 
 
-</P>
 <H2><A NAME="macro">Macro Organization</A></H2>
 <P>The BCs emphasize separation of policy from implementation. For this reason,
 abstract classes are declared for every major component type. Also, the
@@ -100,7 +97,6 @@ is derived from Queue.
 <!---------------------------------------------------------------------->
 
 
- </P>
 <H2><a name="families">Class Families</a></H2>
 <P>Each abstract base class has several derived concrete forms, each designed
 to support specific needs for time and space semantics. The user selects
@@ -133,8 +129,7 @@ forms will be discussed later.
 <!---------------------------------------------------------------------->
 
 
-<A NAME="micro"> </A></P>
-<H2>Micro Organization</H2>
+<H2><A NAME="micro">Micro Organization</A></H2>
 <P>Each Abstract Base Class generally follows the same form of derivation: </P>
 <PRE>
                          Abstract Base Class
@@ -167,7 +162,6 @@ and Unbounded forms have Item and Storage_Manager for parameters. </P>
 <!---------------------------------------------------------------------->
 
 
- </P>
 <H2><A NAME="storage">Storage Management</A></H2>
 <P>Storage management on certain architectures can be complex, and so requires
 that all of our classes use a policy tailored to the platform, rather than
@@ -204,8 +198,7 @@ size.</p>
 <!---------------------------------------------------------------------->
 
 
-<A NAME="exceptions"> </A></P>
-<H2>Exceptions</H2>
+<H2><A NAME="exceptions">Exceptions</A></H2>
 <P>All exceptions for the BCs are placed in the topmost package, BC. This precludes
 the user from having to include a separate &quot;Exceptions&quot; package. Exception
 behaviour of the BCs is standard and portable, unlike other languages. </p>
@@ -218,7 +211,6 @@ abstract class (such subprograms can't be abstract, see RM95 3.9.3(10)).</p>
 <!----------------------------------------------------------------------> 
 
 
-</P>
 <H2><a name="iteration">Iteration<a/></H2>
 
 Separate types act as agents responsible for iterating across a structure.
@@ -251,7 +243,54 @@ mechanism was selected for its direct simplicity and efficiency.
 <!---------------------------------------------------------------------->
 
 
- </P>
+<H2><A NAME="synchronization">Synchronization</A></H2>
+
+
+<p>Those components that provide structural sharing ("<i>polylithic</i>")
+exist only in unprotected forms. Concurrent access by multiple tasks
+requires the user to provide her own access control.
+
+<p>Other components provide access control, when required, in one of two
+forms:
+
+<ul>
+<li>guarded
+<li>synchronized
+</ul>
+
+<h3>Guarded forms</h3>
+
+<p>Clients of guarded objects must follow the simple protocol of first
+Seizing the object, operating on it, and then Releasing it (even if
+exceptions occur).
+
+<p>Seizing a guarded object and failing to release it blocks the
+object's use indefinitely; releasing an object never seized is
+improper; and ignoring the protocol altogether is likely to result in
+interleaved tasks corrupting the state of the object.
+
+<p>Guarded forms are created by instantiating a generic package using
+a type derived from <tt>Semaphore_Base</tt> (in
+<tt>BC.Support.Synchronisation</tt>). A standard <tt>Semaphore</tt> is
+supplied, using which will cause each object to have its own guard; an
+alternative possibility would be to create a new <tt>Semaphore</tt>
+type such that each object of that type accessed a common actual
+Semaphore. Using such a strategy, a global lock could be obtained on a
+whole group of objects in one operation.
+
+<h3>Synchronized forms</h3>
+
+<p>For synchronized objects, each operation on the object becomes an
+atomic transaction; clients don't have to worry about maintaining the
+proper protocol.
+
+<p>This is very much easier for the developer; however, if it's
+necessary to invoke several operations on one object as a single
+atomic transaction, the Guarded protocol should be used.
+
+<!---------------------------------------------------------------------->
+
+
 <H2><A NAME="conclusion">Conclusion</A></H2>
 <P>Here's a table of the components and the forms to be supported.<BR>
  (U=Unbounded, B=Bounded, D=dynamic, G=Guarded, S=Synchronized) </P>
@@ -281,7 +320,7 @@ Trees
 <font color=red>
 <p>Here are the components presently available.</p>
 <pre>
-Bags       : U
+Bags       : UBD
 Graphs
   Directed : U
   Undir    : U
@@ -290,6 +329,7 @@ Lists
   Double   : U
 Maps       : UBD
 Queues     : UBD
+Rings      : UGS
 Sets       : UBD
 Stacks     : UBD
 Trees
