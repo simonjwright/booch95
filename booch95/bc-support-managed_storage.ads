@@ -1,3 +1,22 @@
+-- Copyright (C) 1998 Pat Rogers.
+-- All Rights Reserved.
+--
+--      This program is free software; you can redistribute it
+--      and/or modify it under the terms of the Ada Community
+--      License which comes with this Library.
+--
+--      This program is distributed in the hope that it will be
+--      useful, but WITHOUT ANY WARRANTY; without even the implied
+--      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+--      PURPOSE. See the Ada Community License for more details.
+--      You should have received a copy of the Ada Community
+--      License with this library, in the file named "Ada Community
+--      License" or "ACL". If not, contact the author of this library
+--      for a copy.
+--
+
+-- $Id$
+
 with System.Storage_Pools;
 with System.Storage_Elements;
 
@@ -23,7 +42,7 @@ package BC.Support.Managed_Storage is
                         Alignment                : in     SSE.Storage_Count );
 
   function Storage_Size( This : Pool ) return SSE.Storage_Count;
-  
+
   procedure Preallocate_Chunks( This : in out Pool;  Count : in Positive );
 
   procedure Reclaim_Unused_Chunks( This : in out Pool );
@@ -48,7 +67,7 @@ private
       Next_Sized_Chunk     : Chunk_Pointer;
       Next_Chunk           : Chunk_Pointer;
       Element_Size         : SSE.Storage_Count;
-      Alignment            : SSE.Storage_Count; 
+      Alignment            : SSE.Storage_Count;
       Number_Elements      : SSE.Storage_Count;
       Next_Element         : System.Address;
     end record;
@@ -64,17 +83,17 @@ private
   procedure Initialize( This : in out Pool );
   procedure Finalize  ( This : in out Pool );
 
-  function Aligned( Size      : SSE.Storage_Count; 
+  function Aligned( Size      : SSE.Storage_Count;
                     Alignment : SSE.Storage_Count ) return SSE.Storage_Offset;
 
   function New_Allocation( Size : SSE.Storage_Count ) return Chunk_Pointer;
 
-  function Within_Range( Target : System.Address;  
-                         Base   : Chunk_Pointer; 
+  function Within_Range( Target : System.Address;
+                         Base   : Chunk_Pointer;
                          Offset : SSE.Storage_Count ) return Boolean;
-  
-  procedure Get_Chunk( Result                 :    out Chunk_Pointer; 
-                       From                   : in out Pool; 
+
+  procedure Get_Chunk( Result                 :    out Chunk_Pointer;
+                       From                   : in out Pool;
                        Requested_Element_Size : in     SSE.Storage_Count;
                        Requested_Alignment    : in     SSE.Storage_Count );
 
