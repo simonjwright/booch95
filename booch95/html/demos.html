@@ -14,103 +14,286 @@
 
 <h2>Test programs</h2>
 
-<dl>
+<table border="1">
 
-<dt>avl_test
-<dd>test AVL trees<dd>
+<tr>
+<th>Main
+<th>Description
+<th>GNAT 3.14p
+<th>GNAT 3.15a
+<th>GCC 3.1
+<th>OA 7.2.2
 
-<dt>bag_test
-<dd>test bounded, dynamic and unbounded bags
+<tr>
+<td>avl_test
+<td>test AVL trees
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>collection_test
-<dd>test unbounded collections</b>
+<tr>
+<td>bag_test
+<td>test bounded, dynamic and unbounded bags
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>deque_test
-<dd>test unbounded deques</b>
+<tr>
+<td>collection_test
+<td>test bounded, dynamic and unbounded collections
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>graph_test
-<dd>test directed and undirected graphs
+<tr>
+<td>deque_test
+<td>test bounded, dynamic and unbounded deques
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>list_test
-<dd>test single and double lists
+<tr>
+<td>graph_test
+<td>test directed and undirected graphs
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>map_test
-<dd>test bounded, dynamic and unbounded maps
+<tr>
+<td>list_test
+<td>test single and double lists
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>ordered_collection_test
-<dd>test unbounded ordered collections</b>
+<tr>
+<td>map_test
+<td>test bounded, dynamic and unbounded maps
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>ordered_queue_test
-<dd>test unbounded ordered queues</b>
+<tr>
+<td>map_test_concurrent
+<td>test concurrent bounded, dynamic and unbounded maps
+<td>ok
+<td>ok
+<td>ok
+<td>Constraint_Error
 
-<dt>queue_test
-<dd>test bounded, dynamic and unbounded queues
+<tr>
+<td>ordered_collection_test
+<td>test bounded, dynamic and unbounded ordered collections
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>ring_test
-<dd>test unbounded rings
+<tr>
+<td>ordered_queue_test
+<td>test bounded, dynamic and unbounded ordered queues
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>set_test
-<dd>test bounded, dynamic and unbounded sets
+<tr>
+<td>queue_test
+<td>test bounded, dynamic and unbounded queues
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>smart_test
-<dd>test smart pointers
+<tr>
+<td>queue_test_concurrent
+<td>test concurrent bounded, dynamic and unbounded queues
+<td>ok
+<td>ok
+<td>ok
+<td>Constraint_Error
 
-<dt>stack_test
-<dd>test bounded, dynamic and unbounded stacks
+<tr>
+<td>ring_test
+<td>test bounded, dynamic and unbounded rings
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>stream_test
-<dd>test 'Output, 'Input for those components that support them
+<tr>
+<td>set_test
+<td>test bounded, dynamic and unbounded sets
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>tree_test
-<dd>test AVL, binary and multiway trees
+<tr>
+<td>smart_test
+<td>test smart pointers
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-</dl>
+<tr>
+<td>sort_test
+<td>test sorts
+<td>ok
+<td>ok
+<td>ok
+<td>ok
+
+<tr>
+<td>stack_test
+<td>test bounded, dynamic and unbounded stacks
+<td>ok
+<td>ok
+<td>ok
+<td>ok
+
+<tr>
+<td>stream_test
+<td>test 'Output, 'Input for those components that support them
+<td>ok
+<td>ok
+<td>ok
+<td>Constraint_Error with discriminated records (simple and tagged types ok)
+
+<tr>
+<td>tree_test
+<td>test AVL, binary and multiway trees
+<td>ok
+<td>ok
+<td>ok
+<td>ok
+
+</table>
 
 <h2>Demo programs</h2>
 
-<dl>
+<table border="1">
 
-<dt>ada_units
-<dd>demonstrate graphs
+<tr>
+<th>Main
+<th>Description
+<th>GNAT 3.14p
+<th>GNAT 3.15a
+<th>GCC 3.1
+<th>OA 7.2.2
 
-<dt>configuration_demo
-<dd>demonstrate using Maps to implement a configuration facility
+<tr>
+<td>ada_units
+<td>demonstrate graphs
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>lists_traversal
-<dd>demonstrate an unexpected behaviour of double lists
+<tr>
+<td>configuration_demo
+<td>demonstrate using Maps to implement a configuration facility
+<td>ok
+<td>Program_Error (finalize raised exception)
+<td>ok
+<td>ok
 
-<dt>ordering_test
-<dd>demonstrate ordered containers, especially where different elements have
+<tr>
+<td>lists_traversal
+<td>demonstrate an unexpected behaviour of double lists
+<td>ok
+<td>ok
+<td>ok
+<td>Program_Error (finalization problem?)
+
+<tr>
+<td>ordering_test
+<td>demonstrate ordered containers, especially where different elements have
 equal keys
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>storage
-<dd>demonstrate managed and unmanaged store allocation
+<tr>
+<td>storage
+<td>demonstrate managed and unmanaged store allocation
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>test_synchronization
-<dd>demonstrate the functionality in <tt>BC.Support.Synchronization</tt>
+<tr>
+<td>test_synchronization
+<td>demonstrate the functionality in <tt>BC.Support.Synchronization</tt>
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>time_lists
-<dd>demonstrate timings for lists of varying lengths
+<tr>
+<td>time_lists
+<td>demonstrate timings for lists of varying lengths
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>time_queues
-<dd>demonstrate timings for queues of varying lengths
+<tr>
+<td>time_queues
+<td>demonstrate timings for queues of varying lengths
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>unmanaged_storage
-<dd>demonstrate use of Unmanaged_Storage
+<tr>
+<td>unmanaged_storage
+<td>demonstrate use of <tt>Unmanaged_Storage</tt>
+<td>ok
+<td>ok
+<td>ok
+<td>ok
 
-<dt>user_set
-<dd>demonstrate user-defined equality for sets
+<tr>
+<td>user_map
+<td>demonstrate maps with user-defined equality for the key type
+<td>ok
+<td>ok
+<td>ok
+<td>Program_Error (finalization?)
 
-<dt>word_count
-<dd>a word-counter demo, as suggested by <a
+<tr>
+<td>user_set
+<td>demonstrate user-defined equality for sets
+<td>ok
+<td>ok
+<td>ok
+<td>ok
+
+<tr>
+<td>word_count
+<td>a word-counter demo, as suggested by <a
 href="mailto:J.English@bton.ac.uk">John English</a> in the <a
 href="http://www.suffix.com/Ada/SCL/">Ada Standard Component Library
 Working Group</a>
 
 <p><strong>NB</strong>, as supplied this fails if the last line of the
 input is blank!
+<td>ok
+<td>ok
+<td>ok
+<td>Doesn't compile as it stands (needs to be gnatchop'd)
 
-</dl>
+</table>
 
 <P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4" ></P>
 
