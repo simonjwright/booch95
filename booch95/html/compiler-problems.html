@@ -14,7 +14,44 @@
 
 <dl>
 
-<dt>6 October 1998</dt>
+<dt><a name="20oct1998">20 October 1998</a></dt>
+
+<dd>
+<dl>
+
+<dt><b>Graph passive iterators</b></dt>
+
+<dd>The passive iterators in <tt>BC.Graphs.Directed</tt> and
+<tt>BC.Graphs.Undirected</tt> break GNAT 3.10p and 3.11a1.
+3.11b is OK, so with any luck the forthcoming 3.11p will be too!
+</dd>
+
+<dt><b>ObjectAda Special Edition Version 7.1</b> and Dynamic forms</dt>
+
+<dd>We have an update on this; the impression is that OA has trouble
+with unconstrained types being allocated on a user-supplied storage
+pool. The dynamic forms use an unconstrained array for storage.<br>
+(As a note, the dynamic forms aren't as efficient as Grady Booch
+intended, because of a code translation problem! this will be
+addressed ...)
+</dd>
+
+<dt><b>ObjectAda Special Edition Version 7.1</b> and Managed Store</dt>
+
+<dd>We've supplied a new version of <tt>BC.Support.Managed_Storage</tt>
+which compiles under OA.
+</dd>
+
+<dt><b>ObjectAda Special Edition Version 7.1</b> and <tt>Graph_Test</tt></dt>
+
+<dd>The compiler fails (internal assertion failure) while compiling
+Graph_Test. However, the demo program Ada_Units works as intended.
+</dd>
+
+</dl>
+</dd>
+
+<dt><a name="6oct1998">6 October 1998</a></dt>
 
 <dd>When <a href="mailto:pat@classwide.com">Pat Rogers</a> added Storage
 Management, we found problems with different compilers. I guess this is
@@ -54,7 +91,9 @@ though, please feel free!)
 
 <P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4" ></P>
 
-<p><i>Last update: 6.x.98</i></p>
+<P><A HREF="index.html">[index]</A></p>
+
+<p><i>Last update: 20.x.98</i></p>
 
 </BODY>
 </HTML>
