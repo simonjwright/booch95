@@ -1,6 +1,6 @@
 -- The Ada 95 Booch Components (Version 1.0 beta 1)
 -- Copyright (C)1994-1997 Grady Booch and David Weller.  All Rights Reserved.
--- 
+--
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
 --      License which comes with this Library.
@@ -11,7 +11,7 @@
 --      PURPOSE. See the Ada Community License for more details.
 --      You should have received a copy of the Ada Community
 --      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library 
+--      License" or "ACL". If not, contact the author of this library
 --      for a copy.
 --
 -- This File Contains the specification of the stack abstract base class.
@@ -47,7 +47,7 @@ package Bc.Containers.Stacks is
    -- Return the item at the front of the Stack; the Item is _not_ removed
 
    function Top (Obj : in Stack) return Item_Ptr is abstract;
-   -- Return reference to item at the front of the Stack; 
+   -- Return reference to item at the front of the Stack;
    -- the Item is _not_ removed
 
    function "=" (Left, Right : access Stack'Class) return Boolean;
@@ -60,8 +60,8 @@ private
 
    type Stack is abstract new Container with null record;
 
-   procedure Purge (Obj : in out Stack);
-   procedure Add (Obj : in out Stack; Elem : in out Item);
+   procedure Purge (Obj : in out Stack) is abstract;
+   procedure Add (Obj : in out Stack; Elem : in out Item) is abstract;
 
 end Bc.Containers.Stacks;
 
