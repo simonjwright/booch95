@@ -95,6 +95,9 @@ time_queues: force
 unmanaged_storage: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
+user_set: force
+	gnatmake $(GNATMAKE_FLAGS) $@
+
 demos: $(DEMOS)
 
 ############################
@@ -134,6 +137,10 @@ bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
 bc-containers-queues-unbounded.ad[bs] \
 bc-containers-queues.ad[bs] \
+bc-containers-sets-bounded.ad[bs] \
+bc-containers-sets-dynamic.ad[bs] \
+bc-containers-sets-unbounded.ad[bs] \
+bc-containers-sets.ad[bs] \
 bc-containers-stacks-bounded.ad[bs] \
 bc-containers-stacks-dynamic.ad[bs] \
 bc-containers-stacks-unbounded.ad[bs] \
@@ -176,6 +183,9 @@ queue_test_aonix.ad[bs] \
 queue_test_support.ad[bs] \
 smart_test.ad[bs] \
 smart_test_support.ad[bs] \
+set_test.ad[bs] \
+set_test_aonix.ad[bs] \
+set_test_support.ad[bs] \
 stack_test.ad[bs] \
 stack_test_aonix.ad[bs] \
 stack_test_support.ad[bs] \
@@ -184,20 +194,27 @@ time_lists.ad[bs] \
 time_queues.ad[bs] \
 tree_test.ad[bs] \
 tree_test_support.ad[bs] \
-unmanaged_storage.ad[bs]
+unmanaged_storage.ad[bs] \
+user_set.ad[bs] \
+user_set_support.ad[bs]
 
-SOURCE = makefile ACL README $(ADA_SOURCE)
+CONTRIB = \
+contrib/gaudry/README \
+contrib/gaudry/t.adb \
+contrib/gaudry/t_support.ads
+
+SOURCE = makefile ACL README $(ADA_SOURCE) $(CONTRIB)
 
 bc-$(DATE): force
 	-rm -rf $@
 	mkdir $@
-	cp -p $(SOURCE) $@/
+	tar cf - $(SOURCE) | (cd $@; tar xvf -)
 
 bc-$(DATE).tgz: bc-$(DATE)
 	tar zcvf $@ $</
 
 bc-$(DATE).zip: bc-$(DATE)
-	zip -l $@ $</*
+	zip -lr $@ $</*
 
 bc-$(DATE).src: $(ADA_SOURCE)
 	cat $(ADA_SOURCE) > $@
