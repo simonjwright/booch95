@@ -80,6 +80,13 @@ package BC.Containers.Trees.AVL is
    --  it and set Found to True; otherwise, set Found to False.
    --  Apply MUST NOT alter the result of the ordering operation "<".
 
+   -------------------------------------------------------------------
+   --  The  functionality of  Visit and  Modify is  also available  --
+   --  using the  standard Container generic. Note  that, as here,  --
+   --  the  Apply used  there MUST  NOT  alter the  result of  the  --
+   --  ordering operation "<".                                      --
+   -------------------------------------------------------------------
+
    generic
       with procedure Apply (Elem : in Item; OK : out Boolean);
    procedure Visit (Over_The_Tree : AVL_Tree);
