@@ -69,9 +69,6 @@ package BC.Support.Bounded_Hash_Tables is
       --  for the order in which items may be added and removed from
       --  the container. This class is not intended to be subclassed.
 
-      --  The parameter Buckets signifies the static number of buckets
-      --  in the hash table.
-
       subtype Bucket_Index is Positive;
       subtype Index is Natural;
       --  0 => null reference
