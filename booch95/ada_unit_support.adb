@@ -94,17 +94,21 @@ package body Ada_Unit_Support is
       is new Dependencies_Base.Visit_Arcs (Apply => Process_Dependency);
       Directed_V : Dependencies.Directed_Vertex
          renames Dependencies.Directed_Vertex (V);
+      Vertex_It : Dependencies_Base.Vertex_Iterator
+         := Dependencies.New_Vertex_Outgoing_Iterator (Directed_V);
     begin
       Ada.Text_Io.Put_Line (Description (Dependencies.Item (Directed_V).all)
                             & " unit "
                             & Name (Dependencies.Item (Directed_V).all));
-      Visit (Over_The_Vertex => V);
+      Visit (Using => Vertex_It);
       OK := True;
     end Process_Unit;
     procedure Visit is new Dependencies_Base.Visit_Vertices
        (Apply => Process_Unit);
+    Graph_It : Dependencies_Base.Graph_Iterator
+       := Dependencies.New_Graph_Iterator (Info);
   begin
-    Visit (Over_The_Graph => Info);
+    Visit (Using => Graph_It);
   end Report_Dependencies;
 
 
@@ -125,6 +129,8 @@ package body Ada_Unit_Support is
       is new Dependencies_Base.Visit_Arcs (Apply => Process_Dependency);
       Directed_V : Dependencies.Directed_Vertex
          renames Dependencies.Directed_Vertex (V);
+      Vertex_It : Dependencies_Base.Vertex_Iterator
+         := Dependencies.New_Vertex_Outgoing_Iterator (Directed_V);
       Old_Indent : ASU.Unbounded_String := Indent;
       use type ASU.Unbounded_String;
     begin
@@ -133,7 +139,7 @@ package body Ada_Unit_Support is
                             & " unit "
                             & Name (Dependencies.Item (Directed_V).all));
       Indent := Indent & "  ";
-      Visit (V);
+      Visit (Vertex_It);
       Indent := Old_Indent;
       OK := True;
     end Process_Unit;
