@@ -72,7 +72,7 @@ package BC.Support.Synchronization is
   procedure Release_From_Writing (The_Monitor : in out Multiple_Monitor);
 
 
-  type Lock (Using : access Semaphore)
+  type Lock (Using : access Semaphore_Base'Class)
   is new Ada.Finalization.Limited_Controlled with private;
   procedure Initialize (The_Lock : in out Lock);
   procedure Finalize (The_Lock : in out Lock);
@@ -138,7 +138,7 @@ private
     M : Monitor_Type;
   end record;
 
-  type Lock (Using : access Semaphore)
+  type Lock (Using : access Semaphore_Base'Class)
   is new Ada.Finalization.Limited_Controlled with null record;
 
   type Read_Lock (Using : access Monitor_Base'Class)
