@@ -18,8 +18,13 @@
 -- $Id$
 
 with Ada.Unchecked_Deallocation;
+with BC.Support.Exceptions;
 
 package body BC.Support.Dynamic is
+
+  package BSE renames BC.Support.Exceptions;
+  procedure Assert
+  is new BSE.Assert ("BC.Support.Dynamic");
 
   procedure Delete_Arr is
      new Ada.Unchecked_Deallocation (Dyn_Arr, Dyn_Arr_Ref);
@@ -79,7 +84,10 @@ package body BC.Support.Dynamic is
 
   procedure Insert (Obj : in out Dyn_Node; Elem : Item; Before : Positive) is
   begin
-    pragma Assert (Before <= Obj.Size);
+    Assert (Before <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Insert",
+            BSE.Invalid_Index);
     if Obj.Size = 0 or else Before = 1 then
       Insert (Obj, Elem);
     else
@@ -103,7 +111,10 @@ package body BC.Support.Dynamic is
 
   procedure Append (Obj : in out Dyn_Node; Elem : Item; After : Positive) is
   begin
-    pragma Assert (After <= Obj.Size);
+    Assert (After <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Append",
+            BSE.Invalid_Index);
     if Obj.Size = Obj.Ref'Last then
       Extend (Obj);
     end if;
@@ -119,7 +130,14 @@ package body BC.Support.Dynamic is
 
   procedure Remove (Obj : in out Dyn_Node; From : Positive) is
   begin
-    pragma Assert (From <= Obj.Size);
+    Assert (From <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Remove",
+            BSE.Invalid_Index);
+    Assert (Obj.Size > 0,
+            BC.Underflow'Identity,
+            "Remove",
+            BSE.Empty);
     if Obj.Size = 1 then
       Clear (Obj);
     else
@@ -130,7 +148,10 @@ package body BC.Support.Dynamic is
 
   procedure Replace (Obj : in out Dyn_Node; Index : Positive; Elem : Item) is
   begin
-    pragma Assert (Index <= Obj.Size);
+    Assert (Index <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Replace",
+            BSE.Invalid_Index);
     Obj.Ref (Index) := Elem;
   end Replace;
 
@@ -141,42 +162,65 @@ package body BC.Support.Dynamic is
 
   function First (Obj : Dyn_Node) return Item is
   begin
+    Assert (Obj.Size > 0,
+            BC.Underflow'Identity,
+            "First",
+            BSE.Empty);
     return Obj.Ref (1);
   end First;
 
   function First (Obj : access Dyn_Node) return Item_Ptr is
   begin
+    Assert (Obj.Size > 0,
+            BC.Underflow'Identity,
+            "First",
+            BSE.Empty);
     return Obj.Ref (1)'access;
   end First;
 
   function Last (Obj : Dyn_Node) return Item is
   begin
-    pragma Assert (Obj.Size > 0);
+    Assert (Obj.Size > 0,
+            BC.Underflow'Identity,
+            "Last",
+            BSE.Empty);
     return Obj.Ref (Obj.Size);
   end Last;
 
   function Last (Obj : access Dyn_Node) return Item_Ptr is
   begin
-    pragma Assert (Obj.Size > 0);
+    Assert (Obj.Size > 0,
+            BC.Underflow'Identity,
+            "Last",
+            BSE.Empty);
     return Obj.Ref (Obj.Size)'access;
   end Last;
 
   function Item_At (Obj : access Dyn_Node; Index : Positive) return Item is
   begin
-    pragma Assert (Index <= Obj.Size);
+    Assert (Index <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Item_At",
+            BSE.Invalid_Index);
     return Obj.Ref (Index);
   end Item_At;
 
   function Item_At (Obj : access Dyn_Node; Index : Positive) return Item_Ptr is
   begin
-    pragma Assert (Index <= Obj.Size);
+    Assert (Index <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Item_At",
+            BSE.Invalid_Index);
     return Obj.Ref (Index)'access;
   end Item_At;
 
   function Location (Obj : access Dyn_Node; Elem : Item; Start : Positive := 1)
                      return Natural is
   begin
-    pragma Assert (Start <= Obj.Size);
+    Assert (Start <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Location",
+            BSE.Invalid_Index);
     for I in Start .. Obj.Size loop
       if Obj.Ref (I) = Elem then
         return I;

@@ -18,8 +18,13 @@
 -- $Id$
 
 with Ada.Unchecked_Deallocation;
+with BC.Support.Exceptions;
 
 package body BC.Support.Unbounded is
+
+  package BSE renames BC.Support.Exceptions;
+  procedure Assert
+  is new BSE.Assert ("BC.Support.Dynamic");
 
   use type Nodes.Node_Ref;
 
@@ -92,7 +97,10 @@ package body BC.Support.Unbounded is
 
   procedure Insert (Obj : in out Unb_Node; Elem : Item; Before : Natural) is
   begin
-    pragma Assert (Before <= Obj.Size);
+    Assert (Before <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Insert",
+            BSE.Invalid_Index);
     if Obj.Size = 0 or else Before <= 1 then
       Insert (Obj, Elem);
     else
@@ -129,7 +137,10 @@ package body BC.Support.Unbounded is
 
   procedure Append (Obj : in out Unb_Node; Elem : Item; After : Natural) is
   begin
-    pragma Assert (After <= Obj.Size);
+    Assert (After <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Append",
+            BSE.Invalid_Index);
     if (Obj.Size = 0) or else (After <= 1) then
       Append(Obj, Elem);
     else
@@ -156,8 +167,14 @@ package body BC.Support.Unbounded is
 
   procedure Remove (Obj : in out Unb_Node; From : Natural) is
   begin
-    pragma Assert (From <= Obj.Size );
-    pragma Assert (Obj.Size > 0 );
+    Assert (From <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Remove",
+            BSE.Invalid_Index);
+    Assert (Obj.Size > 0,
+            BC.Underflow'Identity,
+            "Remove",
+            BSE.Empty);
     if Obj.Size = 1 then
       Clear (Obj);
     else
@@ -194,7 +211,10 @@ package body BC.Support.Unbounded is
 
   procedure Replace (Obj : in out Unb_Node; Index : Positive; Elem : Item) is
   begin
-    pragma Assert (Index <= Obj.Size );
+    Assert (Index <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Replace",
+            BSE.Invalid_Index);
     if not ((Obj.Cache /= null) and then (Index = Obj.Cache_Index)) then
       declare
         Ptr : Nodes.Node_Ref := Obj.Rep;
@@ -220,37 +240,57 @@ package body BC.Support.Unbounded is
 
   function First (Obj : Unb_Node) return Item is
   begin
-    pragma Assert (Obj.Size > 0 );
+    Assert (Obj.Size > 0,
+            BC.Underflow'Identity,
+            "First",
+            BSE.Empty);
     return Obj.Rep.Element;
   end First;
 
   function First (Obj : access Unb_Node) return Item_Ptr is
   begin
-    pragma Assert (Obj.Size > 0 );
+    Assert (Obj.Size > 0,
+            BC.Underflow'Identity,
+            "First",
+            BSE.Empty);
     return Obj.Rep.Element'access;
   end First;
 
   function Last (Obj : Unb_Node) return Item is
   begin
-    pragma Assert (Obj.Size > 0 );
+    Assert (Obj.Size > 0,
+            BC.Underflow'Identity,
+            "Last",
+            BSE.Empty);
     return Obj.Last.Element;
   end ;
 
   function Last (Obj : access Unb_Node) return Item_Ptr is
   begin
-    pragma Assert (Obj.Size > 0 );
+    Assert (Obj.Size > 0,
+            BC.Underflow'Identity,
+            "Last",
+            BSE.Empty);
     return  Obj.Last.Element'access;
   end ;
 
   function Item_At (Obj : access Unb_Node; Index : Positive) return Item is
     Tmp : Item_Ptr;
   begin
-    Tmp := Item_At (Obj,Index);
+    Assert (Index <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Item_At",
+            BSE.Invalid_Index);
+    Tmp := Item_At (Obj, Index);
     return Tmp.all;
   end Item_At;
 
   function Item_At (Obj : access Unb_Node; Index : Positive) return Item_Ptr is
   begin
+    Assert (Index <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Item_At",
+            BSE.Invalid_Index);
     if Obj.Cache /= null then
       if Index = Obj.Cache_Index then
         return Obj.Cache.Element'access;
@@ -284,7 +324,10 @@ package body BC.Support.Unbounded is
                      return Natural is
     Ptr : Nodes.Node_Ref := Obj.Rep;
   begin
-    pragma Assert (Start < Obj.Size );
+    Assert (Start <= Obj.Size,
+            BC.Range_Error'Identity,
+            "Location",
+            BSE.Invalid_Index);
     if (Start = Obj.Cache_Index) and then (Elem = Obj.Cache.Element) then
       return Obj.Cache_Index;
     end if;
