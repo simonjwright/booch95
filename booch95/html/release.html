@@ -30,6 +30,54 @@
 
 <dl>
 
+<dt>xxx May 2001</dt>
+
+<dd>
+
+
+<h3>Interface changes</h3>
+
+
+<p>Added <tt>BC.Containers.Quicksort</tt>,
+<tt>BC.Containers.Shellsort</tt> generics (implemented as child
+packages, on the theory that you won't want the clutter in
+<tt>BC.Containers</tt> if you don't need it).
+
+
+<p>Removed <tt>BC.Containers.Copy</tt>, <tt>BC.Containers.Filter</tt>
+generics.
+
+
+<p>Bounded forms have an <tt>Available</tt> function, returning the
+number of free entries. The same function is now available for Dynamic
+and Unbounded forms (in which case it returns <tt>Natural'Last</tt>;
+just don't believe it!
+
+
+<h3>Implementation changes</h3>
+
+
+<p>Added noisy exception handlers to all the test programs .. 
+
+
+<p>.. because an assertion in the Bounded Container support package
+was off by one, and the test programs were putting GNAT's exception
+message in a log file that was a relic of the old malloc checking.
+
+
+<p>Unbounded Maps missed out on the 20010325 change in which
+Containers no longer allocated their representation from the heap;
+fixed.
+
+
+<p>Synchronized Maps didn't override <tt>"="</tt>.
+
+
+<p>
+
+</dd>
+
+
 <dt>25 March 2001</dt>
 
 <dd>
@@ -85,6 +133,7 @@ please!)
 <p>
 
 </dd>
+
 
 <dt>21 January 2001</dt>
 
