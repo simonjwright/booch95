@@ -18,8 +18,49 @@
 
 -- $Id$
 
+-- The Sedgewick algorithm is from "Algorithms", Robert Sedgewick,
+-- Addison-Wesley 1983, with adjustments to obviate Constraint_Error.
+
 procedure BC.Containers.Quicksort (C : in out Container) is
-  procedure Sort (C : in out Containers.Container'Class;
+
+  procedure Sedgewick (C : in out Containers.Container'Class;
+                       L, R : Natural) is
+    V : Item;
+    I : Natural;
+    J : Positive;
+    procedure Swap (A, B : Positive);
+    pragma Inline (Swap);
+    procedure Swap (A , B : Positive) is
+      Temp : constant Item := Item_At (C, A).all;
+    begin
+      Item_At (C, A).all := Item_At (C, B).all;
+      Item_At (C, B).all := Temp;
+    end Swap;
+  begin
+    if R > L then
+      V := Item_At (C, R).all;
+      I := L - 1;
+      J := R;
+      loop
+        loop
+          I := I + 1;
+          exit when I = R or else V < Item_At (C, I).all;
+        end loop;
+        loop
+          J := J - 1;
+          exit when J = L or else Item_At (C, J).all = V or else Item_At (C, J).all < V;
+        end loop;
+        Swap (I, J);
+        exit when J <= I;
+      end loop;
+      Swap (J, I);
+      Swap (I, R);
+      Sedgewick (C, L, I - 1);
+      Sedgewick (C, I + 1, R);
+    end if;
+  end Sedgewick;
+
+  procedure Booch (C : in out Containers.Container'Class;
                   L, R : Natural) is
     procedure Swap (A, B : Positive);
     pragma Inline (Swap);
@@ -62,20 +103,21 @@ procedure BC.Containers.Quicksort (C : in out Container) is
         Swap (L, T);
         -- sort the left part, if it's longer than one element
         if L < T - 1 then
-          Sort (C, L, T - 1);
+          Booch (C, L, T - 1);
         end if;
         -- sort the right part, if it's longer than one element
         if T + 1 < R then
-          Sort (C, T + 1, R);
+          Booch (C, T + 1, R);
         end if;
       end;
     elsif R > L and then Item_At (C, R).all < Item_At (C, L).all then
       -- length is 2, in the wrong order
       Swap (L, R);
     end if;
-  end Sort;
+  end Booch;
+
 begin
-  Sort (C, 1, Length (C));
+  Booch (C, 1, Length (C));
 exception
   when Should_Have_Been_Overridden => raise Container_Error;
 end BC.Containers.Quicksort;
