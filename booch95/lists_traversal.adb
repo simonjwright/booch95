@@ -30,7 +30,7 @@ with BC.Support.Exceptions;
 with Lists_For_Traversal;
 
 procedure Lists_Traversal is
-  D, K : Lists_For_Traversal.D.Double_List;
+  D, K : Lists_For_Traversal.D.List;
 begin
   for I in 1 .. 10 loop
     Lists_For_Traversal.D.Append
