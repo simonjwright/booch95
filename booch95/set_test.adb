@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -176,7 +176,7 @@ procedure Set_Test is
 
   procedure Test_Active_Iterator (S : in out Sets.Set'Class) is
     use Containers; use Sets; use SB;
-    Iter : Containers.Iterator := New_Iterator (S);
+    Iter : Containers.Iterator'Class := New_Iterator (S);
   begin
     while not Containers.Is_Done (Iter) loop
       Put_Line ("      Item: "
@@ -199,7 +199,7 @@ procedure Set_Test is
 
   procedure Test_Passive_Iterator (S : in out Containers.Container'Class) is
     procedure Visitor is new Containers.Visit (Process);
-    Iter : Containers.Iterator := Containers.New_Iterator (S);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (S);
   begin
     Visitor (Using => Iter);
   end Test_Passive_Iterator;
@@ -207,7 +207,7 @@ procedure Set_Test is
   procedure Test_Passive_Modifying_Iterator
      (S : in out Containers.Container'Class) is
     procedure Modifier is new Containers.Modify (Process_Modifiable);
-    Iter : Containers.Iterator := Containers.New_Iterator (S);
+    Iter : Containers.Iterator'Class := Containers.New_Iterator (S);
   begin
     Modifier (Using => Iter);
   end Test_Passive_Modifying_Iterator;

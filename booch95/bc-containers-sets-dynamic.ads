@@ -83,7 +83,7 @@ package BC.Containers.Sets.Dynamic is
   function Chunk_Size (S : Dynamic_Set) return Positive;
   -- Returns the Chunk_Size.
 
-  function New_Iterator (For_The_Set : Dynamic_Set) return Iterator;
+  function New_Iterator (For_The_Set : Dynamic_Set) return Iterator'Class;
   -- Return a reset Iterator bound to the specific Set.
 
 private
@@ -130,8 +130,5 @@ private
 
   function Item_At
      (S : Dynamic_Set; Bucket, Index : Positive) return Item_Ptr;
-
-  type Dynamic_Set_Iterator (D : access Dynamic_Set'Class)
-  is new Set_Iterator (D) with null record;
 
 end BC.Containers.Sets.Dynamic;

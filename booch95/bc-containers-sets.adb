@@ -27,7 +27,7 @@ package body BC.Containers.Sets is
   is new BSE.Assert ("BC.Containers.Sets");
 
   function Are_Equal (L, R : Set'Class) return Boolean is
-    It : Iterator := New_Iterator (L);
+    It : Iterator'Class := New_Iterator (L);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -50,7 +50,7 @@ package body BC.Containers.Sets is
   end Add;
 
   procedure Union (S : in out Set'Class; O : Set'Class) is
-    It : Iterator := New_Iterator (O);
+    It : Iterator'Class := New_Iterator (O);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -67,7 +67,7 @@ package body BC.Containers.Sets is
   end Union;
 
   procedure Intersection (S : in out Set'Class; O : Set'Class) is
-    It : Iterator := New_Iterator (S);
+    It : Iterator'Class := New_Iterator (S);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -85,7 +85,7 @@ package body BC.Containers.Sets is
   end Intersection;
 
   procedure Difference (S : in out Set'Class; O : Set'Class) is
-    It : Iterator := New_Iterator (O);
+    It : Iterator'Class := New_Iterator (O);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -102,7 +102,7 @@ package body BC.Containers.Sets is
   end Difference;
 
   function Is_Subset (S : Set'Class; O : Set'Class) return Boolean is
-    It : Iterator := New_Iterator (S);
+    It : Iterator'Class := New_Iterator (S);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -119,7 +119,7 @@ package body BC.Containers.Sets is
   end Is_Subset;
 
   function Is_Proper_Subset (S : Set'Class; O : Set'Class) return Boolean is
-    It : Iterator := New_Iterator (S);
+    It : Iterator'Class := New_Iterator (S);
   begin
     -- XXX left out the optimisation which checks whether L, R are
     -- identical.
@@ -135,32 +135,16 @@ package body BC.Containers.Sets is
     return True;
   end Is_Proper_Subset;
 
-  procedure Initialize (It : in out Set_Iterator) is
-  begin
-    It.Index := 0;
-    if Extent (It.S.all) = 0 then
-      It.Bucket_Index := 0;
-    else
-      It.Bucket_Index := 1;
-      while It.Bucket_Index <= Number_Of_Buckets (It.S.all) loop
-        if Length (It.S.all, It.Bucket_Index) > 0 then
-          It.Index := 1;
-          exit;
-        end if;
-        It.Bucket_Index := It.Bucket_Index + 1;
-      end loop;
-    end if;
-  end Initialize;
-
   procedure Reset (It : in out Set_Iterator) is
+    S : Set'Class renames Set'Class (It.For_The_Container.all);
   begin
     It.Index := 0;
-    if Extent (It.S.all) = 0 then
+    if Extent (S) = 0 then
       It.Bucket_Index := 0;
     else
       It.Bucket_Index := 1;
-      while It.Bucket_Index <= Number_Of_Buckets (It.S.all) loop
-        if Length (It.S.all, It.Bucket_Index) > 0 then
+      while It.Bucket_Index <= Number_Of_Buckets (S) loop
+        if Length (S, It.Bucket_Index) > 0 then
           It.Index := 1;
           exit;
         end if;
@@ -170,15 +154,16 @@ package body BC.Containers.Sets is
   end Reset;
 
   procedure Next (It : in out Set_Iterator) is
+    S : Set'Class renames Set'Class (It.For_The_Container.all);
   begin
-    if It.Bucket_Index <= Number_Of_Buckets (It.S.all) then
-      if It.Index < Length (It.S.all, It.Bucket_Index) then
+    if It.Bucket_Index <= Number_Of_Buckets (S) then
+      if It.Index < Length (S, It.Bucket_Index) then
         It.Index := It.Index + 1;
       else
         It.Bucket_Index := It.Bucket_Index + 1;
         It.Index := 0;
-        while It.Bucket_Index <= Number_Of_Buckets (It.S.all) loop
-          if Length (It.S.all, It.Bucket_Index) > 0 then
+        while It.Bucket_Index <= Number_Of_Buckets (S) loop
+          if Length (S, It.Bucket_Index) > 0 then
             It.Index := 1;
             exit;
           end if;
@@ -189,12 +174,13 @@ package body BC.Containers.Sets is
   end Next;
 
   function Is_Done (It : Set_Iterator) return Boolean is
+    S : Set'Class renames Set'Class (It.For_The_Container.all);
   begin
     if It.Bucket_Index = 0
-       or else It.Bucket_Index > Number_Of_Buckets (It.S.all) then
+       or else It.Bucket_Index > Number_Of_Buckets (S) then
       return True;
     end if;
-    if It.Index <= Length (It.S.all, It.Bucket_Index) then
+    if It.Index <= Length (S, It.Bucket_Index) then
       return False;
     end if;
     declare
@@ -204,8 +190,8 @@ package body BC.Containers.Sets is
     begin
       P.Bucket_Index := P.Bucket_Index + 1;
       P.Index := 0;
-      while P.Bucket_Index <= Number_Of_Buckets (P.S.all) loop
-        if Length (P.S.all, P.Bucket_Index) > 0 then
+      while P.Bucket_Index <= Number_Of_Buckets (S) loop
+        if Length (S, P.Bucket_Index) > 0 then
           P.Index := 1;
           return False;
         end if;
@@ -216,21 +202,23 @@ package body BC.Containers.Sets is
   end Is_Done;
 
   function Current_Item (It : Set_Iterator) return Item is
+    S : Set'Class renames Set'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.S.all, It.Bucket_Index, It.Index).all;
+    return Item_At (S, It.Bucket_Index, It.Index).all;
   end Current_Item;
 
-  function Current_Item (It : Set_Iterator) return Item_Ptr is
+  function Current_Item_Ptr (It : Set_Iterator) return Item_Ptr is
     -- XXX this should probably not be permitted!
+    S : Set'Class renames Set'Class (It.For_The_Container.all);
   begin
     if Is_Done (It) then
       raise BC.Not_Found;
     end if;
-    return Item_At (It.S.all, It.Bucket_Index, It.Index);
-  end Current_Item;
+    return Item_At (S, It.Bucket_Index, It.Index);
+  end Current_Item_Ptr;
 
   procedure Delete_Item_At (It : Set_Iterator) is
   begin
