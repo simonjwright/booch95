@@ -147,7 +147,7 @@ package body BC.Containers.Maps is
     raise BC.Not_Yet_Implemented;
   end Delete_Item_At;
 
-  function Current_Key (It : Map_Iterator) return Key is
+  function Current_Key (It : Map_Iterator'Class) return Key is
     M : Abstract_Map'Class
     renames Abstract_Map'Class (It.For_The_Container.all);
   begin
