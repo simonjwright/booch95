@@ -34,6 +34,12 @@ procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is
     Left_Depth : constant Natural := Depth (N.Left);
     Right_Depth : constant Natural := Depth (N.Right);
   begin
+    if N.Left /= null then
+      Validate (N.Left);
+    end if;
+    if N.Right /= null then
+      Validate (N.Right);
+    end if;
     if Left_Depth = Right_Depth then
       if N.Balance /= Nodes.Middle then
         Put_Line ("depths equal but balance "
@@ -41,7 +47,7 @@ procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is
       end if;
     elsif Left_Depth > Right_Depth then
       if Left_Depth - Right_Depth /= 1 then
-        Put_Line ("left_depth is"
+        Put_Line ("left depth is"
                   & Natural'Image (Left_Depth - Right_Depth)
                   & " greater than right depth");
       end if;
@@ -51,7 +57,7 @@ procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is
       end if;
     else
       if Right_Depth - Left_Depth /= 1 then
-        Put_Line ("right_depth is"
+        Put_Line ("right depth is"
                   & Natural'Image (Right_Depth - Left_Depth)
                   & " greater than left depth");
       end if;
@@ -59,12 +65,6 @@ procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is
         Put_Line ("right deeper than left but balance "
                   & Nodes.Node_Balance'Image (N.Balance));
       end if;
-    end if;
-    if N.Left /= null then
-      Validate (N.Left);
-    end if;
-    if N.Right /= null then
-      Validate (N.Right);
     end if;
   end Validate;
 begin
