@@ -14,6 +14,23 @@
 
 <dl>
 
+<dt><a name="31nov2001a">30 November 2001</a>
+
+<dd><tt>BC.Copy</tt>, <tt>BC.Filter</tt> can't be used under
+ObjectAda 7.2, AdaMULTI 3.1 or Apex 3.0.0b; they think the
+
+<pre>
+  with package Source is new BC.Containers (Item);
+</pre>
+
+is illegal because it derives from a controlled type at other than
+library level. Tucker Taft says they are wrong.
+
+<dt><a name="31nov2001b">30 November 2001</a>
+
+<dd>ObjectAda 7.2 can't compile <tt>sort_test.adb</tt> (internal
+failure).
+
 <dt><a name="13aug2000">13 August 2000</a></dt>
 
 <dd>
