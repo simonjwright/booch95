@@ -37,8 +37,9 @@ procedure Sort_Test is
     procedure Iterate is new Visit (Apply => Process);
     Iter : Iterator'Class := New_Iterator (C);
   begin
+    Put ("|");
     Iterate (Using => Iter);
-    New_Line;
+    Put_Line ("|");
   end Print;
 
   procedure SSort is new Containers.Shellsort
