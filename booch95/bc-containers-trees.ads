@@ -47,21 +47,21 @@ generic package BC.Containers.Trees is
   -- Unreachable items are those that belong to a tree or a subtree whose
   -- root is not designated by any alias. For example, consider the tree (A
   -- (B C (D E))), with the root of the tree designated by T1. T1 initially
-  -- points to the root of the tree, at item A. Invoking the member
-  -- function RightChild on T1 now causes T1 to point to item C. Because A
-  -- is now considered unreachable, the storage associated with item A is
+  -- points to the root of the tree, at item A. Invoking the operation
+  -- Right_Child on T1 now causes T1 to point to item C. Because A is now
+  -- considered unreachable, the storage associated with item A is
   -- reclaimed; the parent of C is now null. Additionally, the sibling
   -- subtree rooted at B is also now unreachable, and so is reclaimed
   -- (along with its children, and recursively so). Similarly, consider the
   -- same tree, with the root of the tree designated by both T1 and
   -- T2. Both T1 and T2 are aliases that initially point to the root of the
-  -- tree at item A. Invoking the member function RightChild on T1 now
-  -- causes T1 to point to item C; T2 is unaffected. No storage is
-  -- reclaimed, since every element of the tree is still reachable. Suppose
-  -- we now invoke the member function Clear on T2. The semantics of this
-  -- operation are such that only unreachable items are reclaimed. Thus,
-  -- the storage associated with item A is reclaimed, because it is no
-  -- longer reachable; additionally, the sibling B (and recursively so, its
+  -- tree at item A. Invoking the operation Right_Child on T1 now causes T1
+  -- to point to item C; T2 is unaffected. No storage is reclaimed, since
+  -- every element of the tree is still reachable. Suppose we now invoke
+  -- the member function Clear on T2. The semantics of this operation are
+  -- such that only unreachable items are reclaimed. Thus, the storage
+  -- associated with item A is reclaimed, because it is no longer
+  -- reachable; additionally, the sibling B (and recursively so, its
   -- children) is reclaimed, because it is also now unreachable; the
   -- subtree denoted by T1 is unaffected. T2 is now null, and the parent of
   -- C is now null.
