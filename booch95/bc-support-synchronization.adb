@@ -34,41 +34,20 @@ package body BC.Support.Synchronization is
 
   protected body Semaphore_Type is
 
-    entry Seize when True is
-      use type Ada.Task_Identification.Task_Id;
+    entry Seize when not Seized is
     begin
-      -- Why do I say Semaphore_Type.Seize rather than just Seize?
-      --
-      -- Jean-Pascal Cozic <Jean-Pascal.Cozic@ingsud.dga.fr> says:
-      -- You have to write Semaphore_Type.Seize'Caller because there
-      -- are two homographs Seize in the scope (the entry and the
-      -- procedure). Using the context, there is no ambiguity because
-      -- Caller deals with a prefix that denotes an entry_declaration,
-      -- but the compiler cannot use context in this case.
-      --
-      -- See LRM 4.1.4(14).
-      if Owner = Semaphore_Type.Seize'Caller then
-        Count := Count + 1;
-      else
-        requeue Waiting with abort;
-      end if;
+      Seized := True;
     end Seize;
 
     procedure Release is
     begin
-      Count := Count - 1;
+      Seized := False;
     end Release;
 
     function None_Pending return Boolean is
     begin
-      return Waiting'Count = 0;
+      return Seize'Count = 0;
     end None_Pending;
-
-    entry Waiting when Count = 0 is
-    begin
-      Owner := Waiting'Caller;
-      Count := 1;
-    end Waiting;
 
   end Semaphore_Type;
 
@@ -102,6 +81,85 @@ package body BC.Support.Synchronization is
   end Release;
 
   function None_Pending (On_The_Semaphore : Semaphore) return Boolean is
+  begin
+    return On_The_Semaphore.S.None_Pending;
+  end None_Pending;
+
+  -- Recursive_Semaphore --
+
+  protected body Recursive_Semaphore_Type is
+
+    entry Seize when True is
+      use type Ada.Task_Identification.Task_Id;
+    begin
+      -- Why do I say Recursive_Semaphore_Type.Seize rather than just
+      -- Seize?
+      --
+      -- Jean-Pascal Cozic <Jean-Pascal.Cozic@ingsud.dga.fr> says: You
+      -- have to write Recursive_Semaphore_Type.Seize'Caller because
+      -- there are two homographs Seize in the scope (the entry and
+      -- the procedure). Using the context, there is no ambiguity
+      -- because Caller deals with a prefix that denotes an
+      -- entry_declaration, but the compiler cannot use context in
+      -- this case.
+      --
+      -- See LRM 4.1.4(14).
+      if Owner = Recursive_Semaphore_Type.Seize'Caller then
+        Count := Count + 1;
+      else
+        requeue Waiting with abort;
+      end if;
+    end Seize;
+
+    procedure Release is
+    begin
+      Count := Count - 1;
+    end Release;
+
+    function None_Pending return Boolean is
+    begin
+      return Waiting'Count = 0;
+    end None_Pending;
+
+    entry Waiting when Count = 0 is
+    begin
+      Owner := Waiting'Caller;
+      Count := 1;
+    end Waiting;
+
+  end Recursive_Semaphore_Type;
+
+  procedure Initialize (The_Semaphore : in out Recursive_Semaphore) is
+  begin
+    The_Semaphore.S := new Recursive_Semaphore_Type;
+  end Initialize;
+
+  procedure Adjust (The_Semaphore : in out Recursive_Semaphore) is
+  begin
+    The_Semaphore.S := new Recursive_Semaphore_Type;
+  end Adjust;
+
+  procedure Finalize (The_Semaphore : in out Recursive_Semaphore) is
+    procedure Free is new Ada.Unchecked_Deallocation
+       (Recursive_Semaphore_Type, Recursive_Semaphore_Type_P);
+  begin
+    if The_Semaphore.S /= null then
+      Free (The_Semaphore.S);
+    end if;
+  end Finalize;
+
+  procedure Seize (The_Semaphore : in out Recursive_Semaphore) is
+  begin
+    The_Semaphore.S.Seize;
+  end Seize;
+
+  procedure Release (The_Semaphore : in out Recursive_Semaphore) is
+  begin
+    The_Semaphore.S.Release;
+  end Release;
+
+  function None_Pending
+     (On_The_Semaphore : Recursive_Semaphore) return Boolean is
   begin
     return On_The_Semaphore.S.None_Pending;
   end None_Pending;
@@ -142,7 +200,7 @@ package body BC.Support.Synchronization is
   protected body Monitor_Type is
 
     entry Seize (Kind : in Seize_Kind)
-    when Waiting_To_Write'Count = 0 and not Writing is
+    when Waiting_To_Write'Count = 0 and then not Writing is
     begin
       case Kind is
         when For_Reading =>
@@ -188,15 +246,6 @@ package body BC.Support.Synchronization is
   begin
     The_Monitor.M.Release_From_Writing;
   end ;
-
-  -- Lock_Base --
-
-  procedure Delete (The_Lock : in out lock_P) is
-    procedure Free is new Ada.Unchecked_Deallocation
-       (Lock_Base'Class, Lock_P);
-  begin
-    Free (The_Lock);
-  end Delete;
 
   -- Lock --
 
