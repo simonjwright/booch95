@@ -33,7 +33,9 @@ GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu -gnatwl
 ADA_SOURCE = \
 bc.ad[bs] \
 bc-containers.ad[bs] \
-bc-containers-guarded.ad[bs]
+bc-containers-guarded.ad[bs] \
+bc-copy.ad[bs] \
+bc-filter.ad[bs]
 
 ADA_SOURCE += \
 bc-support-bounded.ad[bs] \
