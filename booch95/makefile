@@ -237,6 +237,10 @@ DEMOS += ada_units
 DEMO_SRC += ada_units.ad[bs] ada_unit_support.ad[bs]
 ada_units: force
 
+DEMOS += configuration_demo
+DEMO_SRC += configuration_demo.ad[bs] configuration_demo_support.ad[bs]
+configuration_demo: force
+
 DEMOS += lists_traversal
 DEMO_SRC += lists_for_traversal.ad[bs] lists_traversal.ad[bs]
 lists_traversal: force
