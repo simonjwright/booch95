@@ -18,8 +18,13 @@
 -- $Id$
 
 with Ada.Unchecked_Deallocation;
+with BC.Support.Exceptions;
 
 package body BC.Containers.Trees.Multiway is
+
+  package BSE renames BC.Support.Exceptions;
+  procedure Assert
+  is new BSE.Assert ("BC.Containers.Trees.Multiway");
 
   use type Nodes.Multiway_Node;
   use type Nodes.Multiway_Node_Ref;
@@ -78,8 +83,10 @@ package body BC.Containers.Trees.Multiway is
 
   procedure Insert (Obj : in out Multiway_Tree; Elem : in Item) is
   begin
-    pragma Assert (Obj.Rep = null or else Obj.Rep.Parent = null,
-                   "Attempt to Insert at other than root");
+    Assert (Obj.Rep = null or else Obj.Rep.Parent = null,
+            BC.Not_Root'Identity,
+            "Insert",
+            BSE.Not_Root);
     Obj.Rep := Nodes.Create (Elem,
                              Parent => null,
                              Child => Obj.Rep,
@@ -127,7 +134,10 @@ package body BC.Containers.Trees.Multiway is
               Curr := Curr.Sibling;
               I := I + 1;
             end loop;
-            pragma Assert (Curr /= null, "Illegal 'After' value for Append");
+            Assert (Curr /= null,
+                    BC.Range_Error'Identity,
+                    "Append",
+                    BSE.Invalid_Index);
             Curr.Sibling := Nodes.Create (Elem,
                                           Parent => Obj.Rep,
                                           Child => null,
@@ -144,8 +154,10 @@ package body BC.Containers.Trees.Multiway is
     if From_Tree.Rep = null then
       return;
     end if;
-    pragma Assert(From_Tree.Rep.Parent = null,
-                  "From_Tree is not root for Append");
+    Assert(From_Tree.Rep.Parent = null,
+           BC.Not_Root'Identity,
+           "Append",
+           BSE.Not_Root);
     if Obj.Rep = null then
       Obj.Rep := From_Tree.Rep;
       Obj.Rep.Count := Obj.Rep.Count + 1;
@@ -159,7 +171,10 @@ package body BC.Containers.Trees.Multiway is
 
   procedure Remove (Obj : in out Multiway_Tree; Index : Positive) is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Remove from a NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Remove",
+            BSE.Is_Null);
     declare
       I : Positive := 1;
       Prev : Nodes.Multiway_Node_Ref;
@@ -170,7 +185,10 @@ package body BC.Containers.Trees.Multiway is
         Curr := Curr.Sibling;
         I := I + 1;
       end loop;
-      pragma Assert (Curr /= null, "Illegal 'Index' for Remove");
+      Assert (Curr /= null,
+              BC.Range_Error'Identity,
+              "Remove",
+              BSE.Invalid_Index);
       if Prev = null then
         Obj.Rep.Child := Curr.Sibling;
       else
@@ -188,13 +206,19 @@ package body BC.Containers.Trees.Multiway is
     Ptr : Nodes.Multiway_Node_Ref := Share_With.Rep;
     I : Positive := 1;
   begin
-    pragma Assert (Ptr /= null, "Attempt to Share with a NULL tree");
+    Assert (Ptr /= null,
+            BC.Is_Null'Identity,
+            "Share",
+            BSE.Is_Null);
     Ptr := Ptr.Child;
     while Ptr /= null and then I < Child loop
       Ptr := Ptr.Sibling;
       I := I + 1;
     end loop;
-    pragma Assert (Ptr /= null, "Illegal 'Index' for Share");
+    Assert (Ptr /= null,
+            BC.Range_Error'Identity,
+            "Share",
+            BSE.Invalid_Index);
     Clear (Obj);
     Obj.Rep := Ptr;
     Obj.Rep.Count := Obj.Rep.Count + 1;
@@ -207,16 +231,24 @@ package body BC.Containers.Trees.Multiway is
     Curr : Nodes.Multiway_Node_Ref := Obj.Rep;
     I : Positive := 1;
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Swap with NULL tree");
-    pragma Assert (Swap_With.Rep = null or else Swap_With.Rep.Parent = null,
-                   "Attempt to Swap_Child with NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Swap_Child",
+            BSE.Is_Null);
+    Assert (Swap_With.Rep = null or else Swap_With.Rep.Parent = null,
+            BC.Not_Root'Identity,
+            "Swap_Child",
+            BSE.Not_Root);
     Curr := Curr.Child;
     while Curr /= null and then I < Child loop
       Prev := Curr;
       Curr := Curr.Sibling;
       I := I + 1;
     end loop;
-    pragma Assert (Curr /= null, "Illegal 'Index' for Swap_Child");
+    Assert (Curr /= null,
+            BC.Range_Error'Identity,
+            "Swap_Child",
+            BSE.Invalid_Index);
     Swap_With.Rep.Sibling := Curr.Sibling;
     if Prev = null then
       Obj.Rep.Child := Swap_With.Rep;
@@ -236,13 +268,19 @@ package body BC.Containers.Trees.Multiway is
     Curr : Nodes.Multiway_Node_Ref := Obj.Rep;
     I : Positive := 1;
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to move in a NULL direction");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Child",
+            BSE.Is_Null);
     Curr := Curr.Child;
     while Curr /= null and then I < Child loop
       Curr := Curr.Sibling;
       I := I + 1;
     end loop;
-    pragma Assert (Curr /= null, "Illegal value for Child");
+    Assert (Curr /= null,
+            BC.Range_Error'Identity,
+            "Child",
+            BSE.Invalid_Index);
     Curr.Count := Curr.Count + 1;
     Purge (Obj.Rep);
     Obj.Rep := Curr;
@@ -250,7 +288,10 @@ package body BC.Containers.Trees.Multiway is
 
   procedure Parent (Obj : in out Multiway_Tree) is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to move in a NULL direction");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Parent",
+            BSE.Is_Null);
     if Obj.Rep.Parent = null then
       Clear (Obj);
     else
@@ -262,13 +303,19 @@ package body BC.Containers.Trees.Multiway is
 
   procedure Set_Item (Obj : in out Multiway_Tree; Elem : in Item) is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Set_Item on NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Set_Item",
+            BSE.Is_Null);
     Obj.Rep.Element := Elem;
   end Set_Item;
 
   function Arity (Obj : Multiway_Tree) return Natural is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Arity on NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Arity",
+            BSE.Is_Null);
     declare
       Count : Natural := 0;
       Ptr : Nodes.Multiway_Node_Ref := Obj.Rep.Child;
@@ -303,13 +350,19 @@ package body BC.Containers.Trees.Multiway is
 
   function Item_At (Obj : in Multiway_Tree) return Item is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to move in a NULL direction");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Item_At",
+            BSE.Is_Null);
     return Obj.Rep.Element;
   end Item_At;
 
   function Item_At (Obj : in Multiway_Tree) return Item_Ptr is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to take Item_At a NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Item_At",
+            BSE.Is_Null);
     return Obj.Rep.Element'access;
   end Item_At;
 

@@ -17,7 +17,13 @@
 
 -- $Id$
 
+with BC.Support.Exceptions;
+
 package body BC.Containers.Trees.Binary is
+
+  package BSE renames BC.Support.Exceptions;
+  procedure Assert
+  is new BSE.Assert ("BC.Containers.Trees.Binary");
 
   use type Nodes.Binary_Node;
   use type Nodes.Binary_Node_Ref;
@@ -46,8 +52,10 @@ package body BC.Containers.Trees.Binary is
                     Elem : in Item;
                     Child : in Child_Branch) is
   begin
-    pragma Assert (Obj.Rep = null or else Obj.Rep.Parent = null,
-                   "Tried to insert when not at root");
+    Assert (Obj.Rep = null or else Obj.Rep.Parent = null,
+            BC.Not_Root'Identity,
+            "Insert",
+            BSE.Not_Root);
     if Child = Left then
       Obj.Rep := Nodes.Create (Elem,
                                Parent => null,
@@ -102,7 +110,10 @@ package body BC.Containers.Trees.Binary is
 
   procedure Remove (Obj : in out Binary_Tree; Child : in Child_Branch) is
   begin
-    pragma Assert (Obj.Rep /= null, "Tried to Remove from null tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Remove",
+            BSE.Is_Null);
     if Child = Left then
       Purge (Obj.Rep.Left);
       Obj.Rep.Left := null;
@@ -117,8 +128,10 @@ package body BC.Containers.Trees.Binary is
                    Child : in Child_Branch) is
     Temp : Nodes.Binary_Node_Ref :=  Share_With.Rep;
   begin
-    pragma Assert (Share_With.Rep /= null,
-                   "Attempt to Share with null pointer");
+    Assert (Share_With.Rep /= null,
+            BC.Is_Null'Identity,
+            "Share",
+            BSE.Is_Null);
     if Child = Left then
       Temp := Share_With.Rep.Left;
     else
@@ -134,9 +147,14 @@ package body BC.Containers.Trees.Binary is
                         Child : in Child_Branch) is
     Curr : Nodes.Binary_Node_Ref;
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Swap with null Tree");
-    pragma Assert (Swap_With.Rep = null or else Swap_With.Rep.Parent = null,
-                   "Attempt to Swap with non root Tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Swap_Child",
+            BSE.Is_Null);
+    Assert (Swap_With.Rep = null or else Swap_With.Rep.Parent = null,
+            BC.Not_Root'Identity,
+            "Swap_Child",
+            BSE.Not_Root);
     if Child = Left then
       Curr := Obj.Rep.Left;
       Obj.Rep.Left := Swap_With.Rep;
@@ -165,7 +183,10 @@ package body BC.Containers.Trees.Binary is
   procedure Left_Child (Obj : in out Binary_Tree) is
     Curr : Nodes.Binary_Node_Ref;
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Left_Child a null tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Left_Child",
+            BSE.Is_Null);
     Curr := Obj.Rep;
     Obj.Rep := Obj.Rep.Left;
     if Curr.Count > 1 then
@@ -187,7 +208,10 @@ package body BC.Containers.Trees.Binary is
   procedure Right_Child (Obj : in out Binary_Tree) is
     Curr : Nodes.Binary_Node_Ref;
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Right_Child a null tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Right_Child",
+            BSE.Is_Null);
     Curr := Obj.Rep;
     Obj.Rep := Obj.Rep.Right;
     if Curr.Count > 1 then
@@ -208,7 +232,10 @@ package body BC.Containers.Trees.Binary is
 
   procedure Parent (Obj : in out Binary_Tree) is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Parent a null tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Parent",
+            BSE.Is_Null);
     if Obj.Rep.Parent = null then
       Clear (Obj);
     else
@@ -222,7 +249,10 @@ package body BC.Containers.Trees.Binary is
 
   procedure Set_Item (Obj : in out Binary_Tree; Elem : in Item) is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Set_Item on null tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Set_Item",
+            BSE.Is_Null);
     Obj.Rep.Element := Elem;
   end Set_Item;
 
@@ -249,7 +279,10 @@ package body BC.Containers.Trees.Binary is
 
   function Item_At (Obj : in Binary_Tree) return Item is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to take Item_At with null tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Item_At",
+            BSE.Is_Null);
     return Obj.Rep.Element;
   end Item_At;
 
@@ -268,7 +301,6 @@ package body BC.Containers.Trees.Binary is
           Node.Right.Parent := null;
         end if;
         Nodes.Delete (Node);
-        pragma Assert (Node = null, "Purge should have deleted the Node");
       end if;
     end if;
   end Purge;

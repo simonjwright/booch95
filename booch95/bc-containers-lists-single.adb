@@ -17,9 +17,15 @@
 
 -- $Id$
 
+with BC.Support.Exceptions;
+
 package body Bc.Containers.Lists.Single is
 
-  use Single_Nodes;
+  package BSE renames BC.Support.Exceptions;
+  procedure Assert
+  is new BSE.Assert ("BC.Containers.Lists.Single");
+
+  use type Single_Nodes.Single_Node_Ref;
 
   function "=" (L, R : Single_List) return Boolean is
   begin
@@ -27,8 +33,8 @@ package body Bc.Containers.Lists.Single is
   end "=";
 
   procedure Clear (Obj : in out Single_List) is
-    Curr : Single_Node_Ref := Obj.Rep;
-    Ptr : Single_Node_Ref;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
+    Ptr : Single_Nodes.Single_Node_Ref;
   begin
     while Curr /= null loop
       Ptr := Curr;
@@ -37,7 +43,7 @@ package body Bc.Containers.Lists.Single is
         Ptr.Count := Ptr.Count - 1;
         exit;
       else
-        Delete (Ptr);
+        Single_Nodes.Delete (Ptr);
       end if;
     end loop;
     Obj.Rep := null;
@@ -45,11 +51,11 @@ package body Bc.Containers.Lists.Single is
 
   procedure Insert (Obj : in out Single_List; Elem : Item) is
   begin
-    Obj.Rep := Create (Elem, Next => Obj.Rep);
+    Obj.Rep := Single_Nodes.Create (Elem, Next => Obj.Rep);
   end Insert;
 
   procedure Insert (Obj : in out Single_List; From_List : in Single_List) is
-    Ptr : Single_Node_Ref := From_List.Rep;
+    Ptr : Single_Nodes.Single_Node_Ref := From_List.Rep;
   begin
     if Ptr /= null then
       while Ptr.Next /= null loop
@@ -64,8 +70,8 @@ package body Bc.Containers.Lists.Single is
   procedure Insert (Obj : in out Single_List;
                     Elem : Item;
                     Before : Positive) is
-    Prev : Single_Node_Ref;
-    Curr : Single_Node_Ref := Obj.Rep;
+    Prev : Single_Nodes.Single_Node_Ref;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Index: Positive := 1;
   begin
     if Curr = null or else Before = 1 then
@@ -76,17 +82,20 @@ package body Bc.Containers.Lists.Single is
         Curr := Curr.Next;
         Index := Index + 1;
       end loop;
-      pragma Assert (Curr /= null, "Attempt to Insert at NULL location");
-      Prev.Next := Create (Elem, Next => Curr);
+      Assert (Curr /= null,
+              BC.Range_Error'Identity,
+              "Insert",
+              BSE.Invalid_Index);
+      Prev.Next := Single_Nodes.Create (Elem, Next => Curr);
     end if;
   end Insert;
 
   procedure Insert (Obj : in out Single_List;
                     From_List: in out Single_List;
                     Before : Positive) is
-    Prev : Single_Node_Ref;
-    Curr : Single_Node_Ref := Obj.Rep;
-    Ptr  : Single_Node_Ref := From_List.Rep;
+    Prev : Single_Nodes.Single_Node_Ref;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
+    Ptr  : Single_Nodes.Single_Node_Ref := From_List.Rep;
     Index: Positive := 1;
   begin
     if Ptr /= null then
@@ -98,7 +107,10 @@ package body Bc.Containers.Lists.Single is
           Curr := Curr.Next;
           Index := Index + 1;
         end loop;
-        pragma Assert (Curr /= null, "Attempt to Insert at NULL location");
+        Assert (Curr /= null,
+                BC.Range_Error'Identity,
+                "Insert",
+                BSE.Invalid_Index);
         while Ptr.Next /= null loop
           Ptr := Ptr.Next;
         end loop;
@@ -110,7 +122,7 @@ package body Bc.Containers.Lists.Single is
   end Insert;
 
   procedure Append (Obj : in out Single_List; Elem : Item) is
-    Curr : Single_Node_Ref := Obj.Rep;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
   begin
     if Curr /= null then
       while Curr.Next /= null loop
@@ -118,14 +130,14 @@ package body Bc.Containers.Lists.Single is
       end loop;
     end if;
     if Curr /= null then
-      Curr.Next := Create (Elem, Next => null);
+      Curr.Next := Single_Nodes.Create (Elem, Next => null);
     else
-      Obj.Rep := Create (Elem, Next => null);
+      Obj.Rep := Single_Nodes.Create (Elem, Next => null);
     end if;
   end Append;
 
   procedure Append (Obj : in out Single_List; From_List : in Single_List) is
-    Curr : Single_Node_Ref := Obj.Rep;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
   begin
     if From_List.Rep /= null then
       if Curr /= null then
@@ -143,7 +155,7 @@ package body Bc.Containers.Lists.Single is
   end Append;
 
   procedure Append (Obj : in out Single_List; Elem : Item; After : Positive) is
-    Curr : Single_Node_Ref := Obj.Rep;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Index: Positive := 1;
   begin
     if Curr = null then
@@ -153,16 +165,19 @@ package body Bc.Containers.Lists.Single is
         Curr := Curr.Next;
         Index := Index + 1;
       end loop;
-      pragma Assert (Curr /= null, "Attempt to Insert at NULL location");
-      Curr.Next := Create (Elem, Next => Curr.Next);
+      Assert (Curr /= null,
+              BC.Range_Error'Identity,
+              "Append",
+              BSE.Invalid_Index);
+      Curr.Next := Single_Nodes.Create (Elem, Next => Curr.Next);
     end if;
   end Append;
 
   procedure Append (Obj : in out Single_List;
                     From_List : in Single_List;
                     After : Positive) is
-    Curr : Single_Node_Ref := Obj.Rep;
-    Ptr  : Single_Node_Ref := From_List.Rep;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
+    Ptr  : Single_Nodes.Single_Node_Ref := From_List.Rep;
     Index: Positive := 1;
   begin
     if Ptr /= null then
@@ -173,7 +188,10 @@ package body Bc.Containers.Lists.Single is
           Curr := Curr.Next;
           Index := Index + 1;
         end loop;
-        pragma Assert (Curr /= null, "Attempt to Insert with invalid Index");
+        Assert (Curr /= null,
+                BC.Range_Error'Identity,
+                "Append",
+                BSE.Invalid_Index);
         while Ptr.Next /= null loop
           Ptr := Ptr.Next;
         end loop;
@@ -185,8 +203,8 @@ package body Bc.Containers.Lists.Single is
   end Append;
 
   procedure Remove (Obj : in out Single_List; From : Positive) is
-    Prev : Single_Node_Ref;
-    Curr : Single_Node_Ref := Obj.Rep;
+    Prev : Single_Nodes.Single_Node_Ref;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Index: Positive := 1;
   begin
     while Curr /= null and then Index < From loop
@@ -194,7 +212,10 @@ package body Bc.Containers.Lists.Single is
       Curr := Curr.Next;
       Index := Index + 1;
     end loop;
-    pragma Assert (Curr /= null, "Attempt to Remove from Invalid location");
+    Assert (Curr /= null,
+            BC.Range_Error'Identity,
+            "Remove",
+            BSE.Invalid_Index);
     if Prev /= null then
       Prev.Next := Curr.Next;
     else
@@ -205,14 +226,14 @@ package body Bc.Containers.Lists.Single is
       Obj.Rep := Curr.Next;
       Curr.Next := null;
     else
-      Delete (Curr);
+      Single_Nodes.Delete (Curr);
     end if;
   end Remove;
 
   procedure Purge (Obj : in out Single_List; From : Positive) is
-    Prev : Single_Node_Ref;
-    Curr : Single_Node_Ref := Obj.Rep;
-    Ptr : Single_Node_Ref;
+    Prev : Single_Nodes.Single_Node_Ref;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
+    Ptr : Single_Nodes.Single_Node_Ref;
     Index : Positive := 1;
   begin
     while Curr /= null and then Index < From loop
@@ -220,7 +241,10 @@ package body Bc.Containers.Lists.Single is
       Curr := Curr.Next;
       Index := Index + 1;
     end loop;
-    pragma Assert (Curr /= null, "Attempt to Purge with Invalid Index");
+    Assert (Curr /= null,
+            BC.Range_Error'Identity,
+            "Purge",
+            BSE.Invalid_Index);
     if Prev /= null then
       Prev.Next := null;
     else
@@ -233,7 +257,7 @@ package body Bc.Containers.Lists.Single is
         Ptr.Count := Ptr.Count - 1;
         exit;
       else
-        Delete (Ptr);
+        Single_Nodes.Delete (Ptr);
       end if;
     end loop;
   end Purge;
@@ -241,8 +265,8 @@ package body Bc.Containers.Lists.Single is
   procedure Purge (Obj : in out Single_List;
                    From : Positive;
                    Count : Positive) is
-    Prev, Ptr : Single_Node_Ref;
-    Curr : Single_Node_Ref := Obj.Rep;
+    Prev, Ptr : Single_Nodes.Single_Node_Ref;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Index : Positive := 1;
     Cut : Boolean := True;
   begin
@@ -251,7 +275,10 @@ package body Bc.Containers.Lists.Single is
       Curr := Curr.Next;
       Index := Index + 1;
     end loop;
-    pragma Assert (Curr /= null, "Attempt to Purge with Invalid Index");
+    Assert (Curr /= null,
+            BC.Range_Error'Identity,
+            "Purge",
+            BSE.Invalid_Index);
     if Prev /= null then
       Prev.Next := null;
     else
@@ -266,7 +293,7 @@ package body Bc.Containers.Lists.Single is
           Ptr.Count := Ptr.Count - 1;
           Cut := False;
         else
-          Delete (Ptr);
+          Single_Nodes.Delete (Ptr);
         end if;
       end if;
       Index := Index + 1;
@@ -301,15 +328,21 @@ package body Bc.Containers.Lists.Single is
   procedure Share (Obj : in out Single_List;
                    With_List: Single_List;
                    Starting_At : Positive) is
-    Ptr : Single_Node_Ref := With_List.Rep;
+    Ptr : Single_Nodes.Single_Node_Ref := With_List.Rep;
     Index : Positive := 1;
   begin
-    pragma Assert (Ptr /= null, "Attempt to Share with NULL pointer");
+    Assert (Ptr /= null,
+            BC.Is_Null'Identity,
+            "Share",
+            BSE.Is_Null);
     while Ptr /= null and then Index < Starting_At loop
       Ptr := Ptr.Next;
       Index := Index + 1;
     end loop;
-    pragma Assert (Ptr /= null, "Share: NULL pointer problems");
+    Assert (Ptr /= null,
+            BC.Range_Error'Identity,
+            "Share",
+            BSE.Invalid_Index);
     Clear (Obj);
     Obj.Rep := Ptr;
     Obj.Rep.Count := Obj.Rep.Count + 1;
@@ -318,7 +351,10 @@ package body Bc.Containers.Lists.Single is
   procedure Share_Head (Obj : in out Single_List;
                         With_List : in Single_List) is
   begin
-    pragma Assert (With_List.Rep /= null, "Attempt to Share with NULL list");
+    Assert (With_List.Rep /= null,
+            BC.Is_Null'Identity,
+            "Share_Head",
+            BSE.Is_Null);
     Clear (Obj);
     Obj.Rep := With_List.Rep;
     Obj.Rep.Count := Obj.Rep.Count + 1;
@@ -326,9 +362,12 @@ package body Bc.Containers.Lists.Single is
 
   procedure Share_Foot (Obj : in out Single_List;
                         With_List : in Single_List) is
-    Ptr : Single_Node_Ref := With_List.Rep;
+    Ptr : Single_Nodes.Single_Node_Ref := With_List.Rep;
   begin
-    pragma Assert (Ptr /= null, "Attempt to Share_Foot with NULL list");
+    Assert (Ptr /= null,
+            BC.Is_Null'Identity,
+            "Share_Foot",
+            BSE.Is_Null);
     Clear (Obj);
     while Ptr.Next /= null loop
       Ptr := Ptr.Next;
@@ -339,18 +378,24 @@ package body Bc.Containers.Lists.Single is
 
   procedure Swap_Tail (Obj : in out Single_List;
                        With_List: in out Single_List) is
-    -- XXXXX!!
-    pragma Assert (Obj.Rep /= null, "Attempt to Swap_Tail with NULL tree");
-    Curr : Single_Node_Ref := Obj.Rep.Next;
+    Curr : Single_Nodes.Single_Node_Ref;
   begin
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Swap_Tail",
+            BSE.Is_Null);
+    Curr := Obj.Rep.Next;
     Obj.Rep.Next := With_List.Rep;
     With_List.Rep := Curr;
   end Swap_Tail;
 
   procedure Tail(Obj : in out Single_List) is
-    Curr : Single_Node_Ref := Obj.Rep;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Tail with NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Tail",
+            BSE.Is_Null);
     Obj.Rep := Obj.Rep.Next;
     if Obj.Rep /= null then
       Obj.Rep.Count := Obj.Rep.Count + 1;
@@ -358,32 +403,38 @@ package body Bc.Containers.Lists.Single is
     if Curr.Count > 1 then
       Curr.Count := Curr.Count - 1;
     else
-      Delete (Curr);
+      Single_Nodes.Delete (Curr);
     end if;
   end Tail;
 
   procedure Set_Head (Obj : in out Single_List; Elem : Item) is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to Set_Head with NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Set_Head",
+            BSE.Is_Null);
     Obj.Rep.Element := Elem;
   end Set_Head;
 
   procedure Set_Item (Obj : in out Single_List;
                       Elem : Item;
                       At_Loc : Positive) is
-    Curr : Single_Node_Ref := Obj.Rep;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Index: Positive := 1;
   begin
     while Curr /= null and then Index < At_Loc loop
       Curr := Curr.Next;
       Index := Index + 1;
     end loop;
-    pragma Assert (Curr /= null, "Attempt to Set_Item with invalid index");
+    Assert (Curr /= null,
+            BC.Range_Error'Identity,
+            "Set_Item",
+            BSE.Invalid_Index);
     Curr.Element := Elem;
   end Set_Item;
 
   function Length (Obj : Single_List) return Natural is
-    Curr : Single_Node_Ref := Obj.Rep;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Count : Natural := 0;
   begin
     while Curr /= null loop
@@ -405,20 +456,29 @@ package body Bc.Containers.Lists.Single is
 
   function Head (Obj : Single_List) return Item is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to get Head with NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Head",
+            BSE.Is_Null);
     return Obj.Rep.Element;
   end Head;
 
   function Head (Obj : Single_List) return Item_Ptr is
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to get Head with NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Head",
+            BSE.Is_Null);
     return Obj.Rep.Element'access;
   end Head;
 
   function Foot (Obj : Single_List) return Item is
-    Curr : Single_Node_Ref := Obj.Rep;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to get Foot with NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Foot",
+            BSE.Is_Null);
     while Curr.Next /= null loop
       Curr := Curr.Next;
     end loop;
@@ -426,9 +486,12 @@ package body Bc.Containers.Lists.Single is
   end Foot;
 
   function Foot (Obj : Single_List) return Item_Ptr is
-    Curr : Single_Node_Ref := Obj.Rep;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to get Foot with NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Foot",
+            BSE.Is_Null);
     while Curr.Next /= null loop
       Curr := Curr.Next;
     end loop;
@@ -436,30 +499,42 @@ package body Bc.Containers.Lists.Single is
   end Foot;
 
   function Item_At (Obj : Single_List; Index : Positive) return Item is
-    Prev : Single_Node_Ref;
-    Curr : Single_Node_Ref := Obj.Rep;
+    Prev : Single_Nodes.Single_Node_Ref;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Loc : Positive := 1;
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to get Item with NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Item_At",
+            BSE.Is_Null);
     while Curr /= null and then Loc < Index loop
       Curr := Curr.Next;
       Loc := Loc + 1;
     end loop;
-    pragma Assert (Curr /= null, "Attempt to get Item with Invalid Index");
+    Assert (Curr /= null,
+            BC.Range_Error'Identity,
+            "Item_At",
+            BSE.Invalid_Index);
     return Curr.Element;
   end Item_At;
 
   function Item_At (Obj : Single_List; Index : Natural) return Item_Ptr is
-    Prev : Single_Node_Ref;
-    Curr : Single_Node_Ref := Obj.Rep;
+    Prev : Single_Nodes.Single_Node_Ref;
+    Curr : Single_Nodes.Single_Node_Ref := Obj.Rep;
     Loc : Positive := 1;
   begin
-    pragma Assert (Obj.Rep /= null, "Attempt to get Item with NULL tree");
+    Assert (Obj.Rep /= null,
+            BC.Is_Null'Identity,
+            "Item_At",
+            BSE.Is_Null);
     while Curr /= null and then Loc < Index loop
       Curr := Curr.Next;
       Loc := Loc + 1;
     end loop;
-    pragma Assert (Curr /= null, "Attempt to get Item with Invalid Index");
+    Assert (Curr /= null,
+            BC.Range_Error'Identity,
+            "Item_At",
+            BSE.Invalid_Index);
     return Curr.Element'access;
   end Item_At;
 
