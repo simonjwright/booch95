@@ -34,6 +34,8 @@ package BC.Containers.Stacks.Dynamic is
   -- grows in a linear fashion (based on Chunk_Size).  There is currently
   -- no support for linear collapsing of the Stack.
 
+  function Null_Container return Dynamic_Stack;
+
   function Create (Size : Positive) return Dynamic_Stack;
   -- Creates a new Dynamic Stack that is preallocated for 'Size' elements
 

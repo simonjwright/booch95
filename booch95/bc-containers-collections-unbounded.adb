@@ -133,4 +133,11 @@ package body BC.Containers.Collections.Unbounded is
     Unbounded_Collection_Nodes.Free (C.Rep);
   end Finalize;
 
+  Empty_Container : Unbounded_Collection;
+
+  function Null_Container return Unbounded_Collection is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Collections.Unbounded;

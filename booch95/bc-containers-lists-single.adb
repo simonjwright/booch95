@@ -628,4 +628,11 @@ package body BC.Containers.Lists.Single is
     end if;
   end Delete_Item_At;
 
+  Empty_Container : Single_List;
+
+  function Null_Container return Single_List is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Lists.Single;

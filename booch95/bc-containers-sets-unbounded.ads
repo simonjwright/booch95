@@ -47,6 +47,8 @@ package BC.Containers.Sets.Unbounded is
 
   type Unbounded_Set is new Set with private;
 
+  function Null_Container return Unbounded_Set;
+
   procedure Clear (S : in out Unbounded_Set);
   -- Empty the set of all items.
 

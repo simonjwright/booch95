@@ -136,4 +136,11 @@ package body BC.Containers.Rings.Unbounded is
     Unbounded_Ring_Nodes.Free (R.Rep);
   end Finalize;
 
+  Empty_Container : Unbounded_Ring;
+
+  function Null_Container return Unbounded_Ring is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Rings.Unbounded;

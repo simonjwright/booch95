@@ -100,4 +100,11 @@ package body BC.Containers.Queues.Unbounded is
     Unbounded_Queue_Nodes.Free (Q.Rep); -- does a Clear()
   end Finalize;
 
+  Empty_Container : Unbounded_Queue;
+
+  function Null_Container return Unbounded_Queue is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Queues.Unbounded;

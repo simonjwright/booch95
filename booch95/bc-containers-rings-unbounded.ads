@@ -30,6 +30,8 @@ package BC.Containers.Rings.Unbounded is
 
   type Unbounded_Ring is new Ring with private;
 
+  function Null_Container return Unbounded_Ring;
+
   function "=" (Left, Right : in Unbounded_Ring) return Boolean;
 
   procedure Clear (R : in out Unbounded_Ring);

@@ -101,4 +101,11 @@ package body BC.Containers.Queues.Bounded is
     Free (Q.Rep);
   end Finalize;
 
+  Empty_Container : Bounded_Queue;
+
+  function Null_Container return Bounded_Queue is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Queues.Bounded;

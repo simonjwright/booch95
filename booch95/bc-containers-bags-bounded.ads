@@ -46,6 +46,8 @@ package BC.Containers.Bags.Bounded is
 
   type Bounded_Bag is new Bag with private;
 
+  function Null_Container return Bounded_Bag;
+
   procedure Clear (B : in out Bounded_Bag);
   -- Empty the bag of all items.
 

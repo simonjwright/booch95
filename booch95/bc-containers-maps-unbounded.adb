@@ -127,4 +127,11 @@ package body BC.Containers.Maps.Unbounded is
     return VC.Item_At (Tables.Value_Bucket (M.Rep.all, Bucket).all, Index);
   end Value_At;
 
+  Empty_Container : Unbounded_Map;
+
+  function Null_Container return Unbounded_Map is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Maps.Unbounded;

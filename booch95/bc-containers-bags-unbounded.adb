@@ -133,4 +133,11 @@ package body BC.Containers.Bags.Unbounded is
     return VC.Item_At (Tables.Value_Bucket (B.Rep, Bucket).all, Index);
   end Value_At;
 
+  Empty_Container : Unbounded_Bag;
+
+  function Null_Container return Unbounded_Bag is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Bags.Unbounded;

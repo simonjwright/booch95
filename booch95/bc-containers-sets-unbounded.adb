@@ -105,4 +105,11 @@ package body BC.Containers.Sets.Unbounded is
     return IC.Item_At (Tables.Item_Bucket (S.Rep, Bucket).all, Index);
   end Item_At;
 
+  Empty_Container : Unbounded_Set;
+
+  function Null_Container return Unbounded_Set is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Sets.Unbounded;

@@ -125,4 +125,11 @@ package body BC.Containers.Queues.Dynamic is
     end if;
   end Finalize;
 
+  Empty_Container : Dynamic_Queue;
+
+  function Null_Container return Dynamic_Queue is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Queues.Dynamic;

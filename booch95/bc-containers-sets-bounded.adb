@@ -116,4 +116,11 @@ package body BC.Containers.Sets.Bounded is
     return IC.Item_At (Tables.Item_Bucket (S.Rep, Bucket).all, Index);
   end Item_At;
 
+  Empty_Container : Bounded_Set;
+
+  function Null_Container return Bounded_Set is
+  begin
+    return Empty_Container;
+  end Null_Container;
+
 end BC.Containers.Sets.Bounded;

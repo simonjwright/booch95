@@ -30,6 +30,8 @@ package BC.Containers.Collections.Ordered.Unbounded is
 
   type Unbounded_Ordered_Collection is new Ordered_Collection with private;
 
+  function Null_Container return Unbounded_Ordered_Collection;
+
   function "=" (Left, Right : in Unbounded_Ordered_Collection) return Boolean;
 
   procedure Clear (C : in out Unbounded_Ordered_Collection);

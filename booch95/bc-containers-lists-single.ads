@@ -32,6 +32,8 @@ package BC.Containers.Lists.Single is
 
   type Single_List is new Container with private;
 
+  function Null_Container return Single_List;
+
   function "=" (L, R : Single_List) return Boolean;
   -- Return True if and only if both lists are null or structurally share
   -- the same list.

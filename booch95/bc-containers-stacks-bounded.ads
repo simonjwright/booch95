@@ -26,6 +26,8 @@ package BC.Containers.Stacks.Bounded is
 
   type Bounded_Stack is new Stack with private;
 
+  function Null_Container return Bounded_Stack;
+
   procedure Clear (S : in out Bounded_Stack);
   -- Empty the Stack of all items.
 

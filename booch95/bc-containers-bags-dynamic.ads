@@ -49,6 +49,8 @@ package BC.Containers.Bags.Dynamic is
 
   type Dynamic_Bag is new Bag with private;
 
+  function Null_Container return Dynamic_Bag;
+
   function Create (Size : Positive) return Dynamic_Bag;
   -- Creates a new Dynamic Bag each of whose buckets is preallocated for
   -- 'Size' elements

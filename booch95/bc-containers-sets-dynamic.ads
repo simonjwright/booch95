@@ -47,6 +47,8 @@ package BC.Containers.Sets.Dynamic is
 
   type Dynamic_Set is new Set with private;
 
+  function Null_Container return Dynamic_Set;
+
   function Create (Size : Positive) return Dynamic_Set;
   -- Creates a new Dynamic Set each of whose buckets is preallocated for
   -- 'Size' elements

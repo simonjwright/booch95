@@ -49,6 +49,8 @@ package BC.Containers.Bags.Unbounded is
 
   type Unbounded_Bag is new Bag with private;
 
+  function Null_Container return Unbounded_Bag;
+
   procedure Clear (B : in out Unbounded_Bag);
   -- Empty the bag of all items.
 
