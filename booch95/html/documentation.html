@@ -26,8 +26,8 @@
 <!---------------------------------------------------------------------->
 
 
-<A NAME="abstractions"> </A></P>
-<H2>Key Abstractions</H2>
+ </P>
+<H2><A NAME="abstractions">Key Abstractions</A></H2>
 <P>The Ada 95 verison of the components will contain the same key abstractions
 as the C++ form (Tools, Support, and Structs). However, the organization
 will be slightly different, particularly in the Support domain. This is
@@ -47,8 +47,8 @@ lists, directed and undirected graphs, and binary, multiway, and AVL trees.
 <!---------------------------------------------------------------------->
 
 
-<A NAME="patterns"> </A></P>
-<H2>The Patterns of the BCs</H2>
+ </P>
+<H2><A NAME="patterns">The Patterns of the BCs</A></H2>
 <P>The BCs cover several issues: </P>
 <UL>
 <LI>Time and Space semantics 
@@ -65,8 +65,8 @@ usability and extensibility.
 <!---------------------------------------------------------------------->
 
 
-<A NAME="tactical"> </A></P>
-<H2>Tactical Issues</H2>
+ </P>
+<H2><A NAME="tactical">Tactical Issues</A></H2>
 <P></P>
 <BLOCKQUOTE>The particular semantics of a given programming language influence our architectural
 decisions. To ignore these influences leaves us with abstractions that do
@@ -84,8 +84,8 @@ parameterization is the form most often used.
 <!---------------------------------------------------------------------->
 
 
-<A NAME="macro"> </A></P>
-<H2>Macro Organization</H2>
+</P>
+<H2><A NAME="macro">Macro Organization</A></H2>
 <P>The BCs emphasize separation of policy from implementation. For this reason,
 abstract classes are declared for every major component type. Also, the
 Support category provides the same low-level features used in constructing
@@ -101,7 +101,7 @@ is derived from Queue.
 
 
  </P>
-<H2>Class Families</H2>
+<H2><a name="families">Class Families</a></H2>
 <P>Each abstract base class has several derived concrete forms, each designed
 to support specific needs for time and space semantics. The user selects
 the concrete form most appropriate to their needs. The net result is that
@@ -152,8 +152,8 @@ Item as the container parameter)
 <!---------------------------------------------------------------------->
 
 
-<A NAME="timeandspace"> </A></P>
-<H2>Time and Space Semantics</H2>
+ </P>
+<H2><A NAME="timeandspace">Time and Space Semantics</A></H2>
 <P>The fundamental difference between the Unbounded and Bounded forms is that
 the unbounded form is essentially an time efficient linked-list, but is
 not very space efficient. The bounded form uses a packed array base class,
@@ -167,8 +167,8 @@ and Unbounded forms have Item and Storage_Manager for parameters. </P>
 <!---------------------------------------------------------------------->
 
 
-<A NAME="storage"> </A></P>
-<H2>Storage Management</H2>
+ </P>
+<H2><A NAME="storage">Storage Management</A></H2>
 <P>Storage management on certain architectures can be complex, and so requires
 that all of our classes use a policy tailored to the platform, rather than
 using a general one assumed by the library designer to work in all circumstances.
@@ -208,7 +208,7 @@ This decision may be revisited.</p>
 
 
 </P>
-<H2>Iteration</H2>
+<H2><a name="iteration">Iteration<a/></H2>
 <P>Separate types act as agents responsible for iterating across a structure.
 This was done for two reasons: </P>
 <UL>
@@ -229,8 +229,8 @@ mechanism was selected for its direct simplicity and efficiency.
 <!---------------------------------------------------------------------->
 
 
-<A NAME="conclusion"> </A></P>
-<H2>Conclusion</H2>
+ </P>
+<H2><A NAME="conclusion">Conclusion</A></H2>
 <P>Here's a table of the components and the forms to be supported.<BR>
  (U=Unbounded, B=Bounded, D=dynamic, G=Guarded, S=Synchronized) </P>
 <PRE>
@@ -278,7 +278,7 @@ Trees
 <P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
 <P><A HREF="index.html">[index]</A></p>
 
-<p><i>Last update: 29.vii.98</i></p>
+<p><i>Last update: 30.vii.98</i></p>
 
 <!------------------------------------------------------------------->
 
