@@ -18,7 +18,6 @@
 -- $Id$
 
 generic
-  with function "=" (L, R : Item) return Boolean is <>;
 package BC.Containers.Sets is
 
   -- A set denotes a collection of items, drawn from some well-defined
