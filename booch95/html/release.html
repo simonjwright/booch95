@@ -30,7 +30,7 @@
 
 <dl>
 
-<dt>29 May 2000</dt>
+<dt>4 June 2000</dt>
 
 <dd>
 
@@ -40,10 +40,11 @@ In AVL Trees and Lists, removed the <tt>aliased</tt> specification on
 elements, which forces the element to be constrained even if the
 discriminant has a default.<p>
 
-In response to a report from <a href="mailto:dennsion@ssd.fsi.com">T E
-Dennison</a>, speeded up the creation of Iterators. Note, this
-requires that iterators be declared of type
-<tt>Containers.Interator'Class</tt>.<p>
+In response to a report from <a
+href="mailto:dennsion@ssd.fsi.com">T&nbsp;E&nbsp;Dennison</a>, speeded
+up the creation of Iterators. Note, this requires that iterators be
+declared of type <tt>Containers.Interator'Class</tt>, and initialized
+at the point of declaration.<p>
 
 Copying of Ordered Collections using <tt>Collections.Copy</tt> is now
 stable.<p>
@@ -60,7 +61,7 @@ Container iterators. They are only available when the
 Smart Pointers now have a <tt>Null_Pointer</tt> declaration.<p>
 
 Bounded forms didn't properly implement equality (thanks to <a
-href="mailto:wymbdd@hotmail.com">Mark Bond</a>).<p>
+href="mailto:wymbdd@hotmail.com">Mark Bond</a> for this one).<p>
 
 Hash tables now compile with APEX as well as GNAT and ObjectAda 7.1.<p>
 
