@@ -169,7 +169,7 @@ package body BC.Support.Dynamic is
     return Obj.Ref (1);
   end First;
 
-  function First (Obj : access Dyn_Node) return Item_Ptr is
+  function First (Obj : Dyn_Node) return Item_Ptr is
   begin
     Assert (Obj.Size > 0,
             BC.Underflow'Identity,
@@ -187,7 +187,7 @@ package body BC.Support.Dynamic is
     return Obj.Ref (Obj.Size);
   end Last;
 
-  function Last (Obj : access Dyn_Node) return Item_Ptr is
+  function Last (Obj : Dyn_Node) return Item_Ptr is
   begin
     Assert (Obj.Size > 0,
             BC.Underflow'Identity,
@@ -196,7 +196,7 @@ package body BC.Support.Dynamic is
     return Obj.Ref (Obj.Size)'access;
   end Last;
 
-  function Item_At (Obj : access Dyn_Node; Index : Positive) return Item is
+  function Item_At (Obj : Dyn_Node; Index : Positive) return Item is
   begin
     Assert (Index <= Obj.Size,
             BC.Range_Error'Identity,
@@ -205,7 +205,7 @@ package body BC.Support.Dynamic is
     return Obj.Ref (Index);
   end Item_At;
 
-  function Item_At (Obj : access Dyn_Node; Index : Positive) return Item_Ptr is
+  function Item_At (Obj : Dyn_Node; Index : Positive) return Item_Ptr is
   begin
     Assert (Index <= Obj.Size,
             BC.Range_Error'Identity,
@@ -214,7 +214,7 @@ package body BC.Support.Dynamic is
     return Obj.Ref (Index)'access;
   end Item_At;
 
-  function Location (Obj : access Dyn_Node; Elem : Item; Start : Positive := 1)
+  function Location (Obj : Dyn_Node; Elem : Item; Start : Positive := 1)
                      return Natural is
   begin
     Assert (Start <= Obj.Size,

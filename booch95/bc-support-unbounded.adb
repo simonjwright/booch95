@@ -19,6 +19,7 @@
 
 with Ada.Unchecked_Deallocation;
 with BC.Support.Exceptions;
+with System.Address_To_Access_Conversions;
 
 package body BC.Support.Unbounded is
 
@@ -26,6 +27,12 @@ package body BC.Support.Unbounded is
   procedure Assert
   is new BSE.Assert ("BC.Support.Dynamic");
 
+  -- We can't take 'Access of components of constant (in parameter)
+  -- objects; but we need to be able to do this so that we can update the
+  -- cache (which doesn't violate the abstraction, just the Ada
+  -- restriction). This technique is due to Matthew Heaney.
+  package Allow_Access
+  is new System.Address_To_Access_Conversions (Unb_Node);
   use type Nodes.Node_Ref;
 
   procedure Delete_Node is new
@@ -105,8 +112,8 @@ package body BC.Support.Unbounded is
       Insert (Obj, Elem);
     else
       declare
-        AObj : aliased Unb_Node := Obj;
-        Temp_Item : Item := Item_At (AObj'access, Before);  -- loads cache
+        AObj : Unb_Node := Obj;
+        Temp_Item : Item := Item_At (AObj, Before);  -- loads cache
         Temp_Node : Nodes.Node_Ref;
       begin
         Temp_Node := Nodes.Create (Elem,
@@ -145,8 +152,8 @@ package body BC.Support.Unbounded is
       Append(Obj, Elem);
     else
       declare
-        AObj      : aliased Unb_Node := Obj;
-        Temp_Item : Item := Item_At (AObj'access, After);  -- loads cache
+        AObj      : Unb_Node := Obj;
+        Temp_Item : Item := Item_At (AObj, After);  -- loads cache
         Temp_Node : Nodes.Node_Ref;
       begin
         Temp_Node := Nodes.Create (Elem,
@@ -179,8 +186,8 @@ package body BC.Support.Unbounded is
       Clear (Obj);
     else
       declare
-        AObj      : aliased Unb_Node := Obj;
-        Temp_Item : Item := Item_At (AObj'access, From);
+        AObj      : Unb_Node := Obj;
+        Temp_Item : Item := Item_At (AObj, From);
         Ptr : Nodes.Node_Ref := AObj.Cache;
       begin
         if Ptr.Previous = null then
@@ -247,7 +254,7 @@ package body BC.Support.Unbounded is
     return Obj.Rep.Element;
   end First;
 
-  function First (Obj : access Unb_Node) return Item_Ptr is
+  function First (Obj : Unb_Node) return Item_Ptr is
   begin
     Assert (Obj.Size > 0,
             BC.Underflow'Identity,
@@ -265,7 +272,7 @@ package body BC.Support.Unbounded is
     return Obj.Last.Element;
   end ;
 
-  function Last (Obj : access Unb_Node) return Item_Ptr is
+  function Last (Obj : Unb_Node) return Item_Ptr is
   begin
     Assert (Obj.Size > 0,
             BC.Underflow'Identity,
@@ -274,7 +281,7 @@ package body BC.Support.Unbounded is
     return  Obj.Last.Element'access;
   end ;
 
-  function Item_At (Obj : access Unb_Node; Index : Positive) return Item is
+  function Item_At (Obj : Unb_Node; Index : Positive) return Item is
     Tmp : Item_Ptr;
   begin
     Assert (Index <= Obj.Size,
@@ -285,7 +292,8 @@ package body BC.Support.Unbounded is
     return Tmp.all;
   end Item_At;
 
-  function Item_At (Obj : access Unb_Node; Index : Positive) return Item_Ptr is
+  function Item_At (Obj : Unb_Node; Index : Positive) return Item_Ptr is
+    U : Allow_Access.Object_Pointer := Allow_Access.To_Pointer (Obj'Address);
   begin
     Assert (Index <= Obj.Size,
             BC.Range_Error'Identity,
@@ -295,12 +303,12 @@ package body BC.Support.Unbounded is
       if Index = Obj.Cache_Index then
         return Obj.Cache.Element'access;
       elsif Index = Obj.Cache_Index + 1 then
-        Obj.Cache := Obj.Cache.Next;
-        Obj.Cache_Index := Obj.Cache_Index + 1;
+        U.Cache := Obj.Cache.Next;
+        U.Cache_Index := Obj.Cache_Index + 1;
         return Obj.Cache.Element'access;
       elsif Index = Obj.Cache_Index - 1 then
-        Obj.Cache := Obj.Cache.Previous;
-        Obj.Cache_Index := Obj.Cache_Index - 1;
+        U.Cache := Obj.Cache.Previous;
+        U.Cache_Index := Obj.Cache_Index - 1;
         return Obj.Cache.Element'access;
       end if;
     end if;
@@ -309,8 +317,8 @@ package body BC.Support.Unbounded is
     begin
       for I in 1..Obj.Size loop
         if I = Index then
-          Obj.Cache := Ptr;
-          Obj.Cache_Index := I;
+          U.Cache := Ptr;
+          U.Cache_Index := I;
           return Ptr.Element'access;
         else
           Ptr := Ptr.Next;
@@ -320,9 +328,10 @@ package body BC.Support.Unbounded is
     end;
   end Item_At;
 
-  function Location (Obj : access Unb_Node; Elem : Item; Start : Positive := 1)
+  function Location (Obj : Unb_Node; Elem : Item; Start : Positive := 1)
                      return Natural is
     Ptr : Nodes.Node_Ref := Obj.Rep;
+    U : Allow_Access.Object_Pointer := Allow_Access.To_Pointer (Obj'Address);
   begin
     Assert (Start <= Obj.Size,
             BC.Range_Error'Identity,
@@ -336,8 +345,8 @@ package body BC.Support.Unbounded is
     end loop;
     for I in Start..Obj.Size loop
       if Ptr.Element = Elem then
-        Obj.Cache := Ptr;
-        Obj.Cache_Index := I;
+        U.Cache := Ptr;
+        U.Cache_Index := I;
         return I;
       else
         Ptr := Ptr.Next;
