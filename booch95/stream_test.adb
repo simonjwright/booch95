@@ -1,4 +1,4 @@
---  Copyright 2002 Simon Wright <simon@pushface.org>
+--  Copyright 2002-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -418,12 +418,40 @@ begin
       Collection'Output (Str'Access, C1);
       C2 := Collection'Input (Str'Access);
       Assertion (C1 = C2, "TCUM2: Collections are unequal");
-      declare
-         S : constant Ada.Streams.Stream_Element_Array
-           := BC.Support.Memory_Streams.Contents (Str);
-      begin
-         Put_Line ("buffer length is" & Integer'Image (S'Length));
-      end;
+      Put_Line ("buffer length is" &
+                  Integer'Image (BC.Support.Memory_Streams.Length (Str)));
+
+   exception
+      when E : others =>
+         Assertion (False, "TCUMX: Exception occurred");
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
+   end;
+
+   declare
+      C1, C2 : TCU.Collection;
+      use TCU;
+      Str1 : aliased BC.Support.Memory_Streams.Stream_Type (78);
+      Str2 : aliased BC.Support.Memory_Streams.Stream_Type (1024);
+   begin
+
+      Put_Line ("...Memory stream to memory stream");
+
+      BC.Support.Memory_Streams.Reset (Str1);
+      Append (C1, new Brother'(I => 16#aabb#));
+      Append (C1, new Sister'(B => True));
+      Append (C2, new Brother'(I => 16#5555#));
+      Append (C2, new Sister'(B => False));
+      Assertion (C1 /= C2, "TCUM1: Collections are equal");
+      Collection'Output (Str1'Access, C1);
+      BC.Support.Memory_Streams.Write_Contents (Str2'Access, Str1);
+      C2 := Collection'Input (Str2'Access);
+      Assertion (C1 = C2, "TCUM2: Collections are unequal");
+      Put_Line ("first buffer length is" &
+                  Integer'Image (BC.Support.Memory_Streams.Length (Str1)));
+      Put_Line ("second buffer length is" &
+                  Integer'Image (BC.Support.Memory_Streams.Length (Str2)));
 
    exception
       when E : others =>
