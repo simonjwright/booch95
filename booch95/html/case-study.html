@@ -323,16 +323,16 @@ which is a bit of a mouthful.
 <tt>Item</tt>s,
 
 <dt><tt>From</tt><dd>is the concrete Container type which contains the
-Items to be filtered; it has to be derived from the abstract
+<tt>Item</tt>s to be filtered; it has to be derived from the abstract
 <tt>Container</tt> in <tt>Source</tt>,
 
 <dt><tt>Target</tt><dd>is a (possibly different) instantion of
 <tt>BC.Containers</tt> with <tt>Item</tt>s,
 
 <dt><tt>To</tt><dd>is the concrete Container type which is to receive
-the Items when they have been filtered; it has to be derived from the
-abstract <tt>Container</tt> in <tt>Target</tt>, and may or may not be
-the same as <tt>From</tt>,
+the <tt>Item</tt>s when they have been filtered; it has to be derived
+from the abstract <tt>Container</tt> in <tt>Target</tt>, and may or
+may not be the same as <tt>From</tt>,
 
 <dt><tt>Pass</tt><dd>is a function which takes an <tt>Item</tt> and
 returns <tt>True</tt> if it's to be kept. In our case, this is
