@@ -15,7 +15,10 @@
 --      for a copy.
 --
 
---  $Id$
+--  $RCSfile$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with Ada.Text_IO;
 procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree) is

@@ -1,5 +1,5 @@
--- Copyright (C) 1994-1998 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,7 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Graphs;
 with BC.Graphs.Directed;
@@ -24,14 +24,14 @@ with Global_Heap;
 
 package Graph_Test_Support is
 
-  package AG is new BC.Graphs
+   package AG is new BC.Graphs
      (Vertex_Item => Character,
       Arc_Item => Character,
       Storage_Manager => Global_Heap.Pool,
       Storage => Global_Heap.Storage);
 
-  package DG is new AG.Directed;
+   package DG is new AG.Directed;
 
-  package UG is new AG.Undirected;
+   package UG is new AG.Undirected;
 
 end Graph_Test_Support;

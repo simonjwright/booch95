@@ -67,8 +67,8 @@ package BC.Containers.Bags is
    --  S, copy the item and add it and its count to the bag S. If the
    --  item already is a member, increment its count in S.
 
-   procedure Intersection
-     (B : in out Abstract_Bag'Class; O : Abstract_Bag'Class);
+   procedure Intersection (B : in out Abstract_Bag'Class;
+                           O : Abstract_Bag'Class);
    --  Perform a logical bag intersection; at the completion of this
    --  operation, the bag B contains the items found both in its
    --  original state and in the bag O. For each item in the bag O, if
@@ -77,7 +77,8 @@ package BC.Containers.Bags is
    --  the lower of the two counts. Items in the bag S but not in the
    --  bag O are also removed.
 
-   procedure Difference (B : in out Abstract_Bag'Class; O : Abstract_Bag'Class);
+   procedure Difference (B : in out Abstract_Bag'Class;
+                         O : Abstract_Bag'Class);
    --  Perform a logical bag difference; at the completion of this
    --  operation, the bag B contains the items found in its original
    --  state, less those found in the bag O. For each item in the bag
