@@ -128,16 +128,6 @@ private
       Rep : Tables.Table (Number_Of_Buckets => Buckets);
    end record;
 
-   procedure Attach (S : in out Set; I : Item);
-
-   procedure Detach (S : in out Set; I : Item);
-
-   function Number_Of_Buckets (S : Set) return Natural;
-
-   function Length (S : Set; Bucket : Positive) return Natural;
-
-   function Item_At (S : Set; Bucket, Index : Positive) return Item_Ptr;
-
    --  Iterators
 
    type Dynamic_Set_Iterator is new Set_Iterator with null record;

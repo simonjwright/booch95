@@ -90,35 +90,6 @@ package body BC.Containers.Sets.Unbounded is
       return Result;
    end New_Iterator;
 
-   --  Private implementations
-
-   procedure Attach (S : in out Unconstrained_Set; I : Item) is
-   begin
-      Tables.Bind (S.Rep, I, True);
-   end Attach;
-
-   procedure Detach (S : in out Unconstrained_Set; I : Item) is
-   begin
-      Tables.Unbind (S.Rep, I);
-   end Detach;
-
-   function Number_Of_Buckets (S : Unconstrained_Set) return Natural is
-      pragma Warnings (Off, S);
-   begin
-      return Buckets;
-   end Number_Of_Buckets;
-
-   function Length (S : Unconstrained_Set; Bucket : Positive) return Natural is
-   begin
-      return IC.Length (S.Rep.Items (Bucket));
-   end Length;
-
-   function Item_At (S : Unconstrained_Set;
-                     Bucket, Index : Positive) return Item_Ptr is
-   begin
-      return IC.Item_At (S.Rep.Items (Bucket), Index);
-   end Item_At;
-
    --  Null containers
 
    Empty_Container : Set;

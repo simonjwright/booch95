@@ -118,17 +118,6 @@ private
       Rep : Tables.Table (Number_Of_Buckets => Number_Of_Buckets);
    end record;
 
-   procedure Attach (S : in out Unconstrained_Set; I : Item);
-
-   procedure Detach (S : in out Unconstrained_Set; I : Item);
-
-   function Number_Of_Buckets (S : Unconstrained_Set) return Natural;
-
-   function Length (S : Unconstrained_Set; Bucket : Positive) return Natural;
-
-   function Item_At (S : Unconstrained_Set;
-                     Bucket, Index : Positive) return Item_Ptr;
-
    --  Iterators
 
    type Unbounded_Set_Iterator is new Set_Iterator with null record;
