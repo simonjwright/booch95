@@ -1,6 +1,6 @@
--- The Ada 95 Booch Components (Version 1.0 beta 1)
--- Copyright (C)1994-1997 Grady Booch and David Weller.  All Rights Reserved.
--- 
+-- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- All Rights Reserved.
+--
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
 --      License which comes with this Library.
@@ -11,49 +11,63 @@
 --      PURPOSE. See the Ada Community License for more details.
 --      You should have received a copy of the Ada Community
 --      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library 
+--      License" or "ACL". If not, contact the author of this library
 --      for a copy.
 --
--- This file contains the specification of the bounded stack form
+
+-- $Id$
 
 with BC.Support.Bounded;
 generic
-   Maximum_Size : Positive;
-   with package Bnd_Stack_Nodes is 
-    new BC.Support.Bounded(Item,Item_Ptr,Maximum_Size);
+  Maximum_Size : Positive;
 package BC.Containers.Stacks.Bounded is
 
-   -- See spec documentation for Stacks unless overriding comment apply.
+  type Bnd_Stack is new Stack with private;
 
-   type Bnd_Stack is new Stack with private;
+  procedure Clear (Obj : in out Bnd_Stack);
+  -- Empty the Stack of all items.
 
-   procedure Clear    (Obj : in out Bnd_Stack);
-   procedure Push   (Obj : in out Bnd_Stack; Elem : Item);
-   procedure Pop      (Obj : in out Bnd_Stack);
-   function Available (Obj : in Bnd_Stack) return Natural;
-   -- Indicated number of empty "Item slots" left in Stack
+  procedure Push (Obj : in out Bnd_Stack; Elem : Item);
+  -- Add a copy of the item to the top of the Stack.
 
-   function Depth    (Obj : in Bnd_Stack) return Natural;
-   function Is_Empty  (Obj : in Bnd_Stack) return Boolean;
-   function Top     (Obj : in Bnd_Stack) return Item;
-   function Top     (Obj : in Bnd_Stack) return Item_Ptr;
+  procedure Pop (Obj : in out Bnd_Stack);
+  -- Remove the item from the top of the Stack.
 
-   function "="(Left, Right : in Bnd_Stack) return boolean;
+  function Available (Obj : in Bnd_Stack) return Natural;
+  -- Returns a count of the number of empty "Item slots" left.
+
+  function Depth (Obj : in Bnd_Stack) return Natural;
+  -- Returns the number of items in the Stack
+
+  function Is_Empty (Obj : in Bnd_Stack) return Boolean;
+  -- Returns True if and only if no items are in the stack
+
+  function Top (Obj : in Bnd_Stack) return Item;
+  -- Return a copy of the item at the top of the Stack.
+
+  function Top (Obj : in Bnd_Stack) return Item_Ptr;
+  -- Return a pointer to the item at the top of the Stack.
+
+  function "=" (Left, Right : in Bnd_Stack) return boolean;
+  -- Return True if and only if both stacks have the same depth and the
+  -- same items in the same order; return False otherwise.
+
 private
 
-   function Cardinality(Obj : in Bnd_Stack) return Integer;
-   procedure Purge(Obj : in out Bnd_Stack);
-   procedure Add(Obj : in out Bnd_Stack; Elem : in out Item);
-   function Item_At (Obj : in Bnd_Stack; Index : Natural) return Item_Ptr;
+  function Cardinality (Obj : in Bnd_Stack) return Integer;
+  procedure Purge (Obj : in out Bnd_Stack);
+  procedure Add (Obj : in out Bnd_Stack; Elem : in out Item);
+  function Item_At (Obj : in Bnd_Stack; Index : Natural) return Item_Ptr;
 
-   procedure Adjust(Obj : in out Bnd_Stack);
-   procedure Finalize(Obj : in out Bnd_Stack);
+  package Bnd_Stack_Nodes
+  is new BC.Support.Bounded(Item,Item_Ptr,Maximum_Size);
+  use Bnd_Stack_Nodes;
 
-   use Bnd_Stack_Nodes;
+  type Bnd_Stack is new Stack with record
+    Rep : Bnd_Stack_Nodes.Bnd_Node_Ref := new Bnd_Node;
+  end record;
 
-   type Bnd_Stack is new Stack with record
-      Rep : Bnd_Stack_Nodes.Bnd_Node_Ref := new Bnd_Node;
-   end record;
+  procedure Adjust (Obj : in out Bnd_Stack);
+  procedure Finalize (Obj : in out Bnd_Stack);
 
 end BC.Containers.Stacks.Bounded;
-
