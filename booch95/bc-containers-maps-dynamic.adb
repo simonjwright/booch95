@@ -96,7 +96,7 @@ package body BC.Containers.Maps.Dynamic is
    is new System.Address_To_Access_Conversions (Map);
 
    function New_Iterator (For_The_Map : Map) return Iterator'Class is
-      Result : Map_Iterator;
+      Result : Dynamic_Map_Iterator;
    begin
       Result.For_The_Container :=
         Address_Conversions.To_Pointer (For_The_Map'Address).all'Access;
@@ -104,35 +104,7 @@ package body BC.Containers.Maps.Dynamic is
       return Result;
    end New_Iterator;
 
-   --  Private implementations
-
-   procedure Attach (M : in out Map; K : Key; I : Item) is
-   begin
-      Tables.Bind (M.Rep, K, I);
-   end Attach;
-
-   function Number_Of_Buckets (M : Map) return Natural is
-      pragma Warnings (Off, M);
-   begin
-      return Buckets;
-   end Number_Of_Buckets;
-
-   function Length (M : Map; Bucket : Positive) return Natural is
-   begin
-      return KC.Length (M.Rep.Items (Bucket));
-   end Length;
-
-   function Item_At
-     (M : Map; Bucket, Index : Positive) return Item_Ptr is
-   begin
-      return IC.Item_At (M.Rep.Values (Bucket), Index);
-   end Item_At;
-
-   function Key_At
-     (M : Map; Bucket, Index : Positive) return Key_Ptr is
-   begin
-      return KC.Item_At (M.Rep.Items (Bucket), Index);
-   end Key_At;
+   --  Null containers
 
    Empty_Container : Map;
    pragma Warnings (Off, Empty_Container);
@@ -141,5 +113,60 @@ package body BC.Containers.Maps.Dynamic is
    begin
       return Empty_Container;
    end Null_Container;
+
+   --  Iterators
+
+   --  Bodge to make it easier to convert to the real
+   --  Unconstrained_Map later.
+   subtype Unconstrained_Map is Map;
+
+   procedure Reset (It : in out Dynamic_Map_Iterator) is
+      M : Unconstrained_Map'Class
+        renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      Tables.Reset (M.Rep, It.Bucket_Index, It.Index);
+   end Reset;
+
+   procedure Next (It : in out Dynamic_Map_Iterator) is
+      M : Unconstrained_Map'Class
+        renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      Tables.Next (M.Rep, It.Bucket_Index, It.Index);
+   end Next;
+
+   function Is_Done (It : Dynamic_Map_Iterator) return Boolean is
+      M : Unconstrained_Map'Class
+        renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      return Tables.Is_Done (M.Rep, It.Bucket_Index, It.Index);
+   end Is_Done;
+
+   function Current_Key (It : Dynamic_Map_Iterator) return Key is
+      M : Unconstrained_Map'Class
+        renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Item_Ptr (M.Rep, It.Bucket_Index, It.Index).all;
+   end Current_Key;
+
+   function Current_Item (It : Dynamic_Map_Iterator) return Item is
+      M : Unconstrained_Map'Class
+        renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Value_Ptr (M.Rep, It.Bucket_Index, It.Index).all;
+   end Current_Item;
+
+   function Current_Item_Ptr (It : Dynamic_Map_Iterator) return Item_Ptr is
+      M : Unconstrained_Map'Class
+        renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      return Tables.Current_Value_Ptr (M.Rep, It.Bucket_Index, It.Index);
+   end Current_Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Dynamic_Map_Iterator) is
+      M : Unconstrained_Map'Class
+        renames Unconstrained_Map'Class (It.For_The_Container.all);
+   begin
+      Tables.Delete_Item_At (M.Rep, It.Bucket_Index, It.Index);
+   end Delete_Item_At;
 
 end BC.Containers.Maps.Dynamic;

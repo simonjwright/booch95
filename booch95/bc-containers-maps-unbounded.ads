@@ -105,6 +105,7 @@ private
    use KC;
    package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
+      Item_Ptr => Key_Ptr,
       "=" => Maps."=",
       Item_Container => KC.Unb_Node);
 
@@ -129,16 +130,22 @@ private
       Rep : Tables.Table (Number_Of_Buckets => Number_Of_Buckets);
    end record;
 
-   procedure Attach (M : in out Unconstrained_Map; K : Key; I : Item);
+   --  Iterators
 
-   function Number_Of_Buckets (M : Unconstrained_Map) return Natural;
+   type Unbounded_Map_Iterator is new Map_Iterator with null record;
 
-   function Length (M : Unconstrained_Map; Bucket : Positive) return Natural;
+   procedure Reset (It : in out Unbounded_Map_Iterator);
 
-   function Item_At
-     (M : Unconstrained_Map; Bucket, Index : Positive) return Item_Ptr;
+   procedure Next (It : in out Unbounded_Map_Iterator);
 
-   function Key_At
-     (M : Unconstrained_Map; Bucket, Index : Positive) return Key_Ptr;
+   function Is_Done (It : Unbounded_Map_Iterator) return Boolean;
+
+   function Current_Key (It : Unbounded_Map_Iterator) return Key;
+
+   function Current_Item (It : Unbounded_Map_Iterator) return Item;
+
+   function Current_Item_Ptr (It : Unbounded_Map_Iterator) return Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Unbounded_Map_Iterator);
 
 end BC.Containers.Maps.Unbounded;
