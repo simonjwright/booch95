@@ -11,6 +11,8 @@ commentaries, statistics, source code, etc. will change over the course
 of time. If anything is updated on the Booch Components, you'll see it here
 first, so be sure to check from time to time.) </P>
 
+<P><IMG SRC="greenline.gif" ALT="--" WIDTH="600" HEIGHT="4"> </P>
+
 <H2>History</H2>
 
 <p>The Ada 95 Booch Components began in late 1994 when <a
@@ -49,10 +51,13 @@ need to recompile).</p>
 <font color=red>red</font> parts are new since the last release):</P>
 
 <UL>
-<li><font color=red>Directed Graphs</font>
-<li><font color=red>Undirected Graphs</font>
+<li>Directed Graphs
+<li>Undirected Graphs
 <LI>Single Lists 
 <LI>Double Lists
+<li><font color=red>Bounded Maps</font>
+<li><font color=red>Dynamic Maps</font>
+<li><font color=red>Unbounded Maps</font>
 <LI>Bounded Queues 
 <LI>Dynamic Queues
 <LI>Unbounded Queues
@@ -78,41 +83,64 @@ me</a> with any thoughts you may have!</p>
 <dt>Iterators</dt>
 
 <dd>
-The current <tt>BC.Containers</tt> generic requires both the
-<tt>Item</tt> and an accessor (<tt>Item_Ptr</tt>) as parameters.<br>
 
-I found this very awkward when the type I was interested in was
-<tt>limited private</tt> (and I therefore had to create an accessor
-anyway, because the Components require a copyable type).<br>
+I've reworked Iteration throughout.<p>
 
-The need for the pointer type arises from the C++ iterators that give
-a reference to the <tt>Item</tt>, so you can modify the contained
-<tt>Item</tt> rather than a copy of it: we have both of
+For active iterators, the new style uses a "factory" function
+<tt>New_Iterator</tt>, which dispatches on the concrete Container and
+returns an Iterator. This uses the fact that tagged types are passed
+by reference to allow a reference to the concrete Container to be kept
+behind the scenes.<p>
 
-<pre>
-  function Current_Item (Obj : Iterator) return Item_Ptr;
-</pre>
-
-and
+You can see an example of this style in <tt>Map_Test</tt>;
 
 <pre>
-  generic
-    with procedure Apply (Elem_Ref : in Item_Ptr; OK : out Boolean);
-  function Modify (Obj : access Passive_Iterator) return Boolean;
+  procedure Test_Active_Iterator (M : in out Maps.Map'Class) is
+    use Containers; use Maps; use MB;
+    Iter : Containers.Iterator := New_Iterator (M);
+  begin
+    while not Containers.Is_Done (Iter) loop
+      Put_Line ("      Item: "
+                & Containers.Current_Item (Iter)
+                & " Value: "
+                & Image (Maps.Current_Value (Iter).all));
+      Containers.Next (Iter);
+    end loop;
+  end Test_Active_Iterator;
 </pre>
 
-My thought is to replace the "<tt>in Item_Ptr</tt>"s by "<tt>in out
-Item</tt>"s.<br>
+Passive iteration is handled via generics. In the same test,
 
-This means we need either a generic or a procedure access parameter (I
-think the latter will be impossible; either we'll be taking the access
-at too low a level, or we'll find ourselves wanting to take
-<tt>'Access</tt> of a procedure inside a generic where the type was
-declared outside ..)<br>
+<pre>
+  procedure Test_Passive_Iterator (M : in out Maps.Map'Class) is
+    procedure Visitor is new Maps.Visit (Process, M);
+  begin
+    Visitor;
+  end Test_Passive_Iterator;
+</pre>
 
-You can see an example of this alternate style in the concrete Graph
-packages <tt>BC.Graphs.Directed</tt> and <tt>BC.Graphs.Undirected</tt>;
-note, however, that <b>these generics will break under GNAT 3.10p!</b><br>
+Note, however, that <b><font color="red">iteration is broken</font>
+under GNAT 3.10p!</b><p>
+
+</dd>
+
+<dt>Hierarchy and Graphs</dt>
+
+<dd>
+
+Most of the Components are derived from
+<tt>BC.Containers.Container</tt> (and are in packages that are
+children of <tt>BC.Containers</tt>). The only feature common at this
+level is active iteration; implicit in the fact that
+<tt>BC.Containers</tt> is a generic package parameterised by the type
+<tt>Item</tt> is that Containers contain just one sort of thing.<p>
+
+This works fine except for Graphs; a Graph is a collection of Vertices
+(OK so far), while Vertices are connected by (not collections of)
+Arcs. Unless I can think of a sensible way of doing things, Graphs
+will remain outside the Containers hierarchy.<p>
+
+That said, I've tried to use a common style throughout.<p>
 
 </dd>
 
@@ -122,7 +150,7 @@ note, however, that <b>these generics will break under GNAT 3.10p!</b><br>
 
 <P><A HREF="index.html">[index]</A></p>
 
-<p><i>Last update: 20.x.98</i></p>
+<p><i>Last update: 3.i.99</i></p>
 
 </BODY>
 </HTML>
