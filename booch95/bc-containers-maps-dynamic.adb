@@ -91,7 +91,7 @@ package body BC.Containers.Maps.Dynamic is
 
   function Chunk_Size (M : Dynamic_Map) return Positive is
   begin
-    return Ic.Chunk_Size (Tables.Item_Bucket (M.Rep, 1).all);
+    return IC.Chunk_Size (Tables.Item_Bucket (M.Rep, 1).all);
   end Chunk_Size;
 
   package Address_Conversions
