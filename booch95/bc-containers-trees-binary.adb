@@ -241,8 +241,7 @@ package body BC.Containers.Trees.Binary is
 
   function Is_Root (Obj : in Binary_Tree) return Boolean is
   begin
-    -- XXX can you be the root of a tree if you are null?
-    return Obj.Rep /= null and then Obj.Rep.Parent = null;
+    return Obj.Rep = null or else Obj.Rep.Parent = null;
   end Is_Root;
 
   function Item_At (Obj : in Binary_Tree) return Item is
