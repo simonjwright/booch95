@@ -107,9 +107,9 @@ TEST_SRC += graph_test.ad[bs] graph_test_support.ad[bs]
 graph_test: force
 
 ADA_SOURCE += \
-bc-containers-lists-double.ad[bs] \
-bc-containers-lists-single.ad[bs] \
-bc-containers-lists.ad[bs]
+bc-lists-double.ad[bs] \
+bc-lists-single.ad[bs] \
+bc-lists.ad[bs]
 TESTABLE += list_test
 TEST_SRC += list_test.ad[bs] list_test_support.ad[bs]
 list_test: force
