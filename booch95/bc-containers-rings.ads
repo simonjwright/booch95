@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -103,14 +103,11 @@ private
 
   procedure Unlock (R : in out Ring);
 
-  type Ring_Iterator (R : access Ring'Class)
-  is new Actual_Iterator (R) with record
+  type Ring_Iterator is new Iterator with record
     Index : Natural;
   end record;
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
-
-  procedure Initialize (It : in out Ring_Iterator);
 
   procedure Reset (It : in out Ring_Iterator);
 
@@ -120,7 +117,7 @@ private
 
   function Current_Item (It : Ring_Iterator) return Item;
 
-  function Current_Item (It : Ring_Iterator) return Item_Ptr;
+  function Current_Item_Ptr (It : Ring_Iterator) return Item_Ptr;
 
   procedure Delete_Item_At (It : Ring_Iterator);
 

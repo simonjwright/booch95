@@ -164,7 +164,7 @@ package BC.Containers.Lists.Double is
   function Item_At (L : Double_List; Index : Positive) return Item;
   -- Return a copy of the item at the given index.
 
-  function New_Iterator (For_The_List : Double_List) return Iterator;
+  function New_Iterator (For_The_List : Double_List) return Iterator'Class;
   -- Return a reset Iterator bound to the specific List.
 
 private
@@ -174,12 +174,6 @@ private
   package Double_Nodes
   is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
-  -- Here we use the Rosen Trick to allow write access for Delete_Item_At.
-  -- Of course, Delete_Item_At could take the Iterator as "in out" ...
-  type Double_List_Iterator;
-  type Double_List_Iterator_Relay (Reference : access Double_List_Iterator) is
-     limited null record;
-
   type Double_List is new Container with record
     Rep : Double_Nodes.Double_Node_Ref;
   end record;
@@ -188,15 +182,11 @@ private
   procedure Adjust (L : in out Double_List);
   procedure Finalize (L : in out Double_List);
 
-  type Double_List_Iterator (L : access Double_List'Class)
-  is new Actual_Iterator (L) with record
+  type Double_List_Iterator is new Iterator with record
     Index : Double_Nodes.Double_Node_Ref;
-    Relay : Double_List_Iterator_Relay (Double_List_Iterator'Access);
   end record;
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
-
-  procedure Initialize (It : in out Double_List_Iterator);
 
   procedure Reset (It : in out Double_List_Iterator);
 
@@ -206,7 +196,7 @@ private
 
   function Current_Item (It : Double_List_Iterator) return Item;
 
-  function Current_Item (It : Double_List_Iterator) return Item_Ptr;
+  function Current_Item_Ptr (It : Double_List_Iterator) return Item_Ptr;
 
   procedure Delete_Item_At (It : Double_List_Iterator);
 
