@@ -59,13 +59,19 @@ Unbounded Bags, for instance, the declarations are
 
 <h4>Iterators</h4>
 
-<p>It used to be possible to create an empty Container, create an
+<ul>
+
+<li>It used to be possible to create an empty Container, create an
 Iterator over it, populate the Container, and then just use the
 Iterator.
-
-<p>If you do that now, the Iterator will be "complete" (ie,
+<br>If you do that now, the Iterator will be "complete" (ie,
 <tt>Is_Dome</tt> will return <tt>True</tt>) until you <tt>Reset</tt>
 it -- for some Containers, anyway.
+
+<li><tt>Delete_Item_At</tt> is now implemented for Bags, Maps and
+Sets.
+
+</ul>
 
 <h4>Concurrency</h4>
 
