@@ -148,8 +148,6 @@ package body BC.Containers.Lists.Double is
       while Curr.Next /= null loop
         Curr := Curr.Next;
       end loop;
-    end if;
-    if Curr /= null then
       Curr.Next := Double_Nodes.Create (Elem, Previous => Curr, Next => null);
     else
       Obj.Rep := Double_Nodes.Create (Elem, Previous => null, Next => null);
@@ -160,8 +158,7 @@ package body BC.Containers.Lists.Double is
     Prev : Double_Nodes.Double_Node_Ref;
     Curr : Double_Nodes.Double_Node_Ref := Obj.Rep;
   begin
-    Assert (From_List.Rep /= null
-            or else From_List.Rep.Previous /= null,
+    Assert (From_List.Rep = null or else From_List.Rep.Previous = null,
             BC.Not_Root'Identity,
             "Append",
             BSE.Not_Root);
@@ -293,7 +290,7 @@ package body BC.Containers.Lists.Double is
     end if;
     while Curr /= null loop
       Curr.Previous := null;
-      Ptr := CUrr;
+      Ptr := Curr;
       Curr := Curr.Next;
       if Ptr.Count > 1 then
         Ptr.Count := Ptr.Count - 1;
@@ -458,6 +455,7 @@ package body BC.Containers.Lists.Double is
       Curr.Count := Curr.Count - 1;
     else
       if Obj.Rep /= null then
+	Obj.Rep.Count := Obj.Rep.Count - 1;
         Obj.Rep.Previous := null;
       end if;
       Double_Nodes.Delete (Curr);
