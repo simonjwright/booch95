@@ -26,9 +26,18 @@ all::
 # (armin@ira.uka.de + armin+@cs.cmu.edu, http://iseran.ira.uka.de/~armin)
 # The -Wl,-u,malloc forces the malloc symbol to be required so as to ensure
 # that it's satisfied from libccmalloc.a.
-
 MEMORY_CHECK = \
   -largs -Wl,-u,malloc $(HOME)/ccmalloc-0.2.3/src/libccmalloc.a -ldl
+
+# Note, this strategy does _not_ work if the program to be checked
+# uses tasking, because both libpthread and ccmalloc wrap the standard
+# malloc(), free() etc calls. Instead, we need to use a special
+# version of libpthread.so with ccmalloc's functionality buit
+# in. ccmalloc has to be able to find main(), so we link with the flag
+# that exports the program's symbol table to dynamic libraries that
+# need access.
+DYNAMIC_MEMORY_CHECK = -largs -rdynamic
+
 GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu -gnatwl
 
 test: testable
@@ -59,7 +68,7 @@ list_test: force
 
 TESTABLE += map_test
 map_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
 
 TESTABLE += ordered_collection_test
 ordered_collection_test: force
@@ -75,7 +84,7 @@ queue_test: force
 
 TESTABLE += ring_test
 ring_test: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK) 
 
 TESTABLE += smart_test
 smart_test: force
@@ -114,7 +123,7 @@ bag_test_aonix: force
 
 AONIX_TESTABLE += map_test_aonix
 map_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
 
 #AONIX_TESTABLE += ordered_collection_test_aonix
 #ordered_collection_test_aonix: force
@@ -228,6 +237,8 @@ bc-containers-lists.ad[bs] \
 bc-containers-maps-bounded.ad[bs] \
 bc-containers-maps-dynamic.ad[bs] \
 bc-containers-maps-unbounded.ad[bs] \
+bc-containers-maps-unbounded-guarded.ad[bs] \
+bc-containers-maps-unbounded-synchronized.ad[bs] \
 bc-containers-maps.ad[bs] \
 bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
