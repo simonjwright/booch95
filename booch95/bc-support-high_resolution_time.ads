@@ -1,5 +1,4 @@
---  Copyright 1994 Grady Booch
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -25,15 +24,30 @@
 --  $Date$
 --  $Author$
 
-with Ada.Exceptions;
-with Ada.Text_IO;
+--  This package provides interval measurements using the Pentium
+--  timestamp clock. This clock counts the number of processor cycles
+--  since the processor was started (modulo 2**64).
+--
+--  By default, the package initializes itself by measuring a "delay
+--  1.0"; you can prevent this by setting the environment variable
+--  CLOCK_RATE_GHZ to the correct value (eg, 1.123 for a 1123 MHz
+--  machine).
 
-package BC.Support.Exceptions is
+with Interfaces;
+
+package BC.Support.High_Resolution_Time is
 
    pragma Elaborate_Body;
 
-   procedure Report
-     (The_Exception : Ada.Exceptions.Exception_Occurrence;
-      To : Ada.Text_IO.File_Type := Ada.Text_IO.Standard_Output);
+   type Time is private;
 
-end BC.Support.Exceptions;
+   function Clock return Time;
+   pragma Inline (Clock);
+
+   function "-" (L, R : Time) return Duration;
+
+private
+
+   type Time is new Interfaces.Integer_64;
+
+end BC.Support.High_Resolution_Time;

@@ -1,5 +1,4 @@
---  Copyright 1994 Grady Booch
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -25,15 +24,34 @@
 --  $Date$
 --  $Author$
 
-with Ada.Exceptions;
-with Ada.Text_IO;
+package BC.Support.Statistics is
 
-package BC.Support.Exceptions is
+   type Instance is private;
 
-   pragma Elaborate_Body;
+   procedure Add (Datum : Long_Float; To : in out Instance);
 
-   procedure Report
-     (The_Exception : Ada.Exceptions.Exception_Occurrence;
-      To : Ada.Text_IO.File_Type := Ada.Text_IO.Standard_Output);
+   function Count (Of_Instance : Instance) return Natural;
 
-end BC.Support.Exceptions;
+   function Mean (Of_Instance : Instance) return Long_Float;
+
+   function Variance (Of_Instance : Instance) return Long_Float;
+
+   function Sigma (Of_Instance : Instance) return Long_Float;
+
+   function Min (Of_Instance : Instance) return Long_Float;
+
+   function Max (Of_Instance : Instance) return Long_Float;
+
+private
+
+   subtype Positive_Long_Float is Long_Float range 0.0 .. Long_Float'Last;
+
+   type Instance is record
+      Count : Natural := 0;
+      Min : Long_Float := Long_Float'Last;
+      Max : Long_Float := Long_Float'First;
+      Summed_Data : Float := 0.0;
+      Summed_Squared_Data : Positive_Long_Float := 0.0;
+   end record;
+
+end BC.Support.Statistics;

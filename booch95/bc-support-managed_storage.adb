@@ -27,13 +27,9 @@
 --  $Author$
 
 with Ada.Unchecked_Deallocation;
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Support.Managed_Storage is
-
-   procedure Assert
-   is new BC.Support.Exceptions.Assert ("BC.Support.Managed_Storage");
 
    package PeekPoke is
       new System.Address_To_Access_Conversions (System.Address);
@@ -113,10 +109,9 @@ package body BC.Support.Managed_Storage is
       Usable_Chunk_Size :=
         From.Allocated_Chunk_Size - Aligned (Chunk_Overhead,
                                              Requested_Alignment);
-      Assert (Requested_Element_Size <= Usable_Chunk_Size,
-              BC.Storage_Error'Identity,
-              "Get_Chunk",
-              BC.Support.Exceptions.Out_Of_Memory);
+      if Requested_Element_Size > Usable_Chunk_Size then
+         raise BC.Storage_Error;
+      end if;
       if From.Unused /= null then
          Result := From.Unused;
          From.Unused := From.Unused.Next_Chunk;

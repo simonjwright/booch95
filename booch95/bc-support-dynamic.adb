@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -27,14 +27,9 @@
 --  $Author$
 
 with Ada.Unchecked_Deallocation;
-with BC.Support.Exceptions;
 with System.Address_To_Access_Conversions;
 
 package body BC.Support.Dynamic is
-
-   package BSE renames BC.Support.Exceptions;
-   procedure Assert
-   is new BSE.Assert ("BC.Support.Dynamic");
 
    --  We can't take 'Access of non-aliased components. But if we
    --  alias discriminated objects they become constrained - even if
@@ -90,10 +85,9 @@ package body BC.Support.Dynamic is
 
    procedure Insert (Obj : in out Dyn_Node; Elem : Item; Before : Positive) is
    begin
-      Assert (Before <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Insert",
-              BSE.Invalid_Index);
+      if Before > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       if Obj.Size = 0 or else Before = 1 then
          Insert (Obj, Elem);
       else
@@ -117,10 +111,9 @@ package body BC.Support.Dynamic is
 
    procedure Append (Obj : in out Dyn_Node; Elem : Item; After : Positive) is
    begin
-      Assert (After <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Append",
-              BSE.Invalid_Index);
+      if After > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       if Obj.Size = Obj.Ref'Last then
          Extend (Obj);
       end if;
@@ -137,14 +130,12 @@ package body BC.Support.Dynamic is
 
    procedure Remove (Obj : in out Dyn_Node; From : Positive) is
    begin
-      Assert (From <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Remove",
-              BSE.Invalid_Index);
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "Remove",
-              BSE.Empty);
+      if From > Obj.Size then
+         raise BC.Range_Error;
+      end if;
+      if Obj.Size = 0 then
+         raise BC.Underflow;
+      end if;
       if Obj.Size = 1 then
          Clear (Obj);
       else
@@ -155,10 +146,9 @@ package body BC.Support.Dynamic is
 
    procedure Replace (Obj : in out Dyn_Node; Index : Positive; Elem : Item) is
    begin
-      Assert (Index <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Replace",
-              BSE.Invalid_Index);
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       Obj.Ref (Index) := Elem;
    end Replace;
 
@@ -169,37 +159,33 @@ package body BC.Support.Dynamic is
 
    function First (Obj : Dyn_Node) return Item is
    begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "First",
-              BSE.Empty);
+      if Obj.Size = 0 then
+         raise BC.Underflow;
+      end if;
       return Obj.Ref (1);
    end First;
 
    function Last (Obj : Dyn_Node) return Item is
    begin
-      Assert (Obj.Size > 0,
-              BC.Underflow'Identity,
-              "Last",
-              BSE.Empty);
+      if Obj.Size = 0 then
+         raise BC.Underflow;
+      end if;
       return Obj.Ref (Obj.Size);
    end Last;
 
    function Item_At (Obj : Dyn_Node; Index : Positive) return Item is
    begin
-      Assert (Index <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Item_At",
-              BSE.Invalid_Index);
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       return Obj.Ref (Index);
    end Item_At;
 
    function Item_At (Obj : Dyn_Node; Index : Positive) return Item_Ptr is
    begin
-      Assert (Index <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Item_At",
-              BSE.Invalid_Index);
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       return Item_Ptr
         (Allow_Element_Access.To_Pointer (Obj.Ref (Index)'Address));
    end Item_At;
@@ -214,10 +200,9 @@ package body BC.Support.Dynamic is
       if Obj.Size = 0 then
          return 0;
       end if;
-      Assert (Start <= Obj.Size,
-              BC.Range_Error'Identity,
-              "Location",
-              BSE.Invalid_Index);
+      if Start > Obj.Size then
+         raise BC.Range_Error;
+      end if;
       for I in Start .. Obj.Size loop
          if Obj.Ref (I) = Elem then
             return I;
