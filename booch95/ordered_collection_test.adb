@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -18,6 +18,7 @@
 -- $Id$
 
 with Ada.Text_IO;
+with BC;
 with Ordered_Collection_Test_Support;
 
 procedure Ordered_Collection_Test is
@@ -27,11 +28,9 @@ procedure Ordered_Collection_Test is
   use Containers;
   use Base_Collections;
   use Collections;
---   use SB;
---   use SD;
+--   use CB;
+--   use CD;
   use CU;
-
-  --    Global_Items : array(1..10) of aliased Chunk;
 
   procedure Process (C : Character; OK : out Boolean) is
   begin
@@ -64,6 +63,46 @@ procedure Ordered_Collection_Test is
   begin
     Iterate (Using => Iter);
   end Test_Passive_Iterator;
+
+  procedure Test_Iterator_Deletion (C : in out Collection'Class) is
+    Iter : Iterator := New_Iterator (C);
+    Delete : Boolean;
+  begin
+    Clear (C);
+    Insert (C, '1'); -- Using Insert to push values in reverse order
+    Insert (C, '2');
+    Insert (C, '3');
+    Insert (C, '4');
+    Insert (C, '5');
+    Insert (C, '6');
+    Delete := False;
+    Reset (Iter);
+    while not Is_Done (Iter) loop
+      if Delete then
+        Delete_Item_At (Iter);
+        Delete := False;
+      else
+        Next (Iter);
+        Delete := True;
+      end if;
+    end loop;
+    begin
+      Delete_Item_At (Iter);
+      Assertion (False, "** IS01: Deletion succeeded");
+    exception
+      when BC.Not_Found => null;
+      when others =>
+        Assertion (False, "** IS02: Unexpected exception");
+    end;
+    Assertion (Length (C) = 3, "** IS03: Collection length is not correct");
+    Assertion (First (C) = '1', "** IS04: Collection item is not correct");
+    Remove (C, 1);
+    Assertion (First (C) = '3', "** IS05: Collection item is not correct");
+    Remove (C, 1);
+    Assertion (First (C) = '5', "** IS06: Collection item is not correct");
+    Remove (C, 1);
+    Assertion (Length (C) = 0, "** IS07: Collection length is not zero");
+  end Test_Iterator_Deletion;
 
   procedure Test_Primitive (C1, C2 : in out Collection'Class) is
   begin
@@ -173,6 +212,10 @@ begin
 --   Test_Passive_Iterator (Collection_D_P1);
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (Collection_U_P1);
+
+  Put_Line ("...Ordered Collection Iterator Deletion");
+  Put_Line ("   Unbounded:");
+  Test_Iterator_Deletion (Collection_U_P1);
 
   Put_Line ("Completed Ordered Collection tests");
 
