@@ -22,6 +22,7 @@ with BC.Containers.Bags;
 with BC.Containers.Bags.Bounded;
 with BC.Containers.Bags.Dynamic;
 with BC.Containers.Bags.Unbounded;
+with BC.Support.Standard_Storage;
 with Global_Heap;
 
 package Bag_Test_Support is
@@ -32,18 +33,19 @@ package Bag_Test_Support is
 
    function Char_Hash (C : Character) return Natural;
 
-   package BB is new Bags.Bounded (Hash => Char_Hash,
-                                   Buckets => 3,
-                                   Maximum_Size => 100);
+   package BB is new Bags.Bounded
+     (Hash => Char_Hash,
+      Buckets => 3,
+      Maximum_Size => 100);
 
-   package BD is new Bags.Dynamic (Hash => Char_Hash,
-                                   Buckets => 3,
-                                   Storage_Manager => Global_Heap.Pool,
-                                   Storage => Global_Heap.Storage);
+   package BD is new Bags.Dynamic
+     (Hash => Char_Hash,
+      Buckets => 3,
+      Storage => Global_Heap.Storage);
 
-   package BU is new Bags.Unbounded (Hash => Char_Hash,
-                                     Buckets => 3,
-                                     Storage_Manager => Global_Heap.Pool,
-                                     Storage => Global_Heap.Storage);
+   package BU is new Bags.Unbounded
+     (Hash => Char_Hash,
+      Buckets => 3,
+      Storage => BC.Support.Standard_Storage.Pool);
 
 end Bag_Test_Support;

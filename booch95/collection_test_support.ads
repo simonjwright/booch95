@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -35,8 +35,7 @@ package Collection_Test_Support is
      (Maximum_Size => 100);
 
    package CD is new Collections.Dynamic
-     (Storage_Manager => Global_Heap.Pool,
-      Storage => Global_Heap.Storage);
+     (Storage => Global_Heap.Storage);
 
    package CU is new Collections.Unbounded
      (Storage => BC.Support.Standard_Storage.Pool);

@@ -28,10 +28,8 @@ generic
    type Item is private;
    with function "=" (L, R : Item) return Boolean is <>;
    type Item_Ptr is access all Item;
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-Storage : in out Storage_Manager;
-Initial_Size : Positive := 10;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
+   Initial_Size : Positive := 10;
 package BC.Support.Dynamic is
 
    pragma Elaborate_Body;

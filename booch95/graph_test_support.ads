@@ -27,7 +27,6 @@ package Graph_Test_Support is
    package AG is new BC.Graphs
      (Vertex_Item => Character,
       Arc_Item => Character,
-      Storage_Manager => Global_Heap.Pool,
       Storage => Global_Heap.Storage);
 
    package DG is new AG.Directed;

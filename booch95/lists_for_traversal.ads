@@ -24,7 +24,7 @@ with BC.Containers.Lists.Single;
 with BC.Containers.Lists.Double;
 with BC.Smart;
 with BC.Support.Managed_Storage;
---  with BC.Support.Unmanaged_Storage;
+with System.Storage_Pools;
 package Lists_For_Traversal is
    type T is new Ada.Finalization.Controlled with record
       V : Integer;
@@ -37,6 +37,8 @@ package Lists_For_Traversal is
    package C is new BC.Containers (P);
    package L is new C.Lists;
    Pool : BC.Support.Managed_Storage.Pool (10_000);
-   package S is new L.Single (BC.Support.Managed_Storage.Pool, Pool);
-   package D is new L.Double (BC.Support.Managed_Storage.Pool, Pool);
+   Pool_View : System.Storage_Pools.Root_Storage_Pool'Class
+     renames System.Storage_Pools.Root_Storage_Pool'Class (Pool);
+   package S is new L.Single (Pool_View);
+   package D is new L.Double (Pool_View);
 end Lists_For_Traversal;

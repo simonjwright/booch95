@@ -42,14 +42,12 @@ package Ordering_Support is
    package Collections is new Base_Collections.Ordered;
 
    package CU is new Collections.Unbounded
-     (Storage_Manager => Global_Heap.Pool,
-      Storage => Global_Heap.Storage);
+     (Storage => Global_Heap.Storage);
 
    package Base_Queues is new Containers.Queues;
 
    package Queues is new Base_Queues.Ordered;
 
-   package QU is new Queues.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                       Storage => Global_Heap.Storage);
+   package QU is new Queues.Unbounded (Storage => Global_Heap.Storage);
 
 end Ordering_Support;

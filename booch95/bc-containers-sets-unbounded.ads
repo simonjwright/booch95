@@ -27,9 +27,7 @@ with System.Storage_Pools;
 generic
    with function Hash (V : Item) return Natural is <>;
    Buckets : Positive;
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-   Storage : in out Storage_Manager;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Sets.Unbounded is
 
    pragma Elaborate_Body;
@@ -86,7 +84,6 @@ private
 
    package IC is new BC.Support.Unbounded (Item => Item,
                                            Item_Ptr => Item_Ptr,
-                                           Storage_Manager => Storage_Manager,
                                            Storage => Storage);
    use IC;
    package Items is new BC.Support.Hash_Tables.Item_Signature
@@ -97,7 +94,6 @@ private
    type Boolean_Ptr is access all Boolean;
    package VC is new BC.Support.Unbounded (Item => Boolean,
                                            Item_Ptr => Boolean_Ptr,
-                                           Storage_Manager => Storage_Manager,
                                            Storage => Storage);
    use VC;
    package Values is new BC.Support.Hash_Tables.Value_Signature

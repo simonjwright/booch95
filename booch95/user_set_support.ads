@@ -44,12 +44,10 @@ package User_Set_Support is
 
    package SD is new Sets.Dynamic (Hash => User_Char_Hash,
                                    Buckets => 3,
-                                   Storage_Manager => Global_Heap.Pool,
                                    Storage => Global_Heap.Storage);
 
    package SU is new Sets.Unbounded (Hash => User_Char_Hash,
                                      Buckets => 3,
-                                     Storage_Manager => Global_Heap.Pool,
                                      Storage => Global_Heap.Storage);
 
 end User_Set_Support;

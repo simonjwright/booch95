@@ -34,7 +34,7 @@ package body BC.Support.Managed_Storage is
 
    function Value_At (Location : System.Address) return System.Address;
 
-   procedure Put (This : in System.Address;  At_Location : in System.Address);
+   procedure Put (This : System.Address; At_Location : System.Address);
 
    pragma Inline (Value_At, Put);
 
@@ -44,8 +44,8 @@ package body BC.Support.Managed_Storage is
       return PeekPoke.To_Pointer (Location).all;
    end Value_At;
 
-   procedure Put (This : in System.Address;
-                  At_Location : in System.Address) is
+   procedure Put (This : System.Address;
+                  At_Location : System.Address) is
    begin
       PeekPoke.To_Pointer (At_Location).all := This;
    end Put;
@@ -86,18 +86,18 @@ package body BC.Support.Managed_Storage is
 
 
    function Pool_Overhead
-     (Type_Overhead  : SSE.Storage_Count := 0;
-      Alignment      : SSE.Storage_Count) return SSE.Storage_Count is
+     (Type_Overhead : SSE.Storage_Count := 0;
+      Alignment : SSE.Storage_Count) return SSE.Storage_Count is
    begin
       return Aligned (Chunk_Overhead + Type_Overhead, Alignment);
    end Pool_Overhead;
 
 
 
-   procedure Get_Chunk (Result                 :    out Chunk_Pointer;
-                        From                   : in out Pool;
-                        Requested_Element_Size : in     SSE.Storage_Count;
-                        Requested_Alignment    : in     SSE.Storage_Count) is
+   procedure Get_Chunk (Result : out Chunk_Pointer;
+                        From : in out Pool;
+                        Requested_Element_Size : SSE.Storage_Count;
+                        Requested_Alignment : SSE.Storage_Count) is
 
       Next, Start, Stop : System.Address;
       Usable_Chunk_Size : SSE.Storage_Count;
@@ -133,15 +133,15 @@ package body BC.Support.Managed_Storage is
    end Get_Chunk;
 
 
-   procedure Allocate (The_Pool                 : in out Pool;
-                       Storage_Address          :    out System.Address;
-                       Size_In_Storage_Elements : in     SSE.Storage_Count;
-                       Alignment                : in     SSE.Storage_Count) is
+   procedure Allocate (The_Pool : in out Pool;
+                       Storage_Address : out System.Address;
+                       Size_In_Storage_Elements : SSE.Storage_Count;
+                       Alignment : SSE.Storage_Count) is
 
-      Ptr          : Chunk_Pointer;
+      Ptr : Chunk_Pointer;
       Aligned_Size : SSE.Storage_Offset;
-      Previous     : Chunk_Pointer;
-      Temp         : Chunk_Pointer;
+      Previous : Chunk_Pointer;
+      Temp : Chunk_Pointer;
 
       use type System.Address;
    begin
@@ -196,13 +196,13 @@ package body BC.Support.Managed_Storage is
 
 
    procedure Deallocate
-     (The_Pool                 : in out Pool;
-      Storage_Address          : in     System.Address;
-      Size_In_Storage_Elements : in     SSE.Storage_Count;
-      Alignment                : in     SSE.Storage_Count) is
+     (The_Pool : in out Pool;
+      Storage_Address : System.Address;
+      Size_In_Storage_Elements : SSE.Storage_Count;
+      Alignment : SSE.Storage_Count) is
 
       Aligned_Size : SSE.Storage_Offset;
-      Ptr          : Chunk_Pointer;
+      Ptr : Chunk_Pointer;
    begin
       Aligned_Size := Aligned (Size_In_Storage_Elements, Alignment);
       if Aligned_Size = 0 then
@@ -229,7 +229,7 @@ package body BC.Support.Managed_Storage is
    end Storage_Size;
 
 
-   procedure Preallocate_Chunks (This : in out Pool;  Count : in Positive) is
+   procedure Preallocate_Chunks (This : in out Pool; Count : Positive) is
       Ptr : Chunk_Pointer;
    begin
       for K in 1 .. Count loop
@@ -250,14 +250,14 @@ package body BC.Support.Managed_Storage is
 
 
    procedure Reclaim_Unused_Chunks (This : in out Pool) is
-      Ptr               : Chunk_Pointer;
-      Previous          : Chunk_Pointer;
-      Chunk             : Chunk_Pointer;
-      Temp              : Chunk_Pointer;
-      Next_Chunk        : Chunk_Pointer;
-      Previous_Chunk    : Chunk_Pointer;
+      Ptr : Chunk_Pointer;
+      Previous : Chunk_Pointer;
+      Chunk : Chunk_Pointer;
+      Temp : Chunk_Pointer;
+      Next_Chunk : Chunk_Pointer;
+      Previous_Chunk : Chunk_Pointer;
       Usable_Chunk_Size : SSE.Storage_Count;
-      Element           : System.Address;
+      Element : System.Address;
 
       use SSE;
       use type System.Address;
@@ -368,8 +368,8 @@ package body BC.Support.Managed_Storage is
 
 
    function Dirty_Chunks (This : Pool) return Natural is
-      Result      : Natural := 0;
-      All_Chunks  : Chunk_Pointer;
+      Result : Natural := 0;
+      All_Chunks : Chunk_Pointer;
       Sized_Chunk : Chunk_Pointer;
    begin
       All_Chunks := This.Head;
@@ -386,7 +386,7 @@ package body BC.Support.Managed_Storage is
 
 
    function Unused_Chunks (This : Pool) return Natural is
-      Ptr    : Chunk_Pointer;
+      Ptr : Chunk_Pointer;
       Result : Natural := 0;
    begin
       Ptr := This.Unused;
@@ -399,7 +399,7 @@ package body BC.Support.Managed_Storage is
 
 
    function Aligned
-     (Size      : SSE.Storage_Count;
+     (Size : SSE.Storage_Count;
       Alignment : SSE.Storage_Count) return SSE.Storage_Offset is
       use type SSE.Storage_Count;
    begin

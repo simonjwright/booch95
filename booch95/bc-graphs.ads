@@ -28,9 +28,7 @@ generic
    with function "=" (L, R : Vertex_Item) return Boolean is <>;
    type Arc_Item is private;
    with function "=" (L, R : Arc_Item) return Boolean is <>;
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-Storage : in out Storage_Manager;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Graphs is
 
    pragma Elaborate_Body;

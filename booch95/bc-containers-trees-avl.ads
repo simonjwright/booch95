@@ -26,9 +26,7 @@ with System.Storage_Pools;
 
 generic
    with function "<" (L, R : Item) return Boolean is <>;
-   type Storage_Manager (<>)
-   is new System.Storage_Pools.Root_Storage_Pool with private;
-Storage : in out Storage_Manager;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Trees.AVL is
 
    pragma Elaborate_Body;
@@ -87,7 +85,7 @@ package BC.Containers.Trees.AVL is
 
 private
 
-   package Nodes is new BC.Support.Nodes (Item, Storage_Manager, Storage);
+   package Nodes is new BC.Support.Nodes (Item, Storage);
 
    type AVL_Tree is new Ada.Finalization.Controlled with record
       Rep : Nodes.AVL_Node_Ref;

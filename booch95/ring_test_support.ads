@@ -22,6 +22,7 @@ with BC.Containers.Rings;
 with BC.Containers.Rings.Bounded;
 with BC.Containers.Rings.Dynamic;
 with BC.Containers.Rings.Unbounded;
+with BC.Support.Standard_Storage;
 with Global_Heap;
 
 package Ring_Test_Support is
@@ -30,12 +31,13 @@ package Ring_Test_Support is
 
    package Rings is new Containers.Rings;
 
-   package RB is new Rings.Bounded (Maximum_Size => 100);
+   package RB is new Rings.Bounded
+     (Maximum_Size => 100);
 
-   package RD is new Rings.Dynamic (Storage_Manager => Global_Heap.Pool,
-                                    Storage => Global_Heap.Storage);
+   package RD is new Rings.Dynamic
+     (Storage => Global_Heap.Storage);
 
-   package RU is new Rings.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                      Storage => Global_Heap.Storage);
+   package RU is new Rings.Unbounded
+     (Storage => BC.Support.Standard_Storage.Pool);
 
 end Ring_Test_Support;

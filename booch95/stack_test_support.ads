@@ -22,6 +22,7 @@ with BC.Containers.Stacks;
 with BC.Containers.Stacks.Bounded;
 with BC.Containers.Stacks.Dynamic;
 with BC.Containers.Stacks.Unbounded;
+with BC.Support.Standard_Storage;
 with Global_Heap;
 
 package Stack_Test_Support is
@@ -30,12 +31,13 @@ package Stack_Test_Support is
 
    package Stacks is new Containers.Stacks;
 
-   package SB is new Stacks.Bounded (Maximum_Size => 100);
+   package SB is new Stacks.Bounded
+     (Maximum_Size => 100);
 
-   package SD is new Stacks.Dynamic (Storage_Manager => Global_Heap.Pool,
-                                     Storage => Global_Heap.Storage);
+   package SD is new Stacks.Dynamic
+     (Storage => Global_Heap.Storage);
 
-   package SU is new Stacks.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                       Storage => Global_Heap.Storage);
+   package SU is new Stacks.Unbounded
+     (Storage => BC.Support.Standard_Storage.Pool);
 
 end Stack_Test_Support;
