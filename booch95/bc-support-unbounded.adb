@@ -153,8 +153,8 @@ package body BC.Support.Unbounded is
          begin
             Update_Cache (Obj, Before);
             Temp_Node := Create (Elem,
-                                       Previous => Obj.Cache.Previous,
-                                       Next => Obj.Cache);
+                                 Previous => Obj.Cache.Previous,
+                                 Next => Obj.Cache);
             if Temp_Node.Previous = null then
                Obj.Rep := Temp_Node;
             end if;
