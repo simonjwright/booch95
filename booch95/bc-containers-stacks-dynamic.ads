@@ -39,34 +39,34 @@ package BC.Containers.Stacks.Dynamic is
   -- Return True if and only if both stacks have the same depth and the
   -- same items in the same order; return False otherwise.
 
-  procedure Clear (Obj : in out Dynamic_Stack);
+  procedure Clear (S : in out Dynamic_Stack);
   -- Empty the Stack of all items.
 
-  procedure Push (Obj : in out Dynamic_Stack; Elem : Item);
+  procedure Push (S : in out Dynamic_Stack; Elem : Item);
   -- Add a copy of the item to the top of the Stack.
 
-  procedure Pop (Obj : in out Dynamic_Stack);
+  procedure Pop (S : in out Dynamic_Stack);
   -- Remove the item from the top of the Stack.
 
-  function Depth (Obj : in Dynamic_Stack) return Natural;
+  function Depth (S : in Dynamic_Stack) return Natural;
   -- Returns the number of items in the Stack
 
-  function Is_Empty (Obj : in Dynamic_Stack) return Boolean;
+  function Is_Empty (S : in Dynamic_Stack) return Boolean;
   -- Returns True if and only if no items are in the stack
 
-  function Top (Obj : in Dynamic_Stack) return Item;
+  function Top (S : in Dynamic_Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
 
   -- XXX need accessor generic
 
-  procedure Preallocate (Obj : in out Dynamic_Stack; Size : Natural);
+  procedure Preallocate (S : in out Dynamic_Stack; Size : Natural);
   -- Allocates 'Size' additional storage elements for the Stack
 
-  procedure Set_Chunk_Size (Obj : in out Dynamic_Stack; Size : Natural);
+  procedure Set_Chunk_Size (S : in out Dynamic_Stack; Size : Natural);
   -- Establishes the Size the Stack will grow if the Stack exhausts its
   -- current size.
 
-  function Chunk_Size (Obj : Dynamic_Stack) return Natural;
+  function Chunk_Size (S : Dynamic_Stack) return Natural;
   -- Returns the Chunk_Size
 
   function New_Iterator (For_The_Stack : Dynamic_Stack) return Iterator;
@@ -74,10 +74,12 @@ package BC.Containers.Stacks.Dynamic is
 
 private
 
-  function Item_At (Obj : Dynamic_Stack; Index : Positive) return Item_Ptr;
-  procedure Purge (Obj : in out Dynamic_Stack);
-  procedure Add (Obj : in out Dynamic_Stack; Elem : Item);
-  function Cardinality (Obj : Dynamic_Stack) return Natural;
+  function Cardinality (S : Dynamic_Stack) return Natural;
+  function Item_At (S : Dynamic_Stack; Index : Positive) return Item_Ptr;
+  procedure Purge (S : in out Dynamic_Stack);
+
+  procedure Add (S : in out Dynamic_Stack; Elem : Item);
+  procedure Remove (S : in out Dynamic_Stack; From : Positive);
 
   package Dynamic_Stack_Nodes
   is new BC.Support.Dynamic (Item => Item,
@@ -89,8 +91,8 @@ private
     Rep : Dynamic_Stack_Nodes.Dyn_Node_Ref;
   end record;
 
-  procedure Initialize (Obj : in out Dynamic_Stack);
-  procedure Adjust (Obj : in out Dynamic_Stack);
-  procedure Finalize (Obj : in out Dynamic_Stack);
+  procedure Initialize (S : in out Dynamic_Stack);
+  procedure Adjust (S : in out Dynamic_Stack);
+  procedure Finalize (S : in out Dynamic_Stack);
 
 end BC.Containers.Stacks.Dynamic;
