@@ -1,5 +1,5 @@
--- Copyright (C) 1998 Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1998,2001 Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,28 +15,29 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
-with Ada.Text_Io;
+with Ada.Text_IO;
 with Ada_Unit_Support;
 
 procedure Ada_Units is
-  use Ada_Unit_Support;
-  U_Text_Io : Unit_P := Create_Normal_Unit ("ada.text_io");
-  U_Ada_Units : Unit_P := Create_Normal_Unit ("ada_units");
-  U_Ada_Unit_Support : Unit_P := Create_Normal_Unit ("ada_unit_support");
-  U_Directed : Unit_P := Create_Generic_Unit ("bc.graphs.directed");
-  U_Undirected : Unit_P := Create_Generic_Unit ("bc.graphs.undirected");
-  U_Graphs : Unit_P := Create_Generic_Unit ("bc.graphs");
+   use Ada_Unit_Support;
+   U_Text_IO : Unit_P := Create_Normal_Unit ("ada.text_io");
+   U_Ada_Units : Unit_P := Create_Normal_Unit ("ada_units");
+   U_Ada_Unit_Support : Unit_P := Create_Normal_Unit ("ada_unit_support");
+   U_Directed : Unit_P := Create_Generic_Unit ("bc.graphs.directed");
+   U_Undirected : Unit_P := Create_Generic_Unit ("bc.graphs.undirected");
+   U_Graphs : Unit_P := Create_Generic_Unit ("bc.graphs");
 begin
-  Add_Dependency (U_Graphs, U_Ada_Unit_Support);
-  Add_Dependency (U_Directed, U_Ada_Unit_Support);
-  Add_Dependency (U_Text_Io, U_Ada_Units);
-  Add_Dependency (U_Ada_Unit_Support, U_Ada_Units);
-  Add_Dependency (U_Text_Io, U_Ada_Unit_Support);
-  Report_Dependencies;
-  Ada.Text_Io.New_Line;
-  Report_Dependencies (U_Ada_Units);
-  Ada.Text_Io.New_Line;
-  Report_Dependencies (U_Ada_Unit_Support);
+   Add_Dependency (U_Graphs, U_Ada_Unit_Support);
+   Add_Dependency (U_Directed, U_Ada_Unit_Support);
+   Add_Dependency (U_Undirected, U_Ada_Unit_Support);
+   Add_Dependency (U_Text_IO, U_Ada_Units);
+   Add_Dependency (U_Ada_Unit_Support, U_Ada_Units);
+   Add_Dependency (U_Text_IO, U_Ada_Unit_Support);
+   Report_Dependencies;
+   Ada.Text_IO.New_Line;
+   Report_Dependencies (U_Ada_Units);
+   Ada.Text_IO.New_Line;
+   Report_Dependencies (U_Ada_Unit_Support);
 end Ada_Units;
