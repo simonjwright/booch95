@@ -334,7 +334,7 @@ dist: $(DISTRIBUTION_FILES)
 	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
 	cp -p README distribution/download/
 	cp -p WAVEFRONT-README distribution/wavefront/README
-	cp -p ACL html/*.html html/*.gif distribution/
+	cp -p ACL html/*.html html/x.ada html/*.gif distribution/
 
 SOURCE = makefile ACL README $(ADA_SOURCE)
 
