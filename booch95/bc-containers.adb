@@ -1,4 +1,5 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller, Steve Doiel
+-- and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -61,7 +62,7 @@ package body BC.Containers is
     Apply (Current_Item (SP.Value (SP.Pointer (In_The_Iterator)).all).all);
   end Access_Current_Item;
 
-  procedure Visit  (Using : in out Iterator) is
+  procedure Visit (Using : in out Iterator) is
     Success : Boolean;
   begin
     Reset (Using);
@@ -71,6 +72,30 @@ package body BC.Containers is
       Next (Using);
     end loop;
   end Visit;
+
+  procedure Visit_With_In_Param (Using : in out Iterator;
+                                 Param : Param_Type) is
+    Success : Boolean;
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Current_Item (Using), Param, Success);
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Visit_With_In_Param;
+
+  procedure Visit_With_In_Out_Param (Using : in out Iterator;
+                                     Param : in out Param_Type) is
+    Success : Boolean;
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Apply (Current_Item (Using), Param, Success);
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Visit_With_In_Out_Param;
 
   procedure Modify (Using : in out Iterator) is
     Success : Boolean;
@@ -87,5 +112,39 @@ package body BC.Containers is
       Next (Using);
     end loop;
   end Modify;
+
+  procedure Modify_With_In_Param (Using : in out Iterator;
+                                  Param : in Param_Type ) is
+    Success : Boolean;
+    procedure Caller (I : in out Item) is
+    begin
+      Apply (I, Param, Success);
+    end Caller;
+    procedure Call_Apply is new Access_Current_Item (Caller, Using);
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Call_Apply;
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Modify_With_In_Param;
+
+  procedure Modify_With_In_Out_Param (Using : in out Iterator;
+                                      Param : in out Param_Type) is
+    Success : Boolean;
+    procedure Caller (I : in out Item) is
+    begin
+      Apply (I, Param, Success);
+    end Caller;
+    procedure Call_Apply is new Access_Current_Item (Caller, Using);
+  begin
+    Reset (Using);
+    while not Is_Done (Using) loop
+      Call_Apply;
+      exit when not Success;
+      Next (Using);
+    end loop;
+  end Modify_With_In_Out_Param;
 
 end BC.Containers;
