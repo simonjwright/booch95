@@ -40,9 +40,6 @@ package body BC.Support.Dynamic is
    procedure Delete_Arr is
       new Ada.Unchecked_Deallocation (Dyn_Arr, Dyn_Arr_Ref);
 
-   procedure Extend (Obj : in out Dyn_Node);
-   pragma Warnings (Off, Extend);
-
    function "=" (Left, Right : Dyn_Node) return Boolean is
    begin
       if Left.Size /= Right.Size then
