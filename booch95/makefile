@@ -53,14 +53,15 @@ DISTRIBUTION_FILES = \
 bc-$(DATE).tgz \
 bc-$(DATE).zip \
 bc-$(DATE).src \
-ACL \
-README
+ACL
 
 dist: $(DISTRIBUTION_FILES)
 	-@rm -rf distribution
 	mkdir distribution
-	(cd distribution; ln -s ../../exported-booch-components download)
-	cp -p $(DISTRIBUTION_FILES) distribution/download
+	(cd distribution; \
+	 ln -s ../../exported-booch-components download; \
+	 ln -s ../../wavefront-booch-components wavefront)
+	cp -p $(DISTRIBUTION_FILES) WAVEFRONT-README distribution/wavefront/
 	cp -p ACL html/*.html html/*.gif distribution/
 
 ADA_SOURCE = \
