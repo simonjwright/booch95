@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -267,5 +267,31 @@ package body BC.Support.Dynamic is
          D.Ref := null;
       end if;
    end Finalize;
+
+   procedure Write_Dyn_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : Dyn_Node) is
+   begin
+      Integer'Write (Stream, Obj.Size);
+      for I in 1 .. Obj.Size loop
+         Item'Output (Stream, Obj.Ref (I));
+      end loop;
+   end Write_Dyn_Node;
+
+   procedure Read_Dyn_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : out Dyn_Node) is
+      Count : Integer;
+   begin
+      Clear (Obj);
+      Integer'Read (Stream, Count);
+      for I in 1 .. Count loop
+         declare
+            Elem : constant Item := Item'Input (Stream);
+         begin
+            Append (Obj, Elem);
+         end;
+      end loop;
+   end Read_Dyn_Node;
 
 end BC.Support.Dynamic;

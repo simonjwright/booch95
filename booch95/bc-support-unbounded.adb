@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -388,5 +388,33 @@ package body BC.Support.Unbounded is
          Delete_Node (Ptr);
       end loop;
    end Finalize;
+
+   procedure Write_Unb_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : Unb_Node) is
+      N : Node_Ref := Obj.Rep;
+   begin
+      Integer'Write (Stream, Obj.Size);
+      while N /= null loop
+         Item'Output (Stream, N.Element);
+         N := N.Next;
+      end loop;
+   end Write_Unb_Node;
+
+   procedure Read_Unb_Node
+     (Stream : access Ada.Streams.Root_Stream_Type'Class;
+      Obj : out Unb_Node) is
+      Count : Integer;
+   begin
+      Clear (Obj);
+      Integer'Read (Stream, Count);
+      for I in 1 .. Count loop
+         declare
+            Elem : constant Item := Item'Input (Stream);
+         begin
+            Append (Obj, Elem);
+         end;
+      end loop;
+   end Read_Unb_Node;
 
 end BC.Support.Unbounded;
