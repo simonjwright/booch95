@@ -34,26 +34,58 @@ package body BC.Containers.Collections.Ordered.Unbounded is
 
   procedure Insert (C : in out Unbounded_Ordered_Collection; Elem : Item) is
   begin
-    Add (C, Elem);
+    for Index in 1 .. Unbounded_Ordered_Collection_Nodes.Length (C.Rep.all)
+    loop
+      if not (Unbounded_Ordered_Collection_Nodes.Item_At (C.Rep.all, Index)
+              < Elem) then
+        Unbounded_Ordered_Collection_Nodes.Insert (C.Rep.all, Elem, Index);
+        return;
+      end if;
+    end loop;
+    Unbounded_Ordered_Collection_Nodes.Append (C.Rep.all, Elem);
   end Insert;
 
   procedure Insert (C : in out Unbounded_Ordered_Collection;
                     Elem : Item;
                     Before : Positive) is
   begin
-    Add (C, Elem);
+    for Index in 1 .. Unbounded_Ordered_Collection_Nodes.Length (C.Rep.all)
+    loop
+      if not (Unbounded_Ordered_Collection_Nodes.Item_At (C.Rep.all, Index)
+              < Elem) then
+        Unbounded_Ordered_Collection_Nodes.Insert (C.Rep.all, Elem, Index);
+        return;
+      end if;
+    end loop;
+    Unbounded_Ordered_Collection_Nodes.Append (C.Rep.all, Elem);
   end Insert;
 
   procedure Append (C : in out Unbounded_Ordered_Collection; Elem : Item) is
   begin
-    Add (C, Elem);
+    for Index in 1 .. Unbounded_Ordered_Collection_Nodes.Length (C.Rep.all)
+    loop
+      if Elem < Unbounded_Ordered_Collection_Nodes.Item_At (C.Rep.all, Index)
+      then
+        Unbounded_Ordered_Collection_Nodes.Insert (C.Rep.all, Elem, Index);
+        return;
+      end if;
+    end loop;
+    Unbounded_Ordered_Collection_Nodes.Append (C.Rep.all, Elem);
   end Append;
 
   procedure Append (C : in out Unbounded_Ordered_Collection;
                     Elem : Item;
                     After : Positive) is
   begin
-    Add (C, Elem);
+    for Index in 1 .. Unbounded_Ordered_Collection_Nodes.Length (C.Rep.all)
+    loop
+      if Elem < Unbounded_Ordered_Collection_Nodes.Item_At (C.Rep.all, Index)
+      then
+        Unbounded_Ordered_Collection_Nodes.Insert (C.Rep.all, Elem, Index);
+        return;
+      end if;
+    end loop;
+    Unbounded_Ordered_Collection_Nodes.Append (C.Rep.all, Elem);
   end Append;
 
   procedure Remove (C : in out Unbounded_Ordered_Collection; At_Index : Positive) is
@@ -111,18 +143,6 @@ package body BC.Containers.Collections.Ordered.Unbounded is
   begin
     return Iterator (SP.Create (new Collection_Iterator (P)));
   end New_Iterator;
-
-  procedure Add (C : in out Unbounded_Ordered_Collection; Elem : Item) is
-  begin
-    for Index in 1 .. Unbounded_Ordered_Collection_Nodes.Length (C.Rep.all) loop
-      if not (Unbounded_Ordered_Collection_Nodes.Item_At (C.Rep.all, Index)
-              < Elem) then
-        Unbounded_Ordered_Collection_Nodes.Insert (C.Rep.all, Elem, Index);
-        return;
-      end if;
-    end loop;
-    Unbounded_Ordered_Collection_Nodes.Append (C.Rep.all, Elem);
-  end Add;
 
   function Cardinality (C : Unbounded_Ordered_Collection) return Natural is
   begin
