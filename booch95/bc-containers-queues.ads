@@ -1,6 +1,6 @@
 -- The Ada 95 Booch Components (Version 1.0 beta 1)
 -- Copyright (C)1994-1997 Grady Booch and David Weller.  All Rights Reserved.
--- 
+--
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
 --      License which comes with this Library.
@@ -11,7 +11,7 @@
 --      PURPOSE. See the Ada Community License for more details.
 --      You should have received a copy of the Ada Community
 --      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library 
+--      License" or "ACL". If not, contact the author of this library
 --      for a copy.
 --
 -- This file contains the specification of the queue abstract base class
@@ -50,7 +50,7 @@ package Bc.Containers.Queues is
    -- Return the item at the front of the Queue; the Item is _not_ removed
 
    function Front    (Obj : in Queue) return Item_Ptr is abstract;
-   -- Return reference to item at the front of the Queue; 
+   -- Return reference to item at the front of the Queue;
    -- the Item is _not_ removed
 
    function Location (Obj : in Queue; Elem : in Item) return Natural
@@ -68,8 +68,8 @@ private
 
    type Queue is abstract new Container with null record;
 
-   procedure Purge (Obj : in out Queue);
-   procedure Add (Obj : in out Queue; Elem : in out Item);
+   procedure Purge (Obj : in out Queue) is abstract;
+   procedure Add (Obj : in out Queue; Elem : in out Item) is abstract;
 
 end Bc.Containers.Queues;
 
