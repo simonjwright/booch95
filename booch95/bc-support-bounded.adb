@@ -80,7 +80,7 @@ package body BC.Support.Bounded is
                Obj.Elems (Actual + 1 .. Last + 1)
                  := Obj.Elems (Actual .. Last);
                Obj.Elems (Actual) := Elem;
-            elsif (Last = Obj.Elems'Last or else Last < Actual) then
+            elsif Last = Obj.Elems'Last or else Last < Actual then
                --  the right part is wedged, shift the left part down
                Obj.Elems (Start - 1 .. Actual - 2)
                  := Obj.Elems (Start .. Actual - 1);

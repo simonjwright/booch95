@@ -34,11 +34,11 @@
 
 <H2><A NAME="abstractions">Key Abstractions</A></H2>
 
-<p>The Ada 95 version of the components will contain the same key
+<p>The Ada 95 version of the components contains the same key
 abstractions as the C++ form (Structs, Tools and Support). However,
-the organization will be slightly different, particularly in the
-Support domain. This is because Ada 95 provides several special forms
-of memory management that are quite different from C++.
+the organization is slightly different, particularly in the Support
+domain. This is because Ada 95 provides several special forms of
+memory management that are quite different from C++.
 
 <p>The <B>Structs</B> category provides an array of structural
 abstractions (Bags, Collections, Deques, Graphs, Lists, Maps, Queues,
@@ -98,9 +98,8 @@ management, automatic reclamation of resources (garbage collection
 available in C++ and other languages.
 
 <p>The BCs take advantage of several critical forms of structuring:
-inheritance, parameterization, modularity, concurrency, and
-aggregation. Of these forms, parameterization is the form most often
-used.
+inheritance, parameterization, modularity, and aggregation. Of these
+forms, parameterization is the form most often used.
 
 
 <!---------------------------------------------------------------------->
@@ -254,10 +253,10 @@ size.
 
 <H2><A NAME="exceptions">Exceptions</A></H2>
 
-<p>All exceptions for the BCs are placed in the topmost package,
+<p>All exceptions for the BCs are declared in the topmost package,
 BC. This precludes the user from having to include a separate
 &quot;Exceptions&quot; package. Exception behaviour of the BCs is
-standard and portable, unlike other languages. 
+standard and portable, unlike other languages.
 
 <p>As well as the exceptions from the C++ Components, an exception
 <tt>Should_Have_Been_Overridden</tt> is possible. It will only be

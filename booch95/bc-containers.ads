@@ -26,8 +26,6 @@
 --  $Date$
 --  $Author$
 
-with Ada.Finalization;
-
 generic
    type Item is private;
    with function "=" (L, R : Item) return Boolean is <>;
@@ -138,7 +136,7 @@ private
    type Item_Ptr is access all Item;
    for Item_Ptr'Storage_Size use 0;
 
-   type Container is abstract new Ada.Finalization.Controlled with null record;
+   type Container is abstract tagged null record;
 
    --  Private primitive operations of Container.  These should
    --  ideally be abstract; instead, we provide implementations, but
