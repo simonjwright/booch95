@@ -126,14 +126,20 @@ private
 
    procedure Set_Value (B : in out Unconstrained_Bag; I : Item; C : Positive);
 
-   function Number_Of_Buckets (B : Unconstrained_Bag) return Natural;
+   --  Iterators
 
-   function Length (B : Unconstrained_Bag; Bucket : Positive) return Natural;
+   type Unbounded_Bag_Iterator is new Bag_Iterator with null record;
 
-   function Item_At (B : Unconstrained_Bag;
-                     Bucket, Index : Positive) return Item_Ptr;
+   procedure Reset (It : in out Unbounded_Bag_Iterator);
 
-   function Value_At (B : Unconstrained_Bag;
-                      Bucket, Index : Positive) return Positive;
+   procedure Next (It : in out Unbounded_Bag_Iterator);
+
+   function Is_Done (It : Unbounded_Bag_Iterator) return Boolean;
+
+   function Current_Item (It : Unbounded_Bag_Iterator) return Item;
+
+   function Current_Item_Ptr (It : Unbounded_Bag_Iterator) return Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Unbounded_Bag_Iterator);
 
 end BC.Containers.Bags.Unbounded;

@@ -125,13 +125,7 @@ private
 
    procedure Set_Value (B : in out Unconstrained_Bag; I : Item; C : Positive);
 
-   function Number_Of_Buckets (B : Unconstrained_Bag) return Natural;
-
-   function Item_At (B : Unconstrained_Bag;
-                     Bucket, Index : Positive) return Item_Ptr;
-
-   function Value_At (B : Unconstrained_Bag;
-                      Bucket, Index : Positive) return Positive;
+   --  Iterators
 
    type Bounded_Bag_Iterator is new Bag_Iterator with null record;
 
