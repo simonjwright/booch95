@@ -29,6 +29,7 @@ procedure Stack_Test is
    use SB;
    use SD;
    use SU;
+   use SUM;
 
    procedure Process (C : Character; OK : out Boolean);
    procedure Process (C : Character; OK : out Boolean) is
@@ -188,6 +189,7 @@ procedure Stack_Test is
    Stack_B_P1, Stack_B_P2 : SB.Stack;
    Stack_D_P1, Stack_D_P2 : SD.Stack;
    Stack_U_P1, Stack_U_P2 : SU.Stack;
+   Stack_UM_P1, Stack_UM_P2 : SUM.Stack;
 
 begin
 
@@ -203,6 +205,9 @@ begin
    Put_Line ("...Unbounded Stack");
    Test_Primitive (Stack_U_P1, Stack_U_P2);
 
+   Put_Line ("...Unmanaged Stack");
+   Test_Primitive (Stack_UM_P1, Stack_UM_P2);
+
    Put_Line ("...Stack Active Iterator");
    Put_Line ("   Bounded:");
    Test_Active_Iterator (Stack_B_P1);
@@ -210,6 +215,8 @@ begin
    Test_Active_Iterator (Stack_D_P1);
    Put_Line ("   Unbounded:");
    Test_Active_Iterator (Stack_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Active_Iterator (Stack_UM_P1);
 
    Put_Line ("...Stack Passive Iterator");
    Put_Line ("   Bounded:");
@@ -218,6 +225,8 @@ begin
    Test_Passive_Iterator (Stack_D_P1);
    Put_Line ("   Unbounded:");
    Test_Passive_Iterator (Stack_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Passive_Iterator (Stack_UM_P1);
 
    Assertion ((Top (Stack_B_P1) = 'z'), "** M01: Stack top is not correct");
    Assertion ((Depth (Stack_B_P2) = 0), "** M02: Stack depth is not correct");
@@ -227,6 +236,9 @@ begin
 
    Assertion ((Top (Stack_U_P1) = 'z'), "** M09: Stack top is not correct");
    Assertion ((Depth (Stack_U_P2) = 0), "** M10: Stack depth is not correct");
+
+   Assertion ((Top (Stack_UM_P1) = 'z'), "** M11: Stack top is not correct");
+   Assertion ((Depth (Stack_UM_P2) = 0), "** M12: Stack depth is not correct");
 
    Assertion
      (Available (Stack_B_P1) = 98, "** M13: Available space not correct");
@@ -240,6 +252,8 @@ begin
    Test_Iterator_Deletion (Stack_D_P1);
    Put_Line ("   Unbounded:");
    Test_Iterator_Deletion (Stack_U_P1);
+   Put_Line ("   Unmanaged:");
+   Test_Iterator_Deletion (Stack_UM_P1);
 
    Put_Line ("Completed Stack tests");
 
