@@ -17,7 +17,6 @@
 
 -- $Id$
 
-with BC.Support.Hash_Tables.Print;
 with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Sets.Unbounded is
