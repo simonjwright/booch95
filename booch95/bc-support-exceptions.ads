@@ -22,6 +22,8 @@ with Ada.Text_Io;
 
 package BC.Support.Exceptions is
 
+  pragma Elaborate_Body;
+
   -- These codes are shorthand for standard messages
   type Reason is (No_Reason_Given,
                   Disjoint,

@@ -20,6 +20,8 @@
 generic
 package BC.Graphs.Directed is
 
+  pragma Elaborate_Body;
+
   type Directed_Graph is new Graph with private;
   type Directed_Vertex is new Vertex with private;
   type Directed_Arc is new Arc with private;

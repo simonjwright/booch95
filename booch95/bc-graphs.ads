@@ -31,6 +31,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Graphs is
 
+  pragma Elaborate_Body;
+
   -- A directed graph is an unrooted collection of vertices and directed
   -- arcs where cycles and cross-references are not permitted. An
   -- undirected graph is an unrooted collection of vertices and undirected

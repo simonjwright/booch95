@@ -30,6 +30,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Support.Unbounded is
 
+  pragma Elaborate_Body;
+
   type Unb_Node is private;
   -- An unpacked container whose items are stored on the heap.
   -- Items are effectively indexed from 1.

@@ -24,6 +24,8 @@ generic
   Maximum_Size : Positive;
 package BC.Support.Bounded is
 
+  pragma Elaborate_Body;
+
   Max_Size : constant Positive := Maximum_Size;
 
   type Bnd_Node is private;
