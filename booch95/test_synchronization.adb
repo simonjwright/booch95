@@ -17,6 +17,7 @@
 with Ada.Calendar;
 with Ada.Text_IO;
 with BC.Support.Synchronization;
+with GNAT.Exception_Traces;
 
 procedure Test_Synchronization is
 
@@ -105,6 +106,9 @@ procedure Test_Synchronization is
    end Writer;
 
 begin
+
+   GNAT.Exception_Traces.Trace_On
+     (Kind => GNAT.Exception_Traces.Unhandled_Raise);
 
    Put_Line ("Test 1: Semaphore.");
 
