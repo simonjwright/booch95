@@ -79,6 +79,10 @@ private
                                         Item_Ptr => Item_Ptr,
                                         Maximum_Size => Size);
   use IC;
+  package Items is new BC.Support.Hash_Tables.Item_Signature
+     (Item => Item,
+      Item_Container => IC.Bnd_Node,
+      Item_Container_Ptr => IC.Bnd_Node_Ref);
 
   -- We need a dummy type for the Value component of the hash table.
   type Boolean_Ptr is access all Boolean;
@@ -86,16 +90,16 @@ private
                                         Item_Ptr => Boolean_Ptr,
                                         Maximum_Size => Size);
   use VC;
-
-  package Tables is new BC.Support.Hash_Tables
-     (Item => Item,
-      Value => Boolean,
+  package Values is new BC.Support.Hash_Tables.Value_Signature
+     (Value => Boolean,
       Value_Ptr => Boolean_Ptr,
-      Buckets => Buckets,
-      Item_Container => IC.Bnd_Node,
-      Item_Container_Ptr => IC.Bnd_Node_Ref,
       Value_Container => VC.Bnd_Node,
       Value_Container_Ptr => VC.Bnd_Node_Ref);
+
+  package Tables is new BC.Support.Hash_Tables.Tables
+     (Items => Items,
+      Values => Values,
+      Buckets => Buckets);
 
   type Bounded_Set is new Set with record
     Rep : Tables.Table;

@@ -110,22 +110,26 @@ private
                                         Storage_Manager => Storage_Manager,
                                         Storage => Storage);
   use IC;
+  package Items is new BC.Support.Hash_Tables.Item_Signature
+     (Item => Item,
+      Item_Container => IC.Dyn_Node,
+      Item_Container_Ptr => IC.Dyn_Node_Ref);
 
   package VC is new BC.Support.Dynamic (Item => Value,
                                         Item_Ptr => Value_Ptr,
                                         Storage_Manager => Storage_Manager,
                                         Storage => Storage);
   use VC;
-
-  package Tables is new BC.Support.Hash_Tables
-     (Item => Item,
-      Value => Value,
+  package Values is new BC.Support.Hash_Tables.Value_Signature
+     (Value => Value,
       Value_Ptr => Value_Ptr,
-      Buckets => Buckets,
-      Item_Container => IC.Dyn_Node,
-      Item_Container_Ptr => IC.Dyn_Node_Ref,
       Value_Container => VC.Dyn_Node,
       Value_Container_Ptr => VC.Dyn_Node_Ref);
+
+  package Tables is new BC.Support.Hash_Tables.Tables
+     (Items => Items,
+      Values => Values,
+      Buckets => Buckets);
 
   type Dynamic_Map is new Map with record
     Rep : Tables.Table;
