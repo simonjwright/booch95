@@ -24,25 +24,25 @@ package BC.Containers.Stacks.Bounded is
 
   type Bounded_Stack is new Stack with private;
 
-  procedure Clear (Obj : in out Bounded_Stack);
+  procedure Clear (S : in out Bounded_Stack);
   -- Empty the Stack of all items.
 
-  procedure Push (Obj : in out Bounded_Stack; Elem : Item);
+  procedure Push (S : in out Bounded_Stack; Elem : Item);
   -- Add a copy of the item to the top of the Stack.
 
-  procedure Pop (Obj : in out Bounded_Stack);
+  procedure Pop (S : in out Bounded_Stack);
   -- Remove the item from the top of the Stack.
 
-  function Available (Obj : in Bounded_Stack) return Natural;
+  function Available (S : in Bounded_Stack) return Natural;
   -- Returns a count of the number of empty "Item slots" left.
 
-  function Depth (Obj : in Bounded_Stack) return Natural;
+  function Depth (S : in Bounded_Stack) return Natural;
   -- Returns the number of items in the Stack
 
-  function Is_Empty (Obj : in Bounded_Stack) return Boolean;
+  function Is_Empty (S : in Bounded_Stack) return Boolean;
   -- Returns True if and only if no items are in the stack
 
-  function Top (Obj : in Bounded_Stack) return Item;
+  function Top (S : in Bounded_Stack) return Item;
   -- Return a copy of the item at the top of the Stack.
 
   -- XXX need accessor generic
@@ -56,10 +56,12 @@ package BC.Containers.Stacks.Bounded is
 
 private
 
-  function Cardinality (Obj : Bounded_Stack) return Natural;
-  procedure Purge (Obj : in out Bounded_Stack);
-  procedure Add (Obj : in out Bounded_Stack; Elem : Item);
-  function Item_At (Obj : Bounded_Stack; Index : Positive) return Item_Ptr;
+  function Cardinality (S : Bounded_Stack) return Natural;
+  function Item_At (S : Bounded_Stack; Index : Positive) return Item_Ptr;
+  procedure Purge (S : in out Bounded_Stack);
+
+  procedure Add (S : in out Bounded_Stack; Elem : Item);
+  procedure Remove (S : in out Bounded_Stack; From : Positive);
 
   package Bounded_Stack_Nodes
   is new BC.Support.Bounded (Item => Item,
@@ -71,7 +73,7 @@ private
     Rep : Bounded_Stack_Nodes.Bnd_Node_Ref := new Bnd_Node;
   end record;
 
-  procedure Adjust (Obj : in out Bounded_Stack);
-  procedure Finalize (Obj : in out Bounded_Stack);
+  procedure Adjust (S : in out Bounded_Stack);
+  procedure Finalize (S : in out Bounded_Stack);
 
 end BC.Containers.Stacks.Bounded;

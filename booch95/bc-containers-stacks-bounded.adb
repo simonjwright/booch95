@@ -21,39 +21,39 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Stacks.Bounded is
 
-  procedure Clear (Obj : in out Bounded_Stack) is
+  procedure Clear (S : in out Bounded_Stack) is
   begin
-    Bounded_Stack_Nodes.Clear (Obj.Rep.all);
+    Bounded_Stack_Nodes.Clear (S.Rep.all);
   end Clear;
 
-  procedure Push (Obj : in out Bounded_Stack; Elem : Item) is
+  procedure Push (S : in out Bounded_Stack; Elem : Item) is
   begin
-    Bounded_Stack_Nodes.Insert (Obj.Rep.all, Elem);
+    Bounded_Stack_Nodes.Insert (S.Rep.all, Elem);
   end Push;
 
-  procedure Pop (Obj : in out Bounded_Stack) is
+  procedure Pop (S : in out Bounded_Stack) is
   begin
-    Bounded_Stack_Nodes.Remove (Obj.Rep.all, 1);
+    Bounded_Stack_Nodes.Remove (S.Rep.all, 1);
   end Pop;
 
-  function Available (Obj: in Bounded_Stack) return Natural is
+  function Available (S: in Bounded_Stack) return Natural is
   begin
-    return Bounded_Stack_Nodes.Available (Obj.Rep.all);
+    return Bounded_Stack_Nodes.Available (S.Rep.all);
   end Available;
 
-  function Depth (Obj : Bounded_Stack) return Natural is
+  function Depth (S : Bounded_Stack) return Natural is
   begin
-    return Bounded_Stack_Nodes.Length (Obj.Rep.all);
+    return Bounded_Stack_Nodes.Length (S.Rep.all);
   end Depth;
 
-  function Is_Empty (Obj : Bounded_Stack) return Boolean is
+  function Is_Empty (S : Bounded_Stack) return Boolean is
   begin
-    return Bounded_Stack_Nodes.Length (Obj.Rep.all) = 0;
+    return Bounded_Stack_Nodes.Length (S.Rep.all) = 0;
   end Is_Empty;
 
-  function Top (Obj : Bounded_Stack) return Item is
+  function Top (S : Bounded_Stack) return Item is
   begin
-    return Bounded_Stack_Nodes.First (Obj.Rep.all);
+    return Bounded_Stack_Nodes.First (S.Rep.all);
   end Top;
 
   function "=" (Left, Right : Bounded_Stack) return Boolean is
@@ -71,35 +71,40 @@ package body BC.Containers.Stacks.Bounded is
     return Iterator (SP.Create (new Stack_Iterator (P)));
   end New_Iterator;
 
-  function Cardinality (Obj : Bounded_Stack) return Natural is
+  function Cardinality (S : Bounded_Stack) return Natural is
   begin
-    return Bounded_Stack_Nodes.Length (Obj.Rep.all);
+    return Bounded_Stack_Nodes.Length (S.Rep.all);
   end Cardinality;
 
-  procedure Purge (Obj : in out Bounded_Stack) is
-  begin
-    Bounded_Stack_Nodes.Clear (Obj.Rep.all);
-  end Purge;
-
-  procedure Add (Obj : in out Bounded_Stack; Elem : Item) is
-  begin
-    Bounded_Stack_Nodes.Append (Obj.Rep.all, Elem);
-  end Add;
-
   function Item_At
-     (Obj : Bounded_Stack; Index : Positive) return Item_Ptr is
+     (S : Bounded_Stack; Index : Positive) return Item_Ptr is
   begin
-    return Bounded_Stack_Nodes.Item_At (Obj.Rep.all, Index);
+    return Bounded_Stack_Nodes.Item_At (S.Rep.all, Index);
   end Item_at;
 
-  procedure Adjust (Obj : in out Bounded_Stack) is
+  procedure Purge (S : in out Bounded_Stack) is
   begin
-    Obj.Rep := Bounded_Stack_Nodes.Create (Obj.Rep.all);
+    Bounded_Stack_Nodes.Clear (S.Rep.all);
+  end Purge;
+
+  procedure Add (S : in out Bounded_Stack; Elem : Item) is
+  begin
+    Bounded_Stack_Nodes.Append (S.Rep.all, Elem);
+  end Add;
+
+  procedure Remove (S : in out Bounded_Stack; From : Positive) is
+  begin
+    Bounded_Stack_Nodes.Remove (S.Rep.all, From);
+  end Remove;
+
+  procedure Adjust (S : in out Bounded_Stack) is
+  begin
+    S.Rep := Bounded_Stack_Nodes.Create (S.Rep.all);
   end Adjust;
 
-  procedure Finalize (Obj : in out Bounded_Stack) is
+  procedure Finalize (S : in out Bounded_Stack) is
   begin
-    Free (Obj.Rep);
+    Free (S.Rep);
   end Finalize;
 
 end BC.Containers.Stacks.Bounded;
