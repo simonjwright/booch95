@@ -56,6 +56,8 @@ need to recompile).</p>
 The current version has the following components available:<p>
 
 <UL>
+<li><font color="red">Bounded Bags</font>
+<li><font color="red">Dynamic Bags</font>
 <li>Unbounded Bags
 <li>Directed Graphs
 <li>Undirected Graphs
@@ -67,6 +69,9 @@ The current version has the following components available:<p>
 <LI>Bounded Queues 
 <LI>Dynamic Queues
 <LI>Unbounded Queues
+<LI><font color="red">Unbounded Rings</font>
+<LI><font color="red">Unbounded Guarded Rings</font>
+<LI><font color="red">Unbounded Synchronized Rings</font>
 <li>Bounded Sets
 <li>Dynamic Sets
 <li>Unbounded Sets
@@ -170,6 +175,29 @@ Containers.  This is largely because of the difficulty of supporting
 standard Iterators in a non-linear structure like a Tree.<p>
 
 That said, I've tried to use a common style throughout.<p>
+
+</dd>
+
+<dt>Synchronization</dt>
+
+<dd>
+
+As discussed <a href="documentation.html#synchronization">elsewhere</a>, there are two forms of support for concurrency:
+
+<dl>
+<dt>guarded<dd>where objects must be locked by the client, and
+<dt>synchronized<dd>where each operation provides its own internal locking
+</dl>
+
+In the C++ Components, <em>synchronized</em> objects additionally
+provide a form of queuing control; an attempt to read from an empty
+Container will result in blocking until an entry is added to the
+Container.
+
+<p>This feature isn't implemented in the only Containers (Unbounded
+Rings) for which concurrency protection is presently (3.v.99)
+supported.
+
 
 </dd>
 
