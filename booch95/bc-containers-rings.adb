@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -96,12 +96,6 @@ package body BC.Containers.Rings is
    begin
       return R.Mark = R.Top;
    end At_Mark;
-
-   procedure Initialize (R : in out Abstract_Ring) is
-   begin
-      R.Top := 0;
-      R.Mark := 0;
-   end Initialize;
 
    procedure Add (R : in out Abstract_Ring; Elem : Item) is
    begin

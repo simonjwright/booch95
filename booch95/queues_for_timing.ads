@@ -1,4 +1,4 @@
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -19,11 +19,12 @@ with BC.Containers.Queues;
 with BC.Containers.Queues.Bounded;
 with BC.Containers.Queues.Dynamic;
 with BC.Containers.Queues.Unbounded;
+with BC.Containers.Queues.Unmanaged;
 with BC.Support.Managed_Storage;
 with System.Storage_Pools;
 
 package Queues_For_Timing is
-   Size : constant := 10_000;
+   Size : constant := 10;
    package C is new BC.Containers (Integer);
    package Q is new C.Queues;
    package B is new Q.Bounded (Size);
@@ -31,5 +32,6 @@ package Queues_For_Timing is
    Pool_View : System.Storage_Pools.Root_Storage_Pool'Class
      renames System.Storage_Pools.Root_Storage_Pool'Class (Pool);
    package D is new Q.Dynamic (Pool_View);
+   package M is new Q.Unmanaged;
    package U is new Q.Unbounded (Pool_View);
 end Queues_For_Timing;

@@ -1,4 +1,4 @@
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -15,10 +15,9 @@
 --  $Id$
 
 with Ada.Finalization;
-with BC.Containers;
-with BC.Containers.Lists;
-with BC.Containers.Lists.Single;
-with BC.Containers.Lists.Double;
+with BC.Lists;
+with BC.Lists.Single;
+with BC.Lists.Double;
 with BC.Smart;
 with BC.Support.Managed_Storage;
 with System.Storage_Pools;
@@ -31,8 +30,7 @@ package Lists_For_Traversal is
    package Smart is new BC.Smart (T, T_P);
    subtype P is Smart.Pointer;
    function "=" (L, R : P) return Boolean;
-   package C is new BC.Containers (P);
-   package L is new C.Lists;
+   package L is new BC.Lists (P);
    Pool : BC.Support.Managed_Storage.Pool (10_000);
    Pool_View : System.Storage_Pools.Root_Storage_Pool'Class
      renames System.Storage_Pools.Root_Storage_Pool'Class (Pool);

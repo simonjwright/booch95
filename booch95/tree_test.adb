@@ -448,7 +448,6 @@ procedure Tree_Test is
       Success : Boolean;
       use TM;
    begin
-
       Insert (T, 'd');
       Insert (T, 'c');
       Insert (T1, 'e');
@@ -489,6 +488,37 @@ procedure Tree_Test is
       Multiway_Post_Order (T, Success);
    end Test_Multiway_Iteration;
 
+--     procedure Test_AVL_Iteration;
+--     procedure Test_AVL_Iteration is
+--        T : TA.AVL_Tree;
+--        It : TAI.Iterator := TAI.New_Iterator (T);
+--        Dummy : Boolean;
+--     begin
+--        TA.Insert (T, 'd', Dummy);
+--        TA.Insert (T, 'c', Dummy);
+--        TA.Insert (T, 'e', Dummy);
+--        TA.Insert (T, 'f', Dummy);
+--        TA.Insert (T, 'b', Dummy);
+--        TA.Insert (T, 'g', Dummy);
+--        TA.Insert (T, 'h', Dummy);
+--        TA.Insert (T, 'i', Dummy);
+--        TA.Insert (T, 'a', Dummy);
+--        TA.Insert (T, 'l', Dummy);
+--        TA.Insert (T, 'k', Dummy);
+--        TA.Insert (T, 'm', Dummy);
+--        TA.Insert (T, 'j', Dummy);
+--        TA.Insert (T, 'n', Dummy);
+--        TA.Insert (T, 'p', Dummy);
+--        TA.Insert (T, 'o', Dummy);
+--        TAI.Reset (It);
+--        Put_Line ("AVL iteration");
+--        while not TAI.Is_Done (It) loop
+--           Put (TAI.Current_Item (It));
+--           TAI.Next (It);
+--        end loop;
+--        New_Line;
+--     end Test_AVL_Iteration;
+
 begin
 
    Put_Line ("Starting Tree tests");
@@ -504,6 +534,7 @@ begin
 
    Put_Line ("...AVL Tree");
    Test_Primitive (A_Tree_P1);
+--     Test_AVL_Iteration;
 
    Put_Line ("Completed Tree tests");
 

@@ -65,15 +65,15 @@ package body BC.Support.Array_Streams is
 
    procedure Reset (Stream : out Stream_Type) is
    begin
-      Stream.Next_Write := 1;
-      Stream.Next_Read := 1;
+      Stream.Next_Write := Stream.Buffer'First;
+      Stream.Next_Read := Stream.Buffer'First;
    end Reset;
 
 
    procedure Set_Last (Used_In : in out Stream_Type;
                        To : Ada.Streams.Stream_Element_Offset) is
    begin
-      Used_In.Next_Write := To;
+      Used_In.Next_Write := To + 1;
    end Set_Last;
 
 

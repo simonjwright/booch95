@@ -1,4 +1,4 @@
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -14,15 +14,13 @@
 
 --  $Id$
 
-with BC.Containers;
-with BC.Containers.Lists;
-with BC.Containers.Lists.Single;
-with BC.Containers.Lists.Double;
+with BC.Lists;
+with BC.Lists.Single;
+with BC.Lists.Double;
 with BC.Support.Managed_Storage;
 with System.Storage_Pools;
 package Lists_For_Timing is
-   package C is new BC.Containers (Integer);
-   package L is new C.Lists;
+   package L is new BC.Lists (Integer);
    Pool : BC.Support.Managed_Storage.Pool (10_000);
    Pool_View : System.Storage_Pools.Root_Storage_Pool'Class
      renames System.Storage_Pools.Root_Storage_Pool'Class (Pool);

@@ -1,4 +1,4 @@
---  Copyright 2001-2002 Simon Wright <simon@pushface.org>
+--  Copyright 2001-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -23,6 +23,8 @@
 --  $Revision$
 --  $Date$
 --  $Author$
+
+with Ada.Finalization;
 
 package BC.Support.Bounded_Hash_Tables is
 
@@ -86,12 +88,14 @@ package BC.Support.Bounded_Hash_Tables is
       type Cells is array (Cell_Index range <>) of Cell;
 
       type Table (Number_Of_Buckets : Positive; Maximum_Size : Positive)
-      is record
+      is new Ada.Finalization.Controlled with record
          Buckets : Bkts (1 .. Number_Of_Buckets);
          Contents : Cells (1 .. Maximum_Size);
          Size : Natural;
          Free : Index;
       end record;
+
+      procedure Initialize (T : in out Table);
 
       function "=" (L, R : Table) return Boolean;
 

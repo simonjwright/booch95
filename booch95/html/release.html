@@ -14,7 +14,7 @@
 
 <dl>
 
-<p><dt>dd mmm yyyy
+<p><dt>19 Mar 2004
 
 <dd>
 
@@ -23,10 +23,21 @@
 <p>The closed generic iterators that take an additional <tt>Param</tt>
 now accept limited indefinite types.
 
+<p>Some preliminary work has been done on moving Lists and Trees up a
+level; they don't come in the various forms (bounded, dynamic,
+unbounded, unmanaged), and Trees don't support iterators.
+<br>The older versions are still present, for the time being.
+
+<p>Semaphores (from <tt>BC.Support.Synchronization</tt>) are now
+limited private.
+
 <h3>Implementation changes</h3>
 
-<p><tt>BC.Support.Statistics</tt> allows you to accumulate data with
-negative values.
+<p><tt>BC.Support.Statistics</tt> used to raise
+<tt>Constraint_Error</tt> for negative values.
+
+<p>The bounded Container forms are no longer <tt>Controlled</tt>. This
+is an efficiency improvement.
 
 <h3>Documentation changes</h3>
 

@@ -107,6 +107,9 @@ TEST_SRC += graph_test.ad[bs] graph_test_support.ad[bs]
 graph_test: force
 
 ADA_SOURCE += \
+bc-lists-double.ad[bs] \
+bc-lists-single.ad[bs] \
+bc-lists.ad[bs] \
 bc-containers-lists-double.ad[bs] \
 bc-containers-lists-single.ad[bs] \
 bc-containers-lists.ad[bs]
@@ -203,6 +206,17 @@ stream_test_support-tc[bdu].ad[bs]
 stream_test: force
 
 ADA_SOURCE += \
+bc-trees-avl_trees.ad[bs] \
+bc-trees-avl_trees-print.ad[bs] \
+bc-trees-avl_trees-validate.ad[bs] \
+bc-trees-binary_trees.ad[bs] \
+bc-trees-binary_trees-in_order.ad[bs] \
+bc-trees-binary_trees-post_order.ad[bs] \
+bc-trees-binary_trees-pre_order.ad[bs] \
+bc-trees-multiway_trees.ad[bs] \
+bc-trees-multiway_trees-post_order.ad[bs] \
+bc-trees-multiway_trees-pre_order.ad[bs] \
+bc-trees.ad[bs] \
 bc-containers-trees-avl.ad[bs] \
 bc-containers-trees-avl-print.ad[bs] \
 bc-containers-trees-avl-validate.ad[bs] \
@@ -293,18 +307,13 @@ bc-$(DATE).src \
 bc-html-$(DATE).zip \
 COPYING
 
-dist: $(DISTRIBUTION_FILES)
-	-@rm -rf distribution
-	mkdir distribution
-	(cd distribution; \
-	 ln -s $(HOME)/exported-booch-components download; \
-	 ln -s $(HOME)/wavefront-booch-components wavefront; \
-	 ln -s ../contrib)
-	cp -p $(DISTRIBUTION_FILES) distribution/wavefront/
-	cp -p README distribution/download/
-	cp -p WAVEFRONT-README distribution/wavefront/README
-	cp -p COPYING html/*.{html,gif,jpg,png} html/x.ada \
-	  html/coldframe-hash.{tgz,zip} distribution/
+dist: README $(DISTRIBUTION_FILES)
+	-@rm -rf dist
+	mkdir -p dist/download
+	cp -p README $(DISTRIBUTION_FILES) dist/download/
+	cp -pR contrib dist/
+	cp -p html/*.{html,gif,jpg,png} html/x.ada \
+	  html/coldframe-hash.{tgz,zip} dist/
 
 SOURCE = makefile COPYING README $(ADA_SOURCE)
 

@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -26,6 +26,7 @@
 --  $Date$
 --  $Author$
 
+with Ada.Finalization;
 with System.Storage_Pools;
 
 generic
@@ -184,13 +185,16 @@ private
       Count : Natural := 1;
    end record;
 
-   type List is new Container with record
+   type Header is new Ada.Finalization.Controlled with record
       Rep : Single_Node_Ref;
    end record;
 
-   procedure Initialize (L : in out List);
-   procedure Adjust (L : in out List);
-   procedure Finalize (L : in out List);
+   procedure Adjust (H : in out Header);
+   procedure Finalize (H : in out Header);
+
+   type List is new Container with record
+      Head : Header;
+   end record;
 
    type List_Iterator is new Iterator with record
       Index : Single_Node_Ref;

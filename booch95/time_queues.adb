@@ -1,4 +1,4 @@
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -18,15 +18,16 @@
 --  performance of the various flavours of Queue, in case there's an
 --  efficiency problem.
 
-with Ada.Calendar;
 with Ada.Text_IO;
+with BC.Support.High_Resolution_Time;
 with Queues_For_Timing;
 
 procedure Time_Queues is
 
-   B : Queues_For_Timing.B.Queue;
-   D : Queues_For_Timing.D.Queue;
-   U : Queues_For_Timing.U.Queue;
+   B, B2 : Queues_For_Timing.B.Queue;
+   D, D2  : Queues_For_Timing.D.Queue;
+   M, M2 : Queues_For_Timing.M.Queue;
+   U, U2 : Queues_For_Timing.U.Queue;
 
    procedure Iterate;
    procedure Iterate is
@@ -39,18 +40,19 @@ procedure Time_Queues is
       end Apply;
       procedure B_Application is new Queues_For_Timing.C.Visit (Apply);
       procedure D_Application is new Queues_For_Timing.C.Visit (Apply);
+      procedure M_Application is new Queues_For_Timing.C.Visit (Apply);
       procedure U_Application is new Queues_For_Timing.C.Visit (Apply);
-      Start : Ada.Calendar.Time;
+      Start : BC.Support.High_Resolution_Time.Time;
       Taken : Duration;
       It : Queues_For_Timing.C.Iterator'Class
         := Queues_For_Timing.C.New_Iterator
         (Queues_For_Timing.C.Container'Class (B));
-      use type Ada.Calendar.Time;
+      use type BC.Support.High_Resolution_Time.Time;
    begin
       Total := 0;
-      Start := Ada.Calendar.Clock;
+      Start := BC.Support.High_Resolution_Time.Clock;
       B_Application (It);
-      Taken := Ada.Calendar.Clock - Start;
+      Taken := BC.Support.High_Resolution_Time.Clock - Start;
       Ada.Text_IO.Put_Line
         (".. bounded queue took"
          & Duration'Image (Taken)
@@ -59,9 +61,9 @@ procedure Time_Queues is
       Total := 0;
       It := Queues_For_Timing.C.New_Iterator
         (Queues_For_Timing.C.Container'Class (D));
-      Start := Ada.Calendar.Clock;
+      Start := BC.Support.High_Resolution_Time.Clock;
       D_Application (It);
-      Taken := Ada.Calendar.Clock - Start;
+      Taken := BC.Support.High_Resolution_Time.Clock - Start;
       Ada.Text_IO.Put_Line
         (".. dynamic queue took"
          & Duration'Image (Taken)
@@ -69,16 +71,63 @@ procedure Time_Queues is
          & Integer'Image (Total));
       Total := 0;
       It := Queues_For_Timing.C.New_Iterator
+        (Queues_For_Timing.C.Container'Class (M));
+      Start := BC.Support.High_Resolution_Time.Clock;
+      M_Application (It);
+      Taken := BC.Support.High_Resolution_Time.Clock - Start;
+      Ada.Text_IO.Put_Line
+        (".. unmanaged queue took"
+         & Duration'Image (Taken)
+         & " sec, sum"
+         & Integer'Image (Total));
+      Total := 0;
+      It := Queues_For_Timing.C.New_Iterator
         (Queues_For_Timing.C.Container'Class (U));
-      Start := Ada.Calendar.Clock;
+      Start := BC.Support.High_Resolution_Time.Clock;
       U_Application (It);
-      Taken := Ada.Calendar.Clock - Start;
+      Taken := BC.Support.High_Resolution_Time.Clock - Start;
       Ada.Text_IO.Put_Line
         (".. unbounded queue took"
          & Duration'Image (Taken)
          & " sec, sum"
          & Integer'Image (Total));
    end Iterate;
+
+   procedure Copy;
+   procedure Copy is
+      Start : BC.Support.High_Resolution_Time.Time;
+      Taken : Duration;
+      use type BC.Support.High_Resolution_Time.Time;
+   begin
+      Start := BC.Support.High_Resolution_Time.Clock;
+      B2 := B;
+      Taken := BC.Support.High_Resolution_Time.Clock - Start;
+      Ada.Text_IO.Put_Line
+        (".. bounded queue took"
+         & Duration'Image (Taken)
+         & " sec");
+      Start := BC.Support.High_Resolution_Time.Clock;
+      D2 := D;
+      Taken := BC.Support.High_Resolution_Time.Clock - Start;
+      Ada.Text_IO.Put_Line
+        (".. dynamic queue took"
+         & Duration'Image (Taken)
+         & " sec");
+      Start := BC.Support.High_Resolution_Time.Clock;
+      M2 := M;
+      Taken := BC.Support.High_Resolution_Time.Clock - Start;
+      Ada.Text_IO.Put_Line
+        (".. unmanaged queue took"
+         & Duration'Image (Taken)
+         & " sec");
+      Start := BC.Support.High_Resolution_Time.Clock;
+      U2 := U;
+      Taken := BC.Support.High_Resolution_Time.Clock - Start;
+      Ada.Text_IO.Put_Line
+        (".. unbounded queue took"
+         & Duration'Image (Taken)
+         & " sec");
+   end Copy;
 
    procedure Time (N : Integer);
    procedure Time (N : Integer) is
@@ -88,13 +137,23 @@ procedure Time_Queues is
       Queues_For_Timing.B.Clear (B);
       Queues_For_Timing.D.Clear (D);
       Queues_For_Timing.D.Preallocate (D, 1024);
+      Queues_For_Timing.M.Clear (M);
       Queues_For_Timing.U.Clear (U);
       for I in 1 .. N loop
          Queues_For_Timing.B.Append (B, I);
          Queues_For_Timing.D.Append (D, I);
+         Queues_For_Timing.M.Append (M, I);
          Queues_For_Timing.U.Append (U, I);
       end loop;
       Iterate;
+      Ada.Text_IO.Put_Line
+        ("timing copying containers of length" & Integer'Image (N));
+      Queues_For_Timing.B.Clear (B2);
+      Queues_For_Timing.D.Clear (D2);
+      Queues_For_Timing.D.Preallocate (D2, 1024);
+      Queues_For_Timing.M.Clear (M2);
+      Queues_For_Timing.U.Clear (U2);
+      Copy;
    end Time;
 
 begin
