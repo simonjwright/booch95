@@ -143,10 +143,14 @@ ADA_SOURCE += \
 bc-containers-queues-bounded.ad[bs] \
 bc-containers-queues-dynamic.ad[bs] \
 bc-containers-queues-unbounded.ad[bs] \
+bc-containers-queues-synchronized.ad[bs] \
 bc-containers-queues.ad[bs]
 TESTABLE += queue_test
 TEST_SRC += queue_test.ad[bs] queue_test_support.ad[bs]
 queue_test: force
+CONCURRENT_TESTABLE += queue_test_concurrent
+TEST_SRC += queue_test_concurrent.ad[bs] queue_test_support_concurrent.ad[bs]
+queue_test_concurrent: force
 
 ADA_SOURCE += \
 bc-containers-rings.ad[bs] \
