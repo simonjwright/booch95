@@ -29,6 +29,21 @@ with Ada.IO_Exceptions;
 package body BC.Support.Memory_Streams is
 
 
+   function Contents (Stream : Stream_Type)
+                     return Ada.Streams.Stream_Element_Array is
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      return Stream.Buffer (Stream.Buffer'First .. Stream.Next_Write - 1);
+   end Contents;
+
+
+   function Length (Stream : Stream_Type) return Natural is
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      return Integer (Stream.Next_Write - Stream.Buffer'First);
+   end Length;
+
+
    procedure Read
      (Stream : in out Stream_Type;
       Item   : out Ada.Streams.Stream_Element_Array;
@@ -53,6 +68,36 @@ package body BC.Support.Memory_Streams is
    end Read;
 
 
+   procedure Read_Contents (From : access Ada.Streams.Root_Stream_Type'Class;
+                            Stream : in out Stream_Type) is
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      Reset (Stream);
+      Ada.Streams.Read (From.all, Stream.Buffer, Stream.Next_Write);
+      Stream.Next_Write := Stream.Next_Write + 1;
+   end Read_Contents;
+
+
+   procedure Reset (Stream : out Stream_Type) is
+   begin
+      Stream.Next_Write := 1;
+      Stream.Next_Read := 1;
+   end Reset;
+
+
+   procedure Set_Contents (From : Ada.Streams.Stream_Element_Array;
+                           Stream : in out Stream_Type) is
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      Reset (Stream);
+      if From'Length > Stream.Capacity then
+         raise Ada.IO_Exceptions.End_Error;
+      end if;
+      Stream.Buffer (1 .. From'Length) := From;
+      Stream.Next_Write := From'Length + 1;
+   end Set_Contents;
+
+
    procedure Write
      (Stream : in out Stream_Type;
       Item   : in Ada.Streams.Stream_Element_Array) is
@@ -69,21 +114,6 @@ package body BC.Support.Memory_Streams is
    end Write;
 
 
-   function Length (Stream : Stream_Type) return Natural is
-      use type Ada.Streams.Stream_Element_Offset;
-   begin
-      return Integer (Stream.Next_Write - Stream.Buffer'First);
-   end Length;
-
-
-   function Contents (Stream : Stream_Type)
-                     return Ada.Streams.Stream_Element_Array is
-      use type Ada.Streams.Stream_Element_Offset;
-   begin
-      return Stream.Buffer (Stream.Buffer'First .. Stream.Next_Write - 1);
-   end Contents;
-
-
    procedure Write_Contents (To : access Ada.Streams.Root_Stream_Type'Class;
                              Stream : Stream_Type) is
       use type Ada.Streams.Stream_Element_Offset;
@@ -91,36 +121,6 @@ package body BC.Support.Memory_Streams is
       Ada.Streams.Write
         (To.all, Stream.Buffer (Stream.Buffer'First .. Stream.Next_Write - 1));
    end Write_Contents;
-
-
-   procedure Read_Contents (From : access Ada.Streams.Root_Stream_Type'Class;
-                            Stream : in out Stream_Type) is
-      use type Ada.Streams.Stream_Element_Offset;
-   begin
-      Reset (Stream);
-      Ada.Streams.Read (From.all, Stream.Buffer, Stream.Next_Write);
-      Stream.Next_Write := Stream.Next_Write + 1;
-   end Read_Contents;
-
-
-   procedure Set_Contents (From : Ada.Streams.Stream_Element_Array;
-                           Stream : in out Stream_Type) is
-      use type Ada.Streams.Stream_Element_Offset;
-   begin
-      Reset (Stream);
-      if From'Length > Stream.Capacity then
-         raise Ada.IO_Exceptions.End_Error;
-      end if;
-      Stream.Buffer (1 .. From'Length) := From;
-      Stream.Next_Write := From'Length + 1;
-   end Set_Contents;
-
-
-   procedure Reset (Stream : out Stream_Type) is
-   begin
-      Stream.Next_Write := 1;
-      Stream.Next_Read := 1;
-   end Reset;
 
 
 end BC.Support.Memory_Streams;
