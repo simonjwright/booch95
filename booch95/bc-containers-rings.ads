@@ -99,10 +99,6 @@ private
 
   procedure Add (R : in out Ring; Elem : Item);
 
-  procedure Lock (R : in out Ring);
-
-  procedure Unlock (R : in out Ring);
-
   type Ring_Iterator is new Iterator with record
     Index : Natural;
   end record;
