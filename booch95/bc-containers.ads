@@ -80,7 +80,7 @@ package BC.Containers is
    --  if Apply sets OK to False.
 
    generic
-      type Param_Type is private;
+      type Param_Type (<>) is limited private;
       with procedure Apply (Elem : in Item;
                             Param : in Param_Type;
                             OK : out Boolean);
@@ -91,7 +91,7 @@ package BC.Containers is
    --  early if Apply sets OK to False.
 
    generic
-      type Param_Type is private;
+      type Param_Type (<>) is limited private;
       with procedure Apply (Elem : in Item;
                             Param : in out Param_Type;
                             OK : out Boolean);
@@ -109,7 +109,7 @@ package BC.Containers is
    --  if Apply sets OK to False.
 
    generic
-      type Param_Type is private;
+      type Param_Type (<>) is limited private;
       with procedure Apply (Elem : in out Item;
                             Param : in Param_Type;
                             OK : out Boolean);
@@ -120,7 +120,7 @@ package BC.Containers is
    --  if Apply sets OK to False.
 
    generic
-      type Param_Type is private;
+      type Param_Type (<>) is limited private;
       with procedure Apply (Elem : in out Item;
                             Param : in out Param_Type;
                             OK : out Boolean);
