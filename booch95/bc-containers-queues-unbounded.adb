@@ -103,10 +103,8 @@ package body BC.Containers.Queues.Unbounded is
   end Initialize;
 
   procedure Adjust (Obj : in out Unbounded_Queue) is
-    Tmp_Ptr : Unbounded_Queue_Nodes.Unb_Node_Ref := Obj.Rep;
   begin
-    Obj.Rep := new Unbounded_Queue_Nodes.Unb_Node;
-    Obj.Rep.all := Unbounded_Queue_Nodes.Create(From=>Tmp_Ptr.all);
+    Obj.Rep := Unbounded_Queue_Nodes.Create (From => Obj.Rep.all);
   end Adjust;
 
   procedure Finalize (Obj : in out Unbounded_Queue) is

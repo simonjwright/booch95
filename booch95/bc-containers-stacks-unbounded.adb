@@ -98,10 +98,8 @@ package body BC.Containers.Stacks.Unbounded is
   end Initialize;
 
   procedure Adjust (Obj : in out Unbounded_Stack) is
-    Tmp_Ptr : Unbounded_Stack_Nodes.Unb_Node_Ref := Obj.Rep;
   begin
-    Obj.Rep := new Unbounded_Stack_Nodes.Unb_Node;
-    Obj.Rep.all := Unbounded_Stack_Nodes.Create (From=>Tmp_Ptr.all);
+    Obj.Rep := Unbounded_Stack_Nodes.Create (From => Obj.Rep.all);
   end Adjust;
 
   procedure Finalize (Obj : in out Unbounded_Stack) is
