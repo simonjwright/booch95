@@ -44,7 +44,6 @@ bc-support-dynamic.ad[bs] \
 bc-support-exceptions.ad[bs] \
 bc-support-hash_tables.ad[bs] \
 bc-support-managed_storage.ad[bs] \
-bc-support-nodes.ad[bs] \
 bc-support-standard_storage.ads \
 bc-support-synchronization.ad[bs] \
 bc-support-unbounded.ad[bs] \
