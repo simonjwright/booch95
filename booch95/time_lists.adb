@@ -1,4 +1,4 @@
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -36,13 +36,13 @@ procedure Time_Lists is
          Total := Total + Elem;
          Ok := True;
       end Apply;
-      procedure S_Application is new Lists_For_Timing.C.Visit (Apply);
-      procedure D_Application is new Lists_For_Timing.C.Visit (Apply);
+      procedure S_Application is new Lists_For_Timing.L.Visit (Apply);
+      procedure D_Application is new Lists_For_Timing.L.Visit (Apply);
       Start : Ada.Calendar.Time;
       Taken : Duration;
-      It : Lists_For_Timing.C.Iterator'Class
-        := Lists_For_Timing.C.New_Iterator
-        (Lists_For_Timing.C.Container'Class (S));
+      It : Lists_For_Timing.L.Iterator'Class
+        := Lists_For_Timing.L.New_Iterator
+        (Lists_For_Timing.L.List_Base'Class (S));
       use type Ada.Calendar.Time;
    begin
       Total := 0;
