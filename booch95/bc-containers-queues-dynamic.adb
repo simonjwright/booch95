@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -34,59 +34,59 @@ package body BC.Containers.Queues.Dynamic is
     return Left.Rep.all = Right.Rep.all;
   end "=";
 
-  procedure Clear (Obj : in out Dynamic_Queue) is
+  procedure Clear (Q : in out Dynamic_Queue) is
   begin
-    Dynamic_Queue_Nodes.Clear (Obj.Rep.all);
+    Dynamic_Queue_Nodes.Clear (Q.Rep.all);
   end Clear;
 
-  procedure Append (Obj : in out Dynamic_Queue; Elem : Item) is
+  procedure Append (Q : in out Dynamic_Queue; Elem : Item) is
   begin
-    Dynamic_Queue_Nodes.Append (Obj.Rep.all, Elem);
+    Dynamic_Queue_Nodes.Append (Q.Rep.all, Elem);
   end Append;
 
-  procedure Pop (Obj : in out Dynamic_Queue) is
+  procedure Pop (Q : in out Dynamic_Queue) is
   begin
-    Dynamic_Queue_Nodes.Remove (Obj.Rep.all, 1);
+    Dynamic_Queue_Nodes.Remove (Q.Rep.all, 1);
   end Pop;
 
-  procedure Remove (Obj : in out Dynamic_Queue; From : Positive) is
+  procedure Remove (Q : in out Dynamic_Queue; From : Positive) is
   begin
-    Dynamic_Queue_Nodes.Remove (Obj.Rep.all, From);
+    Dynamic_Queue_Nodes.Remove (Q.Rep.all, From);
   end Remove;
 
-  function Length (Obj : Dynamic_Queue) return Natural is
+  function Length (Q : Dynamic_Queue) return Natural is
   begin
-    return Dynamic_Queue_Nodes.Length (Obj.Rep.all);
+    return Dynamic_Queue_Nodes.Length (Q.Rep.all);
   end Length;
 
-  function Is_Empty (Obj : Dynamic_Queue) return Boolean is
+  function Is_Empty (Q : Dynamic_Queue) return Boolean is
   begin
-    return Dynamic_Queue_Nodes.Length (Obj.Rep.all) = 0;
+    return Dynamic_Queue_Nodes.Length (Q.Rep.all) = 0;
   end Is_Empty;
 
-  function Front (Obj : Dynamic_Queue) return Item is
+  function Front (Q : Dynamic_Queue) return Item is
   begin
-    return Dynamic_Queue_Nodes.First (Obj.Rep.all);
+    return Dynamic_Queue_Nodes.First (Q.Rep.all);
   end Front;
 
-  function Location (Obj : Dynamic_Queue; Elem : Item) return Natural is
+  function Location (Q : Dynamic_Queue; Elem : Item) return Natural is
   begin
-    return Dynamic_Queue_Nodes.Location (Obj.Rep.all, Elem);
+    return Dynamic_Queue_Nodes.Location (Q.Rep.all, Elem);
   end Location;
 
-  procedure Preallocate (Obj : in out Dynamic_Queue; Size : Natural) is
+  procedure Preallocate (Q : in out Dynamic_Queue; Size : Natural) is
   begin
-    Dynamic_Queue_Nodes.Preallocate (Obj.Rep.all, Size);
+    Dynamic_Queue_Nodes.Preallocate (Q.Rep.all, Size);
   end Preallocate;
 
-  procedure Set_Chunk_Size (Obj : in out Dynamic_Queue; Size : Natural) is
+  procedure Set_Chunk_Size (Q : in out Dynamic_Queue; Size : Natural) is
   begin
-    Dynamic_Queue_Nodes.Set_Chunk_Size (Obj.Rep.all, Size);
+    Dynamic_Queue_Nodes.Set_Chunk_Size (Q.Rep.all, Size);
   end Set_Chunk_Size;
 
-  function Chunk_Size (Obj : Dynamic_Queue) return Natural is
+  function Chunk_Size (Q : Dynamic_Queue) return Natural is
   begin
-    return Dynamic_Queue_Nodes.Chunk_Size (Obj.Rep.all);
+    return Dynamic_Queue_Nodes.Chunk_Size (Q.Rep.all);
   end Chunk_Size;
 
   package Address_Conversions
@@ -99,36 +99,36 @@ package body BC.Containers.Queues.Dynamic is
     return Iterator (SP.Create (new Queue_Iterator (P)));
   end New_Iterator;
 
-  procedure Purge (Obj : in out Dynamic_Queue) is
+ function Cardinality (Q : Dynamic_Queue) return Natural is
   begin
-    Dynamic_Queue_Nodes.Clear (Obj.Rep.all);
-  end Purge;
-
-  function Cardinality (Obj : Dynamic_Queue) return Natural is
-  begin
-    return Dynamic_Queue_Nodes.Length (Obj.Rep.all);
+    return Dynamic_Queue_Nodes.Length (Q.Rep.all);
   end Cardinality;
 
-  function Item_At (Obj : Dynamic_Queue; Index : Positive) return Item_Ptr is
+  function Item_At (Q : Dynamic_Queue; Index : Positive) return Item_Ptr is
   begin
-    return Dynamic_Queue_Nodes.Item_At (Obj.Rep.all, Index);
+    return Dynamic_Queue_Nodes.Item_At (Q.Rep.all, Index);
   end Item_At;
 
-  procedure Initialize (Obj : in out Dynamic_Queue) is
+  procedure Purge (Q : in out Dynamic_Queue) is
   begin
-    Obj.Rep := Dynamic_Queue_Nodes.Create;
+    Dynamic_Queue_Nodes.Clear (Q.Rep.all);
+  end Purge;
+
+   procedure Initialize (Q : in out Dynamic_Queue) is
+  begin
+    Q.Rep := Dynamic_Queue_Nodes.Create;
   end Initialize;
 
-  procedure Adjust (Obj : in out Dynamic_Queue) is
+  procedure Adjust (Q : in out Dynamic_Queue) is
   begin
-    Obj.Rep := Dynamic_Queue_Nodes.Create (Obj.Rep.all);
+    Q.Rep := Dynamic_Queue_Nodes.Create (Q.Rep.all);
   end Adjust;
 
-  procedure Finalize (Obj : in out Dynamic_Queue) is
+  procedure Finalize (Q : in out Dynamic_Queue) is
     use type Dynamic_Queue_Nodes.Dyn_Node_Ref;
   begin
-    if Obj.Rep /= null then
-      Dynamic_Queue_Nodes.Free (Obj.Rep);
+    if Q.Rep /= null then
+      Dynamic_Queue_Nodes.Free (Q.Rep);
     end if;
   end Finalize;
 
