@@ -26,6 +26,8 @@ generic
   Storage : in out Storage_Manager;
 package BC.Containers.Lists.Single is
 
+  pragma Elaborate_Body;
+
   -- Singly-linked list
 
   type Single_List is new Container with private;
@@ -138,12 +140,18 @@ package BC.Containers.Lists.Single is
   function Head (L : Single_List) return Item;
   -- Return a copy of the item at the head of the list.
 
-  -- XXX need accessor generic
+  generic
+    with procedure Process (Elem : in out Item);
+  procedure Process_Head (L : in out Single_List);
+  -- Access the item at the head of the list.
 
   function Foot (L : Single_List) return Item;
   -- Return a copy of the item at the end of the list.
 
-  -- XXX need accessor generic
+  generic
+    with procedure Process (Elem : in out Item);
+  procedure Process_Foot (L : in out Single_List);
+  -- Access the item at the end of the list.
 
   function Item_At (L : Single_List; Index : Positive) return Item;
   -- Return a copy of the item at the given index.
