@@ -28,7 +28,7 @@ all::
 
 #GCOV_FLAGS = -ftest-coverage -fprofile-arcs
 
-GNATMAKE_FLAGS = -O2 -g -gnatqQafoy -gnatwaL -j2 -m -k
+GNATMAKE_FLAGS = -O2 -g -gnatqQafoy -gnatwaL -fstack-check -j2 -m -k
 GNATMAKE_FLAGS += $(GCOV_FLAGS)
 
 ADA_SOURCE = \
