@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -27,16 +27,19 @@ package body BC.Containers.Maps is
    function Are_Equal (L, R : Abstract_Map'Class) return Boolean is
       It : Map_Iterator'Class := Map_Iterator'Class (New_Iterator (L));
    begin
-      --  XXX left out the optimisation which checks whether L, R are
-      --  identical.
+      if System."=" (L'Address, R'Address) then
+         return True;
+      end if;
       if Extent (L) /= Extent (R) then
          return False;
       end if;
       while not Is_Done (It) loop
-         if not Is_Bound (R, Current_Key (It)) then
+         if not Is_Bound (R, Current_Key (It))
+           or else Item_Of (L, Current_Key (It))
+                      /= Item_Of (R, Current_Key (It))
+         then
             return False;
          end if;
-         --  XXX what about the Value?
          Next (It);
       end loop;
       return True;
