@@ -1,4 +1,4 @@
---  Copyright 2002 Simon Wright <simon@pushface.org>
+--  Copyright 2002-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -49,9 +49,30 @@ package BC.Support.Memory_Streams is
    --  Adds Item to Stream. Raises Ada.IO_Exceptions.End_Error on
    --  overrun.
 
+   function Length (Stream : Stream_Type) return Natural;
+   --  Returns the number of stream elements in Stream.
+
    function Contents (Stream : Stream_Type)
                      return Ada.Streams.Stream_Element_Array;
    --  Returns a copy of the contents of Stream.
+
+   procedure Write_Contents (To : access Ada.Streams.Root_Stream_Type'Class;
+                             Stream : Stream_Type);
+   --  Writes the contents of Stream directly to the stream To, so
+   --  that it can be read by a 'Input operation.
+
+   --  A possible use of these features might be where an external
+   --  datagram 'stream' requires the length of the data to be written
+   --  before the data: for example,
+   --
+   --     procedure Write (To : access Ada.Streams.Root_Stream_Type'Class;
+   --                      V : Some_Type) is
+   --        M : aliased BC.Support.Memory_Streams.Stream_Type (1024);
+   --     begin
+   --        Some_Type'Output (M, V);
+   --        Integer'Write (To, BC.Support.Memory_Streams.Length (M));
+   --        BC.Support.Memory_Streams.Write_Contents (To, M);
+   --     end Write;
 
    procedure Reset (Stream : out Stream_Type);
    --  Clears Stream.

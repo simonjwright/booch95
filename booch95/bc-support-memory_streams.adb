@@ -1,4 +1,4 @@
---  Copyright 2002 Simon Wright <simon@pushface.org>
+--  Copyright 2002-2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -69,12 +69,28 @@ package body BC.Support.Memory_Streams is
    end Write;
 
 
+   function Length (Stream : Stream_Type) return Natural is
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      return Integer (Stream.Next_Write - Stream.Buffer'First);
+   end Length;
+
+
    function Contents (Stream : Stream_Type)
                      return Ada.Streams.Stream_Element_Array is
       use type Ada.Streams.Stream_Element_Offset;
    begin
       return Stream.Buffer (Stream.Buffer'First .. Stream.Next_Write - 1);
    end Contents;
+
+
+   procedure Write_Contents (To : access Ada.Streams.Root_Stream_Type'Class;
+                             Stream : Stream_Type) is
+      subtype This_Array is
+        Ada.Streams.Stream_Element_Array (Stream.Buffer'Range);
+   begin
+      This_Array'Write (To, Stream.Buffer);
+   end Write_Contents;
 
 
    procedure Reset (Stream : out Stream_Type) is
