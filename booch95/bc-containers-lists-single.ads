@@ -1,20 +1,9 @@
--- The Ada 95 Booch Components (Version 1.0 beta 1)
--- Copyright (C)1994-1997 Grady Booch and David Weller.  All Rights Reserved.
--- 
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
+--  The C++ Booch Components (Version 2.3)
+--  (C) Copyright 1990-1994 Grady Booch. All Rights Reserved.
 --
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library 
---      for a copy.
+--  BCList.h
 --
---  This file contains the specifications for the singly-linked list.
+--  This file contains the declaration of the singly-linked list.
 
 with Bc.Support.Nodes;
 generic
@@ -23,6 +12,8 @@ package Bc.Containers.Lists.Single is
 -- Singly-linked list
 
    type Single_List is new Container with private;
+
+   function Create(Obj : Single_List) return Single_List;
 
    function "="(L, R : Single_List) return Boolean;
 
@@ -59,12 +50,11 @@ package Bc.Containers.Lists.Single is
    function Head(Obj : Single_List) return Item_Ptr;
    function Foot(Obj : Single_List) return Item;
    function Foot(Obj : Single_List) return Item_Ptr;
-   function Item_At(Obj : Single_List; Index : Natural) return Item;
+   function Item_At(Obj : Single_List; Loc : Natural) return Item;
 
 private
-   function Item_At(Obj : Single_List; Index : Natural) return Item_Ptr;
-   function Cardinality (Obj : Single_List) return Integer;
-   
+   function Item_At(Obj : Single_List; Loc : Natural) return Item_Ptr;
+
    package Single_Nodes is new Bc.Support.Nodes(Item);
 
    type Single_List is new Container with record

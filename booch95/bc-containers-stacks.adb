@@ -1,73 +1,45 @@
--- The Ada 95 Booch Components (Version 1.0 beta 1)
--- Copyright (C)1994-1997 Grady Booch and David Weller.  All Rights Reserved.
--- 
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
+--The C++ Booch Components (Version 2.3)
+--(C) Copyright 1990-1994 Grady Booch. All Rights Reserved..
 --
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library 
---      for a copy.
+--BCStac.h
 --
--- This File Contains the implementation of the stack abstract base class.
+--This file contains the declaration of the stack abstract base class
+--and its iterators.
 
-package body Bc.Containers.Stacks is
+package body BC.Containers.Stacks is 
 
-   procedure Purge (Obj : in out Stack) is
+   function "="(L, R : Stack) return Boolean is
    begin
-      pragma Assert ( False, "Failure to override Purge operation");
-      raise Abstraction_Violation;
-      null;
-   end Purge;
-
-   procedure Add (Obj : in out Stack; Elem : in out Item) is
-   begin
-      pragma Assert ( False, "Failure to override Add operation");
-      raise Abstraction_Violation;
-      null;
-   end Add;
-
-   function "=" (Left, Right : access Stack'Class) return Boolean is
-   begin
-      if Left.all = Right.all then
-	 return True;
-      elsif Cardinality (Left.all) /= Cardinality (Right.all) then
-	 return False;
-      else
-	 declare
-	    Left_Iter : Iterator (Left);
-	    Right_Iter : Iterator (Right);
-	 begin
-	    while not Is_Done (Left_Iter) and then 
-	      not Is_Done (Right_Iter) loop
-	       if Current_Item (Left_Iter).all /=
-		 Current_Item (Right_Iter).all then
-		  return False;
-	       end if;
-	       Next (Left_Iter);
-	       Next (Right_Iter);
-	    end loop;
-	    return True;
-	 end;
-      end if;
    end "=";
+    
+   procedure Clear  (Obj : in out Stack) is abstract;
+   procedure Push   (Obj : in out Stack; Elem : Item) is abstract;
+   procedure Pop    (Obj : in out Stack) is abstract;
+   function Depth  (Obj : Stack) return Natural is abstract;
+   function Is_Empty(Obj : Stack) return Boolean is abstract;
+   function Top     (Obj : Stack) return Item is abstract;
 
-   procedure Copy (From : access Stack'Class; To : access Stack'Class) is
-      Iter : Iterator (From);
-   begin
-      Clear (To.all);
-      Reset (Iter);
-      while not Is_Done (Iter) loop
-	 Add (To.all, Current_Item (Iter).all);
-	 Next (Iter);
-      end loop;
-   end Copy;
+   -- expected to be implemented as private methods.  Not permitted
+   -- in private part because they are abstract.
 
-end Bc.Containers.Stacks;
+   function Item_At(Obj : Stack; Index : Natural) return Item is abstract;
+   procedure Purge(Obj : in out Stack) is abstract;
+   procedure Add(Obj : in out Stack; Elem : in out Item) is abstract;
+   function Cardinality(Obj : Stack) return Integer is abstract;
 
+   -- Returning to normal
 
+   function "="(Left, Right : access Stack'Class) return Boolean;
+   procedure Copy(From : access Stack'Class; To : access Stack'Class);
+
+   procedure Reset(Obj : in out Iterator);
+   procedure Next(Obj : in out Iterator);
+   function Is_Done(Obj : Iterator) return Boolean;
+   function Current_Item(Obj : Iterator) return Item;
+
+   procedure Set_Apply_Method(Obj : in out Passive_Iterator;
+			      Iter : in Apply_Method);
+
+   procedure Apply( Obj : in out Passive_Iterator) is abstract;
+
+end BC.Containers.Stacks;

@@ -1,68 +1,38 @@
--- The Ada 95 Booch Components (Version 1.0 beta 1)
--- Copyright (C)1994-1997 Grady Booch and David Weller.  All Rights Reserved.
--- 
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
+--The C++ Booch Components (Version 2.3)
+--(C) Copyright 1990-1994 Grady Booch. All Rights Reserved..
 --
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library 
---      for a copy.
+--BCStac.h
 --
--- This File Contains the specification of the stack abstract base class.
+--This file contains the declaration of the stack abstract base class
+--and its iterators.
 
 generic
-package Bc.Containers.Stacks is
+package BC.Containers.Stacks is 
 
-   type Stack is abstract new Container with private;
+   type Stack is abstract tagged private;
+    
+   procedure Clear  (Obj : in out Stack) is abstract;
+   procedure Push   (Obj : in out Stack; Elem : Item) is abstract;
+   procedure Pop    (Obj : in out Stack) is abstract;
+   function Depth  (Obj : Stack) return Natural is abstract;
+   function Is_Empty(Obj : Stack) return Boolean is abstract;
+   function Top     (Obj : Stack) return Item is abstract;
 
-   -- A sequence in which items may be added from one end and removed from
-   -- the opposite end.  This class is abstract and serves only to enforce
-   -- the interfaces among classes.
+   -- expected to be implemented as private methods.  Not permitted
+   -- in private part because they are abstract.
 
-   -- Operations of equality, inequality, and assignment are "deep" for
-   -- all Stack forms
+   function Item_At(Obj : Stack; Index : Natural) return Item is abstract;
+   procedure Purge(Obj : in out Stack) is abstract;
+   procedure Add(Obj : in out Stack; Elem : in out Item) is abstract;
+   function Cardinality(Obj : Stack) return Integer is abstract;
 
-   procedure Clear (Obj : in out Stack) is abstract;
-   -- Empty the Stack of all items
+   -- Returning to normal
 
-   procedure Push (Obj : in out Stack; Elem : Item) is abstract;
-   -- Add the item to the front of the Stack; the Item itself is copied
-
-   procedure Pop (Obj : in out Stack) is abstract;
-   -- Remove the Item from the front of the Stack
-
-   function Depth (Obj : in Stack) return Natural is abstract;
-   -- Returns total items in the Stack
-
-   function Is_Empty (Obj : in Stack) return Boolean is abstract;
-   -- Returns true iff no items are in the stack
-
-   function Top (Obj : in Stack) return Item is abstract;
-   -- Return the item at the front of the Stack; the Item is _not_ removed
-
-   function Top (Obj : in Stack) return Item_Ptr is abstract;
-   -- Return reference to item at the front of the Stack; 
-   -- the Item is _not_ removed
-
-   function "=" (Left, Right : access Stack'Class) return Boolean;
-
-   procedure Copy (From : access Stack'Class; To : access Stack'Class);
-   -- This operation MUST be called for dissimilar Stacks in place of
-   -- assignment.
+   function "="(Left, Right : access Stack'Class) return Boolean;
+   procedure Copy(From : access Stack'Class; To : access Stack'Class);
 
 private
 
-   type Stack is abstract new Container with null record;
+   type Stack is abstract tagged null record;
 
-   procedure Purge (Obj : in out Stack);
-   procedure Add (Obj : in out Stack; Elem : in out Item);
-
-end Bc.Containers.Stacks;
-
-
+end BC.Containers.Stacks;

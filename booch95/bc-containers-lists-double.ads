@@ -1,18 +1,7 @@
--- The Ada 95 Booch Components (Version 1.0 beta 1)
--- Copyright (C)1994-1997 Grady Booch and David Weller.  All Rights Reserved.
--- 
---      This program is free software; you can redistribute it
---      and/or modify it under the terms of the Ada Community
---      License which comes with this Library.
+--  The C++ Booch Components (Version 2.3)
+--  (C) Copyright 1990-1994 Grady Booch. All Rights Reserved.
 --
---      This program is distributed in the hope that it will be
---      useful, but WITHOUT ANY WARRANTY; without even the implied
---      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
---      PURPOSE. See the Ada Community License for more details.
---      You should have received a copy of the Ada Community
---      License with this library, in the file named "Ada Community
---      License" or "ACL". If not, contact the author of this library 
---      for a copy.
+--  BCDList.h
 --
 --  This file contains the declaration of the doubly-linked list.
 
@@ -23,6 +12,8 @@ package Bc.Containers.Lists.Double is
 -- Doubly-linked list
 
    type Double_List is new Container with private;
+
+   function Create(Obj : Double_List) return Double_List;
 
    function "="(L, R : Double_List) return Boolean;
 
@@ -61,11 +52,10 @@ package Bc.Containers.Lists.Double is
    function Head(Obj : Double_List) return Item_Ptr;
    function Foot(Obj : Double_List) return Item;
    function Foot(Obj : Double_List) return Item_Ptr;
-   function Item_At(Obj : Double_List; Index : Natural) return Item;
+   function Item_At(Obj : Double_List; Loc : Natural) return Item;
 
 private
-   function Item_At(Obj : Double_List; Index : Natural) return Item_Ptr;
-   function Cardinality (Obj : Double_List) return Integer;
+   function Item_At(Obj : Double_List; Loc : Natural) return Item_Ptr;
 
    package Double_Nodes is new Bc.Support.Nodes(Item);
 
