@@ -20,6 +20,8 @@
 generic
 package BC.Containers.Queues is
 
+  pragma Elaborate_Body;
+
   type Queue is abstract new Container with private;
 
   -- A queue denotes a sequence of items, in which items may be added
@@ -46,7 +48,10 @@ package BC.Containers.Queues is
   function Front (Q : in Queue) return Item is abstract;
   -- Return a copy of the item at the front of the queue.
 
-  -- XXX need accessor generic
+  generic
+    with procedure Process (Elem : in out Item);
+  procedure Process_Front (Q : in out Queue'Class);
+  -- Access the item at the front of the queue.
 
   function Location (Q : in Queue; Elem : in Item) return Natural
     is abstract;
