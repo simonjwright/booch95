@@ -22,12 +22,8 @@ package BC.Containers.Queues is
 
   type Queue is abstract new Container with private;
 
-  -- A sequence in which items may be added from one end and removed from
-  -- the opposite end.  This class is abstract and serves only to enforce
-  -- the interfaces among classes.
-
-  -- Operations of equality, inequality, and assignment are "deep" for
-  -- all Queue forms
+  -- A queue denotes a sequence of items, in which items may be added
+  -- from one end and removed from the opposite end of the sequence.
 
   procedure Clear (Obj : in out Queue) is abstract;
   -- Empty the queue of all items.
