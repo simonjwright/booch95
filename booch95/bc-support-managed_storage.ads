@@ -29,7 +29,13 @@ package BC.Support.Managed_Storage is
 
   type Pool( Chunk_Size : SSE.Storage_Count ) is
     new SSP.Root_Storage_Pool with private;
-
+    -- This pool can allocate objects of type Your_Type that are no larger
+    -- than Chunk_Size - Pool_Overhead (Alignment => Your_Type'Alignment).
+    -- BC.Storage_Error will be raised for attempts to allocate larger
+    -- objects.
+    -- (Pool_Overhead's Type_Overhead parameter is for use when Your_Type
+    -- is unconstrained, so that some additional storage is required to
+    -- hold the actual object's constraints).
 
   procedure Allocate( The_Pool                 : in out Pool;
                       Storage_Address          :    out System.Address;
