@@ -82,6 +82,39 @@ begin
    Create (F, Name => "test.dat");
 
    declare
+      C1, C2 : CB.Collection;
+      use CB;
+   begin
+
+      Put_Line ("...Bounded Collections");
+
+      Reset (F, Mode => Out_File);
+      Setup (C1, "");
+      Setup (C2, "initial");
+      Assertion (C1 /= C2, "CB1: Collections are equal");
+      Collection'Output (Stream (F), C1);
+      Reset (F, Mode => In_File);
+      C2 := Collection'Input (Stream (F));
+      Assertion (C1 = C2, "CB2: Collections are unequal");
+
+      Reset (F, Mode => Out_File);
+      Setup (C1, "second");
+      Setup (C2, "SECOND");
+      Assertion (C1 /= C2, "CB3: Collections are equal");
+      Collection'Output (Stream (F), C1);
+      Reset (F, Mode => In_File);
+      C2 := Collection'Input (Stream (F));
+      Assertion (C1 = C2, "CB4: Collections are unequal");
+
+   exception
+      when E : others =>
+         Assertion (False, "CBX: Exception occurred");
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
+   end;
+
+   declare
       C1, C2 : CD.Collection;
       use CD;
    begin
@@ -108,6 +141,7 @@ begin
 
    exception
       when E : others =>
+         Assertion (False, "CDX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
@@ -140,6 +174,7 @@ begin
 
    exception
       when E : others =>
+         Assertion (False, "CUX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
@@ -172,6 +207,7 @@ begin
 
    exception
       when E : others =>
+         Assertion (False, "SUX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
@@ -197,6 +233,7 @@ begin
 
    exception
       when E : others =>
+         Assertion (False, "ICBX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
@@ -222,6 +259,7 @@ begin
 
    exception
       when E : others =>
+         Assertion (False, "ICDX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
@@ -247,6 +285,7 @@ begin
 
    exception
       when E : others =>
+         Assertion (False, "ICUX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
@@ -278,6 +317,7 @@ begin
 
    exception
       when E : others =>
+         Assertion (False, "PX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
@@ -303,6 +343,7 @@ begin
 
    exception
       when E : others =>
+         Assertion (False, "TCBX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
@@ -328,6 +369,7 @@ begin
 
    exception
       when E : others =>
+         Assertion (False, "TCDX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
@@ -353,6 +395,7 @@ begin
 
    exception
       when E : others =>
+         Assertion (False, "TCUX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
