@@ -44,6 +44,22 @@ DYNAMIC_MEMORY_CHECK = -largs -rdynamic
 
 GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu -gnatwl
 
+ADA_SOURCE = \
+bc-containers.ad[bs] \
+bc.ad[bs]
+
+ADA_SOURCE += \
+bc-support-bounded.ad[bs] \
+bc-support-dynamic.ad[bs] \
+bc-support-exceptions.ad[bs] \
+bc-support-hash_tables.ad[bs] \
+bc-support-managed_storage.ad[bs] \
+bc-support-nodes.ad[bs] \
+bc-support-synchronization.ad[bs] \
+bc-support-unbounded.ad[bs] \
+bc-support-unmanaged_storage.ad[bs] \
+bc-support.ad[bs]
+
 test: testable
 	for t in $(TESTABLE); do \
 	  echo running $$t; \
@@ -57,66 +73,138 @@ TEST_SRC += avl_test.ad[bs] avl_test_support.ad[bs]
 avl_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-bags-bounded.ad[bs] \
+bc-containers-bags-dynamic.ad[bs] \
+bc-containers-bags-unbounded.ad[bs] \
+bc-containers-bags.ad[bs]
 TESTABLE += bag_test
 TEST_SRC += bag_test.ad[bs] bag_test_support.ad[bs]
 bag_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-collections-unbounded.ad[bs] \
+bc-containers-collections.ad[bs]
 TESTABLE += collection_test
 TEST_SRC += collection_test.ad[bs] collection_test_support.ad[bs]
 collection_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-deques-unbounded.ad[bs] \
+bc-containers-deques.ad[bs]
+TESTABLE += deque_test
+TEST_SRC += deque_test.ad[bs] deque_test_support.ad[bs]
+deque_test: force
+	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
+
+
+ADA_SOURCE += \
+bc-graphs.ad[bs] \
+bc-graphs-directed.ad[bs] \
+bc-graphs-undirected.ad[bs]
 TESTABLE += graph_test
 TEST_SRC += graph_test.ad[bs] graph_test_support.ad[bs]
 graph_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-lists-double.ad[bs] \
+bc-containers-lists-single.ad[bs] \
+bc-containers-lists.ad[bs]
 TESTABLE += list_test
 TEST_SRC += list_test.ad[bs] list_test_support.ad[bs]
 list_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-maps-bounded.ad[bs] \
+bc-containers-maps-dynamic.ad[bs] \
+bc-containers-maps-unbounded.ad[bs] \
+bc-containers-maps-unbounded-guarded.ad[bs] \
+bc-containers-maps-unbounded-synchronized.ad[bs] \
+bc-containers-maps.ad[bs]
 TESTABLE += map_test
 TEST_SRC += map_test.ad[bs] map_test_support.ad[bs] chunks.ad[bs]
 map_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-collections-ordered-unbounded.ad[bs] \
+bc-containers-collections-ordered.ad[bs]
 TESTABLE += ordered_collection_test
 TEST_SRC += ordered_collection_test.ad[bs] ordered_collection_test_support.ad[bs]
 ordered_collection_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-queues-ordered.ad[bs] \
+bc-containers-queues-ordered-unbounded.ad[bs]
 TESTABLE += ordered_queue_test
 TEST_SRC += ordered_queue_test.ad[bs] ordered_queue_test_support.ad[bs]
 ordered_queue_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-queues-bounded.ad[bs] \
+bc-containers-queues-dynamic.ad[bs] \
+bc-containers-queues-unbounded.ad[bs] \
+bc-containers-queues.ad[bs]
 TESTABLE += queue_test
 TEST_SRC += queue_test.ad[bs] queue_test_support.ad[bs]
 queue_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-rings.ad[bs] \
+bc-containers-rings-unbounded.ad[bs] \
+bc-containers-rings-unbounded-guarded.ad[bs] \
+bc-containers-rings-unbounded-synchronized.ad[bs]
 TESTABLE += ring_test
 TEST_SRC += ring_test.ad[bs] ring_test_support.ad[bs]
 ring_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(DYNAMIC_MEMORY_CHECK) 
 
+ADA_SOURCE += \
+bc-containers-sets-bounded.ad[bs] \
+bc-containers-sets-dynamic.ad[bs] \
+bc-containers-sets-unbounded.ad[bs] \
+bc-containers-sets.ad[bs]
 TESTABLE += set_test
 TEST_SRC += set_test.ad[bs] set_test_support.ad[bs]
 set_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-smart.ad[bs]
 TESTABLE += smart_test
 TEST_SRC += smart_test.ad[bs] smart_test_support.ad[bs]
 smart_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-stacks-bounded.ad[bs] \
+bc-containers-stacks-dynamic.ad[bs] \
+bc-containers-stacks-unbounded.ad[bs] \
+bc-containers-stacks.ad[bs]
 TESTABLE += stack_test
 TEST_SRC += stack_test.ad[bs] stack_test_support.ad[bs]
 stack_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@ $(MEMORY_CHECK)
 
+ADA_SOURCE += \
+bc-containers-trees-avl.ad[bs] \
+bc-containers-trees-avl-print.ad[bs] \
+bc-containers-trees-avl-validate.ad[bs] \
+bc-containers-trees-binary.ad[bs] \
+bc-containers-trees-binary-in_order.ad[bs] \
+bc-containers-trees-binary-post_order.ad[bs] \
+bc-containers-trees-binary-pre_order.ad[bs] \
+bc-containers-trees-multiway.ad[bs] \
+bc-containers-trees-multiway-post_order.ad[bs] \
+bc-containers-trees-multiway-pre_order.ad[bs] \
+bc-containers-trees.ad[bs]
 TESTABLE += tree_test
 TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs]
 tree_test: force
@@ -242,70 +330,6 @@ dist: $(DISTRIBUTION_FILES)
 	cp -p README distribution/download/
 	cp -p WAVEFRONT-README distribution/wavefront/README
 	cp -p ACL html/*.html html/*.gif distribution/
-
-ADA_SOURCE = \
-bc-containers-bags-bounded.ad[bs] \
-bc-containers-bags-dynamic.ad[bs] \
-bc-containers-bags-unbounded.ad[bs] \
-bc-containers-bags.ad[bs] \
-bc-containers-collections-ordered-unbounded.ad[bs] \
-bc-containers-collections-ordered.ad[bs] \
-bc-containers-collections-unbounded.ad[bs] \
-bc-containers-collections.ad[bs] \
-bc-containers-lists-double.ad[bs] \
-bc-containers-lists-single.ad[bs] \
-bc-containers-lists.ad[bs] \
-bc-containers-maps-bounded.ad[bs] \
-bc-containers-maps-dynamic.ad[bs] \
-bc-containers-maps-unbounded.ad[bs] \
-bc-containers-maps-unbounded-guarded.ad[bs] \
-bc-containers-maps-unbounded-synchronized.ad[bs] \
-bc-containers-maps.ad[bs] \
-bc-containers-queues-bounded.ad[bs] \
-bc-containers-queues-dynamic.ad[bs] \
-bc-containers-queues-ordered.ad[bs] \
-bc-containers-queues-ordered-unbounded.ad[bs] \
-bc-containers-queues-unbounded.ad[bs] \
-bc-containers-queues.ad[bs] \
-bc-containers-rings.ad[bs] \
-bc-containers-rings-unbounded.ad[bs] \
-bc-containers-rings-unbounded-guarded.ad[bs] \
-bc-containers-rings-unbounded-synchronized.ad[bs] \
-bc-containers-sets-bounded.ad[bs] \
-bc-containers-sets-dynamic.ad[bs] \
-bc-containers-sets-unbounded.ad[bs] \
-bc-containers-sets.ad[bs] \
-bc-containers-stacks-bounded.ad[bs] \
-bc-containers-stacks-dynamic.ad[bs] \
-bc-containers-stacks-unbounded.ad[bs] \
-bc-containers-stacks.ad[bs] \
-bc-containers-trees-avl.ad[bs] \
-bc-containers-trees-avl-print.ad[bs] \
-bc-containers-trees-avl-validate.ad[bs] \
-bc-containers-trees-binary.ad[bs] \
-bc-containers-trees-binary-in_order.ad[bs] \
-bc-containers-trees-binary-post_order.ad[bs] \
-bc-containers-trees-binary-pre_order.ad[bs] \
-bc-containers-trees-multiway.ad[bs] \
-bc-containers-trees-multiway-post_order.ad[bs] \
-bc-containers-trees-multiway-pre_order.ad[bs] \
-bc-containers-trees.ad[bs] \
-bc-containers.ad[bs] \
-bc-graphs.ad[bs] \
-bc-graphs-directed.ad[bs] \
-bc-graphs-undirected.ad[bs] \
-bc-smart.ad[bs] \
-bc-support-bounded.ad[bs] \
-bc-support-dynamic.ad[bs] \
-bc-support-exceptions.ad[bs] \
-bc-support-hash_tables.ad[bs] \
-bc-support-managed_storage.ad[bs] \
-bc-support-nodes.ad[bs] \
-bc-support-synchronization.ad[bs] \
-bc-support-unbounded.ad[bs] \
-bc-support-unmanaged_storage.ad[bs] \
-bc-support.ad[bs] \
-bc.ad[bs]
 
 SOURCE = makefile ACL README $(ADA_SOURCE)
 
