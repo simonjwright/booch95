@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -90,14 +90,14 @@ package BC.Support.Bounded is
 
 private
 
-  type Elem_Array is array (Positive range 1 .. Max_Size) of aliased Item;
+  type Elem_Array is array (Positive range 1 .. Max_Size) of Item;
 
   -- XXX
-  -- this representation is not the same as the C++ components
-  -- why is Elems aliased? -- so we can take 'Access of components
+  -- This representation is not the same as the C++ components;
+  -- there's a considerable optimisation tht's been omitted.
   subtype Size_Range is Natural range 0..Max_Size;
   type Bnd_Node is record
-    Elems : aliased Elem_Array;
+    Elems : Elem_Array;
     Size : Size_Range := 0;
   end record;
 

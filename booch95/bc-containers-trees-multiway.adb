@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -18,12 +18,19 @@
 -- $Id$
 
 with BC.Support.Exceptions;
+with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Trees.Multiway is
 
   package BSE renames BC.Support.Exceptions;
   procedure Assert
   is new BSE.Assert ("BC.Containers.Trees.Multiway");
+
+  -- We can't take 'Access of non-aliased components. But if we alias
+  -- discriminated objects they become constrained - even if the
+  -- discriminant has a default.
+  package Allow_Element_Access
+  is new System.Address_To_Access_Conversions (Item);
 
   use type Nodes.Multiway_Node;
   use type Nodes.Multiway_Node_Ref;
@@ -362,7 +369,8 @@ package body BC.Containers.Trees.Multiway is
             BC.Is_Null'Identity,
             "Item_At",
             BSE.Is_Null);
-    return T.Rep.Element'access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (T.Rep.Element'Address));
   end Item_At;
 
   procedure Initialize (T : in out Multiway_Tree) is

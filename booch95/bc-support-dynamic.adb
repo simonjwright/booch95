@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -19,12 +19,19 @@
 
 with Ada.Unchecked_Deallocation;
 with BC.Support.Exceptions;
+with System.Address_To_Access_Conversions;
 
 package body BC.Support.Dynamic is
 
   package BSE renames BC.Support.Exceptions;
   procedure Assert
   is new BSE.Assert ("BC.Support.Dynamic");
+
+  -- We can't take 'Access of non-aliased components. But if we alias
+  -- discriminated objects they become constrained - even if the
+  -- discriminant has a default.
+  package Allow_Element_Access
+  is new System.Address_To_Access_Conversions (Item);
 
   procedure Delete_Arr is
      new Ada.Unchecked_Deallocation (Dyn_Arr, Dyn_Arr_Ref);
@@ -178,7 +185,8 @@ package body BC.Support.Dynamic is
             BC.Underflow'Identity,
             "First",
             BSE.Empty);
-    return Obj.Ref (1)'access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (Obj.Ref (1)'Address));
   end First;
 
   function Last (Obj : Dyn_Node) return Item is
@@ -196,7 +204,8 @@ package body BC.Support.Dynamic is
             BC.Underflow'Identity,
             "Last",
             BSE.Empty);
-    return Obj.Ref (Obj.Size)'access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (Obj.Ref (Obj.Size)'Address));
   end Last;
 
   function Item_At (Obj : Dyn_Node; Index : Positive) return Item is
@@ -214,7 +223,8 @@ package body BC.Support.Dynamic is
             BC.Range_Error'Identity,
             "Item_At",
             BSE.Invalid_Index);
-    return Obj.Ref (Index)'access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (Obj.Ref (Index)'Address));
   end Item_At;
 
   function Location (Obj : Dyn_Node; Elem : Item; Start : Positive := 1)

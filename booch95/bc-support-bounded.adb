@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1998 Grady Booch, David Weller and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch, David Weller and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -33,6 +33,12 @@ package body BC.Support.Bounded is
   -- Heaney.
   package Allow_Access
   is new System.Address_To_Access_Conversions (Elem_Array);
+
+  -- We can't take 'Access of non-aliased components. But if we alias
+  -- discriminated objects they become constrained - even if the
+  -- discriminant has a default.
+  package Allow_Element_Access
+  is new System.Address_To_Access_Conversions (Item);
 
   function Create (Obj : in Bnd_Node) return Bnd_Node_Ref is
   begin
@@ -154,7 +160,8 @@ package body BC.Support.Bounded is
             BC.Underflow'Identity,
             "First",
             BSE.Empty);
-    return E (1)'Access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (E (1)'Address));
   end First;
 
   function Last (Obj : Bnd_Node) return Item is
@@ -174,7 +181,8 @@ package body BC.Support.Bounded is
             BC.Underflow'Identity,
             "Last",
             BSE.Empty);
-    return E (Obj.Size)'Access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (E (Obj.Size)'Address));
   end Last;
 
   function Item_At (Obj : Bnd_Node; Index : Positive) return Item is
@@ -194,7 +202,8 @@ package body BC.Support.Bounded is
             BC.Range_Error'Identity,
             "Item_At",
             BSE.Invalid_Index);
-    return E (Index)'Access;
+    return Item_Ptr
+       (Allow_Element_Access.To_Pointer (E (Index)'Address));
   end Item_At;
 
   function Location (Obj : Bnd_Node;
