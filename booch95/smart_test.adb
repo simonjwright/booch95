@@ -18,11 +18,11 @@
 -- $Id$
 
 with Ada.Text_Io;
-with Root_Smart_Pointer;
+with Smart_Test_Support;
 
 procedure Smart_Test is
   use Ada.Text_Io;
-  use Root_Smart_Pointer;
+  use Smart_Test_Support;
   A : Smart.Pointer;
   B : Smart.Pointer := A;
   C : Smart.Pointer;
