@@ -24,62 +24,62 @@ package body BC.Containers.Queues.Dynamic is
   function "=" (Left, Right : Queue) return Boolean is
     use Queue_Nodes;
   begin
-    return Left.Rep.all = Right.Rep.all;
+    return Left.Rep = Right.Rep;
   end "=";
 
   procedure Clear (Q : in out Queue) is
   begin
-    Queue_Nodes.Clear (Q.Rep.all);
+    Queue_Nodes.Clear (Q.Rep);
   end Clear;
 
   procedure Append (Q : in out Queue; Elem : Item) is
   begin
-    Queue_Nodes.Append (Q.Rep.all, Elem);
+    Queue_Nodes.Append (Q.Rep, Elem);
   end Append;
 
   procedure Pop (Q : in out Queue) is
   begin
-    Queue_Nodes.Remove (Q.Rep.all, 1);
+    Queue_Nodes.Remove (Q.Rep, 1);
   end Pop;
 
   procedure Remove (Q : in out Queue; From : Positive) is
   begin
-    Queue_Nodes.Remove (Q.Rep.all, From);
+    Queue_Nodes.Remove (Q.Rep, From);
   end Remove;
 
   function Length (Q : Queue) return Natural is
   begin
-    return Queue_Nodes.Length (Q.Rep.all);
+    return Queue_Nodes.Length (Q.Rep);
   end Length;
 
   function Is_Empty (Q : Queue) return Boolean is
   begin
-    return Queue_Nodes.Length (Q.Rep.all) = 0;
+    return Queue_Nodes.Length (Q.Rep) = 0;
   end Is_Empty;
 
   function Front (Q : Queue) return Item is
   begin
-    return Queue_Nodes.First (Q.Rep.all);
+    return Queue_Nodes.First (Q.Rep);
   end Front;
 
   function Location (Q : Queue; Elem : Item) return Natural is
   begin
-    return Queue_Nodes.Location (Q.Rep.all, Elem);
+    return Queue_Nodes.Location (Q.Rep, Elem);
   end Location;
 
   procedure Preallocate (Q : in out Queue; Size : Natural) is
   begin
-    Queue_Nodes.Preallocate (Q.Rep.all, Size);
+    Queue_Nodes.Preallocate (Q.Rep, Size);
   end Preallocate;
 
   procedure Set_Chunk_Size (Q : in out Queue; Size : Natural) is
   begin
-    Queue_Nodes.Set_Chunk_Size (Q.Rep.all, Size);
+    Queue_Nodes.Set_Chunk_Size (Q.Rep, Size);
   end Set_Chunk_Size;
 
   function Chunk_Size (Q : Queue) return Natural is
   begin
-    return Queue_Nodes.Chunk_Size (Q.Rep.all);
+    return Queue_Nodes.Chunk_Size (Q.Rep);
   end Chunk_Size;
 
   package Address_Conversions
@@ -97,28 +97,11 @@ package body BC.Containers.Queues.Dynamic is
 
   function Item_At (Q : Queue; Index : Positive) return Item_Ptr is
   begin
-    return Queue_Nodes.Item_At (Q.Rep.all, Index);
+    return Queue_Nodes.Item_At (Q.Rep, Index);
   end Item_At;
 
-  procedure Initialize (Q : in out Queue) is
-  begin
-    Q.Rep := Queue_Nodes.Create (Initial_Size);
-  end Initialize;
-
-  procedure Adjust (Q : in out Queue) is
-  begin
-    Q.Rep := Queue_Nodes.Create (Q.Rep.all);
-  end Adjust;
-
-  procedure Finalize (Q : in out Queue) is
-    use type Queue_Nodes.Dyn_Node_Ref;
-  begin
-    if Q.Rep /= null then
-      Queue_Nodes.Free (Q.Rep);
-    end if;
-  end Finalize;
-
   Empty_Container : Queue;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return Queue is
   begin
