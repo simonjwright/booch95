@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -19,9 +19,9 @@
 
 package body Set_Test_Support is
 
-  function Char_Hash (C : Character) return Positive is
+  function Char_Hash (C : Character) return Natural is
   begin
-    return Character'Pos (C) + 1;
+    return Character'Pos (C);
   end Char_Hash;
 
 end Set_Test_Support;

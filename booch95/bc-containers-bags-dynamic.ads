@@ -1,4 +1,4 @@
--- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -22,7 +22,7 @@ with BC.Support.Hash_Tables;
 with System.Storage_Pools;
 
 generic
-  with function Hash (V : Item) return Positive is <>;
+  with function Hash (V : Item) return Natural is <>;
   Buckets : Positive;
   type Storage_Manager (<>)
   is new System.Storage_Pools.Root_Storage_Pool with private;

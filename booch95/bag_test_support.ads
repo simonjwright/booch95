@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -30,7 +30,7 @@ package Bag_Test_Support is
 
   package Bags is new Containers.Bags;
 
-  function Char_Hash (C : Character) return Positive;
+  function Char_Hash (C : Character) return Natural;
 
   package BB is new Bags.Bounded (Hash => Char_Hash,
                                   Buckets => 3,
