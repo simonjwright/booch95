@@ -23,7 +23,7 @@ with BC.Support.Hash_Tables;
 generic
   with function Hash (K : Key) return Natural is <>;
   Buckets : Positive;
-  Size : Positive;
+  Maximum_Size : Positive;
 package BC.Containers.Maps.Bounded is
 
   pragma Elaborate_Body;
@@ -88,7 +88,7 @@ private
 
   package KC is new BC.Support.Bounded (Item => Key,
                                         Item_Ptr => Key_Ptr,
-                                        Maximum_Size => Size);
+                                        Maximum_Size => Maximum_Size);
   use KC;
   package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
@@ -96,7 +96,7 @@ private
 
   package IC is new BC.Support.Bounded (Item => Item,
                                         Item_Ptr => Item_Ptr,
-                                        Maximum_Size => Size);
+                                        Maximum_Size => Maximum_Size);
   use IC;
   package Items is new BC.Support.Hash_Tables.Value_Signature
      (Value => Item,
