@@ -1,5 +1,5 @@
--- Copyright (C) 1994-2001 Grady Booch and Simon Wright.
--- All Rights Reserved.
+--  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
 --      and/or modify it under the terms of the Ada Community
@@ -15,7 +15,7 @@
 --      for a copy.
 --
 
--- $Id$
+--  $Id$
 
 with BC.Containers;
 with BC.Containers.Rings;
@@ -26,16 +26,16 @@ with Global_Heap;
 
 package Ring_Test_Support is
 
-  package Containers is new BC.Containers (Item => Character);
+   package Containers is new BC.Containers (Item => Character);
 
-  package Rings is new Containers.Rings;
+   package Rings is new Containers.Rings;
 
-  package RB is new Rings.Bounded (Maximum_Size => 100);
+   package RB is new Rings.Bounded (Maximum_Size => 100);
 
-  package RD is new Rings.Dynamic (Storage_Manager => Global_Heap.Pool,
+   package RD is new Rings.Dynamic (Storage_Manager => Global_Heap.Pool,
                                     Storage => Global_Heap.Storage);
 
-  package RU is new Rings.Unbounded (Storage_Manager => Global_Heap.Pool,
-                                     Storage => Global_Heap.Storage);
+   package RU is new Rings.Unbounded (Storage_Manager => Global_Heap.Pool,
+                                      Storage => Global_Heap.Storage);
 
 end Ring_Test_Support;
