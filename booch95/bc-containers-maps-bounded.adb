@@ -44,12 +44,8 @@ package body BC.Containers.Maps.Bounded is
   end Unbind;
 
   function Available (M : Map) return Natural is
-    Count : Natural := 0;
   begin
-    for B in 1 .. Buckets loop
-      Count := Count + KC.Available (M.Rep.Items (B));
-    end loop;
-    return Count;
+     return Maximum_Size - M.Rep.Size;
   end Available;
 
   function Extent (M : Map) return Natural is
@@ -98,19 +94,19 @@ package body BC.Containers.Maps.Bounded is
 
   function Length (M : Map; Bucket : Positive) return Natural is
   begin
-    return KC.Length (M.Rep.items (Bucket));
+    return Tables.Length (M.Rep, Bucket);
   end Length;
 
   function Item_At
      (M : Map; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (M.Rep.Values (Bucket), Index);
+    return Tables.Value_At (M.Rep, Bucket, Index);
   end Item_At;
 
   function Key_At
      (M : Map; Bucket, Index : Positive) return Key_Ptr is
   begin
-    return KC.Item_At (M.Rep.Items (Bucket), Index);
+    return Tables.Item_At (M.Rep, Bucket, Index);
   end Key_At;
 
   Empty_Container : Map;

@@ -58,12 +58,8 @@ package body BC.Containers.Bags.Bounded is
   end Remove;
 
   function Available (B : Bag) return Natural is
-    Count : Natural := 0;
   begin
-    for P in 1 .. Buckets loop
-      Count := Count + IC.Available (B.Rep.Items (P));
-    end loop;
-    return Count;
+     return Maximum_Size - B.Rep.Size;
   end Available;
 
   function Extent (B : Bag) return Natural is
@@ -126,17 +122,17 @@ package body BC.Containers.Bags.Bounded is
 
   function Length (B : Bag; Bucket : Positive) return Natural is
   begin
-    return IC.Length (B.Rep.Items (Bucket));
+    return Tables.Length (B.Rep, Bucket);
   end Length;
 
   function Item_At (B : Bag; Bucket, Index : Positive) return Item_Ptr is
   begin
-    return IC.Item_At (B.Rep.Items (Bucket), Index);
+    return Tables.Item_At (B.Rep, Bucket, Index);
   end Item_At;
 
   function Value_At (B : Bag; Bucket, Index : Positive) return Positive is
   begin
-    return VC.Item_At (B.Rep.Values (Bucket), Index);
+    return Tables.Value_At (B.Rep, Bucket, Index).all;
   end Value_At;
 
   Empty_Container : Bag;

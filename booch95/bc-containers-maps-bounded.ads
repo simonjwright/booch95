@@ -17,8 +17,7 @@
 
 -- $Id$
 
-with BC.Support.Bounded;
-with BC.Support.Hash_Tables;
+with BC.Support.Bounded_Hash_Tables;
 
 generic
   with function Hash (K : Key) return Natural is <>;
@@ -86,27 +85,19 @@ package BC.Containers.Maps.Bounded is
 
 private
 
-  package KC is new BC.Support.Bounded (Item => Key,
-                                        Item_Ptr => Key_Ptr,
-                                        Maximum_Size => Maximum_Size);
-  use KC;
-  package Keys is new BC.Support.Hash_Tables.Item_Signature
+   package Keys is new BC.Support.Bounded_Hash_Tables.Item_Signature
      (Item => Key,
-      Item_Container => KC.Bnd_Node);
+      Item_Ptr => Key_Ptr);
 
-  package IC is new BC.Support.Bounded (Item => Item,
-                                        Item_Ptr => Item_Ptr,
-                                        Maximum_Size => Maximum_Size);
-  use IC;
-  package Items is new BC.Support.Hash_Tables.Value_Signature
+  package Items is new BC.Support.Bounded_Hash_Tables.Value_Signature
      (Value => Item,
-      Value_Ptr => Item_Ptr,
-      Value_Container => IC.Bnd_Node);
+      Value_Ptr => Item_Ptr);
 
-  package Tables is new BC.Support.Hash_Tables.Tables
+  package Tables is new BC.Support.Bounded_Hash_Tables.Tables
      (Items => Keys,
       Values => Items,
-      Buckets => Buckets);
+      Buckets => Buckets,
+      Maximum_Size => Maximum_Size);
 
   type Map is new Abstract_Map with record
     Rep : Tables.Table;

@@ -17,8 +17,7 @@
 
 -- $Id$
 
-with BC.Support.Bounded;
-with BC.Support.Hash_Tables;
+with BC.Support.Bounded_Hash_Tables;
 
 generic
   with function Hash (V : Item) return Natural is <>;
@@ -85,28 +84,20 @@ package BC.Containers.Bags.Bounded is
 
 private
 
-  package IC is new BC.Support.Bounded (Item => Item,
-                                        Item_Ptr => Item_Ptr,
-                                        Maximum_Size => Maximum_Size);
-  use IC;
-  package Items is new BC.Support.Hash_Tables.Item_Signature
-     (Item => Item,
-      Item_Container => IC.Bnd_Node);
+  package Items is new BC.Support.Bounded_Hash_Tables.Item_Signature
+    (Item => Item,
+     Item_Ptr => Item_Ptr);
 
   type Positive_Ptr is access all Positive;
-  package VC is new BC.Support.Bounded (Item => Positive,
-                                        Item_Ptr => Positive_Ptr,
-                                        Maximum_Size => Maximum_Size);
-  use VC;
-  package Values is new BC.Support.Hash_Tables.Value_Signature
+  package Values is new BC.Support.Bounded_Hash_Tables.Value_Signature
      (Value => Positive,
-      Value_Ptr => Positive_Ptr,
-      Value_Container => VC.Bnd_Node);
+      Value_Ptr => Positive_Ptr);
 
- package Tables is new BC.Support.Hash_Tables.Tables
+  package Tables is new BC.Support.Bounded_Hash_Tables.Tables
      (Items => Items,
       Values => Values,
-      Buckets => Buckets);
+      Buckets => Buckets,
+      Maximum_Size => Maximum_Size);
 
   type Bag is new Abstract_Bag with record
     Rep : Tables.Table;
