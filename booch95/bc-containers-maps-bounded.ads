@@ -107,12 +107,11 @@ private
 
    package Tables is new BC.Support.Bounded_Hash_Tables.Tables
      (Items => Keys,
-      Values => Items,
-      Buckets => Buckets,
-      Maximum_Size => Maximum_Size);
+      Values => Items);
 
    type Map is new Abstract_Map with record
-      Rep : Tables.Table;
+      Rep : Tables.Table (Number_Of_Buckets => Buckets,
+                          Maximum_Size => Maximum_Size);
    end record;
 
    procedure Attach (M : in out Map; K : Key; I : Item);
