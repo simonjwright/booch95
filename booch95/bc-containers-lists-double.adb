@@ -61,6 +61,7 @@ package body BC.Containers.Lists.Double is
 
   procedure Insert (L : in out List; Elem : Item) is
   begin
+    -- Ensure we only insert at a list's head.
     Assert (L.Rep = null or else L.Rep.Previous = null,
             BC.Not_Root'Identity,
             "Insert",
@@ -68,9 +69,10 @@ package body BC.Containers.Lists.Double is
     L.Rep := Nodes.Create (Elem, Previous => null, Next => L.Rep);
   end Insert;
 
-  procedure Insert (L : in out List; From_List : in List) is
+  procedure Insert (L : in out List; From_List : in out List) is
     Ptr : Nodes.Double_Node_Ref := From_List.Rep;
   begin
+    -- Ensure we only insert at a list's head.
     Assert (L.Rep = null or else L.Rep.Previous = null,
             BC.Not_Root'Identity,
             "Insert",
@@ -121,6 +123,7 @@ package body BC.Containers.Lists.Double is
       if Curr = null or else Before = 1 then
         Insert (L, From_List);
       else
+        -- Ensure From_List is the head of a list.
         Assert (Ptr /= null or else Ptr.Previous = null,
                 BC.Not_Root'Identity,
                 "Insert",
@@ -159,9 +162,10 @@ package body BC.Containers.Lists.Double is
     end if;
   end Append;
 
-  procedure Append (L : in out List; From_List : in List) is
+  procedure Append (L : in out List; From_List : in out List) is
     Curr : Nodes.Double_Node_Ref := L.Rep;
   begin
+    -- Ensure From_List is the head of a list.
     Assert (From_List.Rep = null or else From_List.Rep.Previous = null,
             BC.Not_Root'Identity,
             "Append",
@@ -198,12 +202,14 @@ package body BC.Containers.Lists.Double is
               "Append",
               BSE.Invalid_Index);
       Curr.Next := Nodes.Create (Elem,
-                                        Previous => Curr,
-                                        Next => Curr.Next);
+                                 Previous => Curr,
+                                 Next => Curr.Next);
     end if;
   end Append;
 
-  procedure Append (L : in out List; From_List : in List; After : Positive) is
+  procedure Append (L : in out List;
+                    From_List : in out List;
+                    After : Positive) is
     Curr : Nodes.Double_Node_Ref := L.Rep;
     Ptr : Nodes.Double_Node_Ref := From_List.Rep;
     Index : Positive := 1;
@@ -212,6 +218,7 @@ package body BC.Containers.Lists.Double is
       if Curr = null then
         Append (L, From_List);
       else
+        -- Ensure From_List is the head of a list.
         Assert (From_List.Rep /= null or else
                 From_List.Rep.Previous = null,
                 BC.Not_Root'Identity,
@@ -253,6 +260,11 @@ package body BC.Containers.Lists.Double is
             BC.Range_Error'Identity,
             "Remove",
             BSE.Invalid_Index);
+    -- Ensure we're not removing an aliased element.
+    Assert (Curr.Count = 1,
+            BC.Referenced'Identity,
+            "Remove",
+            BSE.Referenced);
     if Prev /= null then
       Prev.Next := Curr.Next;
     else
@@ -699,6 +711,7 @@ package body BC.Containers.Lists.Double is
   end Delete_Item_At;
 
   Empty_Container : List;
+  pragma Warnings (Off, Empty_Container);
 
   function Null_Container return List is
   begin
