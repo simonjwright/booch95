@@ -40,7 +40,7 @@ package BC.Containers.Collections is
    --  Return True if and only if both collections have the same
    --  extent and the same items in the same order; return False
    --  otherwise.  Can't call this "=" because of the standard one for
-   --  Collection.
+   --  Abstract_Collection.
 
    procedure Copy (From : Abstract_Collection'Class;
                    To : in out Abstract_Collection'Class);
@@ -54,7 +54,8 @@ package BC.Containers.Collections is
    --  Add the item to the front of the collection.
 
    procedure Insert (C : in out Abstract_Collection;
-                     Elem : Item; Before : Positive) is abstract;
+                     Elem : Item;
+                     Before : Positive) is abstract;
    --  Add the item before the given index item in the collection; if
    --  before is 1, the item is added to the front of the collection.
 
