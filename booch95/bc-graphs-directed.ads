@@ -1,4 +1,4 @@
--- Copyright (C) 1994-1999 Grady Booch and Simon Wright.
+-- Copyright (C) 1994-2000 Grady Booch and Simon Wright.
 -- All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -78,15 +78,15 @@ package BC.Graphs.Directed is
   -----------------------
 
   function New_Graph_Iterator (For_The_Graph : Directed_Graph)
-                               return Graph_Iterator;
+                               return Graph_Iterator'Class;
   -- Return a reset Iterator bound to the specific Graph.
 
   ------------------------------------------------------
   -- Vertex iteration over incoming and outgoing arcs --
   ------------------------------------------------------
 
-  function New_Vertex_Iterator (For_The_Vertex : Directed_Vertex)
-                                return Vertex_Iterator;
+  function New_Vertex_Iterator
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator'Class;
   -- Return a reset Iterator bound to the specific Vertex; both outgoing
   -- and incoming Arcs are visited.
 
@@ -95,7 +95,7 @@ package BC.Graphs.Directed is
   -----------------------------------------
 
   function New_Vertex_Incoming_Iterator
-     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator;
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator'Class;
   -- Return a reset Iterator bound to the specific Vertex; only incoming
   -- Arcs are visited.
 
@@ -104,7 +104,7 @@ package BC.Graphs.Directed is
   -----------------------------------------
 
   function New_Vertex_Outgoing_Iterator
-     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator;
+     (For_The_Vertex : Directed_Vertex) return Vertex_Iterator'Class;
   -- Return a reset Iterator bound to the specific Vertex; only outgoing
   -- Arcs are visited.
 
@@ -114,12 +114,9 @@ private
   type Directed_Vertex is new Vertex with null record;
   type Directed_Arc is new Arc with null record;
 
-  type Directed_Graph_Iterator (D : access Directed_Graph'Class)
-     is new Actual_Graph_Iterator (D) with record
-    Index : Vertex_Node_Ptr := D.Rep;
+  type Directed_Graph_Iterator is new Graph_Iterator with record
+    Index : Vertex_Node_Ptr;
   end record;
-
-  procedure Initialize (It : in out Directed_Graph_Iterator);
 
   procedure Reset (It : in out Directed_Graph_Iterator);
 
@@ -129,39 +126,34 @@ private
 
   function Current_Vertex (It : Directed_Graph_Iterator) return Vertex'Class;
 
-  type Directed_Vertex_Abstract_Iterator (D : access Directed_Vertex'Class)
-    is abstract new Actual_Vertex_Iterator (D) with record
+  type Directed_Vertex_Abstract_Iterator
+    is abstract new Vertex_Iterator with record
       Index : Arc_Node_Ptr;
     end record;
 
   function Is_Done (It : Directed_Vertex_Abstract_Iterator) return Boolean;
 
-  function Current_Arc (It : Directed_Vertex_Abstract_Iterator) return Arc'Class;
+  function Current_Arc
+     (It : Directed_Vertex_Abstract_Iterator) return Arc'Class;
 
-  type Directed_Vertex_Bothways_Iterator (D : access Directed_Vertex'Class)
-  is new Directed_Vertex_Abstract_Iterator (D) with record
-    First : Boolean;
+  type Directed_Vertex_Bothways_Iterator
+  is new Directed_Vertex_Abstract_Iterator with record
+    Do_Outgoing : Boolean;
   end record;
-
-  procedure Initialize (It : in out Directed_Vertex_Bothways_Iterator);
 
   procedure Reset (It : in out Directed_Vertex_Bothways_Iterator);
 
   procedure Next (It : in out Directed_Vertex_Bothways_Iterator);
 
-  type Directed_Vertex_Outgoing_Iterator (D : access Directed_Vertex'Class)
-     is new Directed_Vertex_Abstract_Iterator (D) with null record;
-
-  procedure Initialize (It : in out Directed_Vertex_Outgoing_Iterator);
+  type Directed_Vertex_Outgoing_Iterator
+  is new Directed_Vertex_Abstract_Iterator with null record;
 
   procedure Reset (It : in out Directed_Vertex_Outgoing_Iterator);
 
   procedure Next (It : in out Directed_Vertex_Outgoing_Iterator);
 
-  type Directed_Vertex_Incoming_Iterator (D : access Directed_Vertex'Class)
-     is new Directed_Vertex_Abstract_Iterator (D) with null record;
-
-  procedure Initialize (It : in out Directed_Vertex_Incoming_Iterator);
+  type Directed_Vertex_Incoming_Iterator
+  is new Directed_Vertex_Abstract_Iterator with null record;
 
   procedure Reset (It : in out Directed_Vertex_Incoming_Iterator);
 
