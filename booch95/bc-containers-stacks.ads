@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch, David Weller and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch, David Weller and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -27,9 +27,9 @@ package BC.Containers.Stacks is
 
    type Abstract_Stack is abstract new Container with private;
 
-   --  A sequence in which items may be added from one end and removed
-   --  from the opposite end.  This class is abstract and serves only
-   --  to enforce the interfaces among classes.
+   --  A sequence in which items may be added and removed from one end
+   --  only.  This class is abstract and serves only to enforce the
+   --  interfaces among classes.
 
    --  Operations of equality, inequality, and assignment are "deep"
    --  for all Stack forms
