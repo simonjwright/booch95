@@ -187,7 +187,7 @@ package body BC.Support.Unbounded is
     else
       declare
         AObj      : Unb_Node := Obj;
-        Temp_Item : Item := Item_At (AObj, From);
+        Temp_Item : Item := Item_At (AObj, From);  -- loads cache
         Ptr : Nodes.Node_Ref := AObj.Cache;
       begin
         if Ptr.Previous = null then
@@ -294,6 +294,10 @@ package body BC.Support.Unbounded is
 
   function Item_At (Obj : Unb_Node; Index : Positive) return Item_Ptr is
     U : Allow_Access.Object_Pointer := Allow_Access.To_Pointer (Obj'Address);
+    -- Note, although (GNAT 3.11p) the value in Obj is successfully updated
+    -- via U, the optimiser can get fooled; when we return next/previous
+    -- cache hits, we must return via U. I don't think this is a bug; the
+    -- pointer aliasing is a nasty trick, after all.
   begin
     Assert (Index <= Obj.Size,
             BC.Range_Error'Identity,
@@ -305,11 +309,11 @@ package body BC.Support.Unbounded is
       elsif Index = Obj.Cache_Index + 1 then
         U.Cache := Obj.Cache.Next;
         U.Cache_Index := Obj.Cache_Index + 1;
-        return Obj.Cache.Element'access;
+        return U.Cache.Element'access;
       elsif Index = Obj.Cache_Index - 1 then
         U.Cache := Obj.Cache.Previous;
         U.Cache_Index := Obj.Cache_Index - 1;
-        return Obj.Cache.Element'access;
+        return U.Cache.Element'access;
       end if;
     end if;
     declare
