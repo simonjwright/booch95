@@ -27,11 +27,13 @@ note is to provide an initial introduction to their use.
 
 <img src="car-fleet.jpg" alt="Car belongs to Fleet"/>
 
-<p>In the example, a Car has two attributes, the Plate (the Index
-Mark; my first car's was <tt>8493KC</tt>) and the Model name (it was a
-Vauxhall Cresta).
+<p>In the example, a Car has three attributes, the Plate (the Index
+Mark; my first car's was <tt>8493KC</tt>), the Model name (it was a
+Vauxhall Cresta) and the date it was Registered (some time in the
+mists of antiquity).
 
 <pre>
+   with Ada.Calendar;
    with Ada.Strings.Bounded;
    package Cars is
 
@@ -48,6 +50,7 @@ Vauxhall Cresta).
       type Car is record
 	 Plate : Plate_String;
 	 Model : Model_String;
+	 Registered : Ada.Calendar.Time;
       end record;
 
    end Cars;
@@ -198,19 +201,19 @@ created by the concrete package:
    declare
 
       It : Abstract_Car_Containers.Iterator'Class
-	:= Fleets.New_Iterator (The_Fleet);
+        := Fleets.New_Iterator (The_Fleet);
 
    begin
 
-      while not Abstract_Car_Containers.Done (It) loop
+      while not Abstract_Car_Containers.Is_Done (It) loop
 
-	 declare
-	    C : Car := Abstract_Car_Containers.Current_Item (It);
-	 begin
-	    -- do something with C
-	 end;
+         declare
+            C : Car := Abstract_Car_Containers.Current_Item (It);
+         begin
+            null;  --  do something with C
+         end;
 
-	 Abstract_Car_Containers.Next (It);
+         Abstract_Car_Containers.Next (It);
 
       end loop;
 
@@ -230,14 +233,14 @@ A closed-iterator version of the same would look like
       procedure Process_Car (C : Car; OK : out Boolean) is
       begin
 
-         OK := True; -- unless you want the iteration to stop early
+         OK := True;  --  unless you want the iteration to stop early
 
-	 -- do something with C
+         --  do something with C
 
       end Process_Car;
 
       It : Abstract_Car_Containers.Iterator'Class
-	:= Fleets.New_Iterator (The_Fleet);
+        := Fleets.New_Iterator (The_Fleet);
 
    begin
 
