@@ -1,4 +1,4 @@
-# Copyright 1998-2003 Simon Wright <simon@pushface.org>
+# Copyright 1998-2004 Simon Wright <simon@pushface.org>
 
 # This package is free software; you can redistribute it and/or
 # modify it under terms of the GNU General Public License as
@@ -49,6 +49,7 @@ bc-support-memory_streams.ad[bs] \
 bc-support-standard_storage.ads \
 bc-support-statistics.ad[bs] \
 bc-support-synchronization.ad[bs] \
+bc-support-synchronization-debug.ad[bs] \
 bc-support-unbounded.ad[bs] \
 bc-support-unmanaged.ad[bs] \
 bc-support-unmanaged_storage.ad[bs] \
