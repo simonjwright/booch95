@@ -1,4 +1,4 @@
---  Copyright (C) 1994-2001 Grady Booch and Simon Wright.
+--  Copyright (C) 1994-2002 Grady Booch and Simon Wright.
 --  All Rights Reserved.
 --
 --      This program is free software; you can redistribute it
@@ -91,6 +91,7 @@ package body BC.Containers.Maps.Bounded is
    end Attach;
 
    function Number_Of_Buckets (M : Map) return Natural is
+      pragma Warnings (Off, M);
    begin
       return Buckets;
    end Number_Of_Buckets;
@@ -102,12 +103,14 @@ package body BC.Containers.Maps.Bounded is
 
    function Item_At
      (M : Map; Bucket, Index : Positive) return Item_Ptr is
+      pragma Warnings (Off, Bucket);
    begin
       return Tables.Access_Value_At (M.Rep, Index);
    end Item_At;
 
    function Key_At
      (M : Map; Bucket, Index : Positive) return Key_Ptr is
+      pragma Warnings (Off, Bucket);
    begin
       return Tables.Access_Item_At (M.Rep, Index);
    end Key_At;
