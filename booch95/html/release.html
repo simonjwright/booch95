@@ -36,10 +36,17 @@
 
 <h3>Interface changes</h3>
 
+<p>The Containers that don't provide structural sharing (Bags,
+Collections, Dequeues, Maps, Queues, Rings, Sets and Stacks) now
+support Streams (<tt>'Input</tt>, <tt>'Output</tt>).
+
 
 <h3>Documentation changes</h3>
 
-<p>Corrected an error in the annotation of <tt>BC.Graphs.Destroy_Arc</tt>.
+<p>Corrected an error in the annotation of
+<tt>BC.Graphs.Destroy_Arc</tt>.
+
+<p>Added usage of maps to the case study.
 
 
 <h3>Implementation changes</h3>
@@ -49,6 +56,9 @@ the using packages).
 
 <p>Removed unused <tt>First</tt>, <tt>Last</tt> variants in
 <tt>BC.Support.{Bounded,Dynamic,Unbounded}</tt>.
+
+<p>Dynamic Components didn't support "=" properly (predefined equality
+used for array comparison, LRM 4.5.2(24)).
 
 
 <h3>Other notes</h3>
