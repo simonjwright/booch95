@@ -103,9 +103,8 @@ package body BC.Containers.Stacks.Dynamic is
   end Cardinality;
 
   function Item_At (Obj : in Dyn_Stack; Index : in Natural) return Item_Ptr is
-    TObj : aliased Dyn_Stack_Nodes.Dyn_Node := Obj.Rep.all;
   begin
-    return Dyn_Stack_Nodes.Item_At (TObj'access, Index);
+    return Dyn_Stack_Nodes.Item_At (Obj.Rep, Index);
   end Item_At;
 
   procedure Initialize (Obj : in out Dyn_Stack) is

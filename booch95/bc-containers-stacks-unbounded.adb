@@ -76,9 +76,8 @@ package body BC.Containers.Stacks.Unbounded is
   end Cardinality;
 
   function Item_At (Obj : in Unb_Stack; Index : in Natural) return Item_Ptr is
-    Tobj : aliased Unb_Stack := Obj;
   begin
-    return Unb_Stack_Nodes.Item_At (TObj.Rep, Index);
+    return Unb_Stack_Nodes.Item_At (Obj.Rep, Index);
   end Item_At;
 
   procedure Initialize (Obj : in out Unb_Stack) is
