@@ -20,15 +20,9 @@
 with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
 with BC.Support.Exceptions;
-with System;
 
 with Ada.Text_Io;
 
--- generic
---   type Vertex_Item is private;
---   type Vertex_Item_Ptr is access Vertex_Item;
---   type Arc_Item is private;
---   type Arc_Item_Ptr is access Arc_Item;
 package body BC.Graphs is
 
   package BSE renames BC.Support.Exceptions;
@@ -40,14 +34,6 @@ package body BC.Graphs is
   procedure Delete is new Ada.Unchecked_Deallocation
      (Arc_Node, Arc_Node_Ptr);
 
---   type Graph is abstract new Ada.Finalization.Limited_Controlled with private;
---   type Graph_Ptr is access all Graph'Class;
-
---   type Vertex is abstract new Ada.Finalization.Controlled with private;
---   type Vertex_Ptr is access all Vertex'Class;
-
---   type Arc is abstract new Ada.Finalization.Controlled with private;
---   type Arc_Ptr is access all Arc'Class;
 
   ----------------------
   -- Graph operations --
@@ -147,7 +133,7 @@ package body BC.Graphs is
       A.Rep.Next_Incoming := null;
       A.Rep.Next_Outgoing := null;
       A.Rep.Enclosing := null;
-      -- should we decrement the count one more, like Destroy_Vertex?
+      -- XXX should we decrement the count one more, like Destroy_Vertex?
       -- (presumably for the lost Enclosing?)
       Clear (A);
     end if;
@@ -172,32 +158,26 @@ package body BC.Graphs is
   end Is_Empty;
 
 
-  function To_Ptr is new Ada.Unchecked_Conversion (System.Address,
-                                                   Graph_Ptr);
-
-
   function Is_Member (G : Graph; V : Vertex'Class) return Boolean is
-    -- 'Unrestricted_Access is a GNAT extension.
-    -- Is this G a copy or the actual Graph? I think it's the same,
-    -- because Graph is a tagged type. Hmm. It can't really be a copy,
-    -- or the amount of deep copying done would be huge .. anyway,
-    -- graphs are limited .. but that says nothing about what compilers
-    -- might do inwardly, of course
+    -- Thanks to Tucker Taft for this workround to an access level problem
+    type Graph_Const_Ptr is access constant Graph;
   begin
     if V.Rep = null then
       return False;
     else
-      return V.Rep.Enclosing = G'Unrestricted_Access;
+      return Graph_Const_Ptr (V.Rep.Enclosing) = G'Access;
     end if;
   end Is_Member;
 
 
   function Is_Member (G : Graph; A : Arc'Class) return Boolean is
+    -- Thanks to Tucker Taft for this workround to an access level problem
+    type Graph_Const_Ptr is access constant Graph;
   begin
     if A.Rep = null then
       return False;
     else
-      return A.Rep.Enclosing = To_Ptr (G'Address);
+      return Graph_Const_Ptr (A.Rep.Enclosing) = G'Access;
     end if;
   end Is_Member;
 
@@ -229,7 +209,7 @@ package body BC.Graphs is
   begin
     Assert (V.Rep /= null,
             BC.Is_Null'Identity,
-            "Set_Item",
+            "Set_Item(Vertex)",
             BSE.Is_Null);
     V.Rep.Item := I;
   end Set_Item;
@@ -251,7 +231,7 @@ package body BC.Graphs is
   begin
     Assert (V.Rep /= null,
             BC.Is_Null'Identity,
-            "Item",
+            "Item(Vertex)",
             BSE.Is_Null);
     return V.Rep.Item;
   end Item;
@@ -261,7 +241,7 @@ package body BC.Graphs is
   begin
     Assert (V.Rep /= null,
             BC.Is_Null'Identity,
-            "Item",
+            "Item(Vertex)",
             BSE.Is_Null);
     return V.Rep.Item'Access;
   end Item;
@@ -271,7 +251,7 @@ package body BC.Graphs is
   begin
     Assert (V.Rep /= null,
             BC.Is_Null'Identity,
-            "Enclosing_Graph",
+            "Enclosing_Graph(Vertex)",
             BSE.Is_Null);
     return V.Rep.Enclosing;
   end Enclosing_Graph;
@@ -304,7 +284,7 @@ package body BC.Graphs is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
-            "Set_Item",
+            "Set_Item(Arc)",
             BSE.Is_Null);
     A.Rep.Item := I;
   end Set_Item;
@@ -326,7 +306,7 @@ package body BC.Graphs is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
-            "Item",
+            "Item(Arc)",
             BSE.Is_Null);
     return A.Rep.Item;
   end Item;
@@ -336,7 +316,7 @@ package body BC.Graphs is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
-            "Item",
+            "Item(Arc)",
             BSE.Is_Null);
     return A.Rep.Item'Access;
   end Item;
@@ -346,47 +326,52 @@ package body BC.Graphs is
   begin
     Assert (A.Rep /= null,
             BC.Is_Null'Identity,
-            "Enclosing_Graph",
+            "Enclosing_Graph(Arc)",
             BSE.Is_Null);
     return A.Rep.Enclosing;
   end Enclosing_Graph;
 
 
---   type Iterator (G : access Graph'Class) is limited private;
+  ---------------------
+  -- Graph iterators --
+  ---------------------
 
---   procedure Reset (Obj : in out Iterator);
---   procedure Next (Obj : in out Iterator);
---   function Is_Done (Obj : Iterator) return Boolean;
---   function Current_Item (Obj : Iterator) return Item;
---   function Current_Item (Obj : Iterator) return Item_Ptr;
+  procedure Reset (It : in out Graph_Iterator) is
+  begin
+    It.Index := It.G.Rep;
+  end Reset;
 
---   type Passive_Iterator (G : access Graph'Class) is limited private;
 
---   generic
---     with procedure Apply (Elem : in Item; OK : out Boolean);
---   function Visit (Obj : access Passive_Iterator) return Boolean;
+  procedure Next (It : in out Graph_Iterator) is
+  begin
+    if It.Index /= null then
+      It.Index := It.Index.Next;
+    end if;
+  end Next;
 
---   generic
---     with procedure Apply (Elem_Ref : in Item_Ptr; OK : out Boolean);
---   function Modify (Obj : access Passive_Iterator) return Boolean;
 
--- private
+  function Is_Done (It : Graph_Iterator) return Boolean is
+  begin
+    return It.Index = null;
+  end Is_Done;
 
---   type Vertex_Node;
---   type Vertex_Node_Ptr is access Vertex_Node;
---   type Arc_Node;
---   type Arc_Node_Ptr is access Arc_Node;
 
---   -- A Vertex Node is a simple node consisting of an item, a pointer to the
---   -- enclosing graph, a pointer to the next vertex, pointers to the
---   -- outgoing and incoming arcs, and a reference count
---   type Vertex_Node is new Ada.Finalization.Controlled with record
---     Item : Vertex_Item;
---     Enclosing : Graph_Ptr;
---     Incoming : Arc_Node_Ptr;
---     Outgoing : Arc_Node_Ptr;
---     Next : Vertex_Node_Ptr;
---   end record;
+  procedure Current_Item (It : Graph_Iterator; V : in out Vertex'Class) is
+  begin
+    Assert (It.Index /= null,
+            BC.Is_Null'Identity,
+            "Current_Item(Graph_Iterator)",
+            BSE.Is_Null);
+    Clear (V);
+    V.Rep := It.Index;
+    V.Rep.Count := V.Rep.Count + 1;
+  end Current_Item;
+
+
+  ----------------------------------------------
+  -- Utilities, controlled storage management --
+  ----------------------------------------------
+
   procedure Clear_Vertex_Node (G : in out Graph'Class;
                                N : Vertex_Node_Ptr) is
     Curr : Arc_Node_Ptr;
@@ -441,49 +426,24 @@ package body BC.Graphs is
       Ada.Text_Io.Put_Line ("Vertex_Node finalized with Count"
                             & Integer'Image (V.Count));
     end if;
---     Assert (V.Count = 1,
---             BC.Storage_Error'Identity,
---             "Finalize",
---             BSE.Referenced);
   end Finalize;
 
 
---   -- An Arc Node is a simple node consisting of an item, a pointer to the
---   -- enclosing graph, a pointer to the next arc, pointers to the vertices
---   -- to and from the arc, and a reference count
---   type Arc_Node is new Ada.Finalization.Controlled with record
---     Item : Arc_Item;
---     Enclosing : Graph_Ptr;
---     From : Vertex_Node_Ptr;
---     To : Vertex_Node_Ptr;
---     Next_Incoming : Arc_Node_Ptr;
---     Next_Outgoing : Arc_Node_Ptr;
---   end record;
   procedure Finalize (A : in out Arc_Node) is
   begin
     if A.Count > 1 then
       Ada.Text_Io.Put_Line ("Arc_Node finalized with Count"
                             & Integer'Image (A.Count));
     end if;
---     Assert (A.Count = 1,
---             BC.Storage_Error'Identity,
---             "Finalize",
---             BSE.Referenced);
   end Finalize;
 
 
---   type Graph is abstract new Ada.Finalization.Limited_Controlled with record
---     Rep : Vertex_Node_Ptr;
---   end record;
   procedure Finalize (G : in out Graph) is
   begin
     Clear (G);
   end Finalize;
 
 
---   type Vertex is abstract new Ada.Finalization.Controlled with record
---     Rep : Vertex_Node_Ptr;
---   end record;
   procedure Adjust (V : in out Vertex) is
   begin
     if V.Rep /= null then
@@ -529,9 +489,6 @@ package body BC.Graphs is
   end Finalize;
 
 
---   type Arc is abstract new Ada.Finalization.Controlled with record
---     Rep : Arc_Node_Ptr;
---   end record;
   procedure Adjust (A : in out Arc) is
   begin
     if A.Rep /= null then
@@ -591,16 +548,5 @@ package body BC.Graphs is
     end if;
   end Finalize;
 
-
---   function Item_At (Obj : Graph; Index : Natural) return Item_Ptr;
---   function Cardinality (Obj : Graph) return Integer;
-
---   type Iterator (G : access Graph'Class) is limited record
---     Index : Integer := 1;
---   end record;
-
---   type Passive_Iterator (G : access Graph'Class) is limited record
---     Success : Boolean := False;
---   end record;
 
 end BC.Graphs;
