@@ -31,13 +31,13 @@ GNATMAKE_FLAGS = -I.. -O2 -g -gnata -gnatwu -gnatwl
 test: testable
 	for t in $(TESTABLE); do \
 	  echo running $$t; \
-	  ./$$t 2>$$t.log; \
+	  ./$$t 2>&1; \
 	done
 
 concurrent_test: concurrent_testable
 	for t in $(CONCURRENT_TESTABLE); do \
 	  echo running $$t; \
-	  ./$$t 2>$$t.log; \
+	  ./$$t 2>&1; \
 	done
 
 TESTABLE += avl_test
@@ -79,6 +79,9 @@ set_test: force
 
 TESTABLE += smart_test
 smart_test: force
+
+TESTABLE += sort_test
+sort_test: force
 
 TESTABLE += stack_test
 stack_test: force
