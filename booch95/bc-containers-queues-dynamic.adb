@@ -108,9 +108,8 @@ package body BC.Containers.Queues.Dynamic is
   end Cardinality;
 
   function Item_At (Obj : in Dyn_Queue; Index : in Natural) return Item_Ptr is
-    TObj : aliased Dyn_Queue_Nodes.Dyn_Node := Obj.Rep.all;
   begin
-    return Dyn_Queue_Nodes.Item_At (TObj'access, Index);
+    return Dyn_Queue_Nodes.Item_At (Obj.Rep, Index);
   end Item_At;
 
   procedure Initialize (Obj : in out Dyn_Queue) is
