@@ -26,8 +26,9 @@ all::
 GNATMAKE_FLAGS = -O2 -g -gnata -gnatwu -gnatwl
 
 ADA_SOURCE = \
+bc.ad[bs] \
 bc-containers.ad[bs] \
-bc.ad[bs]
+bc-containers-guarded.ad[bs]
 
 ADA_SOURCE += \
 bc-support-bounded.ad[bs] \
@@ -43,6 +44,12 @@ bc-support.ad[bs]
 
 test: testable
 	for t in $(TESTABLE); do \
+	  echo running $$t; \
+	  ./$$t 2>$$t.log; \
+	done
+
+concurrent_test: concurrent_testable
+	for t in $(CONCURRENT_TESTABLE); do \
 	  echo running $$t; \
 	  ./$$t 2>$$t.log; \
 	done
@@ -84,7 +91,6 @@ TEST_SRC += deque_test.ad[bs] deque_test_support.ad[bs]
 deque_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@
 
-
 ADA_SOURCE += \
 bc-graphs.ad[bs] \
 bc-graphs-directed.ad[bs] \
@@ -108,13 +114,13 @@ bc-containers-maps-bounded.ad[bs] \
 bc-containers-maps-dynamic.ad[bs] \
 bc-containers-maps-unbounded.ad[bs] \
 bc-containers-maps-synchronized.ad[bs] \
-bc-containers-maps-unbounded-guarded.ad[bs] \
-bc-containers-maps-unbounded-synchronized.ad[bs] \
 bc-containers-maps.ad[bs]
 TESTABLE += map_test
 TEST_SRC += map_test.ad[bs] map_test_support.ad[bs] chunks.ad[bs]
 map_test: force
 	gnatmake $(GNATMAKE_FLAGS) $@
+CONCURRENT_TESTABLE += map_test_concurrent
+TEST_SRC += map_test_concurrent.ad[bs] map_test_concurrent_support.ad[bs]
 
 ADA_SOURCE += \
 bc-containers-collections-ordered-bounded.ad[bs] \
@@ -150,9 +156,7 @@ ADA_SOURCE += \
 bc-containers-rings.ad[bs] \
 bc-containers-rings-bounded.ad[bs] \
 bc-containers-rings-dynamic.ad[bs] \
-bc-containers-rings-unbounded.ad[bs] \
-bc-containers-rings-unbounded-guarded.ad[bs] \
-bc-containers-rings-unbounded-synchronized.ad[bs]
+bc-containers-rings-unbounded.ad[bs]
 TESTABLE += ring_test
 TEST_SRC += ring_test.ad[bs] ring_test_support.ad[bs]
 ring_test: force
@@ -204,41 +208,7 @@ tree_test: force
 
 testable: $(TESTABLE)
 
-# Aonix special tests (included here so we check they will at least compile
-# under Linux)
-
-aonix_test: aonix_testable
-	for t in $(AONIX_TESTABLE); do \
-	  echo running $$t; \
-	  ./$$t 2>$$t.log; \
-	done
-
-AONIX_TESTABLE += bag_test_aonix
-TEST_SRC += bag_test_aonix.ad[bs]
-bag_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-AONIX_TESTABLE += map_test_aonix
-TEST_SRC += map_test_aonix.ad[bs]
-map_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-AONIX_TESTABLE += queue_test_aonix
-TEST_SRC += queue_test_aonix.ad[bs]
-queue_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-AONIX_TESTABLE += set_test_aonix
-TEST_SRC += set_test_aonix.ad[bs]
-set_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-AONIX_TESTABLE += stack_test_aonix
-TEST_SRC += stack_test_aonix.ad[bs]
-stack_test_aonix: force
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-aonix_testable: $(AONIX_TESTABLE)
+concurrent_testable: $(CONCURRENT_TESTABLE)
 
 ########
 # Demos
