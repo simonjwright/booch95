@@ -201,19 +201,8 @@ procedure Map_Test is
   end record;
   The_U: U := (MU.Null_Container, MU.Null_Container);
 
-  type GU is record
-    Map_UG_Pu1 : MUG.Guarded_Unbounded_Map;
-    Map_UG_Pu2 : MUG.Guarded_Unbounded_Map;
-  end record;
-  The_GU : GU := (MUG.Null_Container, MUG.Null_Container);
-
-  type SU is record
-    Map_US_Pu1 : MUS.Synchronized_Map;
-    Map_US_Pu2 : MUS.Synchronized_Map;
-  end record;
-  The_SU: SU := (MUS.Null_Container, MUS.Null_Container);
-
 begin
+
   Put_Line ("Starting map tests");
   Put_Line ("...Bounded Map");
   Test (The_B.Map_B_Pu1, The_B.Map_B_Pu2);
@@ -222,10 +211,6 @@ begin
   Test (The_D.Map_D_Pu1, The_D.Map_D_Pu2);
   Put_Line ("...Unbounded Map");
   Test (The_U.Map_U_Pu1, The_U.Map_U_Pu2);
-  Put_Line ("...Guarded Unbounded Map");
-  Test (The_GU.Map_UG_Pu1, The_GU.Map_UG_Pu2);
-  Put_Line ("...Synchronized Unbounded Map");
-  Test (The_SU.Map_US_Pu1, The_SU.Map_US_Pu2);
 
   Put_Line ("...Map Simple Active Iterator");
   Put_Line ("   Bounded:");
@@ -234,10 +219,6 @@ begin
   Test_Simple_Active_Iterator (The_D.Map_D_Pu1);
   Put_Line ("   Unbounded:");
   Test_Simple_Active_Iterator (The_U.Map_U_Pu1);
-  Put_Line ("   Guarded Unbounded:");
-  Test_Simple_Active_Iterator (The_GU.Map_UG_Pu1);
-  Put_Line ("   Synchronized Unbounded:");
-  Test_Simple_Active_Iterator (The_SU.Map_US_Pu1);
 
   Put_Line ("...Map Active Iterator");
   Put_Line ("   Bounded:");
@@ -246,10 +227,6 @@ begin
   Test_Active_Iterator (The_D.Map_D_Pu1);
   Put_Line ("   Unbounded:");
   Test_Active_Iterator (The_U.Map_U_Pu1);
-  Put_Line ("   Guarded Unbounded:");
-  Test_Active_Iterator (The_GU.Map_UG_Pu1);
-  Put_Line ("   Synchronized Unbounded:");
-  Test_Active_Iterator (The_SU.Map_US_Pu1);
 
   Put_Line ("...Map Passive Iterator");
   Put_Line ("   Bounded:");
@@ -261,12 +238,6 @@ begin
   Put_Line ("   Unbounded:");
   Test_Passive_Iterator (The_U.Map_U_Pu1);
   Test_Passive_Modifying_Iterator (The_U.Map_U_Pu1);
-  Put_Line ("   Guarded Unbounded:");
-  Test_Passive_Iterator (The_GU.Map_UG_Pu1);
-  Test_Passive_Modifying_Iterator (The_GU.Map_UG_Pu1);
-  Put_Line ("   Synchronized Unbounded:");
-  Test_Passive_Iterator (The_SU.Map_US_Pu1);
-  Test_Passive_Modifying_Iterator (The_SU.Map_US_Pu1);
 
   Assertion (MB.Is_Bound (The_B.Map_B_Pu1, '6'),
              "** M01: Map binding is not correct");
@@ -298,4 +269,5 @@ begin
   Assertion (MB.Available (The_B.Map_B_Pu2) = 300,
              "** M11: Available space is not correct");
   Put_Line ("Completed map tests");
+
 end Map_Test;
