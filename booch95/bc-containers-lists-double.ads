@@ -167,6 +167,12 @@ private
   package Double_Nodes
   is new BC.Support.Nodes (Item, Storage_Manager, Storage);
 
+  -- Here we use the Rosen Trick to allow write access for Delete_Item_At.
+  -- Of course, Delete_Item_At could take the Iterator as "in out" ...
+  type Double_List_Iterator;
+  type Double_List_Iterator_Relay (Reference : access Double_List_Iterator) is
+     limited null record;
+
   type Double_List is new Container with record
     Rep : Double_Nodes.Double_Node_Ref;
   end record;
@@ -178,6 +184,7 @@ private
   type Double_List_Iterator (L : access Double_List'Class)
   is new Actual_Iterator (L) with record
     Index : Double_Nodes.Double_Node_Ref;
+    Relay : Double_List_Iterator_Relay (Double_List_Iterator'Access);
   end record;
 
   -- Overriding primitive supbrograms of the concrete actual Iterator.
