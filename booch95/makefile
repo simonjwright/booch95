@@ -19,7 +19,13 @@
 
 all::
 
-MEMORY_CHECK = -largs ~/lib/ccmalloc.o -ldl
+########
+# Tests
+
+# For checking memory leaks, I use ccmalloc from Armin Biere
+# (armin@ira.uka.de + armin+@cs.cmu.edu, http://iseran.ira.uka.de/~armin)
+
+MEMORY_CHECK = -largs ~/ccmalloc-0.2.3/src/libccmalloc.a -ldl
 
 test:: $(TESTABLE)
 	for t in $(TESTABLE); do \
@@ -36,10 +42,16 @@ TESTABLE += smart_test
 TESTABLE += stack_test
 TESTABLE += tree_test
 
+############################
+# Distribution construction
+
+# Create the current date, in the form yyyymmdd. This certainly works in Linux.
+DATE = $(shell date +%Y%m%d)
+
 DISTRIBUTION_FILES = \
-bc.tar.gz \
-bc.zip \
-bc.src \
+bc-$(DATE).tar.gz \
+bc-$(DATE).zip \
+bc-$(DATE).src \
 ACL \
 README
 
@@ -68,11 +80,14 @@ bc-containers.ad[bs] \
 bc-smart.ad[bs] \
 bc-support-bounded.ad[bs] \
 bc-support-dynamic.ad[bs] \
+bc-support-managed_storage.ad[bs] \
 bc-support-nodes.ad[bs] \
 bc-support-unbounded.ad[bs] \
+bc-support-unmanaged_storage.ad[bs] \
 bc-support.ad[bs] \
 bc.ad[bs] \
 character_references.ad[bs] \
+global_heap.ads \
 list_test.ad[bs] \
 queue_test.ad[bs] \
 root_bin_trees.ad[bs] \
@@ -81,7 +96,6 @@ root_bounded_queues.ad[bs] \
 root_bounded_stacks.ad[bs] \
 root_container.ad[bs] \
 root_dlist.ad[bs] \
-root_dynamic.ad[bs] \
 root_dynamic_queues.ad[bs] \
 root_dynamic_stacks.ad[bs] \
 root_lists.ad[bs] \
@@ -92,7 +106,6 @@ root_smart.ad[bs] \
 root_smart_pointer.ad[bs] \
 root_stacks.ad[bs] \
 root_trees.ad[bs] \
-root_unbounded.ad[bs] \
 root_unbounded_queues.ad[bs] \
 root_unbounded_stacks.ad[bs] \
 smart_test.ad[bs] \
@@ -101,11 +114,18 @@ tree_test.ad[bs]
 
 SOURCE = makefile ACL README $(ADA_SOURCE)
 
-bc.tar.gz: $(SOURCE)
-	tar zcvf bc.tar.gz $(SOURCE)
+bc-$(DATE): force
+	-rm -rf $@
+	mkdir $@
+	cp -p $(SOURCE) $@/
 
-bc.zip: $(SOURCE)
-	zip -l bc.zip $(SOURCE)
+bc-$(DATE).tar.gz: bc-$(DATE)
+	tar zcvf $@ $</
 
-bc.src: $(ADA_SOURCE)
-	cat $(ADA_SOURCE) > bc.src
+bc-$(DATE).zip: bc-$(DATE)
+	zip -l $@ $</*
+
+bc-$(DATE).src: $(ADA_SOURCE)
+	cat $(ADA_SOURCE) > $@
+
+.PHONY: force
