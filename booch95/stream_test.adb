@@ -104,6 +104,11 @@ begin
       C2 := Collection'Input (Stream (F));
       Assertion (C1 = C2, "CD4: Collections are unequal");
 
+   exception
+      when E : others =>
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
    end;
 
    declare
@@ -131,6 +136,11 @@ begin
       C2 := Collection'Input (Stream (F));
       Assertion (C1 = C2, "CU4: Collections are unequal");
 
+   exception
+      when E : others =>
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
    end;
 
    declare
@@ -158,6 +168,11 @@ begin
       S2 := Set'Input (Stream (F));
       Assertion (S1 = S2, "SU4: Sets are unequal");
 
+   exception
+      when E : others =>
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
    end;
 
    declare
@@ -178,6 +193,11 @@ begin
       C2 := Collection'Input (Stream (F));
       Assertion (C1 = C2, "ICB2: Collections are unequal");
 
+   exception
+      when E : others =>
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
    end;
 
    declare
@@ -198,6 +218,11 @@ begin
       C2 := Collection'Input (Stream (F));
       Assertion (C1 = C2, "ICD2: Collections are unequal");
 
+   exception
+      when E : others =>
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
    end;
 
    declare
@@ -218,6 +243,11 @@ begin
       C2 := Collection'Input (Stream (F));
       Assertion (C1 = C2, "ICU2: Collections are unequal");
 
+   exception
+      when E : others =>
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
    end;
 
    declare
@@ -244,6 +274,11 @@ begin
       Assertion (B2.all = B1.all, "P1: values are unequal");
       Assertion (S2.all = S1.all, "P2: values are unequal");
 
+   exception
+      when E : others =>
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
    end;
 
    declare
@@ -264,6 +299,11 @@ begin
       C2 := Collection'Input (Stream (F));
       Assertion (C1 = C2, "TCB2: Collections are unequal");
 
+   exception
+      when E : others =>
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
    end;
 
    declare
@@ -286,6 +326,11 @@ begin
       Image (C2);
       Assertion (C1 = C2, "TCD2: Collections are unequal");
 
+   exception
+      when E : others =>
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
    end;
 
    declare
@@ -306,6 +351,11 @@ begin
       C2 := Collection'Input (Stream (F));
       Assertion (C1 = C2, "TCU2: Collections are unequal");
 
+   exception
+      when E : others =>
+         Put_Line ("                                   EXCEPTION "
+                   & Ada.Exceptions.Exception_Name (E)
+                   & " OCCURRED.");
    end;
 
    Close (F);
