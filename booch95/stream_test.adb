@@ -21,7 +21,7 @@ with Ada.Exceptions;
 with Ada.Streams.Stream_IO;
 with Ada.Text_IO;
 with Assertions;
-with BC.Memory_Streams;
+with BC.Support.Memory_Streams;
 with Collection_Test_Support;
 with Set_Test_Support;
 with Stream_Test_Support;
@@ -407,12 +407,12 @@ begin
    declare
       C1, C2 : TCU.Collection;
       use TCU;
-      Str : aliased BC.Memory_Streams.Stream_Type (78);
+      Str : aliased BC.Support.Memory_Streams.Stream_Type (78);
    begin
 
       Put_Line ("...Unbounded tagged Collections to memory stream");
 
-      BC.Memory_Streams.Reset (Str);
+      BC.Support.Memory_Streams.Reset (Str);
       Append (C1, new Brother'(I => 16#aabb#));
       Append (C1, new Sister'(B => True));
       Append (C2, new Brother'(I => 16#5555#));
@@ -423,7 +423,7 @@ begin
       Assertion (C1 = C2, "TCUM2: Collections are unequal");
       declare
          S : constant Ada.Streams.Stream_Element_Array
-           := BC.Memory_Streams.Contents (Str);
+           := BC.Support.Memory_Streams.Contents (Str);
       begin
          Put_Line ("buffer length is" & Integer'Image (S'Length));
       end;
