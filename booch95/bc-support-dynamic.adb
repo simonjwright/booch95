@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -249,7 +249,7 @@ package body BC.Support.Dynamic is
    end Initialize;
 
    procedure Adjust (D : in out Dyn_Node) is
-      Tmp : Dyn_Arr_Ref := new Dyn_Arr (1 .. D.Ref'Last);
+      Tmp : constant Dyn_Arr_Ref := new Dyn_Arr (1 .. D.Ref'Last);
    begin
       Tmp (1 .. D.Size) := D.Ref (1 .. D.Size);
       D.Ref := Tmp;

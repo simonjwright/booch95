@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2003 Simon Wright <simon@pushface.org>
+--  Copyright 2003-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -301,7 +301,8 @@ package body BC.Support.Unmanaged is
    end Item_At;
 
    function Item_At (Obj : Unm_Node; Index : Positive) return Item_Ptr is
-      U : Allow_Access.Object_Pointer := Allow_Access.To_Pointer (Obj'Address);
+      U : constant Allow_Access.Object_Pointer
+        := Allow_Access.To_Pointer (Obj'Address);
       --  Note, although (GNAT 3.11p) the value in Obj is successfully
       --  updated via U, the optimiser can get fooled; when we return
       --  next/previous cache hits, we must return via U. I don't
@@ -319,7 +320,8 @@ package body BC.Support.Unmanaged is
    function Location (Obj : Unm_Node; Elem : Item; Start : Positive := 1)
                      return Natural is
       Ptr : Node_Ref := Obj.Rep;
-      U : Allow_Access.Object_Pointer := Allow_Access.To_Pointer (Obj'Address);
+      U : constant Allow_Access.Object_Pointer
+        := Allow_Access.To_Pointer (Obj'Address);
    begin
       --  XXX the C++ (which indexes from 0) nevertheless checks
       --  "start <= count". We have to special-case the empty Node;

@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -102,6 +102,7 @@ package body BC.Containers.Lists.Single is
 
    procedure Insert (L : in out List; Elem : Item; Before : Positive) is
       Prev : Single_Node_Ref;
+      pragma Warnings (Off, Prev);
       Curr : Single_Node_Ref := L.Head.Rep;
       Index : Positive := 1;
    begin
@@ -124,6 +125,7 @@ package body BC.Containers.Lists.Single is
                      From_List : in out List;
                      Before : Positive) is
       Prev : Single_Node_Ref;
+      pragma Warnings (Off, Prev);
       Curr : Single_Node_Ref := L.Head.Rep;
       Ptr : Single_Node_Ref := From_List.Head.Rep;
       Index : Positive := 1;
@@ -606,7 +608,8 @@ package body BC.Containers.Lists.Single is
       declare
          package Conversions is new System.Address_To_Access_Conversions
            (List_Iterator'Class);
-         P : Conversions.Object_Pointer := Conversions.To_Pointer (It'Address);
+         P : constant Conversions.Object_Pointer
+           := Conversions.To_Pointer (It'Address);
       begin
          P.Index := Curr.Next;
       end;
