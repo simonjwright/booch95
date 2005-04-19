@@ -297,6 +297,26 @@ clean::
 	rm -f $(DEMOS)
 
 ############################
+# Documentation upload to SF
+
+SFUSER ?= simonjwright
+
+upload-docs: force
+	rsync \
+	  --compress \
+	  --copy-unsafe-links \
+	  --cvs-exclude \
+	  --perms \
+	  --recursive \
+	  --rsh=ssh \
+	  --times \
+	  --update \
+	  --verbose \
+	  html/*.{html,gif,jpg,png} html/x.ada \
+	  html/coldframe-hash.{tgz,zip} \
+	  $(SFUSER)@shell.sourceforge.net:/home/groups/b/bo/booch95/htdocs/
+
+############################
 # Distribution construction
 
 # Create the current date, in the form yyyymmdd. This certainly works in Linux.
