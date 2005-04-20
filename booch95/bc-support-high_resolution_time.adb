@@ -1,4 +1,4 @@
---  Copyright 2003 Simon Wright <simon@pushface.org>
+--  Copyright 2003-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -24,13 +24,12 @@
 --  $Date$
 --  $Author$
 
---  This implementation is for GNAT on Intel i86 hardware (Linux,
---  Windows).
+--  This common implementation devolves processor-specific high
+--  resolution clock code to the separate body of Clock.
 
 with Ada.Calendar;
 with Ada.Unchecked_Conversion;
 with GNAT.OS_Lib;
-with System.Machine_Code;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -67,24 +66,7 @@ package body BC.Support.High_Resolution_Time is
    -- Clock --
    -----------
 
-   function Clock return Time is
-      type Half is (Low, High);
-      Lower, Upper : Interfaces.Unsigned_32;
-      Results : array (Half) of Interfaces.Unsigned_32;
-      Result : Time;
-      for Result'Address use Results (Low)'Address;
-   begin
-      System.Machine_Code.Asm
-        ("rdtsc" & ASCII.LF & ASCII.HT &
-           "movl %%eax, %0"& ASCII.LF & ASCII.HT &
-           "movl %%edx, %1",
-         Outputs => (Interfaces.Unsigned_32'Asm_Output ("=g", Lower),
-                     Interfaces.Unsigned_32'Asm_Output ("=g", Upper)),
-         Clobber => "eax, edx",
-         Volatile => True);
-      Results := (Low => Lower, High => Upper);
-      return Result;
-   end Clock;
+   function Clock return Time is separate;
 
 
    procedure Initialize_Clock_Rate;
