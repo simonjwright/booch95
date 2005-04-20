@@ -27,6 +27,8 @@
 --  This implementation is for GNAT on Intel i86 hardware (Linux,
 --  Windows).
 
+with System.Machine_Code;
+
 separate (BC.Support.High_Resolution_Time)
 function Clock return Time is
    type Half is (Low, High);
@@ -37,10 +39,10 @@ function Clock return Time is
 begin
    System.Machine_Code.Asm
      ("rdtsc" & ASCII.LF & ASCII.HT &
-	"movl %%eax, %0"& ASCII.LF & ASCII.HT &
-	"movl %%edx, %1",
+        "movl %%eax, %0"& ASCII.LF & ASCII.HT &
+        "movl %%edx, %1",
       Outputs => (Interfaces.Unsigned_32'Asm_Output ("=g", Lower),
-		  Interfaces.Unsigned_32'Asm_Output ("=g", Upper)),
+                  Interfaces.Unsigned_32'Asm_Output ("=g", Upper)),
       Clobber => "eax, edx",
       Volatile => True);
    Results := (Low => Lower, High => Upper);
