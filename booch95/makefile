@@ -23,9 +23,6 @@ all::
 %: %.adb
 	gnatmake $(GNATMAKE_FLAGS) $@
 
-########
-# Tests
-
 #GCOV_FLAGS = -O0 -ftest-coverage -fprofile-arcs
 
 GNATMAKE_FLAGS = -O2 -g -gnatqQafoy -gnatwaL -j2 -m -k
@@ -45,6 +42,8 @@ bc-support-dynamic.ad[bs] \
 bc-support-exceptions.ad[bs] \
 bc-support-hash_tables.ad[bs] \
 bc-support-high_resolution_time.ad[bs] \
+bc-support-high_resolution_time-clock.adb-pentium \
+bc-support-high_resolution_time-clock.adb-ppc32 \
 bc-support-managed_storage.ad[bs] \
 bc-support-memory_streams.ad[bs] \
 bc-support-standard_storage.ads \
@@ -55,6 +54,9 @@ bc-support-unbounded.ad[bs] \
 bc-support-unmanaged.ad[bs] \
 bc-support-unmanaged_storage.ad[bs] \
 bc-support.ad[bs]
+
+########
+# Tests
 
 test: testable
 	for t in $(TESTABLE); do \
@@ -325,7 +327,6 @@ DATE = $(shell date +%Y%m%d)$(SUBRELEASE)
 DISTRIBUTION_FILES = \
 bc-$(DATE).tgz \
 bc-$(DATE).zip \
-bc-$(DATE).src \
 bc-html-$(DATE).zip \
 COPYING
 
@@ -339,10 +340,17 @@ dist: README $(DISTRIBUTION_FILES)
 
 SOURCE = makefile COPYING README $(ADA_SOURCE)
 
+# bc-support-high_resolution_time-clock.adb is a copy of the
+# appropriate architecture-specific implementation. Choose the
+# more-popular Pentium version for the standard distribution.
+
 bc-$(DATE): force
 	-rm -rf $@
 	mkdir $@
 	tar cf - $(SOURCE) | (cd $@; tar xvf -)
+	cp -p \
+	  bc-support-high_resolution_time-clock.adb-pentium \
+	  $@/bc-support-high_resolution_time-clock.adb
 	mkdir $@/test
 	cp makefile-test $@/test/makefile
 	tar cf - $(TEST_SRC) | (cd $@/test; tar xvf -)
