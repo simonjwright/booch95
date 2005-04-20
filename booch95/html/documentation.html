@@ -325,8 +325,16 @@ flavours:
 
 <dt><tt>High_Resolution_Time</tt><dd>Supports high resolution
 (sub-microsecond) time measurements.
-<br>The only implementation provided is for GNAT on Intel x86 targets
-(Linux, Windows).
+<br>The implementations provided are in the units
+<dl>
+<dt><tt>bc-support-high_resolution_time-clock.adb-pentium</tt>
+<dd>for GNAT on Intel x86 targets (Linux, Windows).
+<dt><tt>bc-support-high_resolution_time-clock.adb-ppc32</tt>
+<dd>for GNAT on 32-bit PowerPC targets (Linux [not tested], MacOS X).
+</dl>
+As distributed, the software is set up for the Pentium target; for
+PowerPC, copy <tt>bc-support-high_resolution_time-clock.adb-ppc32</tt>
+to <tt>bc-support-high_resolution_time-clock.adb</tt>.
 
 <dt><tt>Managed_Storage</tt><dd>A storage pool by <a
 href="mailto:pat@classwide.com">Pat Rogers</a>, which can allocate
