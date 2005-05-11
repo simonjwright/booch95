@@ -12,8 +12,8 @@ with BC.Containers.Trees;
 with BC.Containers.Trees.Multiway;
 with Global_Heap;
 
---  May not be referenced for released versions
 pragma Warnings (Off, Ada.Text_IO);
+--  May not be referenced for released versions
 
 package body Tests.Multiway_Trees is
 
@@ -69,7 +69,7 @@ package body Tests.Multiway_Trees is
             return To_String (Result) & ")";
          end;
       else
-         return "" & Item_At (The_Tree);
+         return "" & Item_At (The_Tree); -- we need to construct a string
       end if;
    end To_String;
 
