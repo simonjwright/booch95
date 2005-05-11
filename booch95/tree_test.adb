@@ -17,6 +17,7 @@
 --  $Id$
 
 with Ada.Exceptions;
+with Ada.Strings.Unbounded;
 with Ada.Text_IO;
 with BC.Containers.Trees.Binary.In_Order;
 with BC.Containers.Trees.Binary.Pre_Order;
@@ -437,10 +438,38 @@ procedure Tree_Test is
    procedure Test_Multiway_Iteration;
    procedure Test_Multiway_Iteration is
       T, T1, T2 : TM.Multiway_Tree;
+      function To_String (The_Tree : TM.Multiway_Tree) return String;
+      function To_String
+        (The_Tree : TM.Multiway_Tree) return String is
+         use Ada.Strings.Unbounded;
+         use TM;
+      begin
+         if Is_Null (The_Tree) then
+            return "()";
+         elsif Has_Children (The_Tree) then
+            declare
+               Result : Unbounded_String
+                 := To_Unbounded_String ("(" & Item_At (The_Tree));
+               T : Multiway_Tree;
+            begin
+               for C in 1 .. Arity (The_Tree) loop
+                  T := The_Tree;
+                  Child (T, C);
+                  Result := Result & " " & To_String (T);
+               end loop;
+               return To_String (Result) & ")";
+            end;
+         else
+            return "" & Item_At (The_Tree);
+         end if;
+      end To_String;
       procedure Process_Item (C : Character; Success : out Boolean);
+      Traversal : String (1 .. 128);
+      Last : Natural;
       procedure Process_Item (C : Character; Success : out Boolean) is
       begin
-         Put_Line ("      Visit " & C);
+         Last := Last + 1;
+         Traversal (Last) := C;
          Success := True;
       end Process_Item;
       procedure Multiway_Pre_Order is new TM.Pre_Order (Process_Item);
@@ -482,10 +511,17 @@ procedure Tree_Test is
       Clear (T2);
       Append (T, T1);
       Clear (T1);
+      Put_Line (To_String (T));
       Put_Line ("...Multiway Pre-Order Scan");
+      Last := 0;
       Multiway_Pre_Order (T, Success);
+      Assertion (Traversal (1 .. Last) = "abcdefghijklmnop",
+                 "** MI01, pre-order mismatch");
       Put_Line ("...Multiway Post-Order Scan");
+      Last := 0;
       Multiway_Post_Order (T, Success);
+      Assertion (Traversal (1 .. Last) = "defcghiblmknpoja",
+                 "** MI02, post-order mismatch");
    end Test_Multiway_Iteration;
 
    procedure Test_AVL_Iteration;
