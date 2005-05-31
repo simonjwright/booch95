@@ -44,9 +44,9 @@ begin
            "mftb %1" & ASCII.LF & ASCII.HT &
            "mftbu %2",
          Outputs =>
-           (Interfaces.Unsigned_32'Asm_Output ("=g", Upper),
-            Interfaces.Unsigned_32'Asm_Output ("=g", Lower),
-            Interfaces.Unsigned_32'Asm_Output ("=g", Upper_Again)),
+           (Interfaces.Unsigned_32'Asm_Output ("=r", Upper),
+            Interfaces.Unsigned_32'Asm_Output ("=r", Lower),
+            Interfaces.Unsigned_32'Asm_Output ("=r", Upper_Again)),
          Volatile => True);
       exit when Upper_Again = Upper;
    end loop;
