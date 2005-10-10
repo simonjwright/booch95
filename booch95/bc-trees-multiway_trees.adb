@@ -58,8 +58,8 @@ package body BC.Trees.Multiway_Trees is
    --  We can't take 'Access of non-aliased components. But if we
    --  alias discriminated objects they become constrained - even if
    --  the discriminant has a default.
-   package Allow_Element_Access
-   is new System.Address_To_Access_Conversions (Item);
+   --  package Allow_Element_Access
+   --  is new System.Address_To_Access_Conversions (Item);
 
    procedure Purge (Curr : in out Multiway_Node_Ref);
    procedure Purge (Curr : in out Multiway_Node_Ref) is
