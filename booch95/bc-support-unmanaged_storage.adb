@@ -37,6 +37,7 @@ package body BC.Support.Unmanaged_Storage is
                        Storage_Address : out System.Address;
                        Size_In_Storage_Elements : SSE.Storage_Count;
                        Alignment : SSE.Storage_Count) is
+      pragma Unreferenced (The_Pool);
    begin
       SSP.Allocate (SSP.Root_Storage_Pool'Class
                     (Default_Access_Type'Storage_Pool),
@@ -50,6 +51,7 @@ package body BC.Support.Unmanaged_Storage is
                          Storage_Address : System.Address;
                          Size_In_Storage_Elements : SSE.Storage_Count;
                          Alignment : SSE.Storage_Count) is
+   	pragma Unreferenced (The_Pool);
    begin
       SSP.Deallocate (SSP.Root_Storage_Pool'Class
                       (Default_Access_Type'Storage_Pool),
@@ -60,6 +62,7 @@ package body BC.Support.Unmanaged_Storage is
 
 
    function Storage_Size (This : Pool) return SSE.Storage_Count is
+   	pragma Unreferenced (This);
    begin
       return SSP.Storage_Size (SSP.Root_Storage_Pool'Class
                                (Default_Access_Type'Storage_Pool));

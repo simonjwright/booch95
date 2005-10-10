@@ -26,6 +26,8 @@
 --  $Date$
 --  $Author$
 
+--§§with System.Storage_Pools;
+
 generic
    type Item is private;
    with function "=" (L, R : Item) return Boolean is <>;
