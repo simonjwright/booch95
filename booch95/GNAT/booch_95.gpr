@@ -50,7 +50,7 @@ project Booch_95 is
 
    type Style_Type  is ("Debug", "Release");
    type OS_Type     is ("Linux", "OS2", "Windows_NT", "VMS");
-   type Target_Type is ("i686", "x86_64", "AXP");
+   type Target_Type is ("i686", "x86_64", "AXP", "ppc32");
 
    Style  : Style_Type  := external ("style" , "Release");
    OS     : OS_Type     := external ("os"    , "Linux");
@@ -103,13 +103,13 @@ project Booch_95 is
 
    package Compiler is
       for Default_Switches ("ada") use (
-         "-gnatf",                --  Full errors. Verbose details, all undefined references
-         "-gnatU",                --  Enable unique tag for error messages
-         "-gnatwbcfgijklmopruvxz",   --  All warings enabled
-         "-gnatq",                --  Don't quit, try semantics, even if parse errors
-         "-gnatQ",                --  Don't quit, write ali/tree file even if compile errors
-         "-gnati1",               --  Select character set in sources.
-         "-gnatT4");              --  Compiler tables sizes 4* default
+         "-gnatf",                  --  Full errors. Verbose details, all undefined references
+         "-gnatU",                  --  Enable unique tag for error messages
+         "-gnatwal",                --  All warings enabled
+         "-gnatq",                  --  Don't quit, try semantics, even if parse errors
+         "-gnatQ",                  --  Don't quit, write ali/tree file even if compile errors
+         "-gnati1",                 --  Select character set in sources.
+         "-gnatT4");                --  Compiler tables sizes 4* default
 
       case Style is
          when "Debug" =>
@@ -168,7 +168,14 @@ project Booch_95 is
    package Naming is
       for Specification_Suffix ("ada") use ".ads";
       for Implementation_Suffix ("ada") use ".adb";
-      for Separate_Suffix use ".ada";
+      case Target is
+         when "i686" | "x86_64" =>
+            for Separate_Suffix use ".adb-pentium";
+         when "ppc32" =>
+            for Separate_Suffix use ".adb-ppc32";
+         when "AXP" =>
+            for Separate_Suffix use ".adb";
+      end case;
    end Naming;
 
    package Ide is
@@ -191,7 +198,7 @@ project Booch_95 is
         "-A5");      --  align 'AT' keywords in component clauses
    end Pretty_Printer;
 
-   for Source_Files use (
+   Source_Files := (
       "bc-containers-bags-bounded.adb",
       "bc-containers-bags-bounded.ads",
       "bc-containers-bags-dynamic.adb",
@@ -408,8 +415,6 @@ project Booch_95 is
       "bc-support-exceptions.ads",
       "bc-support-hash_tables.adb",
       "bc-support-hash_tables.ads",
-      "bc-support-high_resolution_time.adb",
-      "bc-support-high_resolution_time.ads",
       "bc-support-managed_storage.adb",
       "bc-support-managed_storage.ads",
       "bc-support-memory_streams.adb",
@@ -458,10 +463,30 @@ project Booch_95 is
       "bc.adp",
       "bc.ads");
 
+   case Target is
+      when "i686" | "x86_64" =>
+         for Source_Files use
+            Source_Files & (
+               "bc-support-high_resolution_time.adb",
+               "bc-support-high_resolution_time.ads",
+               "bc-support-high_resolution_time-clock.adb-pentium");
+      when "ppc32" =>
+         for Source_Files use
+            Source_Files & (
+               "bc-support-high_resolution_time.adb",
+               "bc-support-high_resolution_time.ads",
+               "bc-support-high_resolution_time-clock.adb-ppc32");
+      when "AXP" =>
+         for Source_Files use Source_Files;
+   end case;
+
 end Booch_95;
 
 ----------------------------------------------------------------------------
 --  $Log$
+--  Revision 1.1  2005/10/10 16:04:54  krischik
+--  Indefinite container variants and GNAT project files.
+--
 ----------------------------------------------------------------------------
 --  vim: textwidth=0 nowrap tabstop=8 shiftwidth=3 softtabstop=3 expandtab
 --  vim: filetype=ada encoding=latin1 fileformat=unix
