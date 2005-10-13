@@ -1,5 +1,5 @@
 --  Copyright 1998-1999 Pat Rogers
---  Copyright 1999-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1999-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -37,10 +37,10 @@ package body BC.Support.Unmanaged_Storage is
                        Storage_Address : out System.Address;
                        Size_In_Storage_Elements : SSE.Storage_Count;
                        Alignment : SSE.Storage_Count) is
-      pragma Unreferenced (The_Pool);
+      pragma Warnings (Off, The_Pool);
    begin
       SSP.Allocate (SSP.Root_Storage_Pool'Class
-                    (Default_Access_Type'Storage_Pool),
+                      (Default_Access_Type'Storage_Pool),
                     Storage_Address,
                     Size_In_Storage_Elements,
                     Alignment);
@@ -51,10 +51,10 @@ package body BC.Support.Unmanaged_Storage is
                          Storage_Address : System.Address;
                          Size_In_Storage_Elements : SSE.Storage_Count;
                          Alignment : SSE.Storage_Count) is
-   	pragma Unreferenced (The_Pool);
+      pragma Warnings (Off, The_Pool);
    begin
       SSP.Deallocate (SSP.Root_Storage_Pool'Class
-                      (Default_Access_Type'Storage_Pool),
+                        (Default_Access_Type'Storage_Pool),
                       Storage_Address,
                       Size_In_Storage_Elements,
                       Alignment);
@@ -62,10 +62,10 @@ package body BC.Support.Unmanaged_Storage is
 
 
    function Storage_Size (This : Pool) return SSE.Storage_Count is
-   	pragma Unreferenced (This);
+      pragma Warnings (Off, This);
    begin
       return SSP.Storage_Size (SSP.Root_Storage_Pool'Class
-                               (Default_Access_Type'Storage_Pool));
+                                 (Default_Access_Type'Storage_Pool));
    end Storage_Size;
 
 
