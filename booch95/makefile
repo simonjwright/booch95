@@ -236,6 +236,60 @@ TESTABLE += tree_test
 TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs]
 tree_test: force
 
+ADA_SOURCE += \
+bc-indefinite_containers.adb \
+bc-indefinite_containers.ads \
+bc-indefinite_containers-collections.adb \
+bc-indefinite_containers-collections.ads \
+bc-indefinite_containers-collections-bounded.adb \
+bc-indefinite_containers-collections-bounded.ads \
+bc-indefinite_containers-collections-dynamic.adb \
+bc-indefinite_containers-collections-dynamic.ads \
+bc-indefinite_containers-collections-ordered.ads \
+bc-indefinite_containers-collections-ordered-bounded.adb    \
+bc-indefinite_containers-collections-ordered-bounded.ads    \
+bc-indefinite_containers-collections-ordered-dynamic.adb    \
+bc-indefinite_containers-collections-ordered-dynamic.ads    \
+bc-indefinite_containers-collections-ordered-unbounded.adb  \
+bc-indefinite_containers-collections-ordered-unbounded.ads  \
+bc-indefinite_containers-collections-ordered-unmanaged.adb  \
+bc-indefinite_containers-collections-ordered-unmanaged.ads  \
+bc-indefinite_containers-collections-unbounded.adb          \
+bc-indefinite_containers-collections-unbounded.ads          \
+bc-indefinite_containers-collections-unmanaged.adb          \
+bc-indefinite_containers-collections-unmanaged.ads          \
+bc-indefinite_containers-indefinite_iterators.adb           \
+bc-indefinite_containers-indefinite_iterators.ads           \
+bc-indefinite_containers-queues.adb                         \
+bc-indefinite_containers-queues.ads                         \
+bc-indefinite_containers-queues-bounded.adb                 \
+bc-indefinite_containers-queues-bounded.ads                 \
+bc-indefinite_containers-queues-dynamic.adb                 \
+bc-indefinite_containers-queues-dynamic.ads                 \
+bc-indefinite_containers-queues-ordered.ads                 \
+bc-indefinite_containers-queues-ordered-bounded.adb         \
+bc-indefinite_containers-queues-ordered-bounded.ads         \
+bc-indefinite_containers-queues-ordered-dynamic.adb         \
+bc-indefinite_containers-queues-ordered-dynamic.ads         \
+bc-indefinite_containers-queues-ordered-unbounded.adb       \
+bc-indefinite_containers-queues-ordered-unbounded.ads       \
+bc-indefinite_containers-queues-ordered-unmanaged.adb       \
+bc-indefinite_containers-queues-ordered-unmanaged.ads       \
+bc-indefinite_containers-queues-unbounded.adb               \
+bc-indefinite_containers-queues-unbounded.ads               \
+bc-indefinite_containers-queues-unmanaged.adb               \
+bc-indefinite_containers-queues-unmanaged.ads               \
+bc-support-indefinite_bounded.adb                           \
+bc-support-indefinite_bounded.ads                           \
+bc-support-indefinite_dynamic.adb                           \
+bc-support-indefinite_dynamic.ads                           \
+bc-support-indefinite_reference.adb                         \
+bc-support-indefinite_reference.ads                         \
+bc-support-indefinite_unbounded.adb                         \
+bc-support-indefinite_unbounded.ads                         \
+bc-support-indefinite_unmanaged.adb                         \
+bc-support-indefinite_unmanaged.ads                         
+
 testable: $(TESTABLE)
 
 ########
@@ -326,6 +380,7 @@ DATE = $(shell date +%Y%m%d)$(SUBRELEASE)
 
 DISTRIBUTION_FILES = \
 bc-$(DATE).tgz \
+bc-$(DATE).tar.bz \
 bc-$(DATE).zip \
 bc-html-$(DATE).zip \
 COPYING
@@ -361,8 +416,14 @@ bc-$(DATE): force
 bc-$(DATE).tgz: bc-$(DATE)
 	tar zcvf $@ $</
 
+bc-$(DATE).tar.bz: bc-$(DATE)
+	tar --create --verbose --bzip2 --file=$@ $</
+
 bc-$(DATE).zip: bc-$(DATE)
 	zip -lr $@ $</*
+
+bc-$(DATE).7z: bc-$(DATE)
+	7za a -r $@ $</
 
 bc-$(DATE).src: $(ADA_SOURCE) $(TEST_SRC) $(DEMO_SRC)
 	cat $(ADA_SOURCE) $(TEST_SRC) $(DEMO_SRC) > $@
