@@ -2,6 +2,7 @@
 --  Copyright 2005 Martin Krischik
 --  Copyright 1994-1997 David Weller
 --  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 2005 Martin Krischik
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
