@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -60,7 +60,7 @@ package body BC.Containers.Sets.Bounded is
 
    function Available (S : Unconstrained_Set) return Natural is
    begin
-      return Maximum_Size - S.Rep.Size;
+      return S.Maximum_Size - S.Rep.Size;
    end Available;
 
    function Extent (S : Unconstrained_Set) return Natural is

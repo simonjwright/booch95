@@ -60,7 +60,7 @@ package body BC.Containers.Bags.Bounded is
 
    function Available (B : Unconstrained_Bag) return Natural is
    begin
-      return Maximum_Size - B.Rep.Size;
+      return B.Maximum_Size - B.Rep.Size;
    end Available;
 
    function Extent (B : Unconstrained_Bag) return Natural is
