@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -74,7 +74,8 @@ package BC.Containers.Collections.Bounded is
    --  Replace the item at the given index with the given item.
 
    function Available (C : in Unconstrained_Collection) return Natural;
-   --  Indicated number of empty "Item slots" left in the collection.
+   --  Indicates the number of empty "Item slots" left in the
+   --  collection.
 
    function Length (C : Unconstrained_Collection) return Natural;
    --  Return the number of items in the collection.
