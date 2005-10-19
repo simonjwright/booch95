@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -82,9 +82,7 @@ package BC.Containers.Maps.Bounded is
    --  BC.Not_Found. Otherwise, remove the key/item binding.
 
    function Available (M : Unconstrained_Map) return Natural;
-   --  Return the number of unused slots in the map. Note, since hash
-   --  buckets are of fixed size in the bounded map it will probably
-   --  not be possible to use all these slots.
+   --  Return the number of unused slots in the map.
 
    function Extent (M : Unconstrained_Map) return Natural;
    --  Return the number of key/item bindings in the map.

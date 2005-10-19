@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -79,9 +79,7 @@ package BC.Containers.Sets.Bounded is
    --  BC.Not_Found. Otherwise, remove the item from the set.
 
    function Available (S : Unconstrained_Set) return Natural;
-   --  Return the number of unused slots in the set. Note, since hash
-   --  buckets are of fixed size in the bounded set it will probably
-   --  not be possible to use all these slots.
+   --  Return the number of unused slots in the set.
 
    function Extent (S : Unconstrained_Set) return Natural;
    --  Return the number of distinct items in the set.
