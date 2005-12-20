@@ -380,7 +380,7 @@ DATE = $(shell date +%Y%m%d)$(SUBRELEASE)
 
 DISTRIBUTION_FILES = \
 bc-$(DATE).tgz \
-bc-$(DATE).tar.bz \
+bc-$(DATE).tar.bz2 \
 bc-$(DATE).zip \
 bc-html-$(DATE).zip \
 COPYING
@@ -416,7 +416,7 @@ bc-$(DATE): force
 bc-$(DATE).tgz: bc-$(DATE)
 	tar zcvf $@ $</
 
-bc-$(DATE).tar.bz: bc-$(DATE)
+bc-$(DATE).tar.bz2: bc-$(DATE)
 	tar --create --verbose --bzip2 --file=$@ $</
 
 bc-$(DATE).zip: bc-$(DATE)
