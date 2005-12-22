@@ -237,6 +237,16 @@ TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs]
 tree_test: force
 
 ADA_SOURCE += \
+bc-simple_collections.adb \
+bc-simple_collections.ads \
+bc-support-standard_deviations.adb \
+bc-trees-avl_trees-iterators.adb \
+bc-support-array_streams.adb \
+bc-support-standard_deviations.ads \
+bc-trees-avl_trees-iterators.ads \
+bc-support-array_streams.ads
+
+ADA_SOURCE += \
 bc-indefinite_containers.adb \
 bc-indefinite_containers.ads \
 bc-indefinite_containers-collections.adb \
@@ -406,6 +416,12 @@ bc-$(DATE): force
 	cp -p \
 	  bc-support-high_resolution_time-clock.adb-pentium \
 	  $@/bc-support-high_resolution_time-clock.adb
+	mkdir $@/GNAT 
+	cp --target-directory=$@/GNAT   \
+	    GNAT/Makefile               \
+	    GNAT/booch_95.gpr           \
+	    GNAT/gnat-booch.sh          \
+	    GNAT/gnat-booch.conf
 	mkdir $@/test
 	cp makefile-test $@/test/makefile
 	tar cf - $(TEST_SRC) | (cd $@/test; tar xvf -)
@@ -432,3 +448,7 @@ bc-html-$(DATE).zip: force
 	(cd html; zip ../$@ x.ada *.gif *.jpg *.html coldframe-hash.{tgz,zip})
 
 .PHONY: force
+
+
+#vim: textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab
+#vim: filetype=make encoding=utf-8 fileformat=unix
