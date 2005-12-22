@@ -45,7 +45,7 @@ OSID    := Linux
 
 ifeq (${OS},Windows_NT)
 	OSID	:= Windows_NT
-	CPUID	:= i686
+	CPUID	:= i586
 	MKDIR	:= /bin/mkdir --verbose --parents
 	DELETE	:= /usr/bin/rm --verbose
 endif
@@ -57,7 +57,7 @@ endif
 
 ifdef OS2_SHELL
 	OSID	:= OS2
-	CPUID	:= i686
+	CPUID	:= i586
 	MKDIR	:= mkdir
 	DELETE	:= rm --verbose
 endif
@@ -72,7 +72,7 @@ endif
 ifeq (${OSID}, Darwin)
 	OSID	:= Darwin
 	CPUID	:= $(shell uname -p)
-	ifeq ($(CPUID), powerpc)
+	ifeq ($(CPUID),powerpc)
 		CPUID	:= ppc32
 	else
 		# errm ...
@@ -479,6 +479,10 @@ clean_generate:
 
 ############################################################################
 #	$Log$
+#	Revision 1.2  2005/11/05 18:25:54  simonjwright
+#	Removed the Modified part of the GPL notice.
+#	Some (incomplete) Darwin-ppc32 changes.
+#	
 #	Revision 1.1  2005/10/10 16:04:54  krischik
 #	Indefinite container variants and GNAT project files.
 #	
