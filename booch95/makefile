@@ -414,6 +414,10 @@ bc-$(DATE): force
 	mkdir $@
 	tar cf - $(SOURCE) | (cd $@; tar xvf -)
 	cp -p \
+          --target-directory=$@                             \
+	  bc-support-high_resolution_time-clock.adb-pentium \
+          bc-support-high_resolution_time-clock.adb-ppc32
+	cp -p \
 	  bc-support-high_resolution_time-clock.adb-pentium \
 	  $@/bc-support-high_resolution_time-clock.adb
 	mkdir $@/GNAT 
