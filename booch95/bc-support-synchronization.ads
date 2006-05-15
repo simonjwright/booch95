@@ -96,7 +96,6 @@ package BC.Support.Synchronization is
    --    -- the monitor is unlocked as L is finalized, even if an exception
    --    -- occurs
 
---     type Lock_Base is abstract tagged limited private;
    type Lock_Base
       is abstract new Ada.Finalization.Limited_Controlled with private;
 
@@ -105,8 +104,8 @@ package BC.Support.Synchronization is
    is new Lock_Base with private;
 
    --  Read_ and Write_ Locks support multiple reader/single writer
-   --  access provided the given Monitor supports it; otherwise it --
-   --  merely provides mutual exclusion.
+   --  access provided the given Monitor supports it; otherwise they
+   --  merely provide mutual exclusion.
    type Read_Lock (Using : access Monitor_Base'Class)
    is new Lock_Base with private;
 
