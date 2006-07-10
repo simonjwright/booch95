@@ -414,18 +414,19 @@ bc-$(DATE): force
 	mkdir $@
 	tar cf - $(SOURCE) | (cd $@; tar xvf -)
 	cp -p \
-          --target-directory=$@                             \
 	  bc-support-high_resolution_time-clock.adb-pentium \
-          bc-support-high_resolution_time-clock.adb-ppc32
+          bc-support-high_resolution_time-clock.adb-ppc32   \
+	  $@
 	cp -p \
 	  bc-support-high_resolution_time-clock.adb-pentium \
 	  $@/bc-support-high_resolution_time-clock.adb
 	mkdir $@/GNAT 
-	cp --target-directory=$@/GNAT   \
+	cp -p \
 	    GNAT/Makefile               \
 	    GNAT/booch_95.gpr           \
 	    GNAT/gnat-booch.sh          \
-	    GNAT/gnat-booch.conf
+	    GNAT/gnat-booch.conf        \
+	    $@/GNAT
 	mkdir $@/test
 	cp makefile-test $@/test/makefile
 	tar cf - $(TEST_SRC) | (cd $@/test; tar xvf -)
