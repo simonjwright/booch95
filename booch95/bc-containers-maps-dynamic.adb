@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2006 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -111,17 +111,16 @@ package body BC.Containers.Maps.Dynamic is
 
    --  Null containers
 
-   Empty_Container : Map;
-   pragma Warnings (Off, Empty_Container);
-
    function Null_Container return Map is
+      Empty_Container : Map;
+      pragma Warnings (Off, Empty_Container);
    begin
       return Empty_Container;
    end Null_Container;
 
    --  Iterators
 
-   --  Bodge to make it easier to convert to the real
+   --  XXX bodge to make it easier to convert to the real
    --  Unconstrained_Map later.
    subtype Unconstrained_Map is Map;
 
