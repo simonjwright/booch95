@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2006 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -116,10 +116,9 @@ package body BC.Containers.Sets.Dynamic is
 
    --  Null containers
 
-   Empty_Container : Set;
-   pragma Warnings (Off, Empty_Container);
-
    function Null_Container return Set is
+      Empty_Container : Set;
+      pragma Warnings (Off, Empty_Container);
    begin
       return Empty_Container;
    end Null_Container;
