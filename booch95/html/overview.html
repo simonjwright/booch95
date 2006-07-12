@@ -1,216 +1,160 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<HTML VERSION="2.0">
-<HEAD>
-<TITLE>The Ada95 Booch Components (Overview)</TITLE>
-</HEAD>
-<BODY BGCOLOR="#ffffff">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html version="2.0" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 1st December 2004), see www.w3.org" />
+<title>The Ada95 Booch Components (Overview)</title>
+</head>
+<body bgcolor="#FFFFFF">
 <table width="100%">
 <tr>
-<td><img src="ada95lgo.gif" alt="The (free) Ada95 Booch Components" >
-<td align="right"><a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=95861&amp;type=5" width="210" height="62" border="0" alt="SourceForge.net Logo"/></a>
+<td><img src="ada95lgo.gif" alt=
+"The (free) Ada95 Booch Components" /></td>
+<td align="right"><a href="http://sourceforge.net"><img src=
+"http://sourceforge.net/sflogo.php?group_id=95861&amp;type=5"
+width="210" height="62" border="0" alt=
+"SourceForge.net Logo" /></a></td>
 </tr>
 </table>
-
-<P><I>Overview</I> </P>
-
-Please note that this package is a work-in-progress. Some documentation,
-commentaries, statistics, source code, etc. will change over the course
-of time. If anything is updated on the Booch Components, you'll see it here
-first, so be sure to check from time to time.<p>
-
-<P><IMG SRC="greenline.gif" ALT="--" WIDTH="100%" HEIGHT="4"> </P>
-
+<p><i>Overview</i></p>
+Please note that this package is a work-in-progress. Some
+documentation, commentaries, statistics, source code, etc. will
+change over the course of time. If anything is updated on the Booch
+Components, you'll see it here first, so be sure to check from time
+to time.
+<p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>
 <ul>
-<li><a href="#history">History</a>
-<li><a href="#licence">Licence</a>
-<li><a href="#schedule">Schedule</a>
-<li><a href="#tests">Tests, demonstrations and contributions</a>
-<li><a href="#issues">Issues</a>
+<li><a href="#history">History</a></li>
+<li><a href="#licence">Licence</a></li>
+<li><a href="#schedule">Schedule</a></li>
+<li><a href="#tests">Tests, demonstrations and
+contributions</a></li>
+<li><a href="#issues">Issues</a></li>
 </ul>
-
-<P><IMG SRC="greenline.gif" ALT="--" WIDTH="100%" HEIGHT="4"> </P>
-
-<H2><a name="history">History</a></H2>
-
-<p>The Ada 95 Booch Components began in late 1994 when <a
-href="mailto:dgweller@despammed.com">David Weller</a> began a port of
+<p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>
+<h2><a name="history" id="history">History</a></h2>
+<p>The Ada 95 Booch Components began in late 1994 when <a href=
+"mailto:dgweller@despammed.com">David Weller</a> began a port of
 Grady Booch's C++ components.</p>
-
-<p>A first beta release was soon available, followed by a release in
-February 1997.</p>
-
-<p>In December of that year, David concluded that he wouldn't be able
-to continue with the Components and appealed on the <A
-HREF="http://www.adahome.com/FAQ/team-ada.html">Team Ada</A>
-mailing list for a volunteer. Having already found the Components very
-useful, I got my employers' permission to take them on (not a speedy
-process); work began 18.vii.98.</p>
-
-<p>Storage Management was added in August 1998 by
-<a href="mailto:pat@classwide.com">Pat Rogers</a>, thanks very much
-Pat!  (you may like to visit <a href="http://www.classwide.com">Pat's
-web site</a>).
-
-<h2><a name="license">License</a></h2>
-
-<p>The Components are issued under the GNU General Public Licence. The
-units that you need to instantiate and compile in order to use the
-Components in your own software are licenced under the "GNAT-modified
-GPL", which adds the following to the normal GPL permissions:
-
-<blockquote>
-As a special exception, if other files instantiate generics from this
-unit, or you link this unit with other files to produce an executable,
-this unit does not by itself cause the resulting executable to be
-covered by the GNU General Public License.  This exception does not
-however invalidate any other reasons why the executable file might be
-covered by the GNU Public License.
-</blockquote>
-
-<H2><a name="schedule">Schedule</a></H2>
-
-<p>The current version has the following components available (the <font
-color=red>red</font> parts, if any, are new since the last
+<p>A first beta release was soon available, followed by a release
+in February 1997.</p>
+<p>In December of that year, David concluded that he wouldn't be
+able to continue with the Components and appealed on the <a href=
+"http://www.adahome.com/FAQ/team-ada.html">Team Ada</a> mailing
+list for a volunteer. Having already found the Components very
+useful, I got my employers' permission to take them on (not a
+speedy process); work began 18.vii.98.</p>
+<p>Storage Management was added in August 1998 by <a href=
+"mailto:pat@classwide.com">Pat Rogers</a>, thanks very much Pat!
+(you may like to visit <a href="http://www.classwide.com">Pat's web
+site</a>).</p>
+<h2><a name="license" id="license">License</a></h2>
+<p>The Components are issued under the GNU General Public Licence.
+The units that you need to instantiate and compile in order to use
+the Components in your own software are licenced under the
+"GNAT-modified GPL", which adds the following to the normal GPL
+permissions:</p>
+<blockquote>As a special exception, if other files instantiate
+generics from this unit, or you link this unit with other files to
+produce an executable, this unit does not by itself cause the
+resulting executable to be covered by the GNU General Public
+License. This exception does not however invalidate any other
+reasons why the executable file might be covered by the GNU Public
+License.</blockquote>
+<h2><a name="schedule" id="schedule">Schedule</a></h2>
+<p>The current version has the following components available (the
+<font color="red">red</font> parts, if any, are new since the last
 release):</p>
-
-<UL>
-
-<li>Bounded, Dynamic, Unbounded and Unmanaged Bags
-
-<li>Bounded, Dynamic, Unbounded and Unmanaged Collections and Ordered
-Collections
-
-<li>Bounded, Dynamic, Unbounded and Unmanaged Deques
-
-<li>Directed and Undirected Graphs
-
-<LI>Single and Double Lists 
-
-<li>Bounded, Dynamic, Unbounded and Unmanaged Maps
-
-<LI>Bounded, Dynamic, Unbounded and Unmanaged Queues and Ordered
-Queues
-
-<LI>Bounded, Dynamic, Unbounded and Unmanaged Rings
-
-<li>Bounded, Dynamic, Unbounded and Unmanaged Sets
-
-<LI>Bounded, Dynamic, Unbounded and Unmanaged Stacks
-
-<li>AVL Trees
-
-<LI>Binary Trees
 <ul>
-<li>Pre-order, in-order and post-order iteration
-</ul>
-
-<LI>Multiway Trees
+<li>Bounded, Dynamic, Unbounded and Unmanaged Bags</li>
+<li>Bounded, Dynamic, Unbounded and Unmanaged Collections and
+Ordered Collections</li>
+<li>Bounded, Dynamic, Unbounded and Unmanaged Deques</li>
+<li>Directed and Undirected Graphs</li>
+<li>Single and Double Lists</li>
+<li>Bounded, Dynamic, Unbounded and Unmanaged Maps</li>
+<li>Bounded, Dynamic, Unbounded and Unmanaged Queues and Ordered
+Queues</li>
+<li>Bounded, Dynamic, Unbounded and Unmanaged Rings</li>
+<li>Bounded, Dynamic, Unbounded and Unmanaged Sets</li>
+<li>Bounded, Dynamic, Unbounded and Unmanaged Stacks</li>
+<li>AVL Trees</li>
+<li>Binary Trees
 <ul>
-<li>Pre-order and post-order iteration
+<li>Pre-order, in-order and post-order iteration</li>
 </ul>
-
-<li>Smart Pointers
-
-</UL>
-
-<P>See the <A HREF="documentation.html">Component Documentation</A> for
-the details.</P>
-
-<h2><a name="tests">Tests</a>, demonstrations and contributions</h2>
-
+</li>
+<li>Multiway Trees
+<ul>
+<li>Pre-order and post-order iteration</li>
+</ul>
+</li>
+<li>Smart Pointers</li>
+</ul>
+<p>See the <a href="documentation.html">Component Documentation</a>
+for the details.</p>
+<h2><a name="tests" id="tests">Tests</a>, demonstrations and
+contributions</h2>
 The Components are tested with GNAT. I try hard not to release
-anything that doesn't work with the latest public version.<p>
-
-I also use the Aonix ObjectAda compiler (the Special Edition;
-currently I am stuck at 7.2, because of some DLL hell which prevents
-7.2.1 from working! I wouldn't regard a problem with OA as a
-<em>very</em> good reason for withholding a feature, though.<p>
-
-You'll find a set of notes on various <a
-href="compiler-problems.html">compiler problems</a>.<p>
-
-The Components come with <a href="demos.html">test and demonstration
-code samples</a>.<p>
-
-There is also a collection of <a href="contrib/">contributions</a>.
-
-<h2><a name="issues">Issues</a></h2>
-
+anything that doesn't work with the latest public version.
+<p>I also use the Aonix ObjectAda compiler (the Special Edition;
+currently I am stuck at 7.2, because of some DLL hell which
+prevents 7.2.1 from working! I wouldn't regard a problem with OA as
+a <em>very</em> good reason for withholding a feature, though.</p>
+<p>You'll find a set of notes on various <a href=
+"compiler-problems.html">compiler problems</a>.</p>
+<p>The Components come with <a href="demos.html">test and
+demonstration code samples</a>.</p>
+<p>There is also a collection of <a href=
+"contrib/">contributions</a>.</p>
+<h2><a name="issues" id="issues">Issues</a></h2>
 <p>Please feel free to <a href="mailto:simon@pushface.org">mail
 me</a> with any thoughts you may have!</p>
-
 <dl>
-
 <dt>Lists; to use or not to use?</dt>
-
-<dd>
-
-Many people, faced with the BCs for the first time, choose Lists
-(Single or Double) as their standard Container.
-
+<dd>Many people, faced with the BCs for the first time, choose
+Lists (Single or Double) as their standard Container.
 <p>This is probably <em>not</em> the best choice. Lists are complex
-entities which, I suppose, would be useful if you were implementing a
-list-processing engine like Lisp.
-
+entities which, I suppose, would be useful if you were implementing
+a list-processing engine like Lisp.</p>
 <p><font color="red">You'll be a lot better off using
-Collections!</font>
-
-<p>
-
+Collections!</font></p>
 </dd>
-
 <dt>Hierarchy, Graphs, Lists and Trees</dt>
-
-<dd>
-
-Most of the Components are derived from
+<dd>Most of the Components are derived from
 <tt>BC.Containers.Container</tt> (and are in packages that are
-children of <tt>BC.Containers</tt>). The only feature common at this
-level is iteration; implicit in the fact that
-<tt>BC.Containers</tt> is a generic package parameterised by the type
-<tt>Item</tt> is that Containers contain just one sort of thing.<p>
-
-This works fine except for Graphs; a Graph is a collection of Vertices
-(OK so far), while Vertices are connected by (not collections of)
-Arcs. Graphs will remain outside the Containers hierarchy.<p>
-
-Trees aren't Containers, largely because of the difficulty of
-supporting standard Iterators in a non-linear structure like a Tree,
-but also because they are "polylithic" (Grady's term, implies
-structural sharing).<p>
-
-Lists aren't Containers, because they are polylithic.<p>
-
-That said, I've tried to use a common style throughout.<p>
-
+children of <tt>BC.Containers</tt>). The only feature common at
+this level is iteration; implicit in the fact that
+<tt>BC.Containers</tt> is a generic package parameterised by the
+type <tt>Item</tt> is that Containers contain just one sort of
+thing.
+<p>This works fine except for Graphs; a Graph is a collection of
+Vertices (OK so far), while Vertices are connected by (not
+collections of) Arcs. Graphs will remain outside the Containers
+hierarchy.</p>
+<p>Trees aren't Containers, largely because of the difficulty of
+supporting standard Iterators in a non-linear structure like a
+Tree, but also because they are "polylithic" (Grady's term, implies
+structural sharing).</p>
+<p>Lists aren't Containers, because they are polylithic.</p>
+<p>That said, I've tried to use a common style throughout.</p>
 </dd>
-
 <dt>Compilers</dt>
-
-<dd>
-
-The new Aonix ObjectAda 7.2 demo compiler handles the stock Components
-without change, so the old "Aonix-only" versions of the test programs,
-which omitted Dynamic forms, are no longer needed.
-
-<p>The Components work well (for me) with GCC-3.2 and prerelease 3.3
-compilers.
-
+<dd>The new Aonix ObjectAda 7.2 demo compiler handles the stock
+Components without change, so the old "Aonix-only" versions of the
+test programs, which omitted Dynamic forms, are no longer needed.
+<p>The Components work well (for me) with GCC-3.2 and prerelease
+3.3 compilers.</p>
 </dd>
-
 </dl>
-
-<P><IMG SRC="greenline.gif" ALT="--" WIDTH="100%" HEIGHT="4"> </P>
-
-<P><A HREF="index.html">[index]</A></p>
-
-<p><i>
-<script>
+<p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>
+<p><a href="index.html">[index]</a></p>
+<p><i><script type="text/javascript">
+//<![CDATA[
 document.write("Last update: ");
 document.write(document.lastModified);
-</script>
-</i></p>
-
-</BODY>
-</HTML>
+//]]>
+</script></i></p>
+</body>
+</html>
