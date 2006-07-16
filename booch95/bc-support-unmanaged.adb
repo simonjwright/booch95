@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2003-2005 Simon Wright <simon@pushface.org>
+--  Copyright 2003-2006 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -190,8 +190,8 @@ package body BC.Support.Unmanaged is
          begin
             Update_Cache (Obj, After);
             Temp_Node := Create (Elem,
-                                       Previous => Obj.Cache,
-                                       Next => Obj.Cache.Next);
+                                 Previous => Obj.Cache,
+                                 Next => Obj.Cache.Next);
             if Temp_Node.Previous /= null then
                Temp_Node.Previous.Next := Temp_Node;
             end if;
@@ -360,8 +360,8 @@ package body BC.Support.Unmanaged is
          Tmp := Tmp.Previous;  -- move to previous node from orig list
          while Tmp /= null loop
             U.Rep := Create (Tmp.Element,
-                                   Previous => null,
-                                   Next => U.Rep);
+                             Previous => null,
+                             Next => U.Rep);
             Tmp := Tmp.Previous;
          end loop;
       end if;
