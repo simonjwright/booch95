@@ -1,13 +1,13 @@
---  Project file (GCC-3, GNAT-3.15) for Booch Components
+--  Project file for Booch Components
 --  $Id$
 
 project BC is
 
-  --  AUnit is assumed installed in a parallel directory.
-  AUnit := external ("AUNIT", "aunit-1.01");
+  --  AUnit is assumed installed in the user's home directory.
+  AUnit := external ("AUNIT", "AUnit-1.03p");
 
   for Source_Dirs use (".",
-                       "../" & AUnit & "/aunit/**");
+                       external ("HOME") & "/" & AUnit & "/aunit/**");
 
   for Object_Dir use ".build";
 
