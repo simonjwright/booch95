@@ -29,64 +29,48 @@ with Ada.Unchecked_Deallocation;
 package body BC.Support.Auto_Pointers is
 
 
-   procedure Delete is new Ada.Unchecked_Deallocation (T, P);
-
-
-   function Create (With_Value : T) return Pointer is
+   function Create (Value : P) return Pointer is
       Result : Pointer;
    begin
-      Result.The_Owner.The_Owned_P :=
-        new Owned_P'(The_Owner => Result.The_Owner'Unchecked_Access,
-                     The_P => new T'(With_Value));
+      Result.The_Owner.The_Object :=
+        new Object'(The_Owner => Result.The_Owner'Unchecked_Access,
+                    The_P => Value);
       return Result;
    end Create;
 
 
-   function Value (Ptr : Pointer) return T is
+   function Value (Ptr : Pointer) return P is
    begin
-      return Ptr.The_Owner.The_Owned_P.The_P.all;
-   end Value;
-
-
-   procedure Set (Ptr : in out Pointer; To : T) is
-   begin
-      if Ptr.The_Owner.The_Owned_P = null then
-         Ptr.The_Owner.The_Owned_P :=
-           new Owned_P'(The_Owner => Ptr.The_Owner'Unchecked_Access,
-                        The_P => new T'(To));
-      else
-         Delete (Ptr.The_Owner.The_Owned_P.The_P);
-         Ptr.The_Owner.The_Owned_P.The_P := new T'(To);
-      end if;
-   end Set;
-
-
-   function Accessor (Ptr : Pointer) return P is
-   begin
-      if Ptr.The_Owner.The_Owned_P = null then
+      if Ptr.The_Owner.The_Object = null then
          return null;
       else
-         return Ptr.The_Owner.The_Owned_P.The_P;
+         return Ptr.The_Owner.The_Object.The_P;
       end if;
-   end Accessor;
+   end Value;
 
 
    procedure Adjust (Obj : in out Pointer) is
    begin
-      if Obj.The_Owner.The_Owned_P /= null then
-         Obj.The_Owner.The_Owned_P.The_Owner := null;
-         Obj.The_Owner.The_Owned_P.The_Owner := Obj.The_Owner'Unchecked_Access;
+      if Obj.The_Owner.The_Object /= null then
+         declare
+            The_Object : Object_P renames Obj.The_Owner.The_Object;
+            The_Objects_Owner : Owner_P renames The_Object.The_Owner;
+         begin
+            The_Objects_Owner.The_Object := null;
+            The_Objects_Owner := Obj.The_Owner'Unchecked_Access;
+         end;
       end if;
    end Adjust;
 
 
-   procedure Delete is new Ada.Unchecked_Deallocation (Owned_P, Owned_P_P);
+   procedure Delete is new Ada.Unchecked_Deallocation (T, P);
+   procedure Delete is new Ada.Unchecked_Deallocation (Object, Object_P);
 
    procedure Finalize (Obj : in out Pointer) is
    begin
-      if Obj.The_Owner.The_Owned_P /= null then
-         Delete (Obj.The_Owner.The_Owned_P.The_P);
-         Delete (Obj.The_Owner.The_Owned_P);
+      if Obj.The_Owner.The_Object /= null then
+         Delete (Obj.The_Owner.The_Object.The_P);
+         Delete (Obj.The_Owner.The_Object);
       end if;
    end Finalize;
 
