@@ -27,44 +27,44 @@
 with Ada.Finalization;
 
 generic
-   type T (<>) is private;
+   type T (<>) is limited private;
    type P is access T;
 package BC.Support.Auto_Pointers is
 
    pragma Elaborate_Body;
 
    type Pointer is private;
-   --  A Pointer variable encapsulates a T value.
+   --  A Pointer variable encapsulates an accessor of type P (to a T).
+   --
+   --  When a Pointer is assigned, ownership of the accessor and of
+   --  the T it designates is transferred.
+   --
+   --  When a Pointer that owns an accessor is finalized, the accessor
+   --  is deallocated.
 
-   function Create (With_Value : T) return Pointer;
-   pragma Inline (Create);
-   --  Returns a new encapsulation.
+   function Create (Value : P) return Pointer;
+   --  Returns a new encapsulation. You must NOT deallocate the Value
+   --  passed; it will be deallocated when an owning Pointer is
+   --  finalized.
 
-   function Value (Ptr : Pointer) return T;
+   function Value (Ptr : Pointer) return P;
    pragma Inline (Value);
-   --  Returns the encapsulated value.
-
-   procedure Set (Ptr : in out Pointer; To : T);
-   pragma Inline (Set);
-   --  Updates the encapsulated value.
-
-   function Accessor (Ptr : Pointer) return P;
-   pragma Inline (Accessor);
-   --  Designates the encapsulated value.
+   --  Returns the encapsulated pointer, which will be null if
+   --  ownership has been assigned away.
 
 private
 
    type Owner;
    type Owner_P is access all Owner;
 
-   type Owned_P is record
+   type Object is record
       The_Owner : Owner_P;
       The_P : P;
    end record;
-   type Owned_P_P is access Owned_P;
+   type Object_P is access Object;
 
    type Owner is record
-      The_Owned_P : Owned_P_P;
+      The_Object : Object_P;
    end record;
 
    type Pointer is new Ada.Finalization.Controlled with record
