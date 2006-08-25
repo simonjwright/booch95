@@ -113,7 +113,7 @@ endif
 
 Base_Dir				:= ${CURDIR}
 
-ifeq (${GPR_Target}, "native")
+ifeq (${GPR_Target},native)
 	Debug_Dir			:= ${Base_Dir}/${GPR_OS}-${GPR_CPU}-Debug
 	Release_Dir			:= ${Base_Dir}/${GPR_OS}-${GPR_CPU}-Release
 else
