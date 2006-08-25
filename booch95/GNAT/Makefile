@@ -13,19 +13,16 @@
 #  write to the Free Software Foundation, 59 Temple Place - Suite
 #  330, Boston, MA 02111-1307, USA.
 ############################################################################
-#  $RCSfile$
-#  $Source$
+#  CVS Daten:
 #
 #  $Author$
-#  $Locker$
 #
 #  $Revision$
 #  $Date$
-#  $Modtime:   21 Jan 2003 09:12:46  $
-#  $State$
-#  $Name$
 #
 #  $Id makefile,v 4.17 2004/02/23 13:08:49 krischik Exp $
+#  $HeadURL$
+#
 ############################################################################
 
 .PHONY		: all					#  make all
@@ -41,44 +38,71 @@ vpath %.ads	 ../
 vpath %.adb	 ../
 vpath %.ada	 ../
 
-OSID    := Linux
+ifndef GPR_OS
+	#
+	#  Try to guess GPR setting when they are not allready set.
+	#
+	#  Note 1:	If you set GPR_OS you need to set the other variables mentioned
+	#			here as well.
+	#
+	#  Note 2:	The GNU Ada Project is supplied with a more advanced 
+	#			detector which supports more combinations - including
+	#			cross compilations.
+	#
+	GPR_OS    := Linux
 
-ifeq (${OS},Windows_NT)
-	OSID	:= Windows_NT
-	CPUID	:= i586
-	MKDIR	:= /bin/mkdir --verbose --parents
-	DELETE	:= /usr/bin/rm --verbose
-endif
-
-ifdef sys$login
-	OSID    := VMS
-	CPUID   := APX
-endif
-
-ifdef OS2_SHELL
-	OSID	:= OS2
-	CPUID	:= i586
-	MKDIR	:= mkdir
-	DELETE	:= rm --verbose
-endif
-
-ifeq (${OSID}, Linux)
-	OSID	:= $(shell uname --kernel-name)
-	CPUID	:= $(shell uname --machine)
-	MKDIR	:= mkdir --verbose --parents
-	DELETE	:= rm --verbose
-endif
-
-ifeq (${OSID}, Darwin)
-	OSID	:= Darwin
-	CPUID	:= $(shell uname -p)
-	ifeq ($(CPUID),powerpc)
-		CPUID	:= ppc32
-	else
-		# errm ...
+	ifeq (${OS},Windows_NT)
+		GPR_OS		:= Windows_NT
+		GPR_CPU		:= i586
+		GPR_Target	:= native
+		MKDIR		:= /bin/mkdir --verbose --parents
+		DELETE		:= /usr/bin/rm --verbose
+		GNAT		:= gnat
 	endif
-	MKDIR	:= mkdir -v -p
-	DELETE	:= rm -v
+
+	ifdef sys$login
+		GPR_OS		:= 
+		GPR_CPU		:= APX
+		GPR_Target	:= native
+		GNAT		:= gnat
+		MKDIR		:= CREATE Directory /Log
+		DELETE		:= DELETE /Log
+	endif
+
+	ifdef OS2_SHELL
+		GPR_OS		:= OS2
+		GPR_CPU		:= i586
+		GPR_Target	:= native
+		MKDIR		:= mkdir
+		DELETE		:= rm --verbose
+		GNAT		:= gnat
+	endif
+
+	ifeq (${GPR_OS}, Linux)
+		GPR_OS		:= $(shell uname --kernel-name)
+		GPR_CPU		:= $(shell uname --machine)
+		GPR_Target	:= native
+		MKDIR		:= mkdir --verbose --parents
+		DELETE		:= rm --verbose
+		GNAT		:= gnat
+	endif
+
+	ifeq (${GPR_OS}, Darwin)
+		GPR_OS		:= Darwin
+		GPR_CPU	    := $(shell uname -p)
+		GPR_Target	:= native
+		ifeq ($(GPR_CPU),powerpc)
+			GPR_CPU	:= ppc32
+		else
+			# errm ...
+		endif
+		MKDIR		:= mkdir -v -p
+		DELETE		:= rm -v
+		GNAT		:= gnat
+	endif
+else
+	MKDIR		:= mkdir --verbose --parents
+	DELETE		:= rm --verbose
 endif
 
 ############################################################################
@@ -87,11 +111,17 @@ endif
 #                                                                          #
 ############################################################################
 
-Base_Dir			:= ${CURDIR}
-Debug_Dir			:= ${Base_Dir}/${OSID}-${CPUID}-Debug
-Release_Dir			:= ${Base_Dir}/${OSID}-${CPUID}-Release
+Base_Dir				:= ${CURDIR}
 
-GNAT_Opt			:= "-Xtarget=${CPUID}" "-Xos=${OSID}"
+ifeq (${GPR_Target}, "native")
+	Debug_Dir			:= ${Base_Dir}/${GPR_OS}-${GPR_CPU}-Debug
+	Release_Dir			:= ${Base_Dir}/${GPR_OS}-${GPR_CPU}-Release
+else
+	Debug_Dir			:= ${Base_Dir}/${GPR_Target}-${GPR_CPU}-Debug
+	Release_Dir			:= ${Base_Dir}/${GPR_Target}-${GPR_CPU}-Release
+endif
+
+GNAT_Opt				:= "-XGPR_CPU=${GPR_CPU}" "-XGPR_OS=${GPR_OS}"
 GNAT_Opt_Debug			:= ${GNAT_Opt} "-Xstyle=Debug"
 GNAT_Opt_Release		:= ${GNAT_Opt} "-Xstyle=Release"
 
@@ -101,7 +131,7 @@ all:															\
 debug:															\
 		${Debug_Dir}											\
 		${Debug_Dir}/lib										\
-		${Debug_Dir}/obj										
+		${Debug_Dir}/obj
 	gnat make ${GNAT_Opt_Debug} "-P" booch_95.gpr
 
 release:														\
@@ -157,7 +187,7 @@ ${Release_Dir}/obj:
 #                                                                          #
 ############################################################################
 
-BC_Generated_Files :=																\
+BC_Generated_Files :=													\
 		../bc-support-indefinite_dynamic.ads							\
 		../bc-support-indefinite_dynamic.adb							\
 		../bc-support-indefinite_unbounded.ads							\
@@ -477,15 +507,6 @@ clean_generate:
 		../bc-containers-queues-ordered-unmanaged.adb
 	sarBC --verbose --base --unmanaged --item_without_in --out="$(@)" "$(<)"
 
-############################################################################
-#	$Log$
-#	Revision 1.2  2005/11/05 18:25:54  simonjwright
-#	Removed the Modified part of the GPL notice.
-#	Some (incomplete) Darwin-ppc32 changes.
-#	
-#	Revision 1.1  2005/10/10 16:04:54  krischik
-#	Indefinite container variants and GNAT project files.
-#	
 ############################################################################
 # vim: textwidth=0 nowrap tabstop=4 shiftwidth=4 softtabstop=4 noexpandtab
 # vim: filetype=make encoding=utf-8 fileformat=unix

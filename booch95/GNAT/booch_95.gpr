@@ -11,29 +11,30 @@
 --  Copyright (C) 2005 Martin Krischik
 --
 --  This library is free software; you can redistribute it and/or
---  modify it under terms of the GNU General Public License as
---  published by the Free Software Foundation; either version 2, or
---  (at your option) any later version. This package is distributed in
---  the hope that it will be useful, but WITHOUT ANY WARRANTY; without
---  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
---  PARTICULAR PURPOSE. See the GNU General Public License for more
---  details. You should have received a copy of the GNU General Public
---  License distributed with this package; see file COPYING.  If not,
---  write to the Free Software Foundation, 59 Temple Place - Suite
---  330, Boston, MA 02111-1307, USA.
+--  modify it under the terms of the GNU Library General Public
+--  License as published by the Free Software Foundation; either
+--  version 2 of the License, or (at your option) any later version.
+--
+--  This library is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+--  Library General Public License for more details.
+--
+--  You should have received a copy of the GNU Library General Public
+--  License along with this library; if not, write to the Free
+--  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ----------------------------------------------------------------------------
---  $RCSfile$
---  $Source$
 --
---  $Author$
---  $Locker$
+--  Subversion Data
 --
---  $Revision$
---  $Date$
---  $Modtime:   21 Jan 2003 16:41:10  $
---  $State$
+--    $Author$
 --
---  $Id$
+--    $Revision$
+--    $Date$
+--
+--    $Id$
+--    $HeadURL$
+--
 ----------------------------------------------------------------------------
 --
 -- This file is not to be edited through the project properties in GPS.
@@ -43,18 +44,28 @@ project Booch_95 is
 
    type Style_Type  is ("Debug", "Release");
    type OS_Type     is ("Linux", "OS2", "Windows_NT", "VMS", "Darwin");
-   type Target_Type is ("i686", "x86_64", "AXP", "ppc32");
+   type CPU_Type    is ("i586", "i686", "x86_64", "AXP", "ppc32");
+   type Target_Type is ("native", "mingw32");
 
-   Style  : Style_Type  := external ("style" , "Release");
-   OS     : OS_Type     := external ("os"    , "Linux");
-   Target : Target_Type := external ("target", "i686");
+   Style  : Style_Type  := external ("style"      , "Release");
+   OS     : OS_Type     := external ("GPR_OS"     , "Linux");
+   CPU    : CPU_Type    := external ("GPR_CPU"    , "i686");
+   Target : Target_Type := external ("GPR_Target" , "native");
 
    Base    := ".";
-   Version := "1.0.0";
+   Version := "1.1.0";
 
-   for Exec_Dir     use  Base & "/" & OS & "-" & Target & "-" & Style;
-   for Object_Dir   use  Base & "/" & OS & "-" & Target & "-" & Style & "/obj";
-   for Library_Dir  use  Base & "/" & OS & "-" & Target & "-" & Style & "/lib";
+   case Target is
+      when "native" =>
+         for Exec_Dir     use  Base & "/" & OS & "-" & CPU & "-" & Style;
+         for Object_Dir   use  Base & "/" & OS & "-" & CPU & "-" & Style & "/obj";
+         for Library_Dir  use  Base & "/" & OS & "-" & CPU & "-" & Style & "/lib";
+      when others =>
+         for Exec_Dir     use  Base & "/" & Target & "-" & CPU & "-" & Style;
+         for Object_Dir   use  Base & "/" & Target & "-" & CPU & "-" & Style & "/obj";
+         for Library_Dir  use  Base & "/" & Target & "-" & CPU & "-" & Style & "/lib";
+   end case;
+
    for Source_Dirs  use ("../");
    for Languages    use ("ada");
    for Library_Name use "booch95";
@@ -73,15 +84,27 @@ project Booch_95 is
    end Finder;
 
    package Cross_Reference is
-      for Default_Switches ("ada") use ("-u");
+      for Default_Switches ("ada") use (
+      "-f",       -- Output full path name
+      "-v");      -- Print a 'tags' file for vi
    end Cross_Reference;
 
    package Builder is
       for Default_Switches ("ada") use (
+         "-F",             --  Full project path name in brief error messages
          "-m",             --  Minimal recompilation
          "-j4",            --  Use nnn processes to compile
          "-C",             --  Cache source mappings: invoke compiler with temp mapping file
          "-gnatQ",         --  Don't quit, write ali/tree file even if compile errors
+         "-k",             --  Keep going after compilation errors
+         "-shared",
+         "-E");
+      for Default_Switches ("c") use (
+         "-m",
+         "-j4",
+         "-k",
+         "-C",
+         "-gnatQ",
          "-shared",
          "-E");
 
@@ -90,41 +113,65 @@ project Booch_95 is
          when "Debug" =>
             for Default_Switches ("ada") use
                Builder'Default_Switches ("ada") & (
-                  "-g");   --  Generate debugging information
+                  "-g");                     --  Generate debugging information
+            for Default_Switches ("c") use
+               Builder'Default_Switches ("c") & (
+                  "-g");                     --  Generate debugging information
       end case;
    end Builder;
 
    package Compiler is
       for Default_Switches ("ada") use (
-         "-gnatf",                  --  Full errors. Verbose details, all undefined references
-         "-gnatU",                  --  Enable unique tag for error messages
-         "-gnatwal",                --  All warings enabled
-         "-gnatq",                  --  Don't quit, try semantics, even if parse errors
-         "-gnatQ",                  --  Don't quit, write ali/tree file even if compile errors
-         "-gnati1",                 --  Select character set in sources.
-         "-gnatT4");                --  Compiler tables sizes 4* default
+         "-gnatef",                          -- Full source path in brief error messages
+         "-gnatf",                           -- Full errors. Verbose details, all undefined references
+         "-gnatU",                           -- Enable unique tag for error messages
+         "-gnatwcdfijklmopruvz",             -- All warings enabled
+         "-gnatq",                           -- Don't quit, try semantics, even if parse errors
+         "-gnatQ",                           -- Don't quit, write ali/tree file even if compile errors
+         "-gnati1",                          -- Select character set in sources.
+         "-gnatT4");                         -- Compiler tables sizes 4* default
+
+      for Default_Switches ("c") use (
+         "-Wall");                           -- all warnings
+
+      case OS is
+         when "Windows_NT" =>
+         when others =>
+            for Default_Switches ("ada") use
+            Compiler'Default_Switches ("ada") & (
+               "-fPIC");                     -- Position Independend Code
+         end case;
 
       case Style is
          when "Debug" =>
             for Default_Switches ("ada") use
-               Compiler'Default_Switches ("ada") & (
-                  "-gnata",          --  Enable Assersions.
-                  "-gnato",          --  Enable overflow checking
-                  "-fstack-check",   --  Generate stack checking code
-                  "-gnatVa",         --  Enable selected validity checking mode
-                  "-g");             --  Debug info in binary.
+            Compiler'Default_Switches ("ada") & (
+               "-gnata",                     -- Enable Assersions.
+               "-gnato",                     -- Enable overflow checking
+               "-fstack-check",              -- Generate stack checking code
+               "-gnatVa",                    -- Enable selected validity checking mode
+               "-g");                        -- Debug info in binary.
 
          when "Release" =>
-            for Default_Switches ("ada") use
-               Compiler'Default_Switches ("ada") & (
-                  "-O3",                         --  Optimisation "3"
-                  "-gnatn",                      --  Inline Functions
-                  "-funroll-loops",              --  Unroll Loops
-                  "-Wuninitialized",             --  Warn for uninitialized variables
-                  "-gnaty3abcefhiklmnoprstM79"); --  Layout checks
+           for Default_Switches ("ada") use
+           Compiler'Default_Switches ("ada") & (
+               "-O3",                        -- Optimisation "3"
+               "-gnatn",                     -- Inline Functions
+--             "-gnatN",                     -- Full (frontend) inlining of subprograms
+               "-funroll-loops",             -- Unroll Loops
+               "-Wuninitialized",            -- Warn for uninitialized variables
+               "-gnaty3abcefhiklmnoprstM79", -- Layout checks
+               "-fomit-frame-pointer");      --
+
+           for Default_Switches ("c") use
+           Compiler'Default_Switches ("c") & (
+               "-O3",                         -- Optimisation "3"
+               "-static",                     --
+               "-funroll-loops",              -- Unroll Loops
+               "-fomit-frame-pointer");       --
       end case;
 
-      case Target is
+      case CPU is
          when "x86_64" =>
             for Default_Switches ("ada") use
                Compiler'Default_Switches ("ada") & (
@@ -140,15 +187,18 @@ project Booch_95 is
          when "Release" =>
          when "Debug" =>
             for Default_Switches ("ada") use
-            Binder'Default_Switches ("ada") &
-               ("-E");         -- Tracebacks From Exception Occurrences
+            Binder'Default_Switches ("ada") & (
+               "-E");                        -- Tracebacks From Exception Occurrences
       end case;
    end Binder;
 
    package Linker is
       case Style is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-g");
+            for Default_Switches ("ada") use (
+               "-g");                        -- Debug info in binary.
+            for Default_Switches ("c") use (
+               "-g");      -- Debug info in binary.
          when "Release" =>
             case OS is
                when "VMS" =>
@@ -161,34 +211,48 @@ project Booch_95 is
    package Naming is
       for Specification_Suffix ("ada") use ".ads";
       for Implementation_Suffix ("ada") use ".adb";
-      case Target is
-         when "i686" | "x86_64" =>
+      case CPU is
+         when "i586" | "i686" | "x86_64" =>
             for Separate_Suffix use ".adb-pentium";
          when "ppc32" =>
             for Separate_Suffix use ".adb-ppc32";
          when "AXP" =>
             for Separate_Suffix use ".adb";
       end case;
+      for Specification_Suffix ("c") use ".c";
+      for Implementation_Suffix ("c") use ".h";
    end Naming;
 
    package Ide is
       for Vcs_Kind use "CVS";
-      for Compiler_Command ("c") use "gcc";
+
+      case Target is
+         when "native" =>
+            for Compiler_Command ("c")    use "gcc";
+            for Compiler_Command ("ada")  use "gnatmake";
+            for Gnatlist                  use "gnatls";
+            for Gnat                      use "gnat";
+         when others =>
+            for Compiler_Command ("c")    use Target & "-gcc";
+            for Compiler_Command ("ada")  use Target & "-gnatmake";
+            for Gnatlist                  use Target & "-gnatls";
+            for Gnat                      use Target & "-gnat";
+      end case;
    end Ide;
 
    package Pretty_Printer is
       for Default_Switches ("ada") use (
-        "-cl3",      --  Generate stack checking code
-        "-M79",      --  set maximum line length, nnn from 32 .. 256, the default value is 79
-        "-rf",       --  replace the argument source with the pretty-printed source and copy the
-                     --  argument source into filename.npp , overriding the existing file
-        "-c3",       --  GNAT style comment beginning
-        "-c4",       --  reformat comment blocks
-        "-A1",       --  align colons in declarations
-        "-A2",       --  align assignments in declarations
-        "-A3",       --  align assignments in assignment statements
-        "-A4",       --  align arrow delimiters in associations
-        "-A5");      --  align 'AT' keywords in component clauses
+        "-cl3",                              --  Generate stack checking code
+        "-M79",                              --  set maximum line length, nnn from 32 .. 256, the default value is 79
+        "-rf",                               --  replace the argument source with the pretty-printed source and copy the
+                                             --  argument source into filename.npp , overriding the existing file
+        "-c3",                               --  GNAT style comment beginning
+        "-c4",                               --  reformat comment blocks
+        "-A1",                               --  align colons in declarations
+        "-A2",                               --  align assignments in declarations
+        "-A3",                               --  align assignments in assignment statements
+        "-A4",                               --  align arrow delimiters in associations
+        "-A5");                              --  align 'AT' keywords in component clauses
    end Pretty_Printer;
 
    Source_Files := (
@@ -455,8 +519,8 @@ project Booch_95 is
       "bc-trees.ads",
       "bc.ads");
 
-   case Target is
-      when "i686" | "x86_64" =>
+   case CPU is
+      when "i586" | "i686" | "x86_64" =>
          for Source_Files use
             Source_Files & (
                "bc-support-high_resolution_time.adb",
@@ -476,6 +540,13 @@ end Booch_95;
 
 ----------------------------------------------------------------------------
 --  $Log$
+--  Revision 1.3  2005/11/05 18:24:31  simonjwright
+--  Removed the Modified part of the GPL notice.
+--  Some Darwin-ppc32 changes; NB Darwin handles dynamic libraries
+--  differently from Linux, I haven't worked out what if anything can be
+--  done.
+--  The .adp file isn't Ada source.
+--
 --  Revision 1.2  2005/10/12 15:24:44  krischik
 --  Fix NT compile
 --
@@ -485,4 +556,3 @@ end Booch_95;
 ----------------------------------------------------------------------------
 --  vim: textwidth=0 nowrap tabstop=8 shiftwidth=3 softtabstop=3 expandtab
 --  vim: filetype=ada encoding=latin1 fileformat=unix
-
