@@ -40,8 +40,7 @@
 -- This file is not to be edited through the project properties in GPS.
 --
 
-project Booch_95 is
-
+project WikiBook_Ada is
    type Style_Type  is ("Debug", "Release");
    type OS_Type     is ("Linux", "OS2", "Windows_NT", "VMS", "Darwin");
    type CPU_Type    is ("i586", "i686", "x86_64", "AXP", "ppc32");
@@ -100,11 +99,12 @@ project Booch_95 is
          "-shared",
          "-E");
       for Default_Switches ("c") use (
-         "-m",
-         "-j4",
-         "-k",
-         "-C",
-         "-gnatQ",
+         "-F",             --  Full project path name in brief error messages
+         "-m",             --  Minimal recompilation
+         "-j4",            --  Use nnn processes to compile
+         "-k",             --  Keep going after compilation errors
+         "-C",             --  Cache source mappings: invoke compiler with temp mapping file
+         "-gnatQ"          --  Don't quit, write ali/tree file even if compile errors
          "-shared",
          "-E");
 
@@ -140,7 +140,7 @@ project Booch_95 is
             for Default_Switches ("ada") use
             Compiler'Default_Switches ("ada") & (
                "-fPIC");                     -- Position Independend Code
-         end case;
+      end case;
 
       case Style is
          when "Debug" =>
@@ -175,7 +175,7 @@ project Booch_95 is
          when "x86_64" =>
             for Default_Switches ("ada") use
                Compiler'Default_Switches ("ada") & (
-                  "-fPIC");
+                  "-fPIC");                  -- Position Independend Code
          when others =>
       end case;
    end Compiler;
@@ -198,7 +198,7 @@ project Booch_95 is
             for Default_Switches ("ada") use (
                "-g");                        -- Debug info in binary.
             for Default_Switches ("c") use (
-               "-g");      -- Debug info in binary.
+               "-g");                        -- Debug info in binary.
          when "Release" =>
             case OS is
                when "VMS" =>
@@ -540,6 +540,9 @@ end Booch_95;
 
 ----------------------------------------------------------------------------
 --  $Log$
+--  Revision 1.4  2006/08/25 16:12:11  krischik
+--  MingGW cross compile
+--
 --  Revision 1.3  2005/11/05 18:24:31  simonjwright
 --  Removed the Modified part of the GPL notice.
 --  Some Darwin-ppc32 changes; NB Darwin handles dynamic libraries
