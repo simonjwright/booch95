@@ -40,7 +40,8 @@
 -- This file is not to be edited through the project properties in GPS.
 --
 
-project WikiBook_Ada is
+project Booch_95 is
+
    type Style_Type  is ("Debug", "Release");
    type OS_Type     is ("Linux", "OS2", "Windows_NT", "VMS", "Darwin");
    type CPU_Type    is ("i586", "i686", "x86_64", "AXP", "ppc32");
@@ -78,57 +79,38 @@ project WikiBook_Ada is
          for Library_Version     use "libbooch95.a." & Version;
    end case;
 
-   package Finder is
-      for Switches ("ada") use ("-a");
-   end Finder;
+   --------------------------------------------------------------------------
+   --
+   package Naming is
+      for Casing use "lowercase";
+      for Dot_Replacement use "-";
 
-   package Cross_Reference is
-      for Default_Switches ("ada") use (
-      "-f",       -- Output full path name
-      "-v");      -- Print a 'tags' file for vi
-   end Cross_Reference;
-
-   package Builder is
-      for Default_Switches ("ada") use (
-         "-F",             --  Full project path name in brief error messages
-         "-m",             --  Minimal recompilation
-         "-j4",            --  Use nnn processes to compile
-         "-C",             --  Cache source mappings: invoke compiler with temp mapping file
-         "-gnatQ",         --  Don't quit, write ali/tree file even if compile errors
-         "-k",             --  Keep going after compilation errors
-         "-shared",
-         "-E");
-      for Default_Switches ("c") use (
-         "-F",             --  Full project path name in brief error messages
-         "-m",             --  Minimal recompilation
-         "-j4",            --  Use nnn processes to compile
-         "-k",             --  Keep going after compilation errors
-         "-C",             --  Cache source mappings: invoke compiler with temp mapping file
-         "-gnatQ"          --  Don't quit, write ali/tree file even if compile errors
-         "-shared",
-         "-E");
-
-      case Style is
-         when "Release" =>
-         when "Debug" =>
-            for Default_Switches ("ada") use
-               Builder'Default_Switches ("ada") & (
-                  "-g");                     --  Generate debugging information
-            for Default_Switches ("c") use
-               Builder'Default_Switches ("c") & (
-                  "-g");                     --  Generate debugging information
+      for Specification_Suffix ("ada") use ".ads";
+      for Implementation_Suffix ("ada") use ".adb";
+      case CPU is
+         when "i586" | "i686" | "x86_64" =>
+            for Separate_Suffix use ".adb-pentium";
+         when "ppc32" =>
+            for Separate_Suffix use ".adb-ppc32";
+         when "AXP" =>
+            for Separate_Suffix use ".adb";
       end case;
-   end Builder;
+      for Specification_Suffix ("c") use ".c";
+      for Implementation_Suffix ("c") use ".h";
+   end Naming;
 
+   --------------------------------------------------------------------------
+   --
    package Compiler is
       for Default_Switches ("ada") use (
+         "-gnatiw",                          -- Wide-character codes allowed in identifiers
+         "-gnatW8",                          -- UTF-8 encoding (the only one where ASIS works correct)
          "-gnatef",                          -- Full source path in brief error messages
          "-gnatf",                           -- Full errors. Verbose details, all undefined references
          "-gnatU",                           -- Enable unique tag for error messages
          "-gnatwcdfijklmopruvz",             -- All warings enabled
          "-gnatq",                           -- Don't quit, try semantics, even if parse errors
          "-gnatQ",                           -- Don't quit, write ali/tree file even if compile errors
-         "-gnati1",                          -- Select character set in sources.
          "-gnatT4");                         -- Compiler tables sizes 4* default
 
       for Default_Switches ("c") use (
@@ -180,6 +162,56 @@ project WikiBook_Ada is
       end case;
    end Compiler;
 
+   --------------------------------------------------------------------------
+   --
+   package Finder is
+      for Switches ("ada") use ("-a");
+   end Finder;
+
+   --------------------------------------------------------------------------
+   --
+   package Cross_Reference is
+      for Default_Switches ("ada") use (
+      "-f",       -- Output full path name
+      "-v");      -- Print a 'tags' file for vi
+   end Cross_Reference;
+
+   --------------------------------------------------------------------------
+   --
+   package Builder is
+      for Default_Switches ("ada") use (
+         "-F",             --  Full project path name in brief error messages
+         "-m",             --  Minimal recompilation
+         "-j4",            --  Use nnn processes to compile
+         "-C",             --  Cache source mappings: invoke compiler with temp mapping file
+         "-gnatQ",         --  Don't quit, write ali/tree file even if compile errors
+         "-k",             --  Keep going after compilation errors
+         "-shared",
+         "-E");
+      for Default_Switches ("c") use (
+         "-F",             --  Full project path name in brief error messages
+         "-m",             --  Minimal recompilation
+         "-j4",            --  Use nnn processes to compile
+         "-k",             --  Keep going after compilation errors
+         "-C",             --  Cache source mappings: invoke compiler with temp mapping file
+         "-gnatQ",         --  Don't quit, write ali/tree file even if compile errors
+         "-shared",
+         "-E");
+
+      case Style is
+         when "Release" =>
+         when "Debug" =>
+            for Default_Switches ("ada") use
+               Builder'Default_Switches ("ada") & (
+                  "-g");                     --  Generate debugging information
+            for Default_Switches ("c") use
+               Builder'Default_Switches ("c") & (
+                  "-g");                     --  Generate debugging information
+      end case;
+   end Builder;
+
+   --------------------------------------------------------------------------
+   --
    package Binder is
       for Default_Switches ("ada") use ("-shared");
 
@@ -192,6 +224,8 @@ project WikiBook_Ada is
       end case;
    end Binder;
 
+   --------------------------------------------------------------------------
+   --
    package Linker is
       case Style is
          when "Debug" =>
@@ -208,21 +242,8 @@ project WikiBook_Ada is
       end case;
    end Linker;
 
-   package Naming is
-      for Specification_Suffix ("ada") use ".ads";
-      for Implementation_Suffix ("ada") use ".adb";
-      case CPU is
-         when "i586" | "i686" | "x86_64" =>
-            for Separate_Suffix use ".adb-pentium";
-         when "ppc32" =>
-            for Separate_Suffix use ".adb-ppc32";
-         when "AXP" =>
-            for Separate_Suffix use ".adb";
-      end case;
-      for Specification_Suffix ("c") use ".c";
-      for Implementation_Suffix ("c") use ".h";
-   end Naming;
-
+   --------------------------------------------------------------------------
+   --
    package Ide is
       for Vcs_Kind use "CVS";
 
@@ -240,6 +261,8 @@ project WikiBook_Ada is
       end case;
    end Ide;
 
+   --------------------------------------------------------------------------
+   --
    package Pretty_Printer is
       for Default_Switches ("ada") use (
         "-cl3",                              --  Generate stack checking code
@@ -538,24 +561,6 @@ project WikiBook_Ada is
 
 end Booch_95;
 
-----------------------------------------------------------------------------
---  $Log$
---  Revision 1.4  2006/08/25 16:12:11  krischik
---  MingGW cross compile
---
---  Revision 1.3  2005/11/05 18:24:31  simonjwright
---  Removed the Modified part of the GPL notice.
---  Some Darwin-ppc32 changes; NB Darwin handles dynamic libraries
---  differently from Linux, I haven't worked out what if anything can be
---  done.
---  The .adp file isn't Ada source.
---
---  Revision 1.2  2005/10/12 15:24:44  krischik
---  Fix NT compile
---
---  Revision 1.1  2005/10/10 16:04:54  krischik
---  Indefinite container variants and GNAT project files.
---
 ----------------------------------------------------------------------------
 --  vim: textwidth=0 nowrap tabstop=8 shiftwidth=3 softtabstop=3 expandtab
 --  vim: filetype=ada encoding=latin1 fileformat=unix
