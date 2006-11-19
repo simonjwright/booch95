@@ -1,6 +1,7 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1999 Pat Rogers
 --  Copyright 1999-2002 Simon Wright <simon@pushface.org>
+--  Modifications November 2006 by Christopher J. Henrich
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -263,6 +264,7 @@ package body BC.Support.Managed_Storage is
       Previous_Chunk : Chunk_Pointer;
       Usable_Chunk_Size : SSE.Storage_Count;
       Element : System.Address;
+      Previous_Element : System.Address; -- cjh
 
       use SSE;
       use type System.Address;
@@ -308,6 +310,27 @@ package body BC.Support.Managed_Storage is
      Reclaiming :
          while Chunk /= null loop
             if Chunk.Number_Elements = 0 then -- remove it
+               -- cjh
+               -- Elements on the "Next_Element" list and lying within
+               -- this chunk must be removed from the list.
+               Element := Ptr.Next_Element;
+               Previous_Element := System.Null_Address;
+               while Element /= System.Null_Address loop
+                  if Within_Range (Element,
+                                   Base => Chunk,
+                                   Offset => This.Chunk_Size) then
+                     if Previous_Element = System.Null_Address then
+                        Ptr.Next_Element := Value_At (Element);
+                     else
+                        Put (Value_At (Element),
+                             At_Location => Previous_Element);
+                     end if;
+                  else
+                     Previous_Element := Element;
+                  end if;
+                  Element := Value_At (Element); -- get next element
+               end loop;
+               -- end cjh
                if Previous_Chunk /= null then
                   Previous_Chunk.Next_Chunk := Chunk.Next_Chunk;
                   Chunk.Next_Chunk := This.Unused;
@@ -413,4 +436,3 @@ package body BC.Support.Managed_Storage is
 
 
 end BC.Support.Managed_Storage;
-
