@@ -62,9 +62,7 @@ package body Tests.Auto_Pointers is
       Finalizations := 0;
       Value_Pointers.Value (P1).Adjusts := 0;
       Value_Pointers.Value (P1).Id := 42;
-      Put_Line ("doing the copy ...");
       P2 := P1;
-      Put_Line ("... done.");
       Assert (Value_Pointers.Value (P1) = null,
               "copied pointer not null");
       Assert (Value_Pointers.Value (P2).Adjusts = 0,
