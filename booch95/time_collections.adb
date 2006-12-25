@@ -1,4 +1,4 @@
---  Copyright 2004 Simon Wright <simon@pushface.org>
+--  Copyright 2004-2006 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -32,9 +32,13 @@ begin
       function F return Collection_Test_Support.CB.Collection is
          Result : Collection_Test_Support.CB.Collection;
       begin
+         for C in Character'('a') .. Character'('z') loop
+            Collection_Test_Support.CB.Append (Result, C);
+         end loop;
          return Result;
       end F;
       C : Collection_Test_Support.CB.Collection;
+      pragma Unreferenced (C);
    begin
       Start := BC.Support.High_Resolution_Time.Clock;
       C := F;
@@ -48,9 +52,13 @@ begin
       function F return Collection_Test_Support.CD.Collection is
          Result : Collection_Test_Support.CD.Collection;
       begin
+         for C in Character'('a') .. Character'('z') loop
+            Collection_Test_Support.CD.Append (Result, C);
+         end loop;
          return Result;
       end F;
       C : Collection_Test_Support.CD.Collection;
+      pragma Unreferenced (C);
    begin
       Start := BC.Support.High_Resolution_Time.Clock;
       C := F;
@@ -64,9 +72,13 @@ begin
       function F return Collection_Test_Support.CU.Collection is
          Result : Collection_Test_Support.CU.Collection;
       begin
+         for C in Character'('a') .. Character'('z') loop
+            Collection_Test_Support.CU.Append (Result, C);
+         end loop;
          return Result;
       end F;
       C : Collection_Test_Support.CU.Collection;
+      pragma Unreferenced (C);
    begin
       Start := BC.Support.High_Resolution_Time.Clock;
       C := F;
@@ -80,9 +92,13 @@ begin
       function F return Collection_Test_Support.CUM.Collection is
          Result : Collection_Test_Support.CUM.Collection;
       begin
+         for C in Character'('a') .. Character'('z') loop
+            Collection_Test_Support.CUM.Append (Result, C);
+         end loop;
          return Result;
       end F;
       C : Collection_Test_Support.CUM.Collection;
+      pragma Unreferenced (C);
    begin
       Start := BC.Support.High_Resolution_Time.Clock;
       C := F;
