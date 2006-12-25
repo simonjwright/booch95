@@ -51,7 +51,6 @@ package body Tests.Multiway_Trees is
 
    function To_String
      (The_Tree : Multiway_Tree) return String is
-      use Ada.Strings.Unbounded;
    begin
       if Is_Null (The_Tree) then
          return "()";
