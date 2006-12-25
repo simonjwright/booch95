@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2003 Simon Wright <simon@pushface.org>
+--  Copyright 2003-2006 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -55,11 +55,6 @@ package BC.Containers.Rings.Unmanaged is
    --  previously one place forward from the top.
    --  If the removed item was the marked item, the mark now designates
    --  the new top.
-
-   procedure Rotate (R : in out Ring; Dir : Direction := Forward);
-   --  Rotate the top of the ring in the given direction. The ring's
-   --  mark is unaffected. If there is exactly one item in the ring,
-   --  rotating either direction always returns to the same item.
 
    function Extent (R : Ring) return Natural;
    --  Return the number of items in the ring.
