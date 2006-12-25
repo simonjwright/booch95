@@ -76,22 +76,6 @@ package body BC.Containers.Rings.Unmanaged is
       end if;
    end Pop;
 
-   procedure Rotate (R : in out Ring; Dir : Direction := Forward) is
-   begin
-      if Dir = Forward then
-         R.Top := R.Top + 1;
-         if R.Top > Extent (R) then
-            R.Top := 1;
-         end if;
-      else
-         if R.Top = 1 then
-            R.Top := Extent (R);
-         else
-            R.Top := R.Top - 1;
-         end if;
-      end if;
-   end Rotate;
-
    function Extent (R : Ring) return Natural is
    begin
       return Ring_Nodes.Length (R.Rep);
@@ -104,6 +88,9 @@ package body BC.Containers.Rings.Unmanaged is
 
    function Top (R : Ring) return Item is
    begin
+      if R.Top = 0 then
+         raise BC.Underflow;
+      end if;
       return Ring_Nodes.Item_At (R.Rep, R.Top);
    end Top;
 
