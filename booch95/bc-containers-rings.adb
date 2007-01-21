@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2006 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -67,11 +67,13 @@ package body BC.Containers.Rings is
          To.Top := From.Top;
          To.Mark := From.Mark;
          if Extent (To) > 0 then
-            if To.Mark >= To.Top then                 -- XXX huh?
-               To.Mark := To.Mark - To.Top;
+            --  cjh patch
+            if To.Mark >= To.Top then
+               To.Mark := To.Mark - To.Top + 1;
             else
-               To.Mark := To.Mark + To.Top + 1;
+               To.Mark := To.Mark + Extent (To) - To.Top + 1;
             end if;
+            To.Top := 1;
          end if;
       end if;
    end Copy;
@@ -80,6 +82,22 @@ package body BC.Containers.Rings is
    begin
       R.Mark := R.Top;
    end Mark;
+
+   procedure Rotate (R : in out Abstract_Ring; Dir : Direction := Forward) is
+   begin
+      if Dir = Forward then
+         R.Top := R.Top + 1;
+         if R.Top > Extent (Abstract_Ring'Class (R)) then
+            R.Top := 1;
+         end if;
+      else
+         if R.Top = 1 then
+            R.Top := Extent (Abstract_Ring'Class (R));
+         else
+            R.Top := R.Top - 1;
+         end if;
+      end if;
+   end Rotate;
 
    procedure Rotate_To_Mark (R : in out Abstract_Ring) is
    begin
