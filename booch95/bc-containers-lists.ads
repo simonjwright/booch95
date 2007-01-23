@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2007 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -81,7 +81,9 @@ generic package BC.Containers.Lists is
    --  It is possible, but not generally desirable, to produce
    --  multi-headed lists. In such cases, the predecessor of the item
    --  at the neck of a multi-headed list points to the most recently
-   --  attached head.
+   --  attached head. If doubly-linked lists share items, then the
+   --  predecessor if an item is the one to which it was most recently
+   --  attached as a successor.
 
    --  The singly-linked and doubly-linked lists have a similar
    --  protocol, except that the doubly-linked list adds two
