@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2007 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -106,26 +106,24 @@ package BC.Containers.Lists.Double is
    --  given index, inclusive, for a total of count items.
 
    procedure Share (L : in out List; With_List : List; Starting_At : Positive);
-   --  Clear the list, then, if the given list is not null, set the
-   --  list to structurally share with the head of the given list,
-   --  starting at the given index.
+   --  Clear L, then, if With_List is not null, set L to structurally
+   --  share with the head of With_List, starting at the given index.
 
    procedure Share_Head (L : in out List; With_List : in List);
-   --  Clear the list, then, if the given list is not null, set the
-   --  list to structurally share with the head of the given list.
+   --  Clear L, then, if With_List is not null, set L to structurally
+   --  share with the head of With_List.
 
    procedure Share_Foot (L : in out List; With_List : in List);
-   --  Clear the list, then, if the given list is not null, set the
-   --  list to structurally share with the end of the given list.
+   --  Clear L, then, if With_List is not null, set L to structurally
+   --  share with the end of With_List.
 
    procedure Swap_Tail (L : in out List; With_List : in out List);
-   --  The given list must represent the head of a list, which may be
-   --  null. Set the tail of the list (which may be null) to denote
-   --  the given list (which may be null), and set the given list to
-   --  the original tail of the list. If it is not null, the
-   --  predecessor of the new tail of the list is set to be the head
-   --  of the list. If it is not null, the predecessor of the new head
-   --  of the given list is set to be null.
+   --  With_List must represent the head of a list, which may be
+   --  null. Set the tail of L (which must not be null) to denote
+   --  With_List (which may be null), and set With_List to the
+   --  original tail of L. If it is not null, the predecessor of the
+   --  new tail of L is set to be the head of L. If it is not null,
+   --  the predecessor of the new head of With_List is set to be null.
 
    procedure Tail (L : in out List);
    --  The list must not be null. Set the list to now denote its tail
