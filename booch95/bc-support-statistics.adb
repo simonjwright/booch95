@@ -71,9 +71,12 @@ package body BC.Support.Statistics is
       if Of_Instance.Count < 2 then
          return 0.0;
       else
-         return (Of_Instance.Summed_Squared_Data
-                   - Of_Instance.Summed_Data * Of_Instance.Summed_Data
-                   / Long_Float (Of_Instance.Count))
+         return
+           Long_Float'Max
+             ((Of_Instance.Summed_Squared_Data
+               - Of_Instance.Summed_Data * Of_Instance.Summed_Data
+               / Long_Float (Of_Instance.Count)),
+              0.0)
            / Long_Float (Of_Instance.Count - 1);
       end if;
    end Variance;
