@@ -104,7 +104,7 @@ project Booch_95 is
    package Compiler is
       for Default_Switches ("ada") use (
          "-gnatiw",                          -- Wide-character codes allowed in identifiers
-         "-gnatW8",                          -- UTF-8 encoding (the only one where ASIS works correct)
+         -- "-gnatW8",                          -- UTF-8 encoding (the only one where ASIS works correct)
          "-gnatef",                          -- Full source path in brief error messages
          "-gnatf",                           -- Full errors. Verbose details, all undefined references
          "-gnatU",                           -- Enable unique tag for error messages
