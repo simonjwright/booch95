@@ -17,7 +17,6 @@ project BC is
      for Default_Switches ("Ada") use
        (
         "-m",
-        "-j2",
         "-g"
        );
   end Builder;
@@ -27,6 +26,7 @@ project BC is
        (
         "-gnatqQafoy",
         "-gnatwaL",
+        "-gnat95",
         "-O2"
        );
   end Compiler;
