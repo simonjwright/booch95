@@ -5,6 +5,7 @@
 with AUnit.Test_Runner;
 with AUnit.Test_Suites;
 with Tests.Auto_Pointers;
+with Tests.AVL_Trees;
 with Tests.Items;
 with Tests.Multiway_Trees;
 with Tests.Rings;
@@ -19,6 +20,7 @@ procedure Tests.Main is
    begin
       AUnit.Test_Suites.Add_Test (Result, Items.Suite);
       AUnit.Test_Suites.Add_Test (Result, Auto_Pointers.Suite);
+      AUnit.Test_Suites.Add_Test (Result, AVL_Trees.Suite);
       AUnit.Test_Suites.Add_Test (Result, Multiway_Trees.Suite);
       AUnit.Test_Suites.Add_Test (Result, Rings.Suite);
       return Result;
