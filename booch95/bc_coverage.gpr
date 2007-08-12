@@ -1,0 +1,41 @@
+--  Project file for Booch Components
+--  $Id$
+
+project BC_Coverage is
+
+  --  AUnit is assumed installed in the user's home directory.
+  AUnit := external ("AUNIT", "AUnit-1.03p");
+
+  for Source_Dirs use (".",
+                       external ("HOME") & "/" & AUnit & "/aunit/**");
+
+  for Object_Dir use ".coverage";
+
+  for Exec_Dir use ".";
+
+  package Builder is
+     for Default_Switches ("Ada") use
+       (
+        "-m",
+        "-g",
+	"-fprofile-arcs",
+	"-ftest-coverage"
+       );
+  end Builder;
+
+  package Compiler is
+     for Default_Switches ("Ada") use
+       (
+        "-gnatqQafoy",
+        "-gnatwaL",
+        "-gnat95",
+        "-O0"
+       );
+  end Compiler;
+
+  package Binder is
+     for Default_Switches ("Ada") use ("-E");
+  end Binder;
+
+end BC_Coverage;
+
