@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2007 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -31,6 +31,7 @@ with System.Storage_Pools;
 
 generic
    type Item is private;
+   with function "=" (L, R : Item) return Boolean is <>;
    with function "<" (L, R : Item) return Boolean is <>;
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Support.AVL_Trees is
