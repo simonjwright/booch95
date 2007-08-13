@@ -1,5 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1998-2006 Simon Wright <simon@pushface.org>
+--  Included Chris Henrich patch of 20061209.
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
