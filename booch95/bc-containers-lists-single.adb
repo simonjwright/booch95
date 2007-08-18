@@ -94,10 +94,10 @@ package body BC.Containers.Lists.Single is
          while Ptr.Next /= null loop
             Ptr := Ptr.Next;
          end loop;
+         Ptr.Next := L.Head.Rep;
+         L.Head.Rep := From_List.Head.Rep;
+         L.Head.Rep.Count := L.Head.Rep.Count + 1;
       end if;
-      Ptr.Next := L.Head.Rep;
-      L.Head.Rep := From_List.Head.Rep;
-      L.Head.Rep.Count := L.Head.Rep.Count + 1;
    end Insert;
 
    procedure Insert (L : in out List; Elem : Item; Before : Positive) is
