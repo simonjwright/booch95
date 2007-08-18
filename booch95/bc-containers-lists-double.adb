@@ -116,13 +116,13 @@ package body BC.Containers.Lists.Double is
          while Ptr.Next /= null loop
             Ptr := Ptr.Next;
          end loop;
+         Ptr.Next := L.Head.Rep;
+         if L.Head.Rep /= null then
+            L.Head.Rep.Previous := Ptr;
+         end if;
+         L.Head.Rep := From_List.Head.Rep;
+         L.Head.Rep.Count := L.Head.Rep.Count + 1;
       end if;
-      Ptr.Next := L.Head.Rep;
-      if L.Head.Rep /= null then
-         L.Head.Rep.Previous := Ptr;
-      end if;
-      L.Head.Rep := From_List.Head.Rep;
-      L.Head.Rep.Count := L.Head.Rep.Count + 1;
    end Insert;
 
    procedure Insert (L : in out List; Elem : Item; Before : Positive) is
