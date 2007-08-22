@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2007 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -32,12 +32,11 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Lists.Double is
 
-   -------------------------------------------------------------------
+   -----------------------------------------------------------------  --
    --  WARNING: If  you just want a standard  container to support  --
-   --  iteration,       filtering      and       sorting,      use  --
-   --  Containers.Collections. The  List components are  much more  --
-   --  complex than you'll need.                                    --
-   -------------------------------------------------------------------
+   --  iteration, filtering and sorting, use Collections. The List  --
+   --  components  are   much  more  complex   than  you'll  need.  --
+   --  ---------------------------------------------------------------  --
 
    pragma Elaborate_Body;
 
