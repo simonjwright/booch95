@@ -1,4 +1,4 @@
-# Copyright 1998-2005 Simon Wright <simon@pushface.org>
+# Copyright 1998-2007 Simon Wright <simon@pushface.org>
 
 # This package is free software; you can redistribute it and/or
 # modify it under terms of the GNU General Public License as
@@ -66,7 +66,9 @@ test: testable
 clean::
 	rm -f $(TESTABLE)
 
-TEST_SRC = assertions.ad[bs] global_heap.ad[bs]
+TEST_SRC = assertions.ad[bs] global_heap.ad[bs] \
+tests-support.ad[bs] tests-items.ad[bs] \
+tests-main.adb tests.ads
 
 TESTABLE += avl_test
 TEST_SRC += avl_test.ad[bs] avl_test_support.ad[bs]
@@ -168,7 +170,8 @@ bc-containers-rings-dynamic.ad[bs] \
 bc-containers-rings-unbounded.ad[bs] \
 bc-containers-rings-unmanaged.ad[bs]
 TESTABLE += ring_test
-TEST_SRC += ring_test.ad[bs] ring_test_support.ad[bs]
+TEST_SRC += ring_test.ad[bs] ring_test_support.ad[bs] \
+tests-rings.ad[bs]
 ring_test: force
 
 ADA_SOURCE += \
@@ -182,9 +185,12 @@ TEST_SRC += set_test.ad[bs] set_test_support.ad[bs]
 set_test: force
 
 ADA_SOURCE += \
-bc-smart.ad[bs] bc-support-smart_pointers.ad[bs]
+bc-smart.ad[bs] \
+bc-support-auto_pointers.ad[bs] \
+bc-support-smart_pointers.ad[bs]
 TESTABLE += smart_test
-TEST_SRC += smart_test.ad[bs] smart_test_support.ad[bs]
+TEST_SRC += smart_test.ad[bs] smart_test_support.ad[bs] \
+tests-auto_pointers.ad[bs]
 smart_test: force
 
 ADA_SOURCE += \
@@ -233,7 +239,8 @@ bc-containers-trees-multiway-post_order.ad[bs] \
 bc-containers-trees-multiway-pre_order.ad[bs] \
 bc-containers-trees.ad[bs]
 TESTABLE += tree_test
-TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs]
+TEST_SRC += tree_test.ad[bs] tree_test_support.ad[bs] \
+tests-avl_trees.ad[bs] tests-multiway_trees.ad[bs]
 tree_test: force
 
 ADA_SOURCE += \
