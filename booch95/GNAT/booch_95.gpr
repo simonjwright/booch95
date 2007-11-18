@@ -252,12 +252,12 @@ project Booch_95 is
             for Compiler_Command ("c")    use "gcc";
             for Compiler_Command ("ada")  use "gnatmake";
             for Gnatlist                  use "gnatls";
-            for Gnat                      use "gnat";
+            --  for Gnat                      use "gnat";
          when others =>
             for Compiler_Command ("c")    use Target & "-gcc";
             for Compiler_Command ("ada")  use Target & "-gnatmake";
             for Gnatlist                  use Target & "-gnatls";
-            for Gnat                      use Target & "-gnat";
+            --  for Gnat                      use Target & "-gnat";
       end case;
    end Ide;
 
