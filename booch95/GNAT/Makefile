@@ -87,6 +87,10 @@ ifndef GPR_OS
 		GNAT		:= gnat
 	endif
 
+	ifeq (${GPR_OS}, SunOS)
+		GPR_CPU		:= $(shell uname --processor)
+	endif
+
 	ifeq (${GPR_OS}, Darwin)
 		GPR_OS		:= Darwin
 		GPR_CPU	    := $(shell uname -p)
