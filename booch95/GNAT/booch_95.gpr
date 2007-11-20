@@ -43,8 +43,8 @@
 project Booch_95 is
 
    type Style_Type  is ("Debug", "Release");
-   type OS_Type     is ("Linux", "OS2", "Windows_NT", "VMS", "Darwin");
-   type CPU_Type    is ("i586", "i686", "x86_64", "AXP", "ppc32");
+   type OS_Type     is ("Linux", "OS2", "Windows_NT", "VMS", "Darwin", "SunOS");
+   type CPU_Type    is ("i586", "i686", "x86_64", "AXP", "ppc32", "sparc");
    type Target_Type is ("native", "mingw32");
 
    Style  : Style_Type  := external ("style"      , "Release");
@@ -92,7 +92,7 @@ project Booch_95 is
             for Separate_Suffix use ".adb-pentium";
          when "ppc32" =>
             for Separate_Suffix use ".adb-ppc32";
-         when "AXP" =>
+         when "AXP" | "sparc" =>
             for Separate_Suffix use ".adb";
       end case;
       for Specification_Suffix ("c") use ".c";
@@ -252,12 +252,12 @@ project Booch_95 is
             for Compiler_Command ("c")    use "gcc";
             for Compiler_Command ("ada")  use "gnatmake";
             for Gnatlist                  use "gnatls";
-            --  for Gnat                      use "gnat";
+            --for Gnat                      use "gnat";
          when others =>
             for Compiler_Command ("c")    use Target & "-gcc";
             for Compiler_Command ("ada")  use Target & "-gnatmake";
             for Gnatlist                  use Target & "-gnatls";
-            --  for Gnat                      use Target & "-gnat";
+            --for Gnat                      use Target & "-gnat";
       end case;
    end Ide;
 
@@ -555,7 +555,7 @@ project Booch_95 is
                "bc-support-high_resolution_time.adb",
                "bc-support-high_resolution_time.ads",
                "bc-support-high_resolution_time-clock.adb-ppc32");
-      when "AXP" =>
+      when "AXP" | "sparc" =>
          for Source_Files use Source_Files;
    end case;
 
