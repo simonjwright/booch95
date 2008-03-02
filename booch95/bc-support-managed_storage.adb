@@ -30,17 +30,44 @@
 with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
 
+with Ada.Text_IO;
+
 package body BC.Support.Managed_Storage is
+
+   Debug : constant Boolean := False;
+   pragma Warnings (Off, Debug);
+
+   function "+" (S : System.Address) return String;
+   function "+" (S : Chunk_List_Pointer) return String;
+   function "+" (S : Chunk_Pointer) return String;
+   function "+" (S : System.Address) return String is
+   begin
+      return System.Storage_Elements.To_Integer (S)'Img;
+   end "+";
+   function "+" (S : Chunk_List_Pointer) return String is
+   begin
+      return +(S.all'Address);
+   end "+";
+   function "+" (S : Chunk_Pointer) return String is
+   begin
+      return +(S.all'Address);
+   end "+";
+   procedure Put_Line (S : String);
+   procedure Put_Line (S : String) is
+   begin
+      if Debug then
+         Ada.Text_IO.Put_Line (S);
+      end if;
+   end Put_Line;
 
    package PeekPoke is
       new System.Address_To_Access_Conversions (System.Address);
 
    function Value_At (Location : System.Address) return System.Address;
+   pragma Inline (Value_At);
 
    procedure Put (This : System.Address; At_Location : System.Address);
-
-   pragma Inline (Value_At, Put);
-
+   pragma Inline (Put);
 
    function Value_At (Location : System.Address) return System.Address is
    begin
@@ -55,6 +82,8 @@ package body BC.Support.Managed_Storage is
 
 
    procedure Dispose is
+      new Ada.Unchecked_Deallocation (Chunk_List, Chunk_List_Pointer);
+   procedure Dispose is
       new Ada.Unchecked_Deallocation (Chunk, Chunk_Pointer);
 
 
@@ -66,24 +95,30 @@ package body BC.Support.Managed_Storage is
 
 
    procedure Finalize (This : in out Pool) is
-      Temp, Chunk, Ptr : Chunk_Pointer;
+      List, Previous_List : Chunk_List_Pointer;
+      Chunk, Previous_Chunk : Chunk_Pointer;
    begin
-      Purge_Unused_Chunks (This);
-      Ptr := This.Head;
-      while Ptr /= null loop
-         Chunk := Ptr;
-         Ptr := Ptr.Next_Sized_Chunk;
+      Put_Line ("Finalize:");
+      List := This.Head;
+      while List /= null loop
+         Put_Line (" l " & (+List));
+         Chunk := List.Head;
          while Chunk /= null loop
-            Temp := Chunk;
+            Put_Line ("  c " & (+Chunk));
+            Previous_Chunk := Chunk;
             Chunk := Chunk.Next_Chunk;
-            Dispose (Temp);
+            Dispose (Previous_Chunk);
          end loop;
+         Previous_List := List;
+         List := List.Next_List;
+         Dispose (Previous_List);
       end loop;
    end Finalize;
 
 
    function New_Allocation (Size : SSE.Storage_Count) return Chunk_Pointer is
    begin
+      Put_Line ("New_Allocation: " & Size'Img);
       return new Chunk (Size - Pool_Overhead (Alignment => 1));
    end New_Allocation;
 
@@ -94,7 +129,6 @@ package body BC.Support.Managed_Storage is
    begin
       return Aligned (Chunk_Overhead + Type_Overhead, Alignment);
    end Pool_Overhead;
-
 
 
    procedure Get_Chunk (Result : out Chunk_Pointer;
@@ -119,12 +153,10 @@ package body BC.Support.Managed_Storage is
       else
          Result := New_Allocation (From.Allocated_Chunk_Size);
       end if;
-      Result.Element_Size := Requested_Element_Size;
-      Result.Alignment := Requested_Alignment;
       Result.Number_Elements := Usable_Chunk_Size / Requested_Element_Size;
       Start := Result.all'Address
         + Aligned (Chunk_Overhead, Requested_Alignment);
-      Stop  := Start + ((Result.Number_Elements - 1) * Result.Element_Size);
+      Stop  := Start + ((Result.Number_Elements - 1) * Requested_Element_Size);
       Next  := Start;
       while Next < Stop loop
          Put (Next + Requested_Element_Size, At_Location => Next);
@@ -132,6 +164,9 @@ package body BC.Support.Managed_Storage is
       end loop;
       Put (System.Null_Address, At_Location => Stop);
       Result.Next_Element := Start;
+      Put_Line ("Get_Chunk: " & (+Result)
+                  & " ne: " & Result.Number_Elements'Img
+                  & " s: " & (+Result.Next_Element));
    end Get_Chunk;
 
 
@@ -140,63 +175,85 @@ package body BC.Support.Managed_Storage is
                        Size_In_Storage_Elements : SSE.Storage_Count;
                        Alignment : SSE.Storage_Count) is
 
-      Ptr : Chunk_Pointer;
-      Aligned_Size : SSE.Storage_Offset;
-      Previous : Chunk_Pointer;
-      Temp : Chunk_Pointer;
-
-      use type System.Address;
-   begin
       --  Thanks to Adam Beneschan <adam@irvine.com> for this (which
       --  allows allocation of, for example, zero-length arrays).
-      if Size_In_Storage_Elements = 0 then
-         Aligned_Size := Aligned (1, Alignment);
-      else
-         Aligned_Size := Aligned (Size_In_Storage_Elements, Alignment);
-      end if;
-      --  look for a chunk with the right element size and alignment,
-      --  stopping when no point in continuing
-      Ptr := The_Pool.Head;
-      while Ptr /= null and then
-        (Aligned_Size > Ptr.Element_Size or Ptr.Alignment /= Alignment)
+      Aligned_Size : constant SSE.Storage_Offset :=
+        Aligned (SSE.Storage_Count'Max (Size_In_Storage_Elements, 1),
+                 Alignment);
+
+      List : Chunk_List_Pointer;
+      Previous_List : Chunk_List_Pointer;
+      Chunk : Chunk_Pointer;
+
+      use type System.Address;
+
+   begin
+
+      --  Look for a chunk list with the right element size and
+      --  alignment, stopping when no point in continuing
+      List := The_Pool.Head;
+      while List /= null and then
+        (Aligned_Size > List.Element_Size or else List.Alignment > Alignment)
       loop
-         Previous := Ptr;
-         Ptr := Ptr.Next_Sized_Chunk;
+         Previous_List := List;
+         List := List.Next_List;
       end loop;
-      if Ptr = null then -- didn't find one
-         Get_Chunk (Ptr, The_Pool, Aligned_Size, Alignment);
-         if Previous /= null then
-            Previous.Next_Sized_Chunk := Ptr;
-         else -- last was empty
-            The_Pool.Head := Ptr;
-         end if;
-         Ptr.Previous_Sized_Chunk := Previous;
-         --  null or predecessor sized chunk
-         Ptr.Next_Sized_Chunk := null;
-         --  because chunks are reused when possible
-         Ptr.Next_Chunk := null;
-         --  because chunks are reused when possible
-      elsif (Aligned_Size /= Ptr.Element_Size)
-        or (Ptr.Next_Element = System.Null_Address) then
-         Get_Chunk (Temp, The_Pool, Aligned_Size, Alignment);
-         if Previous /= null then -- list wasn't empty
-            Previous.Next_Sized_Chunk := Temp;
+
+      if List = null
+        or else List.Element_Size /= Aligned_Size
+        or else List.Alignment /= Alignment then
+
+         --  Need to create a new list.
+         --
+         --  The new list is inserted before the next list of the
+         --  previous list, if any, and may become the new head.
+
+         List := new Chunk_List;
+
+         List.Previous_List := Previous_List;
+         --  May be null, if at head
+
+         --  Chain the new list in
+         if Previous_List /= null then
+            --  There is a previous member, insert
+            List.Next_List := Previous_List.Next_List;
+            Previous_List.Next_List := List;
          else
-            The_Pool.Head := Temp;
+            --  There was no previous memeber, add as head
+            The_Pool.Head := List;
          end if;
-         Temp.Previous_Sized_Chunk := Previous;
-         if Aligned_Size /= Ptr.Element_Size then
-            Ptr.Previous_Sized_Chunk := Temp;
-            Temp.Next_Sized_Chunk := Ptr;
-            Temp.Next_Chunk := null;
-         elsif Ptr.Next_Element = System.Null_Address then
-            Temp.Next_Sized_Chunk := Ptr.Next_Sized_Chunk;
-            Temp.Next_Chunk := Ptr;
-         end if;
-         Ptr := Temp;
+
+         --  Store the sizing attributes
+         List.Element_Size := Aligned_Size;
+         List.Alignment := Alignment;
+
       end if;
-      Storage_Address := Ptr.Next_Element;
-      Ptr.Next_Element := Value_At (Ptr.Next_Element);
+
+      --  List designates the correct chunk list.
+      --  Find a chunk with a free element.
+      Chunk := List.Head;
+      while Chunk /= null
+        and then Chunk.Next_Element = System.Null_Address loop
+         Chunk := Chunk.Next_Chunk;
+      end loop;
+
+      if Chunk = null then
+
+         --  There was no chunk with free elements; allocate a new one
+         --  (at the head, for efficiency in future allocations).
+         Chunk := List.Head;
+         Get_Chunk (List.Head, The_Pool, Aligned_Size, Alignment);
+         List.Head.Next_Chunk := Chunk;
+         Chunk := List.Head;
+         Chunk.Parent := List;
+
+      end if;
+
+      Storage_Address := Chunk.Next_Element;
+      Chunk.Next_Element := Value_At (Chunk.Next_Element);
+
+      Put_Line ("Allocate: " & (+Storage_Address));
+
    end Allocate;
 
 
@@ -204,27 +261,39 @@ package body BC.Support.Managed_Storage is
      (The_Pool : in out Pool;
       Storage_Address : System.Address;
       Size_In_Storage_Elements : SSE.Storage_Count;
-      Alignment : SSE.Storage_Count) is
+      Alignment : SSE.Storage_Count)
+   is
 
-      Aligned_Size : SSE.Storage_Offset;
-      Ptr : Chunk_Pointer;
+      --  Thanks to Adam Beneschan <adam@irvine.com> for this (which
+      --  allows allocation of, for example, zero-length arrays).
+      Aligned_Size : constant SSE.Storage_Offset
+        := Aligned (SSE.Storage_Count'Max (Size_In_Storage_Elements, 1),
+                    Alignment);
+
+      List : Chunk_List_Pointer;
+
    begin
-      Aligned_Size := Aligned (Size_In_Storage_Elements, Alignment);
-      if Aligned_Size = 0 then
-         return;
-      end if;
-      Ptr := The_Pool.Head;
-      while Ptr /= null and then
-        (Aligned_Size /= Ptr.Element_Size or Ptr.Alignment /= Alignment)
+
+      Put_Line ("Deallocate: " & (+Storage_Address));
+
+      --  Look for the right list
+      List := The_Pool.Head;
+      while List /= null and then
+        (List.Element_Size /= Aligned_Size or List.Alignment /= Alignment)
       loop
-         Ptr := Ptr.Next_Sized_Chunk;
+         List := List.Next_List;
       end loop;
-      Put (Ptr.Next_Element, At_Location => Storage_Address);
-      Ptr.Next_Element := Storage_Address;
-      --  Note that the effect of the above is that the "linked list" of
-      --  elements will span chunks. This is necessary since Deallocate
-      --  is given an address of the element, not a pointer to the
-      --  containing chunk.
+      pragma Assert (List /= null, "no matching list found");
+
+      Put (List.Head.Next_Element, At_Location => Storage_Address);
+      List.Head.Next_Element := Storage_Address;
+      --  Note that the effect of the above is that the "linked list"
+      --  of elements will span chunks. This is necessary since
+      --  Deallocate is given an address of the element, not a pointer
+      --  to the containing chunk, and we don't want the overhead of
+      --  the search at this time. The user should call
+      --  Reclaim_Unused_Chunks at an appropriate moment.
+
    end Deallocate;
 
 
@@ -236,12 +305,12 @@ package body BC.Support.Managed_Storage is
 
 
    procedure Preallocate_Chunks (This : in out Pool; Count : Positive) is
-      Ptr : Chunk_Pointer;
+      Chunk : Chunk_Pointer;
    begin
       for K in 1 .. Count loop
-         Ptr := New_Allocation (This.Allocated_Chunk_Size);
-         Ptr.Next_Chunk := This.Unused;
-         This.Unused := Ptr;
+         Chunk := New_Allocation (This.Allocated_Chunk_Size);
+         Chunk.Next_Chunk := This.Unused;
+         This.Unused := Chunk;
       end loop;
    end Preallocate_Chunks;
 
@@ -256,11 +325,9 @@ package body BC.Support.Managed_Storage is
 
 
    procedure Reclaim_Unused_Chunks (This : in out Pool) is
-      Ptr : Chunk_Pointer;
-      Previous : Chunk_Pointer;
+
+      List : Chunk_List_Pointer;
       Chunk : Chunk_Pointer;
-      Temp : Chunk_Pointer;
-      Next_Chunk : Chunk_Pointer;
       Previous_Chunk : Chunk_Pointer;
       Usable_Chunk_Size : SSE.Storage_Count;
       Element : System.Address;
@@ -268,59 +335,84 @@ package body BC.Support.Managed_Storage is
 
       use SSE;
       use type System.Address;
+
    begin
+
       pragma Style_Checks (Off); -- GNAT 3.14a mishandles named loops
-      Ptr := This.Head;
-      while Ptr /= null loop
-         Chunk := Ptr;
+
+      List := This.Head;
+      while List /= null loop
+
+         Put_Line ("Reclaim_Unused_Chunks: looking at " & (+List));
+         Chunk := List.Head;
+
          --  Compute the maximum number of elements possible, per chunk,
          --  within this sized sublist.
      Compute_Max :
          while Chunk /= null loop
             Usable_Chunk_Size :=
               This.Allocated_Chunk_Size - Aligned (Chunk_Overhead,
-                                                   Chunk.Alignment);
-            Chunk.Number_Elements := Usable_Chunk_Size / Chunk.Element_Size;
+                                                   Chunk.Parent.Alignment);
+            Chunk.Number_Elements :=
+              Usable_Chunk_Size / Chunk.Parent.Element_Size;
             Chunk := Chunk.Next_Chunk;
          end loop Compute_Max;
-         --  Now we traverse the "linked list" of elements that span
-         --  chunks, determining the containing chunk per element and
-         --  decrementing the corresponding count (computed as the max,
-         --  above).
-         Element := Ptr.Next_Element;
+
+         --  Now we traverse the "linked list" of free elements that
+         --  span chunks, determining the containing chunk per element
+         --  and decrementing the corresponding count (computed as the
+         --  max, above).
+         Element := List.Head.Next_Element;
+
      Decrement_Counts :
          while Element /= System.Null_Address loop
-            Chunk := Ptr;
+            Put_Line (" looking for "& (+Element));
+            Chunk := List.Head;
+
         This_Chunk :
             while Chunk /= null loop
+               Put_Line ("  looking in " & (+Chunk));
                if Within_Range (Element,
                                 Base => Chunk,
                                 Offset => This.Chunk_Size) then
                   Chunk.Number_Elements := Chunk.Number_Elements - 1;
+                  Put_Line ("   found.");
                   exit This_Chunk;
-                  --  stay with this chunk and check next element
                end if;
                Chunk := Chunk.Next_Chunk;
             end loop This_Chunk;
+            pragma Assert (Chunk /= null, "element not found in chunk");
+
             Element := Value_At (Element); -- get next element
+
          end loop Decrement_Counts;
-         --  Now walk each sized sublist and remove those no longer used.
+
+         --  Now walk each sized sublist and remove those chunks no
+         --  longer used.
          Previous_Chunk := null;
-         Chunk := Ptr;
+         Chunk := List.Head;
+
      Reclaiming :
          while Chunk /= null loop
-            if Chunk.Number_Elements = 0 then -- remove it
-               -- cjh
-               -- Elements on the "Next_Element" list and lying within
-               -- this chunk must be removed from the list.
-               Element := Ptr.Next_Element;
+
+            if Chunk.Number_Elements = 0 then
+
+               --  Remove this chunk to the Unused list.
+
+               Put_Line (" empty chunk at " & (+Chunk));
+
+               -- cjh: Elements on the "Next_Element" list and lying
+               --  within this chunk must be removed from the list.
+               Element := List.Head.Next_Element;
                Previous_Element := System.Null_Address;
+
                while Element /= System.Null_Address loop
                   if Within_Range (Element,
                                    Base => Chunk,
                                    Offset => This.Chunk_Size) then
+                     Put_Line ("  unlinking element at " & (+Element));
                      if Previous_Element = System.Null_Address then
-                        Ptr.Next_Element := Value_At (Element);
+                        List.Head.Next_Element := Value_At (Element);
                      else
                         Put (Value_At (Element),
                              At_Location => Previous_Element);
@@ -331,60 +423,84 @@ package body BC.Support.Managed_Storage is
                   Element := Value_At (Element); -- get next element
                end loop;
                -- end cjh
+
                if Previous_Chunk /= null then
+
+                  --  This isn't the first chunk in this list.
                   Previous_Chunk.Next_Chunk := Chunk.Next_Chunk;
                   Chunk.Next_Chunk := This.Unused;
                   This.Unused := Chunk;
                   Chunk := Previous_Chunk.Next_Chunk;
+
                else
-                  Temp := Chunk.Next_Chunk;
-                  Next_Chunk := Chunk.Next_Sized_Chunk;
-                  if Temp /= null then
-                     if Previous /= null then
-                        Previous.Next_Sized_Chunk := Temp;
-                     else
-                        This.Head := Temp;
-                     end if;
-                     Temp.Previous_Sized_Chunk := Previous;
-                     Temp.Next_Sized_Chunk := Next_Chunk;
-                     Temp.Next_Element := Chunk.Next_Element;
-                  else
-                     if Previous /= null then
-                        Previous.Next_Sized_Chunk := Next_Chunk;
-                     else
-                        This.Head := Next_Chunk;
-                     end if;
-                  end if;
-                  if Next_Chunk /= null then
-                     if Temp /= null then
-                        Next_Chunk.Previous_Sized_Chunk := Temp;
-                     else
-                        Next_Chunk.Previous_Sized_Chunk := Previous;
-                     end if;
-                  end if;
+
+                  --  This is the first chunk in this list.
+                  List.Head := Chunk.Next_Chunk;
                   Chunk.Next_Chunk := This.Unused;
                   This.Unused := Chunk;
-                  Chunk := Temp;
+                  Chunk := List.Head;
+
                end if;
+
             else
+
+               --  Chunk isn't empty.
                Previous_Chunk := Chunk;
                Chunk := Chunk.Next_Chunk;
+
             end if;
+
          end loop Reclaiming;
-         Previous := Ptr;
-         Ptr := Ptr.Next_Sized_Chunk;
+
+         --  If this list has no chunks, delete it.
+         if List.Head = null then
+
+            declare
+               Next_List : constant Chunk_List_Pointer := List.Next_List;
+            begin
+
+               if This.Head = List then
+
+                  --  If this is the head list of the pool, make the next
+                  --  list the new head.
+                  This.Head := Next_List;
+
+               else
+
+                  --  This isn't the head list of the pool/
+                  List.Previous_List := Next_List;
+
+               end if;
+
+               Put_Line (" deleting list at " & (+List));
+               Dispose (List);
+
+               List := Next_List;
+
+            end;
+
+         else
+
+            --  List wasn't empty
+            List := List.Next_List;
+
+         end if;
+
       end loop;
       pragma Style_Checks (On);
+
    end Reclaim_Unused_Chunks;
 
 
    procedure Purge_Unused_Chunks (This : in out Pool) is
-      Current : Chunk_Pointer;
+      Chunk : Chunk_Pointer;
    begin
+      Put_Line ("Purge_Unused_Chunks:");
       while This.Unused /= null loop
-         Current := This.Unused;
+         Chunk := This.Unused;
          This.Unused := This.Unused.Next_Chunk;
-         Dispose (Current);
+         Put_Line (" p " & (+Chunk));
+         Dispose (Chunk);
       end loop;
    end Purge_Unused_Chunks;
 
@@ -397,30 +513,30 @@ package body BC.Support.Managed_Storage is
 
    function Dirty_Chunks (This : Pool) return Natural is
       Result : Natural := 0;
-      All_Chunks : Chunk_Pointer;
-      Sized_Chunk : Chunk_Pointer;
+      List : Chunk_List_Pointer;
+      Chunk : Chunk_Pointer;
    begin
-      All_Chunks := This.Head;
-      while All_Chunks /= null loop
-         Sized_Chunk := All_Chunks;
-         All_Chunks := All_Chunks.Next_Sized_Chunk;
-         while Sized_Chunk /= null loop
+      List := This.Head;
+      while List /= null loop
+         Chunk := List.Head;
+         while Chunk /= null loop
             Result := Result + 1;
-            Sized_Chunk := Sized_Chunk.Next_Chunk;
+            Chunk := Chunk.Next_Chunk;
          end loop;
+         List := List.Next_List;
       end loop;
       return Result;
    end Dirty_Chunks;
 
 
    function Unused_Chunks (This : Pool) return Natural is
-      Ptr : Chunk_Pointer;
+      Chunk : Chunk_Pointer;
       Result : Natural := 0;
    begin
-      Ptr := This.Unused;
-      while Ptr /= null loop
+      Chunk := This.Unused;
+      while Chunk /= null loop
          Result := Result + 1;
-         Ptr := Ptr.Next_Chunk;
+         Chunk := Chunk.Next_Chunk;
       end loop;
       return Result;
    end Unused_Chunks;
