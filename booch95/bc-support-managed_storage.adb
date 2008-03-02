@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1999 Pat Rogers
---  Copyright 1999-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1999-2008 Simon Wright <simon@pushface.org>
 --  Modifications November 2006 by Christopher J. Henrich
 
 --  This package is free software; you can redistribute it and/or
@@ -34,6 +34,9 @@ with Ada.Text_IO;
 
 package body BC.Support.Managed_Storage is
 
+
+   --  Debug utilities
+
    Debug : constant Boolean := False;
    pragma Warnings (Off, Debug);
 
@@ -42,7 +45,8 @@ package body BC.Support.Managed_Storage is
    function "+" (S : Chunk_Pointer) return String;
    function "+" (S : System.Address) return String is
    begin
-      return System.Storage_Elements.To_Integer (S)'Img;
+      return SSE.Integer_Address'Image
+        (System.Storage_Elements.To_Integer (S));
    end "+";
    function "+" (S : Chunk_List_Pointer) return String is
    begin
@@ -60,8 +64,8 @@ package body BC.Support.Managed_Storage is
       end if;
    end Put_Line;
 
-   package PeekPoke is
-      new System.Address_To_Access_Conversions (System.Address);
+
+   --  Manage chaining through the allocated elements in chunks.
 
    function Value_At (Location : System.Address) return System.Address;
    pragma Inline (Value_At);
@@ -69,28 +73,63 @@ package body BC.Support.Managed_Storage is
    procedure Put (This : System.Address; At_Location : System.Address);
    pragma Inline (Put);
 
-   function Value_At (Location : System.Address) return System.Address is
-   begin
-      return PeekPoke.To_Pointer (Location).all;
-   end Value_At;
 
-   procedure Put (This : System.Address;
-                  At_Location : System.Address) is
-   begin
-      PeekPoke.To_Pointer (At_Location).all := This;
-   end Put;
+   --  Utilities.
 
+   function Aligned (Size : SSE.Storage_Count;
+                     Alignment : SSE.Storage_Count) return SSE.Storage_Offset;
+
+   procedure Get_Chunk (Result : out Chunk_Pointer;
+                        From : in out Pool;
+                        Requested_Element_Size : SSE.Storage_Count;
+                        Requested_Alignment : SSE.Storage_Count);
+
+   function Within_Range (Target : System.Address;
+                          Base : Chunk_Pointer;
+                          Offset : SSE.Storage_Count) return Boolean;
+   pragma Inline (Within_Range);
+
+
+   --  Constants.
+
+   use type SSE.Storage_Offset;
+
+   subtype Empty_Chunk is Chunk (Address_Array_Size => 0);
+   Chunk_Overhead : constant SSE.Storage_Count
+     := (Empty_Chunk'Size + System.Storage_Unit - 1) / System.Storage_Unit;
+
+   Address_Size_I : constant Integer
+     := System.Address'Max_Size_In_Storage_Elements;
+   Address_Size_SC : constant SSE.Storage_Count
+     := System.Address'Max_Size_In_Storage_Elements;
+
+
+   --  Instantiations.
 
    procedure Dispose is
       new Ada.Unchecked_Deallocation (Chunk_List, Chunk_List_Pointer);
    procedure Dispose is
       new Ada.Unchecked_Deallocation (Chunk, Chunk_Pointer);
 
+   package PeekPoke is
+      new System.Address_To_Access_Conversions (System.Address);
+
+
+   --  Bodies.
+
+   function Aligned
+     (Size : SSE.Storage_Count;
+      Alignment : SSE.Storage_Count) return SSE.Storage_Offset is
+      use type SSE.Storage_Count;
+   begin
+      return ((Size + Alignment - 1) / Alignment) * Alignment;
+   end Aligned;
+
 
    procedure Initialize (This : in out Pool) is
    begin
-      This.Allocated_Chunk_Size :=
-        Aligned (This.Chunk_Size, System.Word_Size / System.Storage_Unit);
+      This.Address_Array_Size :=
+        (Integer (This.Chunk_Size) + Address_Size_I - 1) / Address_Size_I;
    end Initialize;
 
 
@@ -116,13 +155,6 @@ package body BC.Support.Managed_Storage is
    end Finalize;
 
 
-   function New_Allocation (Size : SSE.Storage_Count) return Chunk_Pointer is
-   begin
-      Put_Line ("New_Allocation: " & Size'Img);
-      return new Chunk (Size - Pool_Overhead (Alignment => 1));
-   end New_Allocation;
-
-
    function Pool_Overhead
      (Type_Overhead : SSE.Storage_Count := 0;
       Alignment : SSE.Storage_Count) return SSE.Storage_Count is
@@ -137,13 +169,15 @@ package body BC.Support.Managed_Storage is
                         Requested_Alignment : SSE.Storage_Count) is
 
       Next, Start, Stop : System.Address;
-      Usable_Chunk_Size : SSE.Storage_Count;
+
+      Usable_Chunk_Size : constant SSE.Storage_Count :=
+        (SSE.Storage_Count (From.Address_Array_Size) * Address_Size_SC
+           / Requested_Alignment)
+        * Requested_Alignment;
 
       use type System.Address;
+
    begin
-      Usable_Chunk_Size :=
-        From.Allocated_Chunk_Size - Aligned (Chunk_Overhead,
-                                             Requested_Alignment);
       if Requested_Element_Size > Usable_Chunk_Size then
          raise BC.Storage_Error;
       end if;
@@ -151,11 +185,11 @@ package body BC.Support.Managed_Storage is
          Result := From.Unused;
          From.Unused := From.Unused.Next_Chunk;
       else
-         Result := New_Allocation (From.Allocated_Chunk_Size);
+         Result := new Chunk (Address_Array_Size => From.Address_Array_Size);
       end if;
+      Result.Usable_Chunk_Size := Usable_Chunk_Size;
       Result.Number_Elements := Usable_Chunk_Size / Requested_Element_Size;
-      Start := Result.all'Address
-        + Aligned (Chunk_Overhead, Requested_Alignment);
+      Start := Result.Payload'Address;
       Stop  := Start + ((Result.Number_Elements - 1) * Requested_Element_Size);
       Next  := Start;
       while Next < Stop loop
@@ -165,7 +199,7 @@ package body BC.Support.Managed_Storage is
       Put (System.Null_Address, At_Location => Stop);
       Result.Next_Element := Start;
       Put_Line ("Get_Chunk: " & (+Result)
-                  & " ne: " & Result.Number_Elements'Img
+                  & " ne: " & SSE.Storage_Count'Image (Result.Number_Elements)
                   & " s: " & (+Result.Next_Element));
    end Get_Chunk;
 
@@ -175,11 +209,21 @@ package body BC.Support.Managed_Storage is
                        Size_In_Storage_Elements : SSE.Storage_Count;
                        Alignment : SSE.Storage_Count) is
 
-      --  Thanks to Adam Beneschan <adam@irvine.com> for this (which
-      --  allows allocation of, for example, zero-length arrays).
-      Aligned_Size : constant SSE.Storage_Offset :=
-        Aligned (SSE.Storage_Count'Max (Size_In_Storage_Elements, 1),
-                 Alignment);
+      --  The usable alignment is at least the alignment of a
+      --  System.Address, because of the way that elements within a
+      --  chunk are chained.
+      Usable_Alignment : constant SSE.Storage_Count :=
+        SSE.Storage_Count'Max (Alignment,
+                               System.Address'Alignment);
+
+      --  The usable size must be a multiple of the size of a
+      --  System.Address, likewise.
+      Minimum_Size : constant SSE.Storage_Count :=
+        SSE.Storage_Count'Max (Size_In_Storage_Elements, Address_Size_SC);
+
+      Usable_Size : constant SSE.Storage_Count :=
+        ((Minimum_Size + Address_Size_SC - 1) / Address_Size_SC)
+        * Address_Size_SC;
 
       List : Chunk_List_Pointer;
       Previous_List : Chunk_List_Pointer;
@@ -193,15 +237,16 @@ package body BC.Support.Managed_Storage is
       --  alignment, stopping when no point in continuing
       List := The_Pool.Head;
       while List /= null and then
-        (Aligned_Size > List.Element_Size or else List.Alignment > Alignment)
+        (Usable_Size > List.Element_Size
+           or else List.Alignment > Usable_Alignment)
       loop
          Previous_List := List;
          List := List.Next_List;
       end loop;
 
       if List = null
-        or else List.Element_Size /= Aligned_Size
-        or else List.Alignment /= Alignment then
+        or else List.Element_Size /= Usable_Size
+        or else List.Alignment /= Usable_Alignment then
 
          --  Need to create a new list.
          --
@@ -224,8 +269,8 @@ package body BC.Support.Managed_Storage is
          end if;
 
          --  Store the sizing attributes
-         List.Element_Size := Aligned_Size;
-         List.Alignment := Alignment;
+         List.Element_Size := Usable_Size;
+         List.Alignment := Usable_Alignment;
 
       end if;
 
@@ -242,7 +287,7 @@ package body BC.Support.Managed_Storage is
          --  There was no chunk with free elements; allocate a new one
          --  (at the head, for efficiency in future allocations).
          Chunk := List.Head;
-         Get_Chunk (List.Head, The_Pool, Aligned_Size, Alignment);
+         Get_Chunk (List.Head, The_Pool, Usable_Size, Usable_Alignment);
          List.Head.Next_Chunk := Chunk;
          Chunk := List.Head;
          Chunk.Parent := List;
@@ -264,11 +309,23 @@ package body BC.Support.Managed_Storage is
       Alignment : SSE.Storage_Count)
    is
 
-      --  Thanks to Adam Beneschan <adam@irvine.com> for this (which
-      --  allows allocation of, for example, zero-length arrays).
-      Aligned_Size : constant SSE.Storage_Offset
-        := Aligned (SSE.Storage_Count'Max (Size_In_Storage_Elements, 1),
-                    Alignment);
+      --  The usable alignment is at least the alignment of a
+      --  System.Address, because of the way that elements within a
+      --  chunk are chained.
+      Usable_Alignment : constant SSE.Storage_Count :=
+        SSE.Storage_Count'Max (Alignment,
+                               System.Address'Alignment);
+
+      --  The usable size likewise.
+      Minimum_Size : constant SSE.Storage_Count :=
+        SSE.Storage_Count'Max
+        (Size_In_Storage_Elements,
+         System.Address'Max_Size_In_Storage_Elements);
+
+      Usable_Size : constant SSE.Storage_Count :=
+        ((Minimum_Size + System.Address'Max_Size_In_Storage_Elements - 1)
+         / System.Address'Max_Size_In_Storage_Elements)
+        * System.Address'Max_Size_In_Storage_Elements;
 
       List : Chunk_List_Pointer;
 
@@ -279,7 +336,8 @@ package body BC.Support.Managed_Storage is
       --  Look for the right list
       List := The_Pool.Head;
       while List /= null and then
-        (List.Element_Size /= Aligned_Size or List.Alignment /= Alignment)
+        (List.Element_Size /= Usable_Size
+           or List.Alignment /= Usable_Alignment)
       loop
          List := List.Next_List;
       end loop;
@@ -305,12 +363,12 @@ package body BC.Support.Managed_Storage is
 
 
    procedure Preallocate_Chunks (This : in out Pool; Count : Positive) is
-      Chunk : Chunk_Pointer;
+      Ch : Chunk_Pointer;
    begin
       for K in 1 .. Count loop
-         Chunk := New_Allocation (This.Allocated_Chunk_Size);
-         Chunk.Next_Chunk := This.Unused;
-         This.Unused := Chunk;
+         Ch := new Chunk (Address_Array_Size => This.Address_Array_Size);
+         Ch.Next_Chunk := This.Unused;
+         This.Unused := Ch;
       end loop;
    end Preallocate_Chunks;
 
@@ -329,7 +387,6 @@ package body BC.Support.Managed_Storage is
       List : Chunk_List_Pointer;
       Chunk : Chunk_Pointer;
       Previous_Chunk : Chunk_Pointer;
-      Usable_Chunk_Size : SSE.Storage_Count;
       Element : System.Address;
       Previous_Element : System.Address; -- cjh
 
@@ -350,11 +407,8 @@ package body BC.Support.Managed_Storage is
          --  within this sized sublist.
      Compute_Max :
          while Chunk /= null loop
-            Usable_Chunk_Size :=
-              This.Allocated_Chunk_Size - Aligned (Chunk_Overhead,
-                                                   Chunk.Parent.Alignment);
             Chunk.Number_Elements :=
-              Usable_Chunk_Size / Chunk.Parent.Element_Size;
+              Chunk.Usable_Chunk_Size / Chunk.Parent.Element_Size;
             Chunk := Chunk.Next_Chunk;
          end loop Compute_Max;
 
@@ -542,13 +596,17 @@ package body BC.Support.Managed_Storage is
    end Unused_Chunks;
 
 
-   function Aligned
-     (Size : SSE.Storage_Count;
-      Alignment : SSE.Storage_Count) return SSE.Storage_Offset is
-      use type SSE.Storage_Count;
+   procedure Put (This : System.Address;
+                  At_Location : System.Address) is
    begin
-      return ((Size + Alignment - 1) / Alignment) * Alignment;
-   end Aligned;
+      PeekPoke.To_Pointer (At_Location).all := This;
+   end Put;
+
+
+   function Value_At (Location : System.Address) return System.Address is
+   begin
+      return PeekPoke.To_Pointer (Location).all;
+   end Value_At;
 
 
 end BC.Support.Managed_Storage;

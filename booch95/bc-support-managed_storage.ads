@@ -98,7 +98,11 @@ private
    type Chunk_List;
    type Chunk_List_Pointer is access all Chunk_List;
 
-   type Chunk (Payload_Size : SSE.Storage_Count);
+   --  The user data is organised as an array of System.Address, large
+   --  enough to hold at least the number of bytes required.
+   type Address_Array is array (Positive range <>) of System.Address;
+
+   type Chunk (Address_Array_Size : Natural);
    type Chunk_Pointer is access all Chunk;
 
    type Chunk_List is record
@@ -120,7 +124,7 @@ private
 
    end record;
 
-   type Chunk (Payload_Size : SSE.Storage_Count) is
+   type Chunk (Address_Array_Size : Natural) is
       record
 
          --  Owning list of chunks all of the same element size & alignment.
@@ -129,14 +133,17 @@ private
          --  Chain of chunks all of the same element size & alignment.
          Next_Chunk : Chunk_Pointer;
 
-         --  Number of free elements in this chunk.
+         --  Usable size, depending on current alignment.
+         Usable_Chunk_Size : SSE.Storage_Count;
+
+         --  Number of free (or used, depending on context) elements
+         --  in this chunk.
          Number_Elements : SSE.Storage_Count;
 
          --  Address of next free element in this chunk.
          Next_Element : System.Address;
 
-         --  The user data.
-         Payload : SSE.Storage_Array (1 .. Payload_Size);
+         Payload : Address_Array (1 .. Address_Array_Size);
 
       end record;
 
@@ -145,31 +152,10 @@ private
       record
          Head : Chunk_List_Pointer;
          Unused : Chunk_Pointer;
-         Allocated_Chunk_Size : SSE.Storage_Count;
+         Address_Array_Size : Natural;
       end record;
 
    procedure Initialize (This : in out Pool);
    procedure Finalize (This : in out Pool);
-
-   function Aligned (Size : SSE.Storage_Count;
-                     Alignment : SSE.Storage_Count) return SSE.Storage_Offset;
-
-   function New_Allocation (Size : SSE.Storage_Count) return Chunk_Pointer;
-
-   function Within_Range (Target : System.Address;
-                          Base : Chunk_Pointer;
-                          Offset : SSE.Storage_Count) return Boolean;
-   pragma Inline (Within_Range);
-
-   procedure Get_Chunk (Result : out Chunk_Pointer;
-                        From : in out Pool;
-                        Requested_Element_Size : SSE.Storage_Count;
-                        Requested_Alignment : SSE.Storage_Count);
-
-   use type SSE.Storage_Offset;
-
-   subtype Empty_Chunk is Chunk (Payload_Size => 0);
-   Chunk_Overhead : constant SSE.Storage_Count
-     := (Empty_Chunk'Size + System.Storage_Unit - 1) / System.Storage_Unit;
 
 end BC.Support.Managed_Storage;
