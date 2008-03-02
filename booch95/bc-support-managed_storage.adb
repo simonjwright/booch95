@@ -76,9 +76,6 @@ package body BC.Support.Managed_Storage is
 
    --  Utilities.
 
-   function Aligned (Size : SSE.Storage_Count;
-                     Alignment : SSE.Storage_Count) return SSE.Storage_Offset;
-
    procedure Get_Chunk (Result : out Chunk_Pointer;
                         From : in out Pool;
                         Requested_Element_Size : SSE.Storage_Count;
@@ -91,11 +88,7 @@ package body BC.Support.Managed_Storage is
 
    --  Constants.
 
-   use type SSE.Storage_Offset;
-
-   subtype Empty_Chunk is Chunk (Address_Array_Size => 0);
-   Chunk_Overhead : constant SSE.Storage_Count
-     := (Empty_Chunk'Size + System.Storage_Unit - 1) / System.Storage_Unit;
+   use type SSE.Storage_Count;
 
    Address_Size_I : constant Integer
      := System.Address'Max_Size_In_Storage_Elements;
@@ -115,16 +108,6 @@ package body BC.Support.Managed_Storage is
 
 
    --  Bodies.
-
-   function Aligned
-     (Size : SSE.Storage_Count;
-      Alignment : SSE.Storage_Count) return SSE.Storage_Offset
-   is
-      use type SSE.Storage_Count;
-   begin
-      return ((Size + Alignment - 1) / Alignment) * Alignment;
-   end Aligned;
-
 
    procedure Allocate (The_Pool : in out Pool;
                        Storage_Address : out System.Address;
@@ -374,15 +357,6 @@ package body BC.Support.Managed_Storage is
       This.Address_Array_Size :=
         (Integer (This.Chunk_Size) + Address_Size_I - 1) / Address_Size_I;
    end Initialize;
-
-
-   function Pool_Overhead
-     (Type_Overhead : SSE.Storage_Count := 0;
-      Alignment : SSE.Storage_Count) return SSE.Storage_Count
-   is
-   begin
-      return Aligned (Chunk_Overhead + Type_Overhead, Alignment);
-   end Pool_Overhead;
 
 
    procedure Preallocate_Chunks (This : in out Pool; Count : Positive)
