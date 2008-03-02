@@ -46,6 +46,11 @@ package BC.Support.Managed_Storage is
    --  Your_Type is unconstrained, so that some additional storage is
    --  required to hold the actual object's constraints).
 
+   --  At any time, each chunk that is in use may contain objects of a
+   --  specific size and alignment. There may be more than one chunk
+   --  containing objects of the same size and alignment. A used chunk
+   --  may currently contain no objects.
+
    procedure Allocate (The_Pool : in out Pool;
                        Storage_Address : out System.Address;
                        Size_In_Storage_Elements : SSE.Storage_Count;
@@ -62,40 +67,83 @@ package BC.Support.Managed_Storage is
      (Type_Overhead  : SSE.Storage_Count := 0;
       Alignment : SSE.Storage_Count) return SSE.Storage_Count;
 
+   --  Create Count empty chunks, place on the Unused list.
    procedure Preallocate_Chunks (This : in out Pool;  Count : Positive);
 
+   --  Place any in-use chunks without current allocations back on the
+   --  Unused list.
    procedure Reclaim_Unused_Chunks (This : in out Pool);
 
+   --  Release any chunks on the Unused list.
    procedure Purge_Unused_Chunks (This : in out Pool);
 
    function Total_Chunks (This : Pool) return Natural;
 
+   --  Count of in-use chunks (which may not contain any current
+   --  allocations).
    function Dirty_Chunks (This : Pool) return Natural;
 
+   --  Count of chunks on the Unused list.
    function Unused_Chunks (This : Pool) return Natural;
 
 private
 
-   type Chunk (Payload_Size : SSE.Storage_Count);
+   --  Chunks are organised in a doubly-linked list, where each member
+   --  is the head of a list of chunks all of the same aligned element
+   --  size and alignment.
+   --
+   --  The doubly-linked list is organised by decreasing aligned
+   --  element size and then (for the same aligned element size) by
+   --  decreasing alignment.
+   type Chunk_List;
+   type Chunk_List_Pointer is access all Chunk_List;
 
+   type Chunk (Payload_Size : SSE.Storage_Count);
    type Chunk_Pointer is access all Chunk;
+
+   type Chunk_List is record
+
+      --  Backward chain of heads
+         Previous_List : Chunk_List_Pointer;
+
+         --  Forward chain of heads
+         Next_List : Chunk_List_Pointer;
+
+         --  Chain of chunks all of the same element size & alignment.
+         Head : Chunk_Pointer;
+
+         --  Size of elements held in this chunk.
+         Element_Size : SSE.Storage_Count;
+
+         --  Alignment of elements held in this chunk.
+         Alignment : SSE.Storage_Count;
+
+   end record;
 
    type Chunk (Payload_Size : SSE.Storage_Count) is
       record
-         Previous_Sized_Chunk : Chunk_Pointer;
-         Next_Sized_Chunk : Chunk_Pointer;
+
+         --  Owning list of chunks all of the same element size & alignment.
+         Parent : Chunk_List_Pointer;
+
+         --  Chain of chunks all of the same element size & alignment.
          Next_Chunk : Chunk_Pointer;
-         Element_Size : SSE.Storage_Count;
-         Alignment : SSE.Storage_Count;
+
+         --  Number of free elements in this chunk.
          Number_Elements : SSE.Storage_Count;
+
+         --  Address of next free element in this chunk.
          Next_Element : System.Address;
+
+         --  The user data.
          Payload : SSE.Storage_Array (1 .. Payload_Size);
+
       end record;
 
    type Pool (Chunk_Size : SSE.Storage_Count) is
      new SSP.Root_Storage_Pool with
       record
-         Head : Chunk_Pointer;
+         Head : Chunk_List_Pointer;
          Unused : Chunk_Pointer;
          Allocated_Chunk_Size : SSE.Storage_Count;
       end record;
@@ -118,10 +166,9 @@ private
                         Requested_Element_Size : SSE.Storage_Count;
                         Requested_Alignment : SSE.Storage_Count);
 
-
    use type SSE.Storage_Offset;
 
-   type Empty_Chunk is new Chunk (Payload_Size => 0);
+   subtype Empty_Chunk is Chunk (Payload_Size => 0);
    Chunk_Overhead : constant SSE.Storage_Count
      := (Empty_Chunk'Size + System.Storage_Unit - 1) / System.Storage_Unit;
 
