@@ -37,7 +37,7 @@ package body BC.Support.Managed_Storage is
 
    --  Debug utilities
 
-   Debug : constant Boolean := True;
+   Debug : constant Boolean := False;
    pragma Warnings (Off, Debug);
 
    function "+" (S : System.Address) return String;
