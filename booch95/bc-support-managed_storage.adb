@@ -37,7 +37,7 @@ package body BC.Support.Managed_Storage is
 
    --  Debug utilities
 
-   Debug : constant Boolean := False;
+   Debug : constant Boolean := True;
    pragma Warnings (Off, Debug);
 
    function "+" (S : System.Address) return String;
@@ -85,8 +85,7 @@ package body BC.Support.Managed_Storage is
                         Requested_Alignment : SSE.Storage_Count);
 
    function Within_Range (Target : System.Address;
-                          Base : Chunk_Pointer;
-                          Offset : SSE.Storage_Count) return Boolean;
+                          Base : Chunk_Pointer) return Boolean;
    pragma Inline (Within_Range);
 
 
@@ -119,95 +118,19 @@ package body BC.Support.Managed_Storage is
 
    function Aligned
      (Size : SSE.Storage_Count;
-      Alignment : SSE.Storage_Count) return SSE.Storage_Offset is
+      Alignment : SSE.Storage_Count) return SSE.Storage_Offset
+   is
       use type SSE.Storage_Count;
    begin
       return ((Size + Alignment - 1) / Alignment) * Alignment;
    end Aligned;
 
 
-   procedure Initialize (This : in out Pool) is
-   begin
-      This.Address_Array_Size :=
-        (Integer (This.Chunk_Size) + Address_Size_I - 1) / Address_Size_I;
-   end Initialize;
-
-
-   procedure Finalize (This : in out Pool) is
-      List, Previous_List : Chunk_List_Pointer;
-      Chunk, Previous_Chunk : Chunk_Pointer;
-   begin
-      Put_Line ("Finalize:");
-      List := This.Head;
-      while List /= null loop
-         Put_Line (" l " & (+List));
-         Chunk := List.Head;
-         while Chunk /= null loop
-            Put_Line ("  c " & (+Chunk));
-            Previous_Chunk := Chunk;
-            Chunk := Chunk.Next_Chunk;
-            Dispose (Previous_Chunk);
-         end loop;
-         Previous_List := List;
-         List := List.Next_List;
-         Dispose (Previous_List);
-      end loop;
-   end Finalize;
-
-
-   function Pool_Overhead
-     (Type_Overhead : SSE.Storage_Count := 0;
-      Alignment : SSE.Storage_Count) return SSE.Storage_Count is
-   begin
-      return Aligned (Chunk_Overhead + Type_Overhead, Alignment);
-   end Pool_Overhead;
-
-
-   procedure Get_Chunk (Result : out Chunk_Pointer;
-                        From : in out Pool;
-                        Requested_Element_Size : SSE.Storage_Count;
-                        Requested_Alignment : SSE.Storage_Count) is
-
-      Next, Start, Stop : System.Address;
-
-      Usable_Chunk_Size : constant SSE.Storage_Count :=
-        (SSE.Storage_Count (From.Address_Array_Size) * Address_Size_SC
-           / Requested_Alignment)
-        * Requested_Alignment;
-
-      use type System.Address;
-
-   begin
-      if Requested_Element_Size > Usable_Chunk_Size then
-         raise BC.Storage_Error;
-      end if;
-      if From.Unused /= null then
-         Result := From.Unused;
-         From.Unused := From.Unused.Next_Chunk;
-      else
-         Result := new Chunk (Address_Array_Size => From.Address_Array_Size);
-      end if;
-      Result.Usable_Chunk_Size := Usable_Chunk_Size;
-      Result.Number_Elements := Usable_Chunk_Size / Requested_Element_Size;
-      Start := Result.Payload'Address;
-      Stop  := Start + ((Result.Number_Elements - 1) * Requested_Element_Size);
-      Next  := Start;
-      while Next < Stop loop
-         Put (Next + Requested_Element_Size, At_Location => Next);
-         Next := Next + Requested_Element_Size;
-      end loop;
-      Put (System.Null_Address, At_Location => Stop);
-      Result.Next_Element := Start;
-      Put_Line ("Get_Chunk: " & (+Result)
-                  & " ne: " & SSE.Storage_Count'Image (Result.Number_Elements)
-                  & " s: " & (+Result.Next_Element));
-   end Get_Chunk;
-
-
    procedure Allocate (The_Pool : in out Pool;
                        Storage_Address : out System.Address;
                        Size_In_Storage_Elements : SSE.Storage_Count;
-                       Alignment : SSE.Storage_Count) is
+                       Alignment : SSE.Storage_Count)
+   is
 
       --  The usable alignment is at least the alignment of a
       --  System.Address, because of the way that elements within a
@@ -355,14 +278,115 @@ package body BC.Support.Managed_Storage is
    end Deallocate;
 
 
-   function Storage_Size (This : Pool) return SSE.Storage_Count is
-      pragma Warnings (Off, This);
+   function Dirty_Chunks (This : Pool) return Natural
+   is
+      Result : Natural := 0;
+      List : Chunk_List_Pointer;
+      Chunk : Chunk_Pointer;
    begin
-      return SSE.Storage_Count'Last; -- well, what else can we say!?
-   end Storage_Size;
+      List := This.Head;
+      while List /= null loop
+         Chunk := List.Head;
+         while Chunk /= null loop
+            Result := Result + 1;
+            Chunk := Chunk.Next_Chunk;
+         end loop;
+         List := List.Next_List;
+      end loop;
+      return Result;
+   end Dirty_Chunks;
 
 
-   procedure Preallocate_Chunks (This : in out Pool; Count : Positive) is
+   procedure Finalize (This : in out Pool)
+   is
+      List, Previous_List : Chunk_List_Pointer;
+      Chunk, Previous_Chunk : Chunk_Pointer;
+   begin
+      Put_Line ("Finalize:");
+      List := This.Head;
+      while List /= null loop
+         Put_Line (" l " & (+List));
+         Chunk := List.Head;
+         while Chunk /= null loop
+            Put_Line ("  c " & (+Chunk));
+            Previous_Chunk := Chunk;
+            Chunk := Chunk.Next_Chunk;
+            Dispose (Previous_Chunk);
+         end loop;
+         Previous_List := List;
+         List := List.Next_List;
+         Dispose (Previous_List);
+      end loop;
+   end Finalize;
+
+
+   procedure Get_Chunk (Result : out Chunk_Pointer;
+                        From : in out Pool;
+                        Requested_Element_Size : SSE.Storage_Count;
+                        Requested_Alignment : SSE.Storage_Count)
+   is
+
+      Next, Start, Stop : System.Address;
+
+      Usable_Chunk_Size : constant SSE.Storage_Count :=
+        (SSE.Storage_Count (From.Address_Array_Size) * Address_Size_SC
+           / Requested_Alignment)
+        * Requested_Alignment;
+
+      use type System.Address;
+
+   begin
+
+      if Requested_Element_Size > Usable_Chunk_Size then
+         raise BC.Storage_Error;
+      end if;
+
+      if From.Unused /= null then
+         Result := From.Unused;
+         From.Unused := From.Unused.Next_Chunk;
+      else
+         Result := new Chunk (Address_Array_Size => From.Address_Array_Size);
+      end if;
+
+      Result.Usable_Chunk_Size := Usable_Chunk_Size;
+      Result.Number_Elements := Usable_Chunk_Size / Requested_Element_Size;
+
+      Start := Result.Payload'Address;
+      Stop  := Start + ((Result.Number_Elements - 1) * Requested_Element_Size);
+      Next  := Start;
+      while Next < Stop loop
+         Put (Next + Requested_Element_Size, At_Location => Next);
+         Next := Next + Requested_Element_Size;
+      end loop;
+      Put (System.Null_Address, At_Location => Stop);
+      Result.Next_Element := Start;
+
+      Put_Line ("Get_Chunk: " & (+Result)
+                  & " ne: " & SSE.Storage_Count'Image (Result.Number_Elements)
+                  & " s: " & (+Result.Next_Element));
+
+   end Get_Chunk;
+
+
+   procedure Initialize (This : in out Pool)
+   is
+   begin
+      This.Address_Array_Size :=
+        (Integer (This.Chunk_Size) + Address_Size_I - 1) / Address_Size_I;
+   end Initialize;
+
+
+   function Pool_Overhead
+     (Type_Overhead : SSE.Storage_Count := 0;
+      Alignment : SSE.Storage_Count) return SSE.Storage_Count
+   is
+   begin
+      return Aligned (Chunk_Overhead + Type_Overhead, Alignment);
+   end Pool_Overhead;
+
+
+   procedure Preallocate_Chunks (This : in out Pool; Count : Positive)
+   is
       Ch : Chunk_Pointer;
    begin
       for K in 1 .. Count loop
@@ -373,16 +397,30 @@ package body BC.Support.Managed_Storage is
    end Preallocate_Chunks;
 
 
-   function Within_Range (Target : System.Address;
-                          Base : Chunk_Pointer;
-                          Offset : SSE.Storage_Count) return Boolean is
-      use type System.Address;
+   procedure Purge_Unused_Chunks (This : in out Pool)
+   is
+      Chunk : Chunk_Pointer;
    begin
-      return Base.all'Address <= Target and Target < Base.all'Address + Offset;
-   end Within_Range;
+      Put_Line ("Purge_Unused_Chunks:");
+      while This.Unused /= null loop
+         Chunk := This.Unused;
+         This.Unused := This.Unused.Next_Chunk;
+         Put_Line (" p " & (+Chunk));
+         Dispose (Chunk);
+      end loop;
+   end Purge_Unused_Chunks;
 
 
-   procedure Reclaim_Unused_Chunks (This : in out Pool) is
+   procedure Put (This : System.Address;
+                  At_Location : System.Address)
+   is
+   begin
+      PeekPoke.To_Pointer (At_Location).all := This;
+   end Put;
+
+
+   procedure Reclaim_Unused_Chunks (This : in out Pool)
+   is
 
       List : Chunk_List_Pointer;
       Chunk : Chunk_Pointer;
@@ -426,12 +464,13 @@ package body BC.Support.Managed_Storage is
         This_Chunk :
             while Chunk /= null loop
                Put_Line ("  looking in " & (+Chunk));
-               if Within_Range (Element,
-                                Base => Chunk,
-                                Offset => This.Chunk_Size) then
+
+               if Within_Range (Element, Chunk) then
+
                   Chunk.Number_Elements := Chunk.Number_Elements - 1;
                   Put_Line ("   found.");
                   exit This_Chunk;
+
                end if;
                Chunk := Chunk.Next_Chunk;
             end loop This_Chunk;
@@ -461,9 +500,7 @@ package body BC.Support.Managed_Storage is
                Previous_Element := System.Null_Address;
 
                while Element /= System.Null_Address loop
-                  if Within_Range (Element,
-                                   Base => Chunk,
-                                   Offset => This.Chunk_Size) then
+                  if Within_Range (Element, Chunk) then
                      Put_Line ("  unlinking element at " & (+Element));
                      if Previous_Element = System.Null_Address then
                         List.Head.Next_Element := Value_At (Element);
@@ -521,7 +558,7 @@ package body BC.Support.Managed_Storage is
 
                else
 
-                  --  This isn't the head list of the pool/
+                  --  This isn't the head list of the pool.
                   List.Previous_List := Next_List;
 
                end if;
@@ -546,44 +583,23 @@ package body BC.Support.Managed_Storage is
    end Reclaim_Unused_Chunks;
 
 
-   procedure Purge_Unused_Chunks (This : in out Pool) is
-      Chunk : Chunk_Pointer;
+   function Storage_Size (This : Pool) return SSE.Storage_Count
+   is
+      pragma Warnings (Off, This);
    begin
-      Put_Line ("Purge_Unused_Chunks:");
-      while This.Unused /= null loop
-         Chunk := This.Unused;
-         This.Unused := This.Unused.Next_Chunk;
-         Put_Line (" p " & (+Chunk));
-         Dispose (Chunk);
-      end loop;
-   end Purge_Unused_Chunks;
+      return SSE.Storage_Count'Last; -- well, what else can we say!?
+   end Storage_Size;
 
 
-   function Total_Chunks (This : Pool) return Natural is
+   function Total_Chunks (This : Pool) return Natural
+   is
    begin
       return Dirty_Chunks (This) + Unused_Chunks (This);
    end Total_Chunks;
 
 
-   function Dirty_Chunks (This : Pool) return Natural is
-      Result : Natural := 0;
-      List : Chunk_List_Pointer;
-      Chunk : Chunk_Pointer;
-   begin
-      List := This.Head;
-      while List /= null loop
-         Chunk := List.Head;
-         while Chunk /= null loop
-            Result := Result + 1;
-            Chunk := Chunk.Next_Chunk;
-         end loop;
-         List := List.Next_List;
-      end loop;
-      return Result;
-   end Dirty_Chunks;
-
-
-   function Unused_Chunks (This : Pool) return Natural is
+   function Unused_Chunks (This : Pool) return Natural
+   is
       Chunk : Chunk_Pointer;
       Result : Natural := 0;
    begin
@@ -596,17 +612,26 @@ package body BC.Support.Managed_Storage is
    end Unused_Chunks;
 
 
-   procedure Put (This : System.Address;
-                  At_Location : System.Address) is
-   begin
-      PeekPoke.To_Pointer (At_Location).all := This;
-   end Put;
-
-
-   function Value_At (Location : System.Address) return System.Address is
+   function Value_At (Location : System.Address) return System.Address
+   is
    begin
       return PeekPoke.To_Pointer (Location).all;
    end Value_At;
+
+
+   function Within_Range (Target : System.Address;
+                          Base : Chunk_Pointer) return Boolean
+   is
+      use type System.Address;
+   begin
+
+      --  Element is within this chunk (NB, we check <= the last
+      --  address because this is a legal position, at least for
+      --  elements no larger than a System.Address).
+      return Base.Payload (Base.Payload'First)'Address <= Target
+        and Target <= Base.Payload (Base.Payload'Last)'Address;
+
+   end Within_Range;
 
 
 end BC.Support.Managed_Storage;
