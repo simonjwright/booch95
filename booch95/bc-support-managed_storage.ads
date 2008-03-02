@@ -34,17 +34,13 @@ package BC.Support.Managed_Storage is
    pragma Elaborate_Body;
 
    package SSE renames System.Storage_Elements;
-   package SSP renames System.Storage_Pools;
 
    type Pool (Chunk_Size : SSE.Storage_Count) is
-     new SSP.Root_Storage_Pool with private;
+     new System.Storage_Pools.Root_Storage_Pool with private;
    --  This pool can allocate objects of type Your_Type that are no
-   --  larger than Chunk_Size - Pool_Overhead (Alignment =>
-   --  Your_Type'Alignment).  BC.Storage_Error will be raised for
-   --  attempts to allocate larger objects.
-   --  (Pool_Overhead's Type_Overhead parameter is for use when
-   --  Your_Type is unconstrained, so that some additional storage is
-   --  required to hold the actual object's constraints).
+   --  larger than Chunk_Size (including any extra space for the
+   --  constraints of objects of indefinite types). BC.Storage_Error
+   --  will be raised for attempts to allocate larger objects.
 
    --  At any time, each chunk that is in use may contain objects of a
    --  specific size and alignment. There may be more than one chunk
@@ -62,10 +58,6 @@ package BC.Support.Managed_Storage is
                          Alignment : SSE.Storage_Count);
 
    function Storage_Size (This : Pool) return SSE.Storage_Count;
-
-   function Pool_Overhead
-     (Type_Overhead  : SSE.Storage_Count := 0;
-      Alignment : SSE.Storage_Count) return SSE.Storage_Count;
 
    --  Create Count empty chunks, place on the Unused list.
    procedure Preallocate_Chunks (This : in out Pool;  Count : Positive);
@@ -147,13 +139,12 @@ private
 
       end record;
 
-   type Pool (Chunk_Size : SSE.Storage_Count) is
-     new SSP.Root_Storage_Pool with
-      record
+   type Pool (Chunk_Size : SSE.Storage_Count)
+   is new System.Storage_Pools.Root_Storage_Pool with record
          Head : Chunk_List_Pointer;
          Unused : Chunk_Pointer;
          Address_Array_Size : Natural;
-      end record;
+   end record;
 
    procedure Initialize (This : in out Pool);
    procedure Finalize (This : in out Pool);
