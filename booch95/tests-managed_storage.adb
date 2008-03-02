@@ -20,10 +20,6 @@ package body Tests.Managed_Storage is
    package MS renames BC.Support.Managed_Storage;
    P128 : MS.Pool (128);
 
-   type String_P is access String;
-   for String_P'Storage_Pool use P128;
-   procedure Free is new Ada.Unchecked_Deallocation (String, String_P);
-
 
    type Case_1 is new Test_Case with null record;
    function Name (C : Case_1) return String_Access;
@@ -34,20 +30,12 @@ package body Tests.Managed_Storage is
    --  Test procedures  --
    -----------------------
 
-   procedure Info (C : in out Test_Case'Class);
-   procedure Info (C : in out Test_Case'Class) is
-      pragma Warnings (Off, C);
-   begin
-      Put_Line ("Pool_Overhead: " & MS.Pool_Overhead (Alignment => 1)'Img);
-      Put_Line ("Total_Chunks: " & MS.Total_Chunks (P128)'Img);
-      Put_Line ("Dirty_Chunks: " & MS.Dirty_Chunks (P128)'Img);
-      Put_Line ("Unused_Chunks: " & MS.Unused_Chunks (P128)'Img);
-   end Info;
-
-
    procedure Allocation (C : in out Test_Case'Class);
    procedure Allocation (C : in out Test_Case'Class) is
       pragma Warnings (Off, C);
+      type String_P is access String;
+      for String_P'Storage_Pool use P128;
+      procedure Free is new Ada.Unchecked_Deallocation (String, String_P);
       P : String_P;
    begin
       P := new String (1 .. 32);
@@ -92,6 +80,61 @@ package body Tests.Managed_Storage is
    end Allocation;
 
 
+   procedure Zero_Allocation (C : in out Test_Case'Class);
+   procedure Zero_Allocation (C : in out Test_Case'Class) is
+      pragma Warnings (Off, C);
+      subtype Empty is String (1 .. 0);
+      type Empty_P is access Empty;
+      for Empty_P'Storage_Pool use P128;
+      procedure Free is new Ada.Unchecked_Deallocation (Empty, Empty_P);
+      P, Q : Empty_P;
+   begin
+      P := new Empty;
+      Assert (MS.Total_Chunks (P128) = 1,
+              "wrong number of chunks (1)");
+      Assert (MS.Dirty_Chunks (P128) = 1,
+              "wrong number of dirty chunks (1)");
+      Assert (MS.Unused_Chunks (P128) = 0,
+              "wrong number of unused chunks (1)");
+      Q := new Empty;
+      Assert (MS.Total_Chunks (P128) = 1,
+              "wrong number of chunks (2)");
+      Assert (MS.Dirty_Chunks (P128) = 1,
+              "wrong number of dirty chunks (2)");
+      Assert (MS.Unused_Chunks (P128) = 0,
+              "wrong number of unused chunks (2)");
+      Free (P);
+      Assert (MS.Total_Chunks (P128) = 1,
+              "wrong number of chunks (3)");
+      Assert (MS.Dirty_Chunks (P128) = 1,
+              "wrong number of dirty chunks (3)");
+      Assert (MS.Unused_Chunks (P128) = 0,
+              "wrong number of unused chunks (3)");
+      MS.Reclaim_Unused_Chunks (P128);
+      Assert (MS.Total_Chunks (P128) = 1,
+              "wrong number of chunks (4)");
+      Assert (MS.Dirty_Chunks (P128) = 1,
+              "wrong number of dirty chunks (4)");
+      Assert (MS.Unused_Chunks (P128) = 0,
+              "wrong number of unused chunks (4)");
+      Free (Q);
+      MS.Reclaim_Unused_Chunks (P128);
+      Assert (MS.Total_Chunks (P128) = 1,
+              "wrong number of chunks (5)");
+      Assert (MS.Dirty_Chunks (P128) = 0,
+              "wrong number of dirty chunks (5)");
+      Assert (MS.Unused_Chunks (P128) = 1,
+              "wrong number of unused chunks (5)");
+      MS.Purge_Unused_Chunks (P128);
+      Assert (MS.Total_Chunks (P128) = 0,
+              "wrong number of chunks (6)");
+      Assert (MS.Dirty_Chunks (P128) = 0,
+              "wrong number of dirty chunks (6)");
+      Assert (MS.Unused_Chunks (P128) = 0,
+              "wrong number of unused chunks (6)");
+   end Zero_Allocation;
+
+
    function Name (C : Case_1) return String_Access is
       pragma Warnings (Off, C);
    begin
@@ -103,12 +146,12 @@ package body Tests.Managed_Storage is
    begin
       Register_Routine
         (C,
-         Info'Unrestricted_Access,
-         "Info");
-      Register_Routine
-        (C,
          Allocation'Unrestricted_Access,
          "Allocation");
+      Register_Routine
+        (C,
+         Zero_Allocation'Unrestricted_Access,
+         "Zero_Allocation");
    end Register_Tests;
 
 
