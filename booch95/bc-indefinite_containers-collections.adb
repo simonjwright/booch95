@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2008 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -45,7 +45,8 @@ package body BC.Indefinite_Containers.Collections is
       begin
          while not Is_Done (Left_Iter) and then
            not Is_Done (Right_Iter) loop
-            if Item (Current_Item (Left_Iter)) /= Item (Current_Item (Right_Iter)) then
+            if Item (Current_Item (Left_Iter))
+              /= Item (Current_Item (Right_Iter)) then
                return False;
             end if;
             Next (Left_Iter);
