@@ -85,6 +85,12 @@ package body BC.Support.Managed_Storage is
                           Base : Chunk_Pointer) return Boolean;
    pragma Inline (Within_Range);
 
+   procedure Usable_Size_And_Alignment
+     (For_Size : SSE.Storage_Count;
+      For_Alignment : SSE.Storage_Count;
+      Is_Size : out SSE.Storage_Count;
+      Is_Alignment : out SSE.Storage_Count);
+
 
    --  Constants.
 
@@ -115,21 +121,8 @@ package body BC.Support.Managed_Storage is
                        Alignment : SSE.Storage_Count)
    is
 
-      --  The usable alignment is at least the alignment of a
-      --  System.Address, because of the way that elements within a
-      --  chunk are chained.
-      Usable_Alignment : constant SSE.Storage_Count :=
-        SSE.Storage_Count'Max (Alignment,
-                               System.Address'Alignment);
-
-      --  The usable size must be a multiple of the size of a
-      --  System.Address, likewise.
-      Minimum_Size : constant SSE.Storage_Count :=
-        SSE.Storage_Count'Max (Size_In_Storage_Elements, Address_Size_SC);
-
-      Usable_Size : constant SSE.Storage_Count :=
-        ((Minimum_Size + Address_Size_SC - 1) / Address_Size_SC)
-        * Address_Size_SC;
+      Usable_Size : SSE.Storage_Count;
+      Usable_Alignment : SSE.Storage_Count;
 
       List : Chunk_List_Pointer;
       Previous_List : Chunk_List_Pointer;
@@ -138,6 +131,12 @@ package body BC.Support.Managed_Storage is
       use type System.Address;
 
    begin
+
+      --  Calculate the usable size and alignment.
+      Usable_Size_And_Alignment (Size_In_Storage_Elements,
+                                 Alignment,
+                                 Usable_Size,
+                                 Usable_Alignment);
 
       --  Look for a chunk list with the right element size and
       --  alignment, stopping when no point in continuing
@@ -215,29 +214,20 @@ package body BC.Support.Managed_Storage is
       Alignment : SSE.Storage_Count)
    is
 
-      --  The usable alignment is at least the alignment of a
-      --  System.Address, because of the way that elements within a
-      --  chunk are chained.
-      Usable_Alignment : constant SSE.Storage_Count :=
-        SSE.Storage_Count'Max (Alignment,
-                               System.Address'Alignment);
-
-      --  The usable size likewise.
-      Minimum_Size : constant SSE.Storage_Count :=
-        SSE.Storage_Count'Max
-        (Size_In_Storage_Elements,
-         System.Address'Max_Size_In_Storage_Elements);
-
-      Usable_Size : constant SSE.Storage_Count :=
-        ((Minimum_Size + System.Address'Max_Size_In_Storage_Elements - 1)
-         / System.Address'Max_Size_In_Storage_Elements)
-        * System.Address'Max_Size_In_Storage_Elements;
+      Usable_Size : SSE.Storage_Count;
+      Usable_Alignment : SSE.Storage_Count;
 
       List : Chunk_List_Pointer;
 
    begin
 
       Put_Line ("Deallocate: " & (+Storage_Address));
+
+      --  Calculate the usable size and alignment.
+      Usable_Size_And_Alignment (Size_In_Storage_Elements,
+                                 Alignment,
+                                 Usable_Size,
+                                 Usable_Alignment);
 
       --  Look for the right list
       List := The_Pool.Head;
@@ -309,18 +299,36 @@ package body BC.Support.Managed_Storage is
                         Requested_Alignment : SSE.Storage_Count)
    is
 
-      Next, Start, Stop : System.Address;
+      --  There are some tricky problems around the question of
+      --  alignment, especially when the requested alignment is
+      --  sufficiently large to impact the number of elements that can
+      --  live in a chunk (the chunk's payload's alignment is the
+      --  alignment of a System.Address).
+      --
+      --  This is normally not of any great significance: on i386
+      --  hardware, the maximum alignment is 8, while on PowerPC it is
+      --  4.
+      --
+      --  However, we can't calculate the number of elements that can
+      --  be held in the chunk until we've got the chunk.
 
+      --  The maximum that can be held if we turn out to be aligned
+      --  correctly; there may in fact turn out to be room for one less
+      --  element.
       Usable_Chunk_Size : constant SSE.Storage_Count :=
         (SSE.Storage_Count (From.Address_Array_Size) * Address_Size_SC
            / Requested_Alignment)
         * Requested_Alignment;
 
+      Next, Start, Stop : System.Address;
+
       use type System.Address;
+      use type SSE.Integer_Address;
 
    begin
 
       if Requested_Element_Size > Usable_Chunk_Size then
+         --  We have no chance of meeting the requirement.
          raise BC.Storage_Error;
       end if;
 
@@ -331,12 +339,33 @@ package body BC.Support.Managed_Storage is
          Result := new Chunk (Address_Array_Size => From.Address_Array_Size);
       end if;
 
-      Result.Usable_Chunk_Size := Usable_Chunk_Size;
-      Result.Number_Elements := Usable_Chunk_Size / Requested_Element_Size;
+      declare
+         First : Positive := Result.Payload'First;
+      begin
+         loop
+            exit when SSE.To_Integer (Result.Payload (First)'Address)
+              mod SSE.Integer_Address (Requested_Alignment) = 0;
+            First := First + 1;
+         end loop;
+         Start := Result.Payload (First)'Address;
+         Result.Usable_Chunk_Size :=
+           Usable_Chunk_Size
+           - Address_Size_SC * SSE.Storage_Count (First
+                                                    - Result.Payload'First);
+      end;
 
-      Start := Result.Payload'Address;
-      Stop  := Start + ((Result.Number_Elements - 1) * Requested_Element_Size);
-      Next  := Start;
+      Result.Number_Elements :=
+        Result.Usable_Chunk_Size / Requested_Element_Size;
+
+      if Result.Number_Elements < 1 then
+         --  We have failed. Put the chunk back.
+         Result.Next_Chunk := From.Unused;
+         From.Unused := Result;
+         raise BC.Storage_Error;
+      end if;
+
+      Stop := Start + ((Result.Number_Elements - 1) * Requested_Element_Size);
+      Next := Start;
       while Next < Stop loop
          Put (Next + Requested_Element_Size, At_Location => Next);
          Next := Next + Requested_Element_Size;
@@ -584,6 +613,29 @@ package body BC.Support.Managed_Storage is
       end loop;
       return Result;
    end Unused_Chunks;
+
+
+   procedure Usable_Size_And_Alignment
+     (For_Size : SSE.Storage_Count;
+      For_Alignment : SSE.Storage_Count;
+      Is_Size : out SSE.Storage_Count;
+      Is_Alignment : out SSE.Storage_Count)
+   is
+      --  The usable alignment is at least the alignment of a
+      --  System.Address, because of the way that elements within a
+      --  chunk are chained.
+      --  The usable size must be a multiple of the size of a
+      --  System.Address, likewise.
+      Minimum_Size : constant SSE.Storage_Count :=
+        SSE.Storage_Count'Max (For_Size, Address_Size_SC);
+   begin
+      Is_Size :=
+        ((Minimum_Size + Address_Size_SC - 1) / Address_Size_SC)
+        * Address_Size_SC;
+      Is_Alignment :=
+        SSE.Storage_Count'Max (For_Alignment,
+                               System.Address'Alignment);
+   end Usable_Size_And_Alignment;
 
 
    function Value_At (Location : System.Address) return System.Address
