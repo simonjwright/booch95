@@ -13,6 +13,7 @@ pragma Warnings (Off, Ada.Text_IO);
 
 with Ada.Unchecked_Deallocation;
 with BC.Support.Managed_Storage;
+with System.Storage_Elements;
 
 package body Tests.Managed_Storage is
 
@@ -20,6 +21,7 @@ package body Tests.Managed_Storage is
    package MS renames BC.Support.Managed_Storage;
    P128 : MS.Pool (128);
 
+   package SSE renames System.Storage_Elements;
 
    type Case_1 is new Test_Case with null record;
    function Name (C : Case_1) return String_Access;
@@ -135,6 +137,38 @@ package body Tests.Managed_Storage is
    end Zero_Allocation;
 
 
+   procedure Alignment (C : in out Test_Case'Class);
+   procedure Alignment (C : in out Test_Case'Class)
+   is
+      pragma Warnings (Off, C);
+      P256 : MS.Pool (256);
+      Result : System.Address;
+      use type SSE.Integer_Address;
+      use type SSE.Storage_Count;
+   begin
+      MS.Allocate (P256, Result, 256, System.Address'Alignment);  -- must work
+      MS.Allocate (P256, Result, 12, 32);  -- must work
+      Assert (SSE.To_Integer (Result) mod 32 = 0,
+              "address not correctly aligned (1)");
+      MS.Allocate (P256, Result, 256 - 32, 32);  -- must work
+      Assert (SSE.To_Integer (Result) mod 32 = 0,
+              "address not correctly aligned (2)");
+      begin
+         --  This allocation almost certainly won't work, because
+         --  (assuming 32-bit words) the payload starts 6 words in,
+         --  and the system allocation will probably start on a
+         --  16-byte alignment, so the highest alignment with wioch we
+         --  could ever achieve allocation of a full-size element
+         --  would be 8.
+         MS.Allocate (P256, Result, 256, 16);
+         Assert (SSE.To_Integer (Result) mod 16 = 0,
+                 "address not correctly aligned (3)");
+      exception
+         when BC.Storage_Error => null;
+      end;
+   end Alignment;
+
+
    function Name (C : Case_1) return String_Access is
       pragma Warnings (Off, C);
    begin
@@ -152,6 +186,10 @@ package body Tests.Managed_Storage is
         (C,
          Zero_Allocation'Unrestricted_Access,
          "Zero_Allocation");
+      Register_Routine
+        (C,
+         Alignment'Unrestricted_Access,
+         "Alignmant");
    end Register_Tests;
 
 
