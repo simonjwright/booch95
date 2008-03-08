@@ -165,7 +165,7 @@ package body Tests.Managed_Storage is
       Register_Routine
         (C,
          Alignment'Unrestricted_Access,
-         "Alignmant");
+         "Alignment");
    end Register_Tests;
 
 
