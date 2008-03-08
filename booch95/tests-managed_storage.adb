@@ -80,10 +80,14 @@ package body Tests.Managed_Storage is
       Check_Chunks (P128, 2, 2, 2, 0);
       Free (P);
       Check_Chunks (P128, 2, 2, 2, 0);
+      P := new String (1 .. 1);
+      Check_Chunks (P128, 3, 3, 3, 0);
+      Free (P);
+      Check_Chunks (P128, 4, 3, 3, 0);
       MS.Reclaim_Unused_Chunks (P128);
-      Check_Chunks (P128, 3, 2, 0, 2);
+      Check_Chunks (P128, 5, 3, 0, 3);
       MS.Purge_Unused_Chunks (P128);
-      Check_Chunks (P128, 4, 0, 0, 0);
+      Check_Chunks (P128, 6, 0, 0, 0);
    end Allocation;
 
 
