@@ -27,6 +27,7 @@
 --  $Date$
 --  $Author$
 
+with Ada.Exceptions;
 with Ada.Strings.Fixed;
 with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
@@ -249,7 +250,11 @@ package body BC.Support.Managed_Storage is
       loop
          List := List.Next_List;
       end loop;
-      pragma Assert (List /= null, "no matching list found");
+      if List = null then
+         Ada.Exceptions.Raise_Exception
+           (Program_Error'Identity,
+            "BC.Support.Managed_Storage.Deallocate: no matching list found");
+      end if;
 
       Put (List.Head.Next_Element, At_Location => Storage_Address);
       List.Head.Next_Element := Storage_Address;
@@ -451,7 +456,7 @@ package body BC.Support.Managed_Storage is
 
    begin
 
-      pragma Style_Checks (Off); -- GNAT 3.14a mishandles named loops
+      pragma Style_Checks (Off); -- GNAT and GLIDE disagree about layout here
 
       List := This.Head;
       while List /= null loop
@@ -492,7 +497,12 @@ package body BC.Support.Managed_Storage is
                end if;
                Chunk := Chunk.Next_Chunk;
             end loop This_Chunk;
-            pragma Assert (Chunk /= null, "element not found in chunk");
+            if Chunk = null then
+               Ada.Exceptions.Raise_Exception
+                 (Program_Error'Identity,
+                  "BC.Support.Managed_Storage.Reclaim_Unused_Chunks: "
+                    & "element not found in chunk");
+            end if;
 
             Element := Value_At (Element); -- get next element
 
