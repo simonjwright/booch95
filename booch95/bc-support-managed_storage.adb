@@ -27,6 +27,7 @@
 --  $Date$
 --  $Author$
 
+with Ada.Strings.Fixed;
 with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
 
@@ -50,7 +51,7 @@ package body BC.Support.Managed_Storage is
       Address_IO.Put (Result,
                       System.Storage_Elements.To_Integer (S),
                       Base => 16);
-      return Result;
+      return " " & Ada.Strings.Fixed.Trim (Result, Ada.Strings.Both);
    end "+";
    function "+" (S : Chunk_List_Pointer) return String is
    begin
@@ -174,7 +175,9 @@ package body BC.Support.Managed_Storage is
             List.Next_List := Previous_List.Next_List;
             Previous_List.Next_List := List;
          else
-            --  There was no previous member, add as head
+            --  There was no previous member, add as head (before
+            --  previous head)
+            List.Next_List := The_Pool.Head;
             The_Pool.Head := List;
          end if;
 
@@ -382,11 +385,12 @@ package body BC.Support.Managed_Storage is
       Put (System.Null_Address, At_Location => Stop);
       Result.Next_Element := Start;
 
-      Put_Line ("Get_Chunk:" & (+Result)
+      Put_Line ("Get_Chunk:"
                   & " s:" & SSE.Storage_Count'Image (Requested_Element_Size)
                   & " a:" & SSE.Storage_Count'Image (Requested_Alignment)
+                  & " c:" & (+(Result))
                   & " ne:" & SSE.Storage_Count'Image (Result.Number_Elements)
-                  & " @:" & (+Result.Next_Element));
+                  & " p:" & (+Result.Next_Element));
 
    end Get_Chunk;
 
