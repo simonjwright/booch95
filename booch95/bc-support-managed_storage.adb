@@ -44,9 +44,13 @@ package body BC.Support.Managed_Storage is
    function "+" (S : Chunk_List_Pointer) return String;
    function "+" (S : Chunk_Pointer) return String;
    function "+" (S : System.Address) return String is
+      package Address_IO is new Ada.Text_IO.Modular_IO (SSE.Integer_Address);
+      Result : String (1 .. 12);
    begin
-      return SSE.Integer_Address'Image
-        (System.Storage_Elements.To_Integer (S));
+      Address_IO.Put (Result,
+                      System.Storage_Elements.To_Integer (S),
+                      Base => 16);
+      return Result;
    end "+";
    function "+" (S : Chunk_List_Pointer) return String is
    begin
@@ -61,6 +65,7 @@ package body BC.Support.Managed_Storage is
    begin
       if Debug then
          Ada.Text_IO.Put_Line (S);
+         Ada.Text_IO.Flush;
       end if;
    end Put_Line;
 
@@ -142,7 +147,7 @@ package body BC.Support.Managed_Storage is
       --  alignment, stopping when no point in continuing
       List := The_Pool.Head;
       while List /= null and then
-        (Usable_Size > List.Element_Size
+        (List.Element_Size > Usable_Size
            or else List.Alignment > Usable_Alignment)
       loop
          Previous_List := List;
@@ -169,7 +174,7 @@ package body BC.Support.Managed_Storage is
             List.Next_List := Previous_List.Next_List;
             Previous_List.Next_List := List;
          else
-            --  There was no previous memeber, add as head
+            --  There was no previous member, add as head
             The_Pool.Head := List;
          end if;
 
@@ -202,7 +207,9 @@ package body BC.Support.Managed_Storage is
       Storage_Address := Chunk.Next_Element;
       Chunk.Next_Element := Value_At (Chunk.Next_Element);
 
-      Put_Line ("Allocate: " & (+Storage_Address));
+      Put_Line ("Allocate:" & (+Storage_Address)
+                  & " s:" & SSE.Storage_Count'Image (Size_In_Storage_Elements)
+                  & " a:" & SSE.Storage_Count'Image (Alignment));
 
    end Allocate;
 
@@ -221,7 +228,9 @@ package body BC.Support.Managed_Storage is
 
    begin
 
-      Put_Line ("Deallocate: " & (+Storage_Address));
+      Put_Line ("Deallocate:" & (+Storage_Address)
+                  & " s:" & SSE.Storage_Count'Image (Size_In_Storage_Elements)
+                  & " a:" & SSE.Storage_Count'Image (Alignment));
 
       --  Calculate the usable size and alignment.
       Usable_Size_And_Alignment (Size_In_Storage_Elements,
@@ -373,9 +382,11 @@ package body BC.Support.Managed_Storage is
       Put (System.Null_Address, At_Location => Stop);
       Result.Next_Element := Start;
 
-      Put_Line ("Get_Chunk: " & (+Result)
-                  & " ne: " & SSE.Storage_Count'Image (Result.Number_Elements)
-                  & " s: " & (+Result.Next_Element));
+      Put_Line ("Get_Chunk:" & (+Result)
+                  & " s:" & SSE.Storage_Count'Image (Requested_Element_Size)
+                  & " a:" & SSE.Storage_Count'Image (Requested_Alignment)
+                  & " ne:" & SSE.Storage_Count'Image (Result.Number_Elements)
+                  & " @:" & (+Result.Next_Element));
 
    end Get_Chunk;
 
