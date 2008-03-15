@@ -70,6 +70,14 @@ package body Tests.Managed_Storage is
       procedure Free is new Ada.Unchecked_Deallocation (String, String_P);
       P : String_P;
    begin
+      begin
+         P := new String
+           (1 .. 129 - 2 * Integer'Max_Size_In_Storage_Elements);
+         Free (P);
+         Assert (False, "allocation of too large an item should have failed");
+      exception
+         when BC.Storage_Error => null;
+      end;
       P := new String (1 .. 32);
       Check_Chunks (P128, 1, 1, 1, 0);
       Free (P);
@@ -88,7 +96,52 @@ package body Tests.Managed_Storage is
       Check_Chunks (P128, 5, 3, 0, 3);
       MS.Purge_Unused_Chunks (P128);
       Check_Chunks (P128, 6, 0, 0, 0);
+      --  Check that a chunk on the free list gets reused.
+      P := new String (1 .. 1);
+      Free (P);
+      MS.Reclaim_Unused_Chunks (P128);
+      Check_Chunks (P128, 7, 1, 0, 1);
+      P := new String (1 .. 1);
+      Check_Chunks (P128, 8, 1, 1, 0);
+      Free (P);
    end Allocation;
+
+
+   procedure Deallocation (C : in out Test_Case'Class);
+   procedure Deallocation (C : in out Test_Case'Class) is
+      pragma Warnings (Off, C);
+      P8 : MS.Pool (8); -- 2 integers
+      type Integer_P is access Integer;
+      for Integer_P'Storage_Pool use P8;
+      procedure Free is new Ada.Unchecked_Deallocation (Integer, Integer_P);
+      Ps : array (1 .. 6) of Integer_P;
+   begin
+      for I in Ps'Range loop
+         Ps (I) := new Integer'(I);
+      end loop;
+      Check_Chunks (P8, 1, 3, 3, 0);
+      Free (Ps (1));
+      Free (Ps (4));
+      Free (Ps (5));
+      Check_Chunks (P8, 2, 3, 3, 0);
+      MS.Reclaim_Unused_Chunks (P8);
+      Check_Chunks (P8, 3, 3, 3, 0);
+      MS.Purge_Unused_Chunks (P8);
+      Check_Chunks (P8, 4, 3, 3, 0);
+      Assert (Ps (2).all = 2, "(2) is incorrect (1)");
+      Assert (Ps (3).all = 3, "(3) is incorrect (1)");
+      Assert (Ps (6).all = 6, "(6) is incorrect (1)");
+      Free (Ps (3));
+      Check_Chunks (P8, 5, 3, 3, 0);
+      MS.Reclaim_Unused_Chunks (P8);
+      Check_Chunks (P8, 6, 3, 2, 1);
+      MS.Purge_Unused_Chunks (P8);
+      Check_Chunks (P8, 7, 2, 2, 0);
+      Assert (Ps (2).all = 2, "(2) is incorrect (2)");
+      Assert (Ps (6).all = 6, "(6) is incorrect (2)");
+      --  re-Free.
+      Free (Ps (3));
+   end Deallocation;
 
 
    procedure Zero_Allocation (C : in out Test_Case'Class);
@@ -149,6 +202,57 @@ package body Tests.Managed_Storage is
    end Alignment;
 
 
+   procedure Reclaiming_And_Purging (C : in out Test_Case'Class);
+   procedure Reclaiming_And_Purging (C : in out Test_Case'Class) is
+      pragma Warnings (Off, C);
+      P128 : MS.Pool (128);
+      type String_P is access String;
+      for String_P'Storage_Pool use P128;
+      procedure Free is new Ada.Unchecked_Deallocation (String, String_P);
+      P : String_P;
+      Ps : array (1 .. 5) of String_P;
+   begin
+      --  Make sure we can reclaim/purge already reclaimed/purged Pools.
+      P := new String (1 .. 1);
+      Free (P);
+      MS.Reclaim_Unused_Chunks (P128);
+      MS.Reclaim_Unused_Chunks (P128);
+      MS.Purge_Unused_Chunks (P128);
+      MS.Purge_Unused_Chunks (P128);
+      MS.Reclaim_Unused_Chunks (P128);
+      --  Check we can reclaim chunks at beginning/middle/end of size lists
+      for I in Ps'Range loop
+         Ps (I) := new String (1 .. I * 4);
+      end loop;
+      Free (Ps (1));
+      Free (Ps (3));
+      Free (Ps (5));
+      Check_Chunks (P128, 1, 5, 5, 0);
+      MS.Reclaim_Unused_Chunks (P128);
+      Check_Chunks (P128, 2, 5, 2, 3);
+      MS.Purge_Unused_Chunks (P128);
+      Check_Chunks (P128, 3, 2, 2, 0);
+   end Reclaiming_And_Purging;
+
+
+   procedure Miscellaneous (C : in out Test_Case'Class);
+   procedure Miscellaneous (C : in out Test_Case'Class) is
+      pragma Warnings (Off, C);
+      P128 : MS.Pool (128);
+      package SSE renames System.Storage_Elements;
+      use type SSE.Storage_Count;
+   begin
+      MS.Preallocate_Chunks (P128, 10);
+      Check_Chunks (P128, 1, 10, 0, 10);
+      MS.Reclaim_Unused_Chunks (P128);
+      Check_Chunks (P128, 2, 10, 0, 10);
+      MS.Purge_Unused_Chunks (P128);
+      Check_Chunks (P128, 3, 0, 0, 0);
+      Assert (MS.Storage_Size (P128) = SSE.Storage_Count'Last,
+              "wrong Storage_Size");
+   end Miscellaneous;
+
+
    function Name (C : Case_1) return String_Access is
       pragma Warnings (Off, C);
    begin
@@ -164,12 +268,24 @@ package body Tests.Managed_Storage is
          "Allocation");
       Register_Routine
         (C,
+         Deallocation'Unrestricted_Access,
+         "Deallocation");
+      Register_Routine
+        (C,
          Zero_Allocation'Unrestricted_Access,
          "Zero_Allocation");
       Register_Routine
         (C,
          Alignment'Unrestricted_Access,
          "Alignment");
+      Register_Routine
+        (C,
+         Reclaiming_And_Purging'Unrestricted_Access,
+         "Reclaiming_And_Purging");
+      Register_Routine
+        (C,
+         Miscellaneous'Unrestricted_Access,
+         "Miscellaneous");
    end Register_Tests;
 
 
