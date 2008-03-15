@@ -166,20 +166,32 @@ package body BC.Support.Managed_Storage is
          --  previous list, if any, and may become the new head.
 
          List := new Chunk_List;
+         Put_Line ("Allocate: new List" & (+(List)));
 
          List.Previous_List := Previous_List;
          --  May be null, if at head
 
          --  Chain the new list in
          if Previous_List /= null then
+
             --  There is a previous member, insert
             List.Next_List := Previous_List.Next_List;
             Previous_List.Next_List := List;
+
          else
+
             --  There was no previous member, add as head (before
             --  previous head)
             List.Next_List := The_Pool.Head;
             The_Pool.Head := List;
+
+            if List.Next_List /= null then
+
+               --  Insert the backward link.
+               List.Next_List.Previous_List := List;
+
+            end if;
+
          end if;
 
          --  Store the sizing attributes
@@ -200,11 +212,29 @@ package body BC.Support.Managed_Storage is
 
          --  There was no chunk with free elements; allocate a new one
          --  (at the head, for efficiency in future allocations).
-         Chunk := List.Head;
-         Get_Chunk (List.Head, The_Pool, Usable_Size, Usable_Alignment);
-         List.Head.Next_Chunk := Chunk;
-         Chunk := List.Head;
-         Chunk.Parent := List;
+         --
+         --  Note that if Get_Chunk fails (alignment > alignment of
+         --  System.Address => this request just fails to fit) we may
+         --  be left with an empty List.
+         begin
+            Chunk := List.Head;
+            Get_Chunk (List.Head, The_Pool, Usable_Size, Usable_Alignment);
+            List.Head.Next_Chunk := Chunk;
+            Chunk := List.Head;
+            Chunk.Parent := List;
+         exception
+            when BC.Storage_Error =>
+               if List.Head = null then
+                  if List.Previous_List = null then
+                     The_Pool.Head := List.Next_List;
+                  end if;
+                  if List.Next_List /= null then
+                     List.Next_List.Previous_List := List.Previous_List;
+                  end if;
+                  Dispose (List);
+               end if;
+               raise;
+         end;
 
       end if;
 
@@ -324,7 +354,7 @@ package body BC.Support.Managed_Storage is
       --
       --  This is normally not of any great significance: on i386
       --  hardware, the maximum alignment is 8, while on PowerPC it is
-      --  4.
+      --  4 sometimes 8, depending on OS).
       --
       --  However, we can't calculate the number of elements that can
       --  be held in the chunk until we've got the chunk.
@@ -359,6 +389,7 @@ package body BC.Support.Managed_Storage is
       declare
          First : Positive := Result.Payload'First;
       begin
+         --  Probably should be able to do this without a loop!
          loop
             exit when SSE.To_Integer (Result.Payload (First)'Address)
               mod SSE.Integer_Address (Requested_Alignment) = 0;
@@ -459,6 +490,7 @@ package body BC.Support.Managed_Storage is
       pragma Style_Checks (Off); -- GNAT and GLIDE disagree about layout here
 
       List := This.Head;
+
       while List /= null loop
 
          Put_Line ("Reclaim_Unused_Chunks: looking at " & (+List));
@@ -586,8 +618,18 @@ package body BC.Support.Managed_Storage is
 
                else
 
-                  --  This isn't the head list of the pool.
-                  List.Previous_List := Next_List;
+                  --  This isn't the head list of the pool, so there
+                  --  is a previous list; make it's next list this
+                  --  list's next list.
+                  List.Previous_List.Next_List := Next_List;
+
+               end if;
+
+               if Next_List /= null then
+
+                  --  Make the next list's previous list this list's
+                  --  previous list.
+                  Next_List.Previous_List := List.Previous_List;
 
                end if;
 
