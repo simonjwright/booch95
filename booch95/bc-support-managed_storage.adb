@@ -63,6 +63,7 @@ package body BC.Support.Managed_Storage is
       return +(S.all'Address);
    end "+";
    procedure Put_Line (S : String);
+   pragma Inline (Put_Line);
    procedure Put_Line (S : String) is
    begin
       if Debug then
@@ -166,10 +167,7 @@ package body BC.Support.Managed_Storage is
          --  previous list, if any, and may become the new head.
 
          List := new Chunk_List;
-         Put_Line ("Allocate: new List" & (+(List)));
-
-         List.Previous_List := Previous_List;
-         --  May be null, if at head
+         Put_Line ("Allocate: new List" & (+List));
 
          --  Chain the new list in
          if Previous_List /= null then
@@ -184,13 +182,6 @@ package body BC.Support.Managed_Storage is
             --  previous head)
             List.Next_List := The_Pool.Head;
             The_Pool.Head := List;
-
-            if List.Next_List /= null then
-
-               --  Insert the backward link.
-               List.Next_List.Previous_List := List;
-
-            end if;
 
          end if;
 
@@ -225,11 +216,10 @@ package body BC.Support.Managed_Storage is
          exception
             when BC.Storage_Error =>
                if List.Head = null then
-                  if List.Previous_List = null then
+                  if The_Pool.Head = List then
                      The_Pool.Head := List.Next_List;
-                  end if;
-                  if List.Next_List /= null then
-                     List.Next_List.Previous_List := List.Previous_List;
+                  else
+                     Previous_List.Next_List := List.Next_List;
                   end if;
                   Dispose (List);
                end if;
@@ -424,7 +414,7 @@ package body BC.Support.Managed_Storage is
       Put_Line ("Get_Chunk:"
                   & " s:" & SSE.Storage_Count'Image (Requested_Element_Size)
                   & " a:" & SSE.Storage_Count'Image (Requested_Alignment)
-                  & " c:" & (+(Result))
+                  & " c:" & (+Result)
                   & " ne:" & SSE.Storage_Count'Image (Result.Number_Elements)
                   & " p:" & (+Result.Next_Element));
 
@@ -477,6 +467,7 @@ package body BC.Support.Managed_Storage is
    is
 
       List : Chunk_List_Pointer;
+      Previous_List : Chunk_List_Pointer;
       Chunk : Chunk_Pointer;
       Previous_Chunk : Chunk_Pointer;
       Element : System.Address;
@@ -490,10 +481,11 @@ package body BC.Support.Managed_Storage is
       pragma Style_Checks (Off); -- GNAT and GLIDE disagree about layout here
 
       List := This.Head;
+      Previous_List := null;
 
       while List /= null loop
 
-         Put_Line ("Reclaim_Unused_Chunks: looking at " & (+List));
+         Put_Line ("Reclaim_Unused_Chunks: looking at" & (+List));
          Chunk := List.Head;
 
          --  Compute the maximum number of elements possible, per chunk,
@@ -513,7 +505,7 @@ package body BC.Support.Managed_Storage is
 
      Decrement_Counts :
          while Element /= System.Null_Address loop
-            Put_Line (" looking for "& (+Element));
+            Put_Line (" looking for" & (+Element));
             Chunk := List.Head;
 
         This_Chunk :
@@ -612,24 +604,22 @@ package body BC.Support.Managed_Storage is
 
                if This.Head = List then
 
-                  --  If this is the head list of the pool, make the next
+                  --  This is the head list of the pool; make the next
                   --  list the new head.
                   This.Head := Next_List;
 
                else
 
                   --  This isn't the head list of the pool, so there
-                  --  is a previous list; make it's next list this
+                  --  is a previous list; make its next list this
                   --  list's next list.
-                  List.Previous_List.Next_List := Next_List;
-
-               end if;
-
-               if Next_List /= null then
-
-                  --  Make the next list's previous list this list's
-                  --  previous list.
-                  Next_List.Previous_List := List.Previous_List;
+                  if Previous_List = null then
+                     Ada.Exceptions.Raise_Exception
+                       (Program_Error'Identity,
+                        "BC.Support.Managed_Storage.Reclaim_Unused_Chunks: " &
+                          "Previous_List null");
+                  end if;
+                  Previous_List.Next_List := Next_List;
 
                end if;
 
@@ -643,6 +633,7 @@ package body BC.Support.Managed_Storage is
          else
 
             --  List wasn't empty
+            Previous_List := List;
             List := List.Next_List;
 
          end if;
