@@ -99,13 +99,11 @@ private
 
    type Chunk_List is record
 
-      --  Backward chain of heads
-         Previous_List : Chunk_List_Pointer;
-
-         --  Forward chain of heads
+         --  Chain of heads
          Next_List : Chunk_List_Pointer;
 
-         --  Chain of chunks all of the same element size & alignment.
+         --  Chain of chunks all of the same element size & alignment
+         --  (as below).
          Head : Chunk_Pointer;
 
          --  Size of elements held in this chunk.
@@ -116,31 +114,30 @@ private
 
    end record;
 
-   type Chunk (Address_Array_Size : Natural) is
-      record
+   type Chunk (Address_Array_Size : Natural) is record
 
-         --  Owning list of chunks all of the same element size & alignment.
-         Parent : Chunk_List_Pointer;
+      --  Owning list of chunks all of the same element size & alignment.
+      Parent : Chunk_List_Pointer;
 
-         --  Chain of chunks all of the same element size & alignment.
-         Next_Chunk : Chunk_Pointer;
+      --  Chain of chunks all of the same element size & alignment.
+      Next_Chunk : Chunk_Pointer;
 
-         --  Usable size, depending on current alignment.
-         Usable_Chunk_Size : SSE.Storage_Count;
+      --  Usable size, depending on current alignment.
+      Usable_Chunk_Size : SSE.Storage_Count;
 
-         --  Number of free (or used, depending on context) elements
-         --  in this chunk.
-         Number_Elements : SSE.Storage_Count;
+      --  Number of free (or used, depending on context) elements
+      --  in this chunk.
+      Number_Elements : SSE.Storage_Count;
 
-         --  Address of next free element in this chunk.
-         Next_Element : System.Address;
+      --  Address of next free element in this chunk.
+      Next_Element : System.Address;
 
-         Payload : Address_Array (1 .. Address_Array_Size);
+      Payload : Address_Array (1 .. Address_Array_Size);
 
-      end record;
+   end record;
 
    type Pool (Chunk_Size : SSE.Storage_Count)
-   is new System.Storage_Pools.Root_Storage_Pool with record
+      is new System.Storage_Pools.Root_Storage_Pool with record
          Head : Chunk_List_Pointer;
          Unused : Chunk_Pointer;
          Address_Array_Size : Natural;
