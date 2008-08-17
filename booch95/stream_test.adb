@@ -404,7 +404,7 @@ begin
    declare
       C1, C2 : TCU.Collection;
       use TCU;
-      Str : aliased BC.Support.Memory_Streams.Stream_Type (78);
+      Str : aliased BC.Support.Memory_Streams.Stream_Type (256);
    begin
 
       Put_Line ("...Unbounded tagged Collections to memory stream");
@@ -432,8 +432,7 @@ begin
    declare
       C1, C2, C3 : TCU.Collection;
       use TCU;
-      Str1, Str3 : aliased BC.Support.Memory_Streams.Stream_Type (78);
-      Str2 : aliased BC.Support.Memory_Streams.Stream_Type (1024);
+      Str1, Str2, Str3 : aliased BC.Support.Memory_Streams.Stream_Type (256);
    begin
 
       Put_Line ("...Memory stream to memory stream");
