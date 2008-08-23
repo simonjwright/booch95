@@ -79,7 +79,8 @@ package body Tests.Auto_Pointers is
       pragma Unreferenced (C);
       function Inner return Value_Pointers.Pointer;
       function Inner return Value_Pointers.Pointer is
-         Ptr : Value_Pointers.Pointer := Value_Pointers.Create (new Value);
+         Ptr : constant Value_Pointers.Pointer
+           := Value_Pointers.Create (new Value);
       begin
          Value_Pointers.Value (Ptr).Adjusts := 0;
          Value_Pointers.Value (Ptr).Id := 42;
