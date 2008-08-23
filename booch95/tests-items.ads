@@ -1,6 +1,6 @@
 --  $Id$
 --
---  Tests for Items.
+--  Tests for Items (defined in Tests.Support).
 
 with AUnit.Test_Suites;
 
