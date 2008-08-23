@@ -1,8 +1,7 @@
---  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
---  Copyright 1994-1997 David Weller
 --  Copyright 1998-2003 Simon Wright <simon@pushface.org>
---  Copyright 2005 Martin Krischik
+--  Copyright 1994-1997 David Weller
+--  Copyright 1994 Grady Booch
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -28,12 +27,10 @@
 --  $Date$
 --  $Author$
 
-with System.Storage_Pools;
-
 generic
    type Item (<>) is private;
+   type Item_Ptr is access Item;
    with function "=" (L, R : Item) return Boolean is <>;
-   Item_Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Indefinite_Containers is
 
    pragma Elaborate_Body;
@@ -139,12 +136,6 @@ private
    --  pragma Unreferenced, because then we get warnings in child
    --  packages.
    pragma Warnings (Off, "=");
-
-   --  We need access to Items; but we must make sure that no actual
-   --  allocations occur using this type.
-
-   type Item_Ptr is access Item;
-   for Item_Ptr'Storage_Pool use Item_Storage;
 
    type Container is abstract tagged null record;
 
