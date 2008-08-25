@@ -29,7 +29,9 @@ package body Tests.Rings is
 
    generic
       Test_Name : String;
-      type Ring is new Abstract_Rings.Abstract_Ring with private;
+      type Ring (<>)
+         is new Abstract_Rings.Abstract_Ring with private;
+      Initializer : Ring;
    package Test_G is
 
       function Suite return AUnit.Test_Suites.Access_Test_Suite;
@@ -56,7 +58,7 @@ package body Tests.Rings is
 
    package body Test_G is
 
-      R : Ring;
+      R : Ring := Initializer;
 
       -----------------------
       --  Test procedures  --
@@ -453,16 +455,24 @@ package body Tests.Rings is
    end Test_G;
 
    package RB is new Abstract_Rings.Bounded (Maximum_Size => 10);
-   package Bounded_Tests is new Test_G ("bounded", RB.Ring);
+   package Bounded_Tests is new Test_G ("bounded",
+                                        RB.Ring,
+                                        RB.Null_Container);
 
    package RD is new Abstract_Rings.Dynamic (Storage => Global_Heap.Storage);
-   package Dynamic_Tests is new Test_G ("dynamic", RD.Ring);
+   package Dynamic_Tests is new Test_G ("dynamic",
+                                        RD.Ring,
+                                        RD.Null_Container);
 
    package RU is new Abstract_Rings.Unbounded (Storage => Global_Heap.Storage);
-   package Unbounded_Tests is new Test_G ("unbounded", RU.Ring);
+   package Unbounded_Tests is new Test_G ("unbounded",
+                                          RU.Ring,
+                                          RU.Null_Container);
 
    package RUM is new Abstract_Rings.Unmanaged;
-   package Unmanaged_Tests is new Test_G ("unmanaged", RUM.Ring);
+   package Unmanaged_Tests is new Test_G ("unmanaged",
+                                          RUM.Ring,
+                                          RUM.Null_Container);
 
 
    function Suite return AUnit.Test_Suites.Access_Test_Suite is
