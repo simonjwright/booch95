@@ -29,20 +29,20 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Rings.Bounded is
 
-   function "=" (Left, Right : in Ring) return Boolean is
+   function "=" (Left, Right : in Unconstrained_Ring) return Boolean is
       use Ring_Nodes;
    begin
       return Left.Top = Right.Top and then Left.Rep = Right.Rep;
    end "=";
 
-   procedure Clear (R : in out Ring) is
+   procedure Clear (R : in out Unconstrained_Ring) is
    begin
       Ring_Nodes.Clear (R.Rep);
       R.Top := 0;
       R.Mark := 0;
    end Clear;
 
-   procedure Insert (R : in out Ring; Elem : Item) is
+   procedure Insert (R : in out Unconstrained_Ring; Elem : Item) is
    begin
       if R.Top = 0 then
          R.Top := 1;
@@ -56,7 +56,7 @@ package body BC.Containers.Rings.Bounded is
       end if;
    end Insert;
 
-   procedure Pop (R : in out Ring) is
+   procedure Pop (R : in out Unconstrained_Ring) is
       Size : Natural;
    begin
       Ring_Nodes.Remove (R.Rep, R.Top);
@@ -76,22 +76,22 @@ package body BC.Containers.Rings.Bounded is
       end if;
    end Pop;
 
-   function Available (R : in Ring) return Natural is
+   function Available (R : in Unconstrained_Ring) return Natural is
    begin
       return Ring_Nodes.Available (R.Rep);
    end Available;
 
-   function Extent (R : Ring) return Natural is
+   function Extent (R : Unconstrained_Ring) return Natural is
    begin
       return Ring_Nodes.Length (R.Rep);
    end Extent;
 
-   function Is_Empty (R : Ring) return Boolean is
+   function Is_Empty (R : Unconstrained_Ring) return Boolean is
    begin
       return Ring_Nodes.Length (R.Rep) = 0;
    end Is_Empty;
 
-   function Top (R : Ring) return Item is
+   function Top (R : Unconstrained_Ring) return Item is
    begin
       if R.Top = 0 then
          raise BC.Underflow;
@@ -100,9 +100,10 @@ package body BC.Containers.Rings.Bounded is
    end Top;
 
    package Address_Conversions
-   is new System.Address_To_Access_Conversions (Ring);
+   is new System.Address_To_Access_Conversions (Unconstrained_Ring);
 
-   function New_Iterator (For_The_Ring : Ring) return Iterator'Class is
+   function New_Iterator
+     (For_The_Ring : Unconstrained_Ring) return Iterator'Class is
       Result : Ring_Iterator;
    begin
       Result.For_The_Container :=
@@ -111,17 +112,18 @@ package body BC.Containers.Rings.Bounded is
       return Result;
    end New_Iterator;
 
-   procedure Add (R : in out Ring; Elem : Item) is
+   procedure Add (R : in out Unconstrained_Ring; Elem : Item) is
    begin
       Ring_Nodes.Append (R.Rep, Elem);
    end Add;
 
-   function Item_At (R : Ring; Index : Positive) return Item_Ptr is
+   function Item_At
+     (R : Unconstrained_Ring; Index : Positive) return Item_Ptr is
    begin
       return Ring_Nodes.Item_At (R.Rep, Index);
    end Item_At;
 
-   function Null_Container return Ring is
+   function Null_Container return Unconstrained_Ring is
       Empty_Container : Ring;
       pragma Warnings (Off, Empty_Container);
    begin
