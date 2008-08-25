@@ -33,16 +33,22 @@ package BC.Containers.Rings.Bounded is
 
    pragma Elaborate_Body;
 
-   type Ring is new Abstract_Ring with private;
+   type Unconstrained_Ring
+     (Maximum_Size : Positive) is new Abstract_Ring with private;
 
-   function Null_Container return Ring;
+   subtype Ring
+      is Unconstrained_Ring (Maximum_Size => Maximum_Size);
 
-   function "=" (Left, Right : in Ring) return Boolean;
+   function Null_Container return Unconstrained_Ring;
+   --  Note, this function has to be provided but the object returned
+   --  is in fact a Ring (ie, it is constrained).
 
-   procedure Clear (R : in out Ring);
+   function "=" (Left, Right : in Unconstrained_Ring) return Boolean;
+
+   procedure Clear (R : in out Unconstrained_Ring);
    --  Empty the ring of all items. The mark is cleared.
 
-   procedure Insert (R : in out Ring; Elem : Item);
+   procedure Insert (R : in out Unconstrained_Ring; Elem : Item);
    --  If the ring was empty, set the ring's mark and top to designate
    --  this item.
    --  Otherwise,
@@ -50,38 +56,41 @@ package BC.Containers.Rings.Bounded is
    --    the previous top is located one place forward of the new top;
    --    the mark remains on the previously marked item.
 
-   procedure Pop (R : in out Ring);
+   procedure Pop (R : in out Unconstrained_Ring);
    --  Remove the top item from the ring.
    --  If the ring is still not empty, the new top is the item that
    --  was previously one place forward from the top.
    --  If the removed item was the marked item, the mark now
    --  designates the new top.
 
-   function Available (R : in Ring) return Natural;
+   function Available (R : in Unconstrained_Ring) return Natural;
    --  Indicates number of empty "Item slots" left in the ring.
 
-   function Extent (R : Ring) return Natural;
+   function Extent (R : Unconstrained_Ring) return Natural;
    --  Return the number of items in the ring.
 
-   function Is_Empty (R : Ring) return Boolean;
+   function Is_Empty (R : Unconstrained_Ring) return Boolean;
    --  Return True if and only if there are no items in the ring.
 
-   function Top (R : Ring) return Item;
+   function Top (R : Unconstrained_Ring) return Item;
    --  Return a copy of the item at the top of the ring.
 
-   function New_Iterator (For_The_Ring : Ring) return Iterator'Class;
+   function New_Iterator
+     (For_The_Ring : Unconstrained_Ring) return Iterator'Class;
    --  Return a reset Iterator bound to the specific Ring.
 
 private
 
-   procedure Add (R : in out Ring; Elem : Item);
-   function Item_At (R : Ring; Index : Positive) return Item_Ptr;
+   procedure Add (R : in out Unconstrained_Ring; Elem : Item);
+   function Item_At (R : Unconstrained_Ring; Index : Positive) return Item_Ptr;
 
    package Ring_Nodes
    is new BC.Support.Bounded (Item => Item,
                               Item_Ptr => Item_Ptr);
 
-   type Ring is new Abstract_Ring with record
+   type Unconstrained_Ring
+     (Maximum_Size : Positive)
+   is new Abstract_Ring with record
       Rep : Ring_Nodes.Bnd_Node (Maximum_Size => Maximum_Size);
    end record;
 
