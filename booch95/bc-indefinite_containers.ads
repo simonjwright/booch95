@@ -27,6 +27,16 @@
 --  $Date$
 --  $Author$
 
+--  This package is the root of a tree of container packages that
+--  support indefinite non-limited types (for example, String).
+--
+--  Storage for the container itself is either stack-based (for
+--  Bounded forms) or managed via the storage pool provided by the
+--  user at instantiation of the Unbounded form.
+--
+--  Storage for the contained elements is provided via the generic
+--  parameter Item_Ptr.
+
 generic
    type Item (<>) is private;
    type Item_Ptr is access Item;
