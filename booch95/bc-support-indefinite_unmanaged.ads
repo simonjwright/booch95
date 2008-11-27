@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2005 Martin Krischik
 --  Copyright 2003 Simon Wright <simon@pushface.org>
+--  Copyright 2005 Martin Krischik
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -86,14 +86,13 @@ package BC.Support.Indefinite_Unmanaged is
 
 private
 
+   package IR is new Indefinite_Reference (T => Item, P => Item_Ptr);
+
    type Node;
    type Node_Ref is access Node;
-   package Smart
-   is new BC.Support.Indefinite_Reference (
-      T => Item,
-      P => Item_Ptr);
+
    type Node is record
-      Element : Smart.Pointer;
+      Element : IR.Pointer;
       Next : Node_Ref;
       Previous : Node_Ref;
    end record;
