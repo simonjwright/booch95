@@ -19,8 +19,9 @@ with BC.Support.Smart_Pointers;
 
 package Smart_Test_Support is
 
-   --  This type is used to test BC.Smart. It's Controlled simply so
-   --  that we can see when instances are deleted.
+   --  This type is used to test BC.Support.Smart_Pointers. It's
+   --  Controlled simply so that we can see when instances are
+   --  deleted.
    type T is new Ada.Finalization.Controlled with record
       C : Character;
    end record;
@@ -32,5 +33,10 @@ package Smart_Test_Support is
 
    function Create (Ch : Character) return Smart.Pointer;
    function Value (P : Smart.Pointer) return Character;
+
+   --  Timing tests. Only need one level of controlledness for this.
+   type Character_P is access Character;
+   package Smart_Characters
+   is new BC.Support.Smart_Pointers (T => Character, P => Character_P);
 
 end Smart_Test_Support;
