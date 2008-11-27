@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
+--  Copyright 2003-2008 Simon Wright <simon@pushface.org>
 --  Copyright 2005 Martin Krischik
---  Copyright 2003-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -30,7 +30,7 @@ with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
 
 package body BC.Support.Indefinite_Unmanaged is
-   use type Smart.Pointer;
+   use type IR.Pointer;
 
    --  We can't take 'Access of components of constant (in parameter)
    --  objects; but we need to be able to do this so that we can
@@ -49,7 +49,7 @@ package body BC.Support.Indefinite_Unmanaged is
    function Create (I : Item; Previous, Next : Node_Ref) return Node_Ref is
       Result : Node_Ref;
    begin
-      Result := new Node'(Element => Smart.Create (Value => I),
+      Result := new Node'(Element => IR.Create (Value => I),
                           Previous => Previous,
                           Next => Next);
       if Previous /= null then
@@ -103,7 +103,8 @@ package body BC.Support.Indefinite_Unmanaged is
             Temp_R : Node_Ref := Right.Rep;
          begin
             while Temp_L /= null loop
-               if Smart.Value (Temp_L.Element) /= Smart.Value (Temp_R.Element) then
+               if IR.Value (Temp_L.Element)
+                 /= IR.Value (Temp_R.Element) then
                   return False;
                end if;
                Temp_L := Temp_L.Next;
@@ -152,8 +153,8 @@ package body BC.Support.Indefinite_Unmanaged is
          begin
             Update_Cache (Obj, Before);
             Temp_Node := Create (Elem,
-                                       Previous => Obj.Cache.Previous,
-                                       Next => Obj.Cache);
+                                 Previous => Obj.Cache.Previous,
+                                 Next => Obj.Cache);
             if Temp_Node.Previous = null then
                Obj.Rep := Temp_Node;
             end if;
@@ -190,8 +191,8 @@ package body BC.Support.Indefinite_Unmanaged is
          begin
             Update_Cache (Obj, After);
             Temp_Node := Create (Elem,
-                                       Previous => Obj.Cache,
-                                       Next => Obj.Cache.Next);
+                                 Previous => Obj.Cache,
+                                 Next => Obj.Cache.Next);
             if Temp_Node.Previous /= null then
                Temp_Node.Previous.Next := Temp_Node;
             end if;
@@ -266,7 +267,7 @@ package body BC.Support.Indefinite_Unmanaged is
             end loop;
          end;
       end if;
-      Obj.Cache.Element := Smart.Create (Value => Elem);
+      Obj.Cache.Element := IR.Create (Value => Elem);
    end Replace;
 
    function Length (Obj : Unm_Node) return Natural is
@@ -279,7 +280,7 @@ package body BC.Support.Indefinite_Unmanaged is
       if Obj.Size = 0 then
          raise BC.Underflow;
       end if;
-      return Smart.Value (Obj.Rep.Element);
+      return IR.Value (Obj.Rep.Element);
    end First;
 
    function Last (Obj : Unm_Node) return Item is
@@ -287,7 +288,7 @@ package body BC.Support.Indefinite_Unmanaged is
       if Obj.Size = 0 then
          raise BC.Underflow;
       end if;
-      return Smart.Value (Obj.Last.Element);
+      return IR.Value (Obj.Last.Element);
    end Last;
 
    function Item_At (Obj : Unm_Node; Index : Positive) return Item is
@@ -313,7 +314,7 @@ package body BC.Support.Indefinite_Unmanaged is
          raise BC.Range_Error;
       end if;
       Update_Cache (U.all, Index);
-      return Smart.Value_Access (U.Cache.Element);
+      return IR.Value_Access (U.Cache.Element);
    end Item_At;
 
    function Location (Obj : Unm_Node; Elem : Item; Start : Positive := 1)
@@ -332,7 +333,8 @@ package body BC.Support.Indefinite_Unmanaged is
       if Start > Obj.Size then
          raise BC.Range_Error;
       end if;
-      if (Start = Obj.Cache_Index) and then (Elem = Smart.Value (Obj.Cache.Element)) then
+      if (Start = Obj.Cache_Index)
+        and then (Elem = IR.Value (Obj.Cache.Element)) then
          return Obj.Cache_Index;
       end if;
       for I in 1 .. Start - 1 loop
@@ -354,13 +356,15 @@ package body BC.Support.Indefinite_Unmanaged is
       Tmp : Node_Ref := U.Last;
    begin
       if Tmp /= null then
-         U.Last := Create (Smart.Value (Tmp.Element), Previous => null, Next => null);
+         U.Last := Create (IR.Value (Tmp.Element),
+                           Previous => null,
+                           Next => null);
          U.Rep := U.Last;
          Tmp := Tmp.Previous;  -- move to previous node from orig list
          while Tmp /= null loop
-            U.Rep := Create (Smart.Value (Tmp.Element),
-                                   Previous => null,
-                                   Next => U.Rep);
+            U.Rep := Create (IR.Value (Tmp.Element),
+                             Previous => null,
+                             Next => U.Rep);
             Tmp := Tmp.Previous;
          end loop;
       end if;
@@ -386,7 +390,7 @@ package body BC.Support.Indefinite_Unmanaged is
    begin
       Integer'Write (Stream, Obj.Size);
       while N /= null loop
-         Item'Output (Stream, Smart.Value (N.Element));
+         Item'Output (Stream, IR.Value (N.Element));
          N := N.Next;
       end loop;
    end Write_Unm_Node;
