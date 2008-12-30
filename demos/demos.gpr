@@ -8,6 +8,7 @@ project Demos is
      "ordering_test",
      "storage",
      "test_synchronization",
+     "time_collections",
      "time_lists",
      "time_queues",
      "user_map",
