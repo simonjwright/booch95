@@ -32,19 +32,21 @@ package body Ada_Unit_Support is
 
 
    function Description (Of_The_Unit : Normal_Unit) return String is
+      pragma Unreferenced (Of_The_Unit);
    begin
       return "normal";
    end Description;
 
 
    function Description (Of_The_Unit : Generic_Unit) return String is
+      pragma Unreferenced (Of_The_Unit);
    begin
       return "generic";
    end Description;
 
 
    function Create_Normal_Unit (Unit_Named : String) return Unit_P is
-      Result : Unit_P := new Normal_Unit;
+      Result : constant Unit_P := new Normal_Unit;
    begin
       Result.Named := ASU.To_Unbounded_String (Unit_Named);
       Dependencies.Create_Vertex (G => Info,
@@ -55,7 +57,7 @@ package body Ada_Unit_Support is
 
 
    function Create_Generic_Unit (Unit_Named : String) return Unit_P is
-      Result : Unit_P := new Generic_Unit;
+      Result : constant Unit_P := new Generic_Unit;
    begin
       Result.Named := ASU.To_Unbounded_String (Unit_Named);
       Dependencies.Create_Vertex (G => Info,
@@ -133,7 +135,7 @@ package body Ada_Unit_Support is
          Directed_V : Dependencies.Vertex renames Dependencies.Vertex (V);
          Vertex_It : Dependencies_Base.Vertex_Iterator'Class
            := Dependencies.New_Vertex_Outgoing_Iterator (Directed_V);
-         Old_Indent : ASU.Unbounded_String := Indent;
+         Old_Indent : constant ASU.Unbounded_String := Indent;
          use type ASU.Unbounded_String;
       begin
          Ada.Text_IO.Put_Line
@@ -147,6 +149,7 @@ package body Ada_Unit_Support is
          OK := True;
       end Process_Unit;
       Dummy : Boolean;
+      pragma Unreferenced (Dummy);
    begin
       Process_Unit (For_Unit.Vertex, Dummy);
    end Report_Dependencies;

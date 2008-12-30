@@ -413,7 +413,7 @@ procedure Graph_Test is
                                       OK : out Boolean);
    procedure Process_Directed_Vertex (V : AG.Abstract_Vertex'Class;
                                       OK : out Boolean) is
-      DV : DG.Vertex := DG.Vertex (V);
+      DV : constant DG.Vertex := DG.Vertex (V);
       Iter : AG.Vertex_Iterator'Class := DG.New_Vertex_Outgoing_Iterator (DV);
    begin
       Put_Line ("    Vertex: " & DG.Item (DV)
@@ -422,8 +422,9 @@ procedure Graph_Test is
                 & " )");
       while not AG.Is_Done (Iter) loop
          declare
-            A : DG.Arc := DG.Arc (AG.Current_Arc (Iter));
+            A : constant DG.Arc := DG.Arc (AG.Current_Arc (Iter));
             Dummy : Boolean;
+            pragma Unreferenced (Dummy);
          begin
             Process_Arc (A, Dummy);
          end;
@@ -438,8 +439,9 @@ procedure Graph_Test is
    begin
       while not AG.Is_Done (Iter) loop
          declare
-            V : DG.Vertex := DG.Vertex (AG.Current_Vertex (Iter));
+            V : constant DG.Vertex := DG.Vertex (AG.Current_Vertex (Iter));
             Dummy : Boolean;
+            pragma Unreferenced (Dummy);
          begin
             Process_Directed_Vertex (V, Dummy);
          end;
@@ -482,15 +484,16 @@ procedure Graph_Test is
                                         OK : out Boolean);
    procedure Process_Undirected_Vertex (V : AG.Abstract_Vertex'Class;
                                         OK : out Boolean) is
-      UV : UG.Vertex := UG.Vertex (V);
+      UV : constant UG.Vertex := UG.Vertex (V);
       Iter : AG.Vertex_Iterator'Class := UG.New_Vertex_Iterator (UV);
    begin
       Put_Line ("    Vertex: " & UG.Item (UV)
                 & " (" & Integer'Image (UG.Arity (UV)) & " )");
       while not AG.Is_Done (Iter) loop
          declare
-            A : UG.Arc := UG.Arc (AG.Current_Arc (Iter));
+            A : constant UG.Arc := UG.Arc (AG.Current_Arc (Iter));
             Dummy : Boolean;
+            pragma Unreferenced (Dummy);
          begin
             Process_Arc (A, Dummy);
          end;
@@ -505,9 +508,10 @@ procedure Graph_Test is
    begin
       while not AG.Is_Done (Iter) loop
          declare
-            V : UG.Vertex
+            V : constant UG.Vertex
               := UG.Vertex (AG.Current_Vertex (Iter));
             Dummy : Boolean;
+            pragma Unreferenced (Dummy);
          begin
             Process_Undirected_Vertex (V, Dummy);
          end;

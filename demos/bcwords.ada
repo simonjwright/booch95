@@ -133,6 +133,7 @@ package body Word_Count_Support is
    --  some better hash function!
    function Hash
      (S : Ada.Strings.Unbounded.Unbounded_String) return Positive is
+      pragma Unreferenced (S);
    begin
       return 1;
    end Hash;
@@ -156,8 +157,8 @@ end Word_Count_Support;
 --  by Corey Minyard
 package body Word_Parser is
 
-   Big_A_Pos   : Integer := Character'Pos ('A');
-   Small_A_Pos : Integer := Character'Pos ('a');
+   Big_A_Pos   : constant Integer := Character'Pos ('A');
+   Small_A_Pos : constant Integer := Character'Pos ('a');
 
    procedure Xlat_To_Lower_Case (C : in out Character);
    procedure Xlat_To_Lower_Case (C : in out Character) is

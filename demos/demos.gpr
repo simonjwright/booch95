@@ -7,6 +7,7 @@ project Demos is
      "lists_traversal",
      "ordering_test",
      "storage",
+     "storage_timing",
      "test_synchronization",
      "time_collections",
      "time_lists",
