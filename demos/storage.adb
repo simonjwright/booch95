@@ -36,8 +36,7 @@ procedure Storage is
    T_Overhead : constant := 2 * (System.Word_Size / System.Storage_Unit);
    --  to include dope for lower/upper bounds, since T is unconstrained
 
-   Managed_Pool : Managed_Storage.Pool
-     (4096 + Managed_Storage.Pool_Overhead (T_Overhead, T'Alignment));
+   Managed_Pool : Managed_Storage.Pool (4096 + T_Overhead);
    Unmanaged_Pool : Unmanaged_Storage.Pool;
 
    type M_P is access T;
