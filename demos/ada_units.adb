@@ -19,12 +19,18 @@ with Ada_Unit_Support;
 
 procedure Ada_Units is
    use Ada_Unit_Support;
-   U_Text_IO : Unit_P := Create_Normal_Unit ("ada.text_io");
-   U_Ada_Units : Unit_P := Create_Normal_Unit ("ada_units");
-   U_Ada_Unit_Support : Unit_P := Create_Normal_Unit ("ada_unit_support");
-   U_Directed : Unit_P := Create_Generic_Unit ("bc.graphs.directed");
-   U_Undirected : Unit_P := Create_Generic_Unit ("bc.graphs.undirected");
-   U_Graphs : Unit_P := Create_Generic_Unit ("bc.graphs");
+   U_Text_IO : constant Unit_P
+     := Create_Normal_Unit ("ada.text_io");
+   U_Ada_Units : constant Unit_P
+     := Create_Normal_Unit ("ada_units");
+   U_Ada_Unit_Support : constant Unit_P
+     := Create_Normal_Unit ("ada_unit_support");
+   U_Directed : constant Unit_P
+     := Create_Generic_Unit ("bc.graphs.directed");
+   U_Undirected : constant Unit_P
+     := Create_Generic_Unit ("bc.graphs.undirected");
+   U_Graphs : constant Unit_P
+     := Create_Generic_Unit ("bc.graphs");
 begin
    Add_Dependency (U_Graphs, U_Ada_Unit_Support);
    Add_Dependency (U_Directed, U_Ada_Unit_Support);

@@ -66,6 +66,7 @@ begin
    while not Ordering_Support.QU.Is_Empty (Q) loop
       declare
          Dummy : Boolean;
+         pragma Unreferenced (Dummy);
       begin
          Report_Element (Ordering_Support.QU.Front (Q), Dummy);
          Ordering_Support.QU.Pop (Q);

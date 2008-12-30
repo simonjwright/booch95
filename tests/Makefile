@@ -1,4 +1,4 @@
-# Copyright (C) 2000-2002 Simon Wright. All Rights Reserved.
+# Copyright (C) Simon Wright <simon@pushface.org>. All Rights Reserved.
 #
 #      This program is free software; you can redistribute it
 #      and/or modify it under the terms of the Ada Community
@@ -18,17 +18,21 @@
 
 # (GNU) Makefile for test of Booch Components distribution.
 
+ifneq (, $(findstring CYGWIN, $(sys)))
+  EXE = .exe
+else
+  EXE =
+endif
+
 GNATMAKE=gnatmake
 
 #####################
 # Default build rule
-%: %.adb
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+%$(EXE): %.adb
+	$(GNATMAKE) -Ptests $<
 
 ########
 # Tests
-
-GNATMAKE_FLAGS = -I.. -O2 -g -gnatqQafy -gnatwaL
 
 test: testable
 	for t in $(TESTABLE); do \
@@ -36,59 +40,57 @@ test: testable
 	  ./$$t 2>&1; \
 	done
 
-TESTABLE += avl_test
-avl_test: force
+TESTABLE += avl_test$(EXE)
+avl_test$(EXE): force
 
-TESTABLE += bag_test
-bag_test: force
+TESTABLE += bag_test$(EXE)
+bag_test$(EXE): force
 
-TESTABLE += collection_test
-collection_test: force
+TESTABLE += collection_test$(EXE)
+collection_test$(EXE): force
 
-TESTABLE += graph_test
-graph_test: force
+TESTABLE += graph_test$(EXE)
+graph_test$(EXE): force
 
-TESTABLE += list_test
-list_test: force
+TESTABLE += list_test$(EXE)
+list_test$(EXE): force
 
-TESTABLE += map_test
-map_test: force
+TESTABLE += map_test$(EXE)
+map_test$(EXE): force
 
-TESTABLE += ordered_collection_test
-ordered_collection_test: force
+TESTABLE += ordered_collection_test$(EXE)
+ordered_collection_test$(EXE): force
 
-TESTABLE += ordered_queue_test
-ordered_queue_test: force
+TESTABLE += ordered_queue_test$(EXE)
+ordered_queue_test$(EXE): force
 
-TESTABLE += queue_test
-queue_test: force
+TESTABLE += queue_test$(EXE)
+queue_test$(EXE): force
 
-TESTABLE += ring_test
-ring_test: force
+TESTABLE += ring_test$(EXE)
+ring_test$(EXE): force
 
-TESTABLE += set_test
-set_test: force
+TESTABLE += set_test$(EXE)
+set_test$(EXE): force
 
-TESTABLE += smart_test
-smart_test: force
+TESTABLE += smart_test$(EXE)
+smart_test$(EXE): force
 
-TESTABLE += sort_test
-sort_test: force
+TESTABLE += sort_test$(EXE)
+sort_test$(EXE): force
 
-TESTABLE += stack_test
-stack_test: force
+TESTABLE += stack_test$(EXE)
+stack_test$(EXE): force
 
-TESTABLE += stream_test
-stream_test: force
+TESTABLE += stream_test$(EXE)
+stream_test$(EXE): force
 
-TESTABLE += tree_test
-tree_test: force
+TESTABLE += tree_test$(EXE)
+tree_test$(EXE): force
 
-testable: $(TESTABLE)
+testable: .build $(TESTABLE)
+
+.build:
+	mkdir $@
 
 .PHONY: force
-
-# Emacs variable settings
-# Local Variables:
-# mode : makefile
-# End:

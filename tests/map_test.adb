@@ -427,13 +427,13 @@ begin
               "** M06: Map Extent is not correct");
    --  I don't understand this one ..
    declare
-      Map_D_Pu3 : MD.Map := The_D.Map_D_Pu1;
+      Map_D_Pu3 : constant MD.Map := The_D.Map_D_Pu1;
    begin
       Assertion (MD."=" (The_D.Map_D_Pu1, Map_D_Pu3),
                  "** M08: Maps are not equal");
    end;
    declare
-      Map_U_Pu3 : MU.Map := The_U.Map_U_Pu1;
+      Map_U_Pu3 : constant MU.Map := The_U.Map_U_Pu1;
    begin
       Assertion (MU."=" (The_U.Map_U_Pu1, Map_U_Pu3),
                  "** M09: Maps are not equal");

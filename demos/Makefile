@@ -1,4 +1,4 @@
-# Copyright (C) 2000-2002 Simon Wright. All Rights Reserved.
+# Copyright (C) Simon Wright <simon@pushface.org>. All Rights Reserved.
 #
 #      This program is free software; you can redistribute it
 #      and/or modify it under the terms of the Ada Community
@@ -21,61 +21,65 @@
 ########
 # Demos
 
+ifneq (, $(findstring CYGWIN, $(sys)))
+  EXE = .exe
+else
+  EXE =
+endif
+
 GNATMAKE = gnatmake
-GNATMAKE_FLAGS = -I.. -O2 -g -gnatqQafy -gnatwaL
+
+#####################
+# Default build rule
+%$(EXE): %.adb
+	$(GNATMAKE) -Pdemos $<
 
 all:: demos
 
-DEMOS += ada_units
-ada_units: force
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+DEMOS += ada_units$(EXE)
+ada_units$(EXE): force
 
-DEMOS += lists_traversal
-lists_traversal: force
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+DEMOS += configuration_demo$(EXE)
+configuration_demo$(EXE): force
 
-DEMOS += ordering_test
-ordering_test: force
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+DEMOS += lists_traversal$(EXE)
+lists_traversal$(EXE): force
 
-DEMOS += storage
-storage: force
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+DEMOS += ordering_test$(EXE)
+ordering_test$(EXE): force
 
-DEMOS += test_synchronization
-test_synchronization: force
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+DEMOS += storage$(EXE)
+storage$(EXE): force
 
-DEMOS += time_lists
-time_lists: force
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+DEMOS += storage_timing$(EXE)
+storage_timing$(EXE): force
 
-DEMOS += time_queues
-time_queues: force
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+DEMOS += test_synchronization$(EXE)
+test_synchronization$(EXE): force
 
-DEMOS += unmanaged_storage
-unmanaged_storage: force
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+DEMOS += time_collections$(EXE)
+time_collections$(EXE): force
 
-DEMOS += user_map
-user_map: force
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+DEMOS += time_lists$(EXE)
+time_lists$(EXE): force
 
-DEMOS += user_set
-user_set: force
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+DEMOS += time_queues$(EXE)
+time_queues$(EXE): force
 
-DEMOS += word_count
-word_count: bcwords.ada
+DEMOS += user_map$(EXE)
+user_map$(EXE): force
+
+DEMOS += user_set$(EXE)
+user_set$(EXE): force
+
+DEMOS += word_count$(EXE)
+word_count$(EXE): bcwords.ada force
 	gnatchop -r -w bcwords.ada
-	$(GNATMAKE) $(GNATMAKE_FLAGS) $@
+	$(GNATMAKE) -Pdemos word_count
 
-demos: $(DEMOS)
+demos: .build $(DEMOS)
+
+.build:
+	mkdir .build
 
 .PHONY: force
-
-# Emacs variable settings
-# Local Variables:
-# mode : makefile
-# End:
