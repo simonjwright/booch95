@@ -18,6 +18,7 @@ project Tests is
      "sort_test",
      "stack_test",
      "stream_test",
+     "time_change",
      "tree_test"
     );
 
