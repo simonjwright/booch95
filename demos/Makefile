@@ -57,6 +57,9 @@ storage_timing$(EXE): force
 DEMOS += test_synchronization$(EXE)
 test_synchronization$(EXE): force
 
+DEMOS += time_change$(EXE)
+time_change$(EXE): force
+
 DEMOS += time_collections$(EXE)
 time_collections$(EXE): force
 
