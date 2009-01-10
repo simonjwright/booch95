@@ -9,6 +9,7 @@ project Demos is
      "storage",
      "storage_timing",
      "test_synchronization",
+     "time_change",
      "time_collections",
      "time_lists",
      "time_queues",

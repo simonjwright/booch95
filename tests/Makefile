@@ -85,9 +85,6 @@ stack_test$(EXE): force
 TESTABLE += stream_test$(EXE)
 stream_test$(EXE): force
 
-TESTABLE += time_change$(EXE)
-time_change$(EXE): force
-
 TESTABLE += tree_test$(EXE)
 tree_test$(EXE): force
 
