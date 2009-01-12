@@ -23,7 +23,6 @@
 pragma License (Modified_GPL);
 pragma Ada_05;
 
---  $RCSfile$
 --  $Revision$
 --  $Date$
 --  $Author$

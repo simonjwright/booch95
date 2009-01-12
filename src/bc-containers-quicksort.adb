@@ -20,7 +20,6 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $RCSfile$
 --  $Revision$
 --  $Date$
 --  $Author$
@@ -135,4 +134,3 @@ begin
 exception
    when Should_Have_Been_Overridden => raise Sort_Error;
 end BC.Containers.Quicksort;
-

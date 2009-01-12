@@ -32,4 +32,3 @@ package body AVL_Test_Support is
    end Image;
 
 end AVL_Test_Support;
-

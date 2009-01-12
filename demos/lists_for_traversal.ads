@@ -1,4 +1,4 @@
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -18,8 +18,8 @@ with Ada.Finalization;
 with BC.Lists;
 with BC.Lists.Single;
 with BC.Lists.Double;
-with BC.Smart;
 with BC.Support.Managed_Storage;
+with BC.Support.Smart_Pointers;
 with System.Storage_Pools;
 package Lists_For_Traversal is
    type T is new Ada.Finalization.Controlled with record
@@ -27,7 +27,7 @@ package Lists_For_Traversal is
    end record;
    type T_P is access T;
    procedure Finalize (The_T : in out T);
-   package Smart is new BC.Smart (T, T_P);
+   package Smart is new BC.Support.Smart_Pointers (T, T_P);
    subtype P is Smart.Pointer;
    function "=" (L, R : P) return Boolean;
    package L is new BC.Lists (P);

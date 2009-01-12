@@ -22,4 +22,3 @@ package body Ordering_Support is
    end "<";
 
 end Ordering_Support;
-

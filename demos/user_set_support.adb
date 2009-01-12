@@ -31,4 +31,3 @@ package body User_Set_Support is
    end User_Char_Hash;
 
 end User_Set_Support;
-
