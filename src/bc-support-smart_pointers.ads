@@ -19,7 +19,6 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $RCSfile$
 --  $Revision$
 --  $Date$
 --  $Author$
@@ -69,4 +68,3 @@ private
      := Pointer'(Ada.Finalization.Controlled with Rep => null);
 
 end BC.Support.Smart_Pointers;
-

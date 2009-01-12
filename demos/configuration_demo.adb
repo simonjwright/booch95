@@ -73,4 +73,3 @@ begin
    Close (F);
 
 end Configuration_Demo;
-

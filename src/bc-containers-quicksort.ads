@@ -1,3 +1,4 @@
+
 --  Copyright 2001-2002 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
@@ -19,7 +20,6 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $RCSfile$
 --  $Revision$
 --  $Date$
 --  $Author$

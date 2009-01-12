@@ -20,7 +20,6 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $RCSfile$
 --  $Revision$
 --  $Date$
 --  $Author$
@@ -29,6 +28,3 @@ generic
    with procedure Apply (Elem : in Item; OK : out Boolean);
 procedure BC.Containers.Trees.Multiway.Post_Order
   (T : Multiway_Tree; Success : out Boolean);
---  Call Apply with a copy of each Item in the Tree, in preorder (for
---  each node, visit its children and then the node itself). The
---  iteration will terminate early if Apply sets OK to False.

@@ -31,4 +31,3 @@ package body User_Map_Support is
    end User_Char_Hash;
 
 end User_Map_Support;
-

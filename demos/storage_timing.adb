@@ -1,3 +1,4 @@
+
 --  Copyright 2001-2002 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
@@ -12,7 +13,6 @@
 --  write to the Free Software Foundation, 59 Temple Place - Suite
 --  330, Boston, MA 02111-1307, USA.
 
---  $RCSfile$
 --  $Revision$
 --  $Date$
 --  $Author$

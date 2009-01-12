@@ -1,3 +1,4 @@
+
 --  Copyright 1994 Grady Booch
 --  Copyright 1998-2002 Simon Wright <simon@pushface.org>
 
@@ -20,7 +21,6 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $RCSfile$
 --  $Revision$
 --  $Date$
 --  $Author$
@@ -29,7 +29,3 @@ generic
    with procedure Apply (Elem : in Item; OK : out Boolean);
 procedure BC.Containers.Trees.Multiway.Pre_Order
   (T : Multiway_Tree; Success : out Boolean);
---  Call Apply with a copy of each Item in the Tree, in preorder (for
---  each node, visit the node itself and then its children). The
---  iteration will terminate early if Apply sets OK to False.
-
