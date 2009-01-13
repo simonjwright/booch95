@@ -34,22 +34,21 @@
 
 .SUFFIXES	: .ada .adb .ads
 
-vpath %.ads	 ../
-vpath %.adb	 ../
-vpath %.ada	 ../
+vpath %.ads	 ../src
+vpath %.adb	 ../src
+vpath %.ada	 ../src
 
 ifndef GPR_OS
 	#
-	#  Try to guess GPR setting when they are not allready set.
+	#  Try to guess GPR settings when they are not already set.
 	#
-	#  Note 1:	If you set GPR_OS you need to set the other variables mentioned
-	#			here as well.
+	#  Note 1: If you set GPR_OS you need to set the other variables 
+	#	   mentioned here as well.
 	#
-	#  Note 2:	The GNU Ada Project is supplied with a more advanced 
-	#			detector which supports more combinations - including
-	#			cross compilations.
+	#  Note 2: The GNU Ada Project is supplied with a more advanced 
+	#	   detector which supports more combinations - including
+	#	   cross compilations.
 	#
-	GPR_OS    := Linux
 
 	ifeq (${OS},Windows_NT)
 		GPR_OS		:= Windows_NT
@@ -78,7 +77,7 @@ ifndef GPR_OS
 		GNAT		:= gnat
 	endif
 
-	ifeq (${GPR_OS}, Linux)
+	ifeq ($(shell uname), Linux)
 		GPR_OS		:= $(shell uname --kernel-name)
 		GPR_CPU		:= $(shell uname --machine)
 		GPR_Target	:= native
@@ -87,18 +86,19 @@ ifndef GPR_OS
 		GNAT		:= gnat
 	endif
 
-	ifeq (${GPR_OS}, SunOS)
+	ifeq ($(shell uname), SunOS)
 		GPR_CPU		:= $(shell uname --processor)
 	endif
 
-	ifeq (${GPR_OS}, Darwin)
+	ifeq ($(shell uname), Darwin)
 		GPR_OS		:= Darwin
-		GPR_CPU	    := $(shell uname -p)
+		GPR_CPU		:= $(shell uname -p)
 		GPR_Target	:= native
 		ifeq ($(GPR_CPU),powerpc)
 			GPR_CPU	:= ppc32
-		else
-			# errm ...
+		endif
+		ifeq ($(GPR_CPU),i386)
+			GPR_CPU	:= i686
 		endif
 		MKDIR		:= mkdir -v -p
 		DELETE		:= rm -v
