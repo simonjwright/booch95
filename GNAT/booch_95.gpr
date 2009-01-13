@@ -66,7 +66,7 @@ project Booch_95 is
          for Library_Dir  use  Base & "/" & Target & "-" & CPU & "-" & Style & "/lib";
    end case;
 
-   for Source_Dirs  use ("../");
+   for Source_Dirs  use ("../src");
    for Languages    use ("ada");
    for Library_Name use "booch95";
 
@@ -479,8 +479,6 @@ project Booch_95 is
       "bc-lists.ads",
       "bc-simple_collections.adb",
       "bc-simple_collections.ads",
-      "bc-smart.adb",
-      "bc-smart.ads",
       "bc-support-array_streams.adb",
       "bc-support-array_streams.ads",
       "bc-support-avl_trees.adb",
