@@ -13,7 +13,9 @@
 --  write to the Free Software Foundation, 59 Temple Place - Suite
 --  330, Boston, MA 02111-1307, USA.
 
---  $Id$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with Ada.Numerics.Discrete_Random;
 
