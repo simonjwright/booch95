@@ -25,7 +25,7 @@
 #	$Date$
 #
 #	$Id$
-#	$HeadURL: https://gnuada.svn.sourceforge.net/svnroot/gnuada/trunk/rpm/SCRIPTS/Upload_HTML.zsh $
+#	$HeadURL$
 #
 ########################################################### }}}1 ###########
 

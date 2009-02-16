@@ -26,8 +26,8 @@
 ############################################################################
 
 .PHONY		: all					#  make all
-.PHONY		: debug					#  make all debug
-.PHONY		: release				#  make all release
+.PHONY		: debug					#  make debug
+.PHONY		: release				#  make release
 .PHONY		: clean					#  cleanup
 .PHONY		: pretty				#  pretty printer
 .PHONY		: booch_95				#  make library only
@@ -60,7 +60,7 @@ ifndef GPR_OS
 	endif
 
 	ifdef sys$login
-		GPR_OS		:= 
+		GPR_OS		:= VMS 
 		GPR_CPU		:= APX
 		GPR_Target	:= native
 		GNAT		:= gnat
