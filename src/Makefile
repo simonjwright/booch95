@@ -198,67 +198,83 @@ bc-indefinite_containers-collections-ordered-unbounded.adb  \
 bc-indefinite_containers-collections-ordered-unbounded.ads  \
 bc-indefinite_containers-collections-ordered-unmanaged.adb  \
 bc-indefinite_containers-collections-ordered-unmanaged.ads  \
-bc-indefinite_containers-collections-unbounded.adb          \
-bc-indefinite_containers-collections-unbounded.ads          \
-bc-indefinite_containers-collections-unmanaged.adb          \
-bc-indefinite_containers-collections-unmanaged.ads          \
-bc-indefinite_containers-indefinite_iterators.adb           \
-bc-indefinite_containers-indefinite_iterators.ads           \
-bc-indefinite_containers-queues.adb                         \
-bc-indefinite_containers-queues.ads                         \
-bc-indefinite_containers-queues-bounded.adb                 \
-bc-indefinite_containers-queues-bounded.ads                 \
-bc-indefinite_containers-queues-dynamic.adb                 \
-bc-indefinite_containers-queues-dynamic.ads                 \
-bc-indefinite_containers-queues-ordered.ads                 \
-bc-indefinite_containers-queues-ordered-bounded.adb         \
-bc-indefinite_containers-queues-ordered-bounded.ads         \
-bc-indefinite_containers-queues-ordered-dynamic.adb         \
-bc-indefinite_containers-queues-ordered-dynamic.ads         \
-bc-indefinite_containers-queues-ordered-unbounded.adb       \
-bc-indefinite_containers-queues-ordered-unbounded.ads       \
-bc-indefinite_containers-queues-ordered-unmanaged.adb       \
-bc-indefinite_containers-queues-ordered-unmanaged.ads       \
-bc-indefinite_containers-queues-unbounded.adb               \
-bc-indefinite_containers-queues-unbounded.ads               \
-bc-indefinite_containers-queues-unmanaged.adb               \
-bc-indefinite_containers-queues-unmanaged.ads               \
-bc-support-indefinite_bounded.adb                           \
-bc-support-indefinite_bounded.ads                           \
-bc-support-indefinite_dynamic.adb                           \
-bc-support-indefinite_dynamic.ads                           \
-bc-support-indefinite_reference.adb                         \
-bc-support-indefinite_reference.ads                         \
-bc-support-indefinite_unbounded.adb                         \
-bc-support-indefinite_unbounded.ads                         \
-bc-support-indefinite_unmanaged.adb                         \
-bc-support-indefinite_unmanaged.ads                         
+bc-indefinite_containers-collections-unbounded.adb	    \
+bc-indefinite_containers-collections-unbounded.ads	    \
+bc-indefinite_containers-collections-unmanaged.adb	    \
+bc-indefinite_containers-collections-unmanaged.ads	    \
+bc-indefinite_containers-indefinite_iterators.adb	    \
+bc-indefinite_containers-indefinite_iterators.ads	    \
+bc-indefinite_containers-queues.adb			    \
+bc-indefinite_containers-queues.ads			    \
+bc-indefinite_containers-queues-bounded.adb		    \
+bc-indefinite_containers-queues-bounded.ads		    \
+bc-indefinite_containers-queues-dynamic.adb		    \
+bc-indefinite_containers-queues-dynamic.ads		    \
+bc-indefinite_containers-queues-ordered.ads		    \
+bc-indefinite_containers-queues-ordered-bounded.adb	    \
+bc-indefinite_containers-queues-ordered-bounded.ads	    \
+bc-indefinite_containers-queues-ordered-dynamic.adb	    \
+bc-indefinite_containers-queues-ordered-dynamic.ads	    \
+bc-indefinite_containers-queues-ordered-unbounded.adb	    \
+bc-indefinite_containers-queues-ordered-unbounded.ads	    \
+bc-indefinite_containers-queues-ordered-unmanaged.adb	    \
+bc-indefinite_containers-queues-ordered-unmanaged.ads	    \
+bc-indefinite_containers-queues-unbounded.adb		    \
+bc-indefinite_containers-queues-unbounded.ads		    \
+bc-indefinite_containers-queues-unmanaged.adb		    \
+bc-indefinite_containers-queues-unmanaged.ads		    \
+bc-support-indefinite_bounded.adb			    \
+bc-support-indefinite_bounded.ads			    \
+bc-support-indefinite_dynamic.adb			    \
+bc-support-indefinite_dynamic.ads			    \
+bc-support-indefinite_reference.adb			    \
+bc-support-indefinite_reference.ads			    \
+bc-support-indefinite_unbounded.adb			    \
+bc-support-indefinite_unbounded.ads			    \
+bc-support-indefinite_unmanaged.adb			    \
+bc-support-indefinite_unmanaged.ads			    
 
 ############################
 # Documentation upload to SF
 
-SFUSER ?= simonjwright
+# Create the current date, in the form yyyymmdd. This certainly works in Linux.
+DATE = $(shell date +%Y%m%d)$(SUBRELEASE)
+
+ifeq (${USER},martin)
+    SFUSER	   ?= krischik
+else
+    SFUSER	   ?= simonjwright
+endif
+
+RSYNC_OPTS  =			\
+	--compress		\
+	--copy-unsafe-links	\
+	--cvs-exclude		\
+	--perms			\
+	--recursive		\
+	--rsh=ssh		\
+	--times			\
+	--update		\
+	--verbose
 
 upload-docs: force
-	rsync \
-	  --compress \
-	  --copy-unsafe-links \
-	  --cvs-exclude \
-	  --perms \
-	  --recursive \
-	  --rsh=ssh \
-	  --times \
-	  --update \
-	  --verbose \
-	  html/*.{html,gif,jpg,png} html/x.ada \
-	  html/coldframe-hash.{tgz,zip} \
+	rsync					    \
+	  $(RSYNC_OPTS)				    \
+	  html/*.{html,gif,jpg,png} html/x.ada	    \
+	  html/coldframe-hash.{tgz,zip}		    \
 	  $(SFUSER)@shell.sourceforge.net:/home/groups/b/bo/booch95/htdocs/
+
+upload-dist: force
+	rsync					    \
+	  $(RSYNC_OPTS)				    \
+	  bc-$(DATE).7z				    \
+	  bc-$(DATE).tar.bz2			    \
+	  bc-$(DATE).tgz			    \
+	  bc-$(DATE).zip			    \
+	  "$(SFUSER)@frs.sourceforge.net:uploads/" 
 
 ############################
 # Distribution construction
-
-# Create the current date, in the form yyyymmdd. This certainly works in Linux.
-DATE = $(shell date +%Y%m%d)$(SUBRELEASE)
 
 DISTRIBUTION_FILES = \
 bc-$(DATE).tgz \
@@ -284,17 +300,17 @@ bc-$(DATE): force
 	tar cf - $(SOURCE) | (cd $@/src; tar xvf -)
 	cp -p \
 	  bc-support-high_resolution_time-clock.adb-pentium \
-          bc-support-high_resolution_time-clock.adb-ppc32   \
+	  bc-support-high_resolution_time-clock.adb-ppc32   \
 	  $@/src
 	cp -p \
 	  bc-support-high_resolution_time-clock.adb-pentium \
 	  $@/src/bc-support-high_resolution_time-clock.adb
 	mkdir $@/GNAT 
 	cp -p \
-	    ../GNAT/Makefile               \
-	    ../GNAT/booch_95.gpr           \
-	    ../GNAT/gnat-booch.sh          \
-	    ../GNAT/gnat-booch.conf        \
+	    ../GNAT/Makefile		   \
+	    ../GNAT/booch_95.gpr	   \
+	    ../GNAT/gnat-booch.sh	   \
+	    ../GNAT/gnat-booch.conf	   \
 	    $@/GNAT
 	$(MAKE) DIST=$(PWD)/$@ -C ../tests dist
 	$(MAKE) DIST=$(PWD)/$@ -C ../demos dist
@@ -316,6 +332,6 @@ bc-$(DATE).src: $(ADA_SOURCE) $(TEST_SRC) $(DEMO_SRC)
 
 .PHONY: force
 
-
-#vim: textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab
-#vim: filetype=make encoding=utf-8 fileformat=unix
+		
+# vim: textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab
+# vim: filetype=make encoding=utf-8 fileformat=unix
