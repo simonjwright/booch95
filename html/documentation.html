@@ -5,6 +5,13 @@
 <meta name="generator" content=
 "HTML Tidy for Mac OS X (vers 1st December 2004), see www.w3.org" />
 <title>The Ada95 Booch Components (Component documentation)</title>
+<style type="text/css">
+table { margin : 0.2em 1em;
+        font-size : 100%;
+        border-collapse : collapse; }
+table th,td { padding : 0.2em;
+              text-align : center; }
+</style>
 </head>
 <body bgcolor="#FFFFFF">
 <table width="100%">
@@ -29,8 +36,8 @@ width="210" height="62" border="0" alt=
 <a href="#storage">Storage Management</a><br />
 <a href="#exceptions">Exceptions</a><br />
 <a href="#iteration">Iteration</a><br />
-<a href="#support">Support packages</a><br />
-<a href="#conclusion">Conclusion</a><br /></p>
+<a href="#support">Support</a><br />
+<a href="#the-containers">The Containers</a><br /></p>
 <p><img src="greenline.gif" alt="--" width="100%" height="4" /> 
 <!--==================================================================--></p>
 <h2><a name="abstractions" id="abstractions">Key
@@ -50,7 +57,17 @@ provides algorithmic abstractions (Searching, Sorting, etc.). The
 and trees). Some structures may also be ordered (collections,
 dequeues, and queues). There are also multiple forms for some
 structures: single and double linked lists, directed and undirected
-graphs, and binary, multiway, and AVL trees. 
+graphs, and binary, multiway, and AVL trees.
+
+<p>The structures originally supported only definite items. Work
+by <a href="http://sourceforge.net/users/krischik">Martin Krischik</a>
+introduced support for indefinite items (for example, String).
+
+<ul>
+<li> <a href="#definite">Definite containers</a>
+<li> <a href="#indefinite">Indefinite containers</a>
+</ul>
+
 <!--==================================================================--></p>
 <h2><a name="patterns" id="patterns">The Patterns of the
 BCs</a></h2>
@@ -218,6 +235,13 @@ two flavours:</p>
 </ul>
 <p>The general utilities are:</p>
 <dl>
+<dt><tt>Array_Streams</tt></dt>
+<dd>Support streaming to and from
+an <tt>Ada.Streams.Stream_Element_Array</tt>.</dd>
+<dt><tt>Auto_Pointers</tt></dt>
+<dd>Similar to the C++ <tt>auto_ptr</tt>. Wraps a standard pointer in
+such a way that the pointer is deallocated when the wrapping is
+destroyed.</dd>
 <dt><tt>High_Resolution_Time</tt></dt>
 <dd>Supports high resolution (sub-microsecond) time
 measurements.<br />
@@ -238,7 +262,7 @@ PowerPC, copy
 Rogers</a>, which can allocate objects up to a user-defined size
 (supplied as a constraint).</dd>
 <dt><tt>Memory_Streams</tt></dt>
-<dd>Support streaming to memory.</dd>
+<dd>Support streaming to and from memory.</dd>
 <dt><tt>Smart_Pointers</tt></dt>
 <dd>Provide reference-counting pointers.</dd>
 <dt><tt>Standard_Storage</tt></dt>
@@ -263,31 +287,395 @@ Rogers</a>, implemented using the default storage pool (works for
 GNAT, ObjectAda, Apex, may work on others).</dd>
 </dl>
 <!--==================================================================-->
-<h2><a name="conclusion" id="conclusion">Conclusion</a></h2>
-<p>Here's a table of the components and the forms that are
-supported (U=Unbounded, B=Bounded, D=Dynamic, N=Unmanaged).</p>
-<pre>
-Bags         : <font color="red">UBDN</font>
-Collections  : <font color="red">UBDN</font>
-  (ordered)  : <font color="red">UBDN</font>
-Dequeues     : <font color="red">UBDN</font>
-Graphs
-  Directed   : <font color="red">U</font>
-  Undirected : <font color="red">U</font>
-Lists
-  Single     : <font color="red">U</font>
-  Double     : <font color="red">U</font>
-Maps         : <font color="red">UBDN</font>
-Queues       : <font color="red">UBDN</font>
-  (ordered)  : <font color="red">UBDN</font>
-Rings        : <font color="red">UBDN</font>
-Sets         : <font color="red">UBDN</font>
-Stacks       : <font color="red">UBDN</font>
-Trees
-  AVL        : <font color="red">U</font>
-  Binary     : <font color="red">U</font>
-  Multiway   : <font color="red">U</font>
-</pre>
+<h2><a name="the-containers" id="the-containers">The Containers</a></h2>
+
+<h3><a name="definite" id="definite">Definite containers</a></h3>
+
+<p>This is a table of the definite components (children
+of <tt>BC.Containers</tt>) and the forms that are supported.
+
+<table border="1">
+
+<tr>
+<th>Component</th>
+<th>Unbounded</th>
+<th>Bounded</th>
+<th>Dynamic</th>
+<th>Unmanaged</th>
+</tr>
+
+<tr>
+<td style="text-align: left;">Bags</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Collections</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>plain</em></td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>ordered</em></td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Dequeues</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Queues</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>directed</em></td>
+<td>&#10003;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>undirected</em></td>
+<td>&#10003;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Lists</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>single</em></td>
+<td>&#10003;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>double</em></td>
+<td>&#10003;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Maps</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Queues</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>plain</em></td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>ordered</em></td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Rings</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Sets</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Stacks</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Trees</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>AVL</em></td>
+<td>&#10003;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>binary</em></td>
+<td>&#10003;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>multiway</em></td>
+<td>&#10003;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+</table>
+
+<h3><a name="indefinite" id="indefinite">Indefinite containers</a></h3>
+
+<p>This is a table of the indefinite components (children
+of <tt>BC.Indefinite_Containers</tt>) and the forms that are
+supported.
+
+<table border="1">
+
+<tr>
+<th>Component</th>
+<th>Unbounded</th>
+<th>Bounded</th>
+<th>Dynamic</th>
+<th>Unmanaged</th>
+</tr>
+
+<tr>
+<td style="text-align: left;">Bags</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Collections</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>plain</em></td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>ordered</em></td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Dequeues</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Queues</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>directed</em></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>undirected</em></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Lists</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>single</em></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>double</em></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Maps</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Queues</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>plain</em></td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>ordered</em></td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Rings</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Sets</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Stacks</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Trees</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>AVL</em></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>binary</em></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>multiway</em></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+</table>
+
 <!--footer=========================================================-->
 <p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>
 <p><a href="index.html">[index]</a></p>
