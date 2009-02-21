@@ -42,7 +42,6 @@ package body BC.Support.Array_Streams is
      (Stream : in out Stream_Type;
       Item   : out Ada.Streams.Stream_Element_Array;
       Last   : out Ada.Streams.Stream_Element_Offset) is
-      use type Ada.Streams.Stream_Element_Offset;
       Available : constant Ada.Streams.Stream_Element_Offset
         := Stream.Next_Write - Stream.Next_Read;
       Required : constant Ada.Streams.Stream_Element_Offset
@@ -79,7 +78,6 @@ package body BC.Support.Array_Streams is
    procedure Write
      (Stream : in out Stream_Type;
       Item   : in Ada.Streams.Stream_Element_Array) is
-      use type Ada.Streams.Stream_Element_Offset;
       Length : constant Ada.Streams.Stream_Element_Offset
         := Item'Last + 1 - Item'First;
    begin
