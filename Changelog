@@ -1,0 +1,29 @@
+$Id$
+
+This is the Changelog for the Booch Components. It's intended for
+updating SourceForge releases, not as a standard ChangeLog; in other
+words, it's for features, not detailed updates, and it's for features
+actually in releases - it excludes work-in-progress.
+
+Paste into the Change Log box; at present you need to 'preserve my
+preformatted text', see SF Support Requests item #2624497.
+
+80-column width works well.
+
+The initial entry is intended as catch-up for the changes made between
+the 20070822 and 20090216 releases.
+
+20090216:
+
+A release with some fixes for MacOS.
+
+Altered the directory structure to a more standard form; the top level
+is still bc-yyyymmdd, but under that is GNAT/ (supporting GNUAda and
+other Ada projects on SourceForge), src/ for source, tests/ for tests
+and demos/ for demos.
+	
+----------------------------------------------------------------------------
+For emacs:
+Local Variables:
+mode: text
+End:
