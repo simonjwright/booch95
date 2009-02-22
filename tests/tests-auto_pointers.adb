@@ -3,9 +3,7 @@
 --  Tests for Auto_Pointers.
 
 with AUnit.Assertions; use AUnit.Assertions;
-with AUnit.Test_Cases.Registration; use AUnit.Test_Cases.Registration;
 with AUnit.Test_Cases; use AUnit.Test_Cases;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Ada.Finalization;
@@ -117,11 +115,11 @@ package body Tests.Auto_Pointers is
 
 
    type Case_1 is new Test_Case with null record;
-   function Name (C : Case_1) return String_Access;
+   function Name (C : Case_1) return AUnit.Message_String;
    procedure Register_Tests (C : in out Case_1);
 
 
-   function Name (C : Case_1) return String_Access is
+   function Name (C : Case_1) return AUnit.Message_String is
       pragma Warnings (Off, C);
    begin
       return new String'("Auto_Pointers");
@@ -130,15 +128,15 @@ package body Tests.Auto_Pointers is
 
    procedure Register_Tests (C : in out Case_1) is
    begin
-      Register_Routine
+      Registration.Register_Routine
         (C,
          Destroy_Owning_Pointer'Access,
          "destroying an owning pointer deletes the value");
-      Register_Routine
+      Registration.Register_Routine
         (C,
          Copy_Pointer'Access,
          "copying an owning pointer transfers the value");
-      Register_Routine
+      Registration.Register_Routine
         (C,
          Return_From_Function'Access,
          "returning from a function transfers the value");

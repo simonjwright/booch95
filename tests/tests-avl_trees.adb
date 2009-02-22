@@ -3,9 +3,7 @@
 --  Tests for AVL Trees.
 
 with AUnit.Assertions; use AUnit.Assertions;
-with AUnit.Test_Cases.Registration; use AUnit.Test_Cases.Registration;
 with AUnit.Test_Cases; use AUnit.Test_Cases;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with BC.Containers.Trees;
@@ -37,7 +35,7 @@ package body Tests.AVL_Trees is
 
 
    type Case_1 is new Test_Case with null record;
-   function Name (C : Case_1) return String_Access;
+   function Name (C : Case_1) return AUnit.Message_String;
    procedure Register_Tests (C : in out Case_1);
 
 
@@ -159,7 +157,7 @@ package body Tests.AVL_Trees is
    end To_String;
 
 
-   function Name (C : Case_1) return String_Access is
+   function Name (C : Case_1) return AUnit.Message_String is
       pragma Warnings (Off, C);
    begin
       return new String'("AVL Trees");
@@ -168,11 +166,11 @@ package body Tests.AVL_Trees is
 
    procedure Register_Tests (C : in out Case_1) is
    begin
-      Register_Routine
+      Registration.Register_Routine
         (C,
          Initially_Empty'Access,
          "tests with no elements");
-      Register_Routine
+      Registration.Register_Routine
         (C,
          One_Element'Access,
          "tests with one element");
