@@ -3,9 +3,7 @@
 --  Tests for Rings.
 
 with AUnit.Assertions; use AUnit.Assertions;
-with AUnit.Test_Cases.Registration; use AUnit.Test_Cases.Registration;
 with AUnit.Test_Cases; use AUnit.Test_Cases;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with BC.Containers.Rings.Bounded;
@@ -39,17 +37,17 @@ package body Tests.Rings is
    private
 
       type Case_1 is new Test_Case with null record;
-      function Name (C : Case_1) return String_Access;
+      function Name (C : Case_1) return AUnit.Message_String;
       procedure Register_Tests (C : in out Case_1);
 
       type Case_2 is new Test_Case with null record;
-      function Name (C : Case_2) return String_Access;
+      function Name (C : Case_2) return AUnit.Message_String;
       procedure Register_Tests (C : in out Case_2);
       procedure Set_Up (C : in out Case_2);
       procedure Tear_Down (C : in out Case_2);
 
       type Case_3 is new Test_Case with null record;
-      function Name (C : Case_3) return String_Access;
+      function Name (C : Case_3) return AUnit.Message_String;
       procedure Register_Tests (C : in out Case_3);
       procedure Set_Up (C : in out Case_3);
       procedure Tear_Down (C : in out Case_3);
@@ -120,7 +118,7 @@ package body Tests.Rings is
                  "ring isn't empty");
       end Check_Clear;
 
-      function Name (C : Case_1) return String_Access is
+      function Name (C : Case_1) return AUnit.Message_String is
          pragma Warnings (Off, C);
       begin
          return new String'("Rings (basic) -- " & Test_Name);
@@ -128,27 +126,27 @@ package body Tests.Rings is
 
       procedure Register_Tests (C : in out Case_1) is
       begin
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Extent_Initially_Zero'Unrestricted_Access,
             "initialized ring has zero extent");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Initially_Empty'Unrestricted_Access,
             "initialized ring is empty");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Initially_At_Mark'Unrestricted_Access,
             "initialized ring is at mark");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Initially_No_Content'Unrestricted_Access,
             "initialized ring has no content");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Value_Initially_Empty'Unrestricted_Access,
             "value of initialized ring is empty string");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Clear'Unrestricted_Access,
             "empty ring can be cleared");
@@ -244,7 +242,7 @@ package body Tests.Rings is
 --               "ring's extent is not 1");
 --        end ;
 
-      function Name (C : Case_2) return String_Access is
+      function Name (C : Case_2) return AUnit.Message_String is
          pragma Warnings (Off, C);
       begin
          return new String'("Rings (single entry) -- " & Test_Name);
@@ -252,35 +250,35 @@ package body Tests.Rings is
 
       procedure Register_Tests (C : in out Case_2) is
       begin
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Extent_Is_One'Unrestricted_Access,
             "extent is 1");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Is_Not_Empty'Unrestricted_Access,
             "ring isn't empty");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Is_At_Mark'Unrestricted_Access,
             "is at mark");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Top_After_Single_Insert'Unrestricted_Access,
             "check top");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Clear'Unrestricted_Access,
             "clearing single entry");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Empty_After_Pop'Unrestricted_Access,
             "popping single entry");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Rotating_Single_Entry'Unrestricted_Access,
             "rotating single entry");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Value_After_Single_Insert'Unrestricted_Access,
             "check value");
@@ -383,7 +381,7 @@ package body Tests.Rings is
 --               "ring's extent is not 1");
 --        end ;
 
-      function Name (C : Case_3) return String_Access is
+      function Name (C : Case_3) return AUnit.Message_String is
          pragma Warnings (Off, C);
       begin
          return new String'("Rings (double entry) -- " & Test_Name);
@@ -391,35 +389,35 @@ package body Tests.Rings is
 
       procedure Register_Tests (C : in out Case_3) is
       begin
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Extent_Is_Two'Unrestricted_Access,
             "extent is 2");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Not_At_Mark'Unrestricted_Access,
             "ring isn't at mark");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Is_Not_Empty'Unrestricted_Access,
             "ring isn't empty");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Top_After_Double_Insert'Unrestricted_Access,
             "check top");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Value_After_Pop'Unrestricted_Access,
             "checking pop of double entry");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Clear'Unrestricted_Access,
             "clearing double entry");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Rotating_Double_Entry'Unrestricted_Access,
             "rotating double entry");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Value_Of_Double_Entry'Unrestricted_Access,
             "checking initial value of double entry");

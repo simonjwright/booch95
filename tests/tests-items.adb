@@ -3,9 +3,7 @@
 --  Tests for Items.
 
 with AUnit.Assertions; use AUnit.Assertions;
-with AUnit.Test_Cases.Registration; use AUnit.Test_Cases.Registration;
 with AUnit.Test_Cases; use AUnit.Test_Cases;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 pragma Warnings (Off, Ada.Text_IO);
@@ -21,7 +19,7 @@ package body Tests.Items is
 
 
    type Case_1 is new Test_Case with null record;
-   function Name (C : Case_1) return String_Access;
+   function Name (C : Case_1) return AUnit.Message_String;
    procedure Register_Tests (C : in out Case_1);
 
 
@@ -87,7 +85,7 @@ package body Tests.Items is
    end Comparison;
 
 
-   function Name (C : Case_1) return String_Access is
+   function Name (C : Case_1) return AUnit.Message_String is
       pragma Warnings (Off, C);
    begin
       return new String'("Items");
@@ -96,11 +94,11 @@ package body Tests.Items is
 
    procedure Register_Tests (C : in out Case_1) is
    begin
-      Register_Routine
+      Registration.Register_Routine
         (C,
          Equality'Unrestricted_Access,
          "Equality");
-      Register_Routine
+      Registration.Register_Routine
         (C,
          Comparison'Unrestricted_Access,
          "Comparison");

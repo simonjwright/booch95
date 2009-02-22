@@ -3,9 +3,7 @@
 --  Tests for Collections.
 
 with AUnit.Assertions; use AUnit.Assertions;
-with AUnit.Test_Cases.Registration; use AUnit.Test_Cases.Registration;
 with AUnit.Test_Cases; use AUnit.Test_Cases;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with BC.Containers.Collections.Bounded;
@@ -40,17 +38,17 @@ package body Tests.Collections is
    private
 
       type Case_1 is new Test_Case with null record;
-      function Name (C : Case_1) return String_Access;
+      function Name (C : Case_1) return AUnit.Message_String;
       procedure Register_Tests (C : in out Case_1);
 
       type Case_2 is new Test_Case with null record;
-      function Name (C : Case_2) return String_Access;
+      function Name (C : Case_2) return AUnit.Message_String;
       procedure Register_Tests (C : in out Case_2);
       procedure Set_Up (C : in out Case_2);
       procedure Tear_Down (C : in out Case_2);
 
       type Case_3 is new Test_Case with null record;
-      function Name (C : Case_3) return String_Access;
+      function Name (C : Case_3) return AUnit.Message_String;
       procedure Register_Tests (C : in out Case_3);
       procedure Set_Up (C : in out Case_3);
       procedure Tear_Down (C : in out Case_3);
@@ -98,7 +96,7 @@ package body Tests.Collections is
                  "collection isn't empty");
       end Check_Clear;
 
-      function Name (C : Case_1) return String_Access is
+      function Name (C : Case_1) return AUnit.Message_String is
          pragma Warnings (Off, C);
       begin
          return new String'("Collections (basic) -- " & Test_Name);
@@ -106,19 +104,19 @@ package body Tests.Collections is
 
       procedure Register_Tests (C : in out Case_1) is
       begin
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Length_Initially_Zero'Unrestricted_Access,
             "initialized collection has zero length");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Initially_Empty'Unrestricted_Access,
             "initialized collection is empty");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Value_Initially_Empty'Unrestricted_Access,
-            "value of initialized collection is empty stcollection");
-         Register_Routine
+            "value of initialized collection is empty collection");
+         Registration.Register_Routine
            (C,
             Check_Clear'Unrestricted_Access,
             "empty collection can be cleared");
@@ -169,7 +167,7 @@ package body Tests.Collections is
 --               "collection's length is not 1");
 --        end ;
 
-      function Name (C : Case_2) return String_Access is
+      function Name (C : Case_2) return AUnit.Message_String is
          pragma Warnings (Off, C);
       begin
          return new String'("Collections (single entry) -- " & Test_Name);
@@ -177,19 +175,19 @@ package body Tests.Collections is
 
       procedure Register_Tests (C : in out Case_2) is
       begin
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Length_Is_One'Unrestricted_Access,
             "length is 1");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Is_Not_Empty'Unrestricted_Access,
             "collection isn't empty");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Clear'Unrestricted_Access,
             "clearing single entry");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Value_After_Single_Insert'Unrestricted_Access,
             "check value");
@@ -239,7 +237,7 @@ package body Tests.Collections is
 --               "collection's length is not 1");
 --        end ;
 
-      function Name (C : Case_3) return String_Access is
+      function Name (C : Case_3) return AUnit.Message_String is
          pragma Warnings (Off, C);
       begin
          return new String'("Collections (double entry) -- " & Test_Name);
@@ -247,15 +245,15 @@ package body Tests.Collections is
 
       procedure Register_Tests (C : in out Case_3) is
       begin
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Length_Is_Two'Unrestricted_Access,
             "length is 2");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Is_Not_Empty'Unrestricted_Access,
             "collection isn't empty");
-         Register_Routine
+         Registration.Register_Routine
            (C,
             Check_Clear'Unrestricted_Access,
             "clearing double entry");
