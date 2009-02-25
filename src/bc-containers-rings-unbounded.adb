@@ -48,7 +48,7 @@ package body BC.Containers.Rings.Unbounded is
          R.Mark := 1;
          Ring_Nodes.Insert (R.Rep, Elem);
       else
-         if R.Mark /= 0 then
+         if R.Mark >= R.Top then
             R.Mark := R.Mark + 1;
          end if;
          Ring_Nodes.Insert (R.Rep, Elem, Before => R.Top);
