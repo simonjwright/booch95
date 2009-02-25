@@ -365,17 +365,54 @@ package body Tests.Rings is
                  "has wrong value");
       end Check_Value_Of_Double_Entry;
 
+      procedure Check_Insertion_Around_Mark (C : in out Test_Case'Class);
+      procedure Check_Insertion_Around_Mark (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
+      begin
+         Mark (R);                     --  mark is on b, internal form Ba
+         Assert (Value (R) = "ba",
+                 "has wrong value");
+         Assert (At_Mark (R),
+                 "not at mark");
+         Rotate (R, Dir => Backward);  --  internal bA
+         Assert (Value (R) = "ab",
+                 "has wrong value");
+         Assert (not At_Mark (R),
+                 "is at mark");
+         Insert (R, 'c');              --  internal bCa (after mark)
+         Assert (Value (R) = "cab",
+                 "has wrong value");
+         Assert (not At_Mark (R),
+                 "is at mark");
+         Rotate (R, Dir => Forward);   --  internal bcA
+         Assert (Value (R) = "abc",
+                 "has wrong value");
+         Assert (not At_Mark (R),
+                 "is not at mark");
+         Rotate (R, Dir => Forward);   --  internal Bca
+         Assert (Value (R) = "bca",
+                 "has wrong value");
+         Assert (At_Mark (R),
+                 "is not at mark");
+         Rotate (R, Dir => Forward);   --  internal bCa
+         Assert (Value (R) = "cab",
+                 "has wrong value");
+         Mark (R);                     --  mark now on c
+         Insert (R, 'd');              --  internal bDca (before mark)
+         Assert (Value (R) = "dcab",
+                 "has wrong value");
+         Assert (not At_Mark (R),
+                 "is at mark");
+         Rotate (R, Dir => Forward);   --  internal bdCa
+         Assert (Value (R) = "cabd",
+                 "has wrong value");
+         Assert (At_Mark (R),
+                 "is not at mark");
+      end Check_Insertion_Around_Mark;
+
       --        procedure  (C : in out Test_Case'Class);
 --        procedure  (C : in out Test_Case'Class) is
---       R : Ring renames case_3 (C).R;
---        begin
---       Assert (Extent (R) = 1,
---               "ring's extent is not 1");
---        end ;
-
---        procedure  (C : in out Test_Case'Class);
---        procedure  (C : in out Test_Case'Class) is
---       R : Ring renames case_3 (C).R;
+--       pragma Unreferenced (C);
 --        begin
 --       Assert (Extent (R) = 1,
 --               "ring's extent is not 1");
@@ -421,7 +458,11 @@ package body Tests.Rings is
            (C,
             Check_Value_Of_Double_Entry'Unrestricted_Access,
             "checking initial value of double entry");
-         --           Register_Routine
+         Registration.Register_Routine
+           (C,
+            Check_Insertion_Around_Mark'Unrestricted_Access,
+            "checking insertion around the mark");
+         --           Registration.Register_Routine
 --             (C,
 --              'Unrestricted_Access,
 --              "");
