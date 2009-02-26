@@ -21,6 +21,14 @@ Altered the directory structure to a more standard form; the top level
 is still bc-yyyymmdd, but under that is GNAT/ (supporting GNUAda and
 other Ada projects on SourceForge), src/ for source, tests/ for tests
 and demos/ for demos.
+
+20090226:
+
+A release with fixes for Ring containers.	
+
+There was a problem when the Mark denoted an internal index before the
+Top; Insert would improperly increment the Mark.
+
 	
 ----------------------------------------------------------------------------
 For emacs:
