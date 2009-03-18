@@ -499,8 +499,6 @@ project Booch_95 is
       "bc-support-memory_streams.ads",
       "bc-support-smart_pointers.adb",
       "bc-support-smart_pointers.ads",
-      "bc-support-standard_deviations.adb",
-      "bc-support-standard_deviations.ads",
       "bc-support-standard_storage.ads",
       "bc-support-statistics.adb",
       "bc-support-statistics.ads",
