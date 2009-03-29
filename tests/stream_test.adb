@@ -18,7 +18,6 @@ with Ada.Exceptions;
 with Ada.Streams.Stream_IO;
 with Ada.Text_IO;
 with Assertions;
-with BC.Support.Array_Streams;
 with BC.Support.Memory_Streams;
 with Collection_Test_Support;
 with Set_Test_Support;
@@ -429,33 +428,6 @@ begin
    end;
 
    declare
-      C1, C2 : TCU.Collection;
-      use TCU;
-      Buffer : aliased Ada.Streams.Stream_Element_Array := (1 .. 256 => 0);
-      Str : aliased BC.Support.Array_Streams.Stream_Type (Buffer'Access);
-   begin
-
-      Put_Line ("...Unbounded tagged Collections to array stream");
-
-      BC.Support.Array_Streams.Reset (Str);
-      Append (C1, new Brother'(I => 16#aabb#));
-      Append (C1, new Sister'(B => True));
-      Append (C2, new Brother'(I => 16#5555#));
-      Append (C2, new Sister'(B => False));
-      Assertion (C1 /= C2, "TCUA1: Collections are equal");
-      Collection'Output (Str'Access, C1);
-      C2 := Collection'Input (Str'Access);
-      Assertion (C1 = C2, "TCUA2: Collections are unequal");
-
-   exception
-      when E : others =>
-         Assertion (False, "TCUAX: Exception occurred");
-         Put_Line ("                                   EXCEPTION "
-                   & Ada.Exceptions.Exception_Name (E)
-                   & " OCCURRED.");
-   end;
-
-   declare
       C1, C2, C3 : TCU.Collection;
       use TCU;
       Str1, Str2, Str3 : aliased BC.Support.Memory_Streams.Stream_Type (256);
@@ -484,43 +456,6 @@ begin
    exception
       when E : others =>
          Assertion (False, "TCCUMX: Exception occurred");
-         Put_Line ("                                   EXCEPTION "
-                   & Ada.Exceptions.Exception_Name (E)
-                   & " OCCURRED.");
-   end;
-
-   declare
-      C1, C2, C3 : TCU.Collection;
-      use TCU;
-      Buffer1 : aliased Ada.Streams.Stream_Element_Array := (0 .. 255 => 0);
-      Buffer2 : aliased Ada.Streams.Stream_Element_Array := (1 .. 256 => 0);
-      Str1 : aliased BC.Support.Array_Streams.Stream_Type (Buffer1'Access);
-      Str2 : aliased BC.Support.Array_Streams.Stream_Type (Buffer2'Access);
-      use type Ada.Streams.Stream_Element_Offset;
-   begin
-
-      Put_Line ("...Array stream to array stream");
-
-      BC.Support.Array_Streams.Reset (Str1);
-      Append (C1, new Brother'(I => 16#aabb#));
-      Append (C1, new Sister'(B => True));
-      Append (C2, new Brother'(I => 16#5555#));
-      Append (C2, new Sister'(B => False));
-      C3 := C2;
-      Assertion (C1 /= C2, "TCCUA1: Collections are equal");
-      Collection'Output (Str1'Access, C1);
-      Buffer2 := Buffer1;
-      BC.Support.Array_Streams.Set_Last
-        (Str2,
-         Buffer2'First
-           + (BC.Support.Array_Streams.Last (Str1) - Buffer1'First));
-      C2 := Collection'Input (Str2'Access);
-      Assertion (C1 = C2, "TCCUA2: Collections are unequal");
-      Assertion (C1 /= C3, "TCCUA3: Collections are equal");
-
-   exception
-      when E : others =>
-         Assertion (False, "TCCUAX: Exception occurred");
          Put_Line ("                                   EXCEPTION "
                    & Ada.Exceptions.Exception_Name (E)
                    & " OCCURRED.");
