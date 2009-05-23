@@ -1,4 +1,4 @@
---  Copyright 2002 Simon Wright <simon@pushface.org>
+--  Copyright 2002-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -12,7 +12,9 @@
 --  write to the Free Software Foundation, 59 Temple Place - Suite
 --  330, Boston, MA 02111-1307, USA.
 
---  $Id$
+--  $Revision$
+--  $Date$
+--  $Author$
 
 package body Stream_Test_Support is
 
