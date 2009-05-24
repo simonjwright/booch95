@@ -16,12 +16,26 @@
 --  $Date$
 --  $Author$
 --
---  Tests for Indefinite Maps.
+--  Tests for Booch Components Indefinite Maps.
 
+with AUnit.Reporter.Text;
+with AUnit.Run;
 with AUnit.Test_Suites;
 
-package Tests.Indefinite_Maps is
+procedure Tests.Indefinite_Maps.Main is
 
-   function Suite return AUnit.Test_Suites.Access_Test_Suite;
+   function Suites return AUnit.Test_Suites.Access_Test_Suite;
+   procedure Run is new AUnit.Run.Test_Runner (Suites);
+   function Suites return AUnit.Test_Suites.Access_Test_Suite is
+      Result : constant AUnit.Test_Suites.Access_Test_Suite
+        := new AUnit.Test_Suites.Test_Suite;
+   begin
+      AUnit.Test_Suites.Add_Test (Result, Indefinite_Maps.Suite);
+      return Result;
+   end Suites;
 
-end Tests.Indefinite_Maps;
+   Reporter : AUnit.Reporter.Text.Text_Reporter;
+
+begin
+   Run (Reporter);
+end Tests.Indefinite_Maps.Main;
