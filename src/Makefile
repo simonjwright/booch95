@@ -174,8 +174,6 @@ bc-containers-trees.ad[bs]
 ADA_SOURCE +=					\
 bc-simple_collections.adb			\
 bc-simple_collections.ads			\
-bc-support-array_streams.adb			\
-bc-support-array_streams.ads			\
 bc-trees-avl_trees-iterators.adb		\
 bc-trees-avl_trees-iterators.ads
 
