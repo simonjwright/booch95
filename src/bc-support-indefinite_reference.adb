@@ -29,9 +29,8 @@ with Ada.Unchecked_Deallocation;
 package body BC.Support.Indefinite_Reference is
 
 
-   procedure Deallocate is new Ada.Unchecked_Deallocation (
-      Object => T,
-      Name => P);
+   procedure Deallocate is new Ada.Unchecked_Deallocation (Object => T,
+                                                           Name => P);
 
 
    function "=" (Ptr : Pointer; Value : T) return Boolean

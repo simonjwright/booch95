@@ -12,45 +12,16 @@
 --  write to the Free Software Foundation, 59 Temple Place - Suite
 --  330, Boston, MA 02111-1307, USA.
 
---  $Revision$
---  $Date$
---  $Author$
+--  $Revision: 1409 $
+--  $Date: 2009-05-23 18:33:55 +0100 (Sat, 23 May 2009) $
+--  $Author: simonjwright $
+--
+--  Tests for Indefinite Maps.
 
-with "aunit";
+with AUnit.Test_Suites;
 
-project AUnit_Tests is
+package Tests.Indefinite_Maps is
 
-  for Main use
-    (
-     "tests-main.adb"
-    );
+   function Suite return AUnit.Test_Suites.Access_Test_Suite;
 
-  for Source_Dirs use (".", "../src");
-  for Exec_Dir use ".";
-  for Object_Dir use ".build";
-
-  package Builder is
-     for Default_Switches ("Ada") use
-       (
-        "-ftest-coverage",
-        "-fprofile-arcs",
-        "-m",
-        "-g"
-       );
-  end Builder;
-
-  package Compiler is
-     for Default_Switches ("Ada") use
-       (
-        "-gnatqQafoy",
-        "-gnatwaL",
-        "-gnat05",
-        "-O2"
-       );
-  end Compiler;
-
-  package Binder is
-     for Default_Switches ("Ada") use ("-E");
-  end Binder;
-
-end AUnit_Tests;
+end Tests.Indefinite_Maps;
