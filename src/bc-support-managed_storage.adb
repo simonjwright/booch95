@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1999 Pat Rogers
---  Copyright 1999-2008 Simon Wright <simon@pushface.org>
+--  Copyright 1999-2009 Simon Wright <simon@pushface.org>
 --  Modifications November 2006 by Christopher J. Henrich
 
 --  This package is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ package body BC.Support.Managed_Storage is
    function "+" (S : Chunk_Pointer) return String;
    function "+" (S : System.Address) return String is
       package Address_IO is new Ada.Text_IO.Modular_IO (SSE.Integer_Address);
-      Result : String (1 .. 12);
+      Result : String (1 .. 20);
    begin
       Address_IO.Put (Result,
                       System.Storage_Elements.To_Integer (S),
@@ -166,7 +166,9 @@ package body BC.Support.Managed_Storage is
          --  previous list, if any, and may become the new head.
 
          List := new Chunk_List;
-         Put_Line ("Allocate: new List" & (+List));
+         if Debug then
+            Put_Line ("Allocate: new List" & (+List));
+         end if;
 
          --  Chain the new list in
          if Previous_List /= null then
@@ -230,9 +232,12 @@ package body BC.Support.Managed_Storage is
       Storage_Address := Chunk.Next_Element;
       Chunk.Next_Element := Value_At (Chunk.Next_Element);
 
-      Put_Line ("Allocate:" & (+Storage_Address)
-                  & " s:" & SSE.Storage_Count'Image (Size_In_Storage_Elements)
-                  & " a:" & SSE.Storage_Count'Image (Alignment));
+      if Debug then
+         Put_Line
+           ("Allocate:" & (+Storage_Address)
+              & " s:" & SSE.Storage_Count'Image (Size_In_Storage_Elements)
+              & " a:" & SSE.Storage_Count'Image (Alignment));
+      end if;
 
    end Allocate;
 
@@ -251,9 +256,12 @@ package body BC.Support.Managed_Storage is
 
    begin
 
-      Put_Line ("Deallocate:" & (+Storage_Address)
-                  & " s:" & SSE.Storage_Count'Image (Size_In_Storage_Elements)
-                  & " a:" & SSE.Storage_Count'Image (Alignment));
+      if Debug then
+         Put_Line
+           ("Deallocate:" & (+Storage_Address)
+              & " s:" & SSE.Storage_Count'Image (Size_In_Storage_Elements)
+              & " a:" & SSE.Storage_Count'Image (Alignment));
+      end if;
 
       --  Calculate the usable size and alignment.
       Usable_Size_And_Alignment (Size_In_Storage_Elements,
@@ -311,13 +319,19 @@ package body BC.Support.Managed_Storage is
       List, Previous_List : Chunk_List_Pointer;
       Chunk, Previous_Chunk : Chunk_Pointer;
    begin
-      Put_Line ("Finalize:");
+      if Debug then
+         Put_Line ("Finalize:");
+      end if;
       List := This.Head;
       while List /= null loop
-         Put_Line (" l " & (+List));
+         if Debug then
+            Put_Line (" l" & (+List));
+         end if;
          Chunk := List.Head;
          while Chunk /= null loop
-            Put_Line ("  c " & (+Chunk));
+            if Debug then
+               Put_Line ("  c" & (+Chunk));
+            end if;
             Previous_Chunk := Chunk;
             Chunk := Chunk.Next_Chunk;
             Dispose (Previous_Chunk);
@@ -343,7 +357,7 @@ package body BC.Support.Managed_Storage is
       --
       --  This is normally not of any great significance: on i386
       --  hardware, the maximum alignment is 8, while on PowerPC it is
-      --  4 sometimes 8, depending on OS).
+      --  4 (sometimes 8, depending on OS).
       --
       --  However, we can't calculate the number of elements that can
       --  be held in the chunk until we've got the chunk.
@@ -410,12 +424,15 @@ package body BC.Support.Managed_Storage is
       Put (System.Null_Address, At_Location => Stop);
       Result.Next_Element := Start;
 
-      Put_Line ("Get_Chunk:"
-                  & " s:" & SSE.Storage_Count'Image (Requested_Element_Size)
-                  & " a:" & SSE.Storage_Count'Image (Requested_Alignment)
-                  & " c:" & (+Result)
-                  & " ne:" & SSE.Storage_Count'Image (Result.Number_Elements)
-                  & " p:" & (+Result.Next_Element));
+      if Debug then
+         Put_Line
+           ("Get_Chunk:"
+              & " s:" & SSE.Storage_Count'Image (Requested_Element_Size)
+              & " a:" & SSE.Storage_Count'Image (Requested_Alignment)
+              & " c:" & (+Result)
+              & " ne:" & SSE.Storage_Count'Image (Result.Number_Elements)
+              & " p:" & (+Result.Next_Element));
+      end if;
 
    end Get_Chunk;
 
@@ -444,11 +461,15 @@ package body BC.Support.Managed_Storage is
    is
       Chunk : Chunk_Pointer;
    begin
-      Put_Line ("Purge_Unused_Chunks:");
+      if Debug then
+         Put_Line ("Purge_Unused_Chunks:");
+      end if;
       while This.Unused /= null loop
          Chunk := This.Unused;
          This.Unused := This.Unused.Next_Chunk;
-         Put_Line (" p " & (+Chunk));
+         if Debug then
+            Put_Line (" p" & (+Chunk));
+         end if;
          Dispose (Chunk);
       end loop;
    end Purge_Unused_Chunks;
@@ -484,7 +505,9 @@ package body BC.Support.Managed_Storage is
 
       while List /= null loop
 
-         Put_Line ("Reclaim_Unused_Chunks: looking at" & (+List));
+         if Debug then
+            Put_Line ("Reclaim_Unused_Chunks: looking at" & (+List));
+         end if;
          Chunk := List.Head;
 
          --  Compute the maximum number of elements possible, per chunk,
@@ -504,17 +527,23 @@ package body BC.Support.Managed_Storage is
 
      Decrement_Counts :
          while Element /= System.Null_Address loop
-            Put_Line (" looking for" & (+Element));
+            if Debug then
+               Put_Line (" looking for" & (+Element));
+            end if;
             Chunk := List.Head;
 
         This_Chunk :
             while Chunk /= null loop
-               Put_Line ("  looking in " & (+Chunk));
+               if Debug then
+                  Put_Line ("  looking in" & (+Chunk));
+               end if;
 
                if Within_Range (Element, Chunk) then
 
                   Chunk.Number_Elements := Chunk.Number_Elements - 1;
-                  Put_Line ("   found.");
+                  if Debug then
+                     Put_Line ("   found.");
+                  end if;
                   exit This_Chunk;
 
                end if;
@@ -543,7 +572,9 @@ package body BC.Support.Managed_Storage is
 
                --  Remove this chunk to the Unused list.
 
-               Put_Line (" empty chunk at " & (+Chunk));
+               if Debug then
+                  Put_Line (" empty chunk at" & (+Chunk));
+               end if;
 
                -- cjh: Elements on the "Next_Element" list and lying
                --  within this chunk must be removed from the list.
@@ -552,7 +583,9 @@ package body BC.Support.Managed_Storage is
 
                while Element /= System.Null_Address loop
                   if Within_Range (Element, Chunk) then
-                     Put_Line ("  unlinking element at " & (+Element));
+                     if Debug then
+                        Put_Line ("  unlinking element at" & (+Element));
+                     end if;
                      if Previous_Element = System.Null_Address then
                         List.Head.Next_Element := Value_At (Element);
                      else
@@ -622,7 +655,9 @@ package body BC.Support.Managed_Storage is
 
                end if;
 
-               Put_Line (" deleting list at " & (+List));
+               if Debug then
+                  Put_Line (" deleting list at" & (+List));
+               end if;
                Dispose (List);
 
                List := Next_List;
