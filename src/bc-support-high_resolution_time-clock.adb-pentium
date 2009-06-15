@@ -1,4 +1,4 @@
---  Copyright 2005 Simon Wright <simon@pushface.org>
+--  Copyright 2005-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -26,16 +26,21 @@
 --  This implementation is for GNAT on Intel i86 hardware (Linux,
 --  Windows).
 
+with Ada.Unchecked_Conversion;
 with System.Machine_Code;
 
 separate (BC.Support.High_Resolution_Time)
 function Clock return Time is
+
    type Half is (Low, High);
+   type Low_High is array (Half) of Interfaces.Unsigned_32;
+
    Lower, Upper : Interfaces.Unsigned_32;
-   Results : array (Half) of Interfaces.Unsigned_32;
-   Result : Time;
-   for Result'Address use Results (Low)'Address;
+
+   function To_Time is new Ada.Unchecked_Conversion (Low_High, Time);
+
 begin
+
    System.Machine_Code.Asm
      ("rdtsc" & ASCII.LF & ASCII.HT &
         "movl %%eax, %0"& ASCII.LF & ASCII.HT &
@@ -44,8 +49,9 @@ begin
                   Interfaces.Unsigned_32'Asm_Output ("=g", Upper)),
       Clobber => "eax, edx",
       Volatile => True);
-   Results := (Low => Lower, High => Upper);
-   return Result;
+
+   return To_Time ((Low => Lower, High => Upper));
+
 end Clock;
 
 --  for emacs:
