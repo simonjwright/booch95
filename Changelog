@@ -29,6 +29,13 @@ A release with fixes for Ring containers.
 There was a problem when the Mark denoted an internal index before the
 Top; Insert would improperly increment the Mark.
 
+yyyymmdd:
+
+A release with ...
+
+There was a problem with BC.Support.High_Resolution_Time on 64-bit
+compilers. Cleared by doing the Right Thing and using
+Unchecked_Conversion instead of overlays.
 	
 ----------------------------------------------------------------------------
 For emacs:
