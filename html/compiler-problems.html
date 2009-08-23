@@ -5,6 +5,8 @@
 <meta name="generator" content=
 "HTML Tidy for Mac OS X (vers 1st December 2004), see www.w3.org" />
 <title>The Ada95 Booch Components (Compiler problems)</title>
+<link href="bc.css" rel="stylesheet" type="text/css"/>
+<style type="text/css">dt {font-size: 1.5em; font-weight: bold;</style>
 </head>
 <body bgcolor="#FFFFFF">
 <table width="100%">
@@ -83,10 +85,10 @@ Apex/Summit PATCH: 199903042-1  Installed by ratadmin on Mar 9 08:45
 <dt><a name="29jan1999">29 January 1999</a></dt>
 <dd>
 <dl>
-<dt><b>Iterators</b></dt>
+<dt>Iterators</dt>
 <dd>The new Iterators work correctly under GNAT 3.11p and ObjectAda
 Special Edition Version 7.1.</dd>
-<dt><b>ObjectAda Special Edition Version 7.1</b></dt>
+<dt>ObjectAda Special Edition Version 7.1</dt>
 <dd>There are special versions of the Map, Queue and Stack test
 drivers which avoid using the Dynamic forms:
 <pre>
@@ -103,19 +105,18 @@ Don't use the test driver <tt>storage.adb</tt>.</dd>
 <dt><b>Iterators</b></dt>
 <dd>The new Iterators break GNAT 3.10p. 3.11b is OK, so with any
 luck the forthcoming 3.11p will be too!</dd>
-<dt><b>ObjectAda Special Edition Version 7.1</b> and Dynamic
-forms</dt>
+<dt>ObjectAda Special Edition Version 7.1 and Dynamic forms</dt>
 <dd>These are still broken.</dd>
 </dl>
 </dd>
 <dt><a name="20oct1998">20 October 1998</a></dt>
 <dd>
 <dl>
-<dt><b>Graph passive iterators</b></dt>
+<dt>Graph passive iterators</dt>
 <dd>The passive iterators in <tt>BC.Graphs.Directed</tt> and
 <tt>BC.Graphs.Undirected</tt> break GNAT 3.10p and 3.11a1. 3.11b is
 OK, so with any luck the forthcoming 3.11p will be too!</dd>
-<dt><b>ObjectAda Special Edition Version 7.1</b> and Dynamic
+<dt>ObjectAda Special Edition Version 7.1 and Dynamic
 forms</dt>
 <dd>We have an update on this; the impression is that OA has
 trouble with unconstrained types being allocated on a user-supplied
@@ -124,11 +125,11 @@ storage.<br />
 (As a note, the dynamic forms aren't as efficient as Grady Booch
 intended, because of a code translation problem! this will be
 addressed ...)</dd>
-<dt><b>ObjectAda Special Edition Version 7.1</b> and Managed
+<dt>ObjectAda Special Edition Version 7.1 and Managed
 Store</dt>
 <dd>We've supplied a new version of
 <tt>BC.Support.Managed_Storage</tt> which compiles under OA.</dd>
-<dt><b>ObjectAda Special Edition Version 7.1</b> and
+<dt>ObjectAda Special Edition Version 7.1 and
 <tt>Graph_Test</tt></dt>
 <dd>The compiler fails (internal assertion failure) while compiling
 Graph_Test. However, the demo program Ada_Units works as
@@ -141,11 +142,11 @@ Storage Management, we found problems with different compilers. I
 guess this is an area of the language that's not been very heavily
 used up to now.<br />
 <dl>
-<dt><b>GNAT 3.10p</b></dt>
+<dt>GNAT 3.10p</dt>
 <dd>No problems.</dd>
-<dt><b>GNAT 3.11a1</b></dt>
+<dt>GNAT 3.11a1</dt>
 <dd>No problems.</dd>
-<dt><b>GNAT 3.11b</b></dt>
+<dt>GNAT 3.11b</dt>
 <dd><tt>BC.Support.Unmanaged_Storage</tt> failed to compile.<br />
 We've worked round the problem by a (nugatory) view conversion from
 what should have been a classwide attribute value already

@@ -5,6 +5,8 @@
 <meta name="generator" content=
 "HTML Tidy for Mac OS X (vers 1st December 2004), see www.w3.org" />
 <title>The Ada95 Booch Components (Release notes)</title>
+<link href="bc.css" rel="stylesheet" type="text/css"/>
+<style type="text/css">dt {font-size: 1.5em; font-weight: bold;</style>
 </head>
 <body bgcolor="white">
 <table width="100%">
@@ -20,6 +22,22 @@ SourceForge.net. Fast, secure and Free Open Source software downloads"
 <p><i>Release notes</i></p>
 <p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>
 <dl>
+
+<dt>26 Feb 2009</dt>
+<dd>There was a problem with Rings when the Mark denoted an internal
+index before the Top; Insert would improperly increment the Mark.</dd>
+
+<dt>16 Feb 2009</dt>
+<dd>Altered the directory structure to a more standard form; the top
+level is still bc-yyyymmdd, but under that is GNAT/ (supporting GNUAda
+and other Ada projects on SourceForge), src/ for source, tests/ for
+tests and demos/ for demos.<br/>
+Some fixes for Mac OS X.</dd>
+
+<dt>12 Dec 2007</dt>
+<dd>Support release for The GNU Ada Project. This release adds support
+for Sun Solaris to the GNAT project files.</dd>
+
 <dt>22 Aug 2007</dt>
 <dd>
 <h3>Interface changes</h3>
@@ -35,6 +53,7 @@ raises <tt>BC.Underflow</tt>.</p>
 <h3>New contributions</h3>
 <p>None.</p>
 </dd>
+
 <dt>16 Jul 2006</dt>
 <dd>
 <h3>Interface changes</h3>
@@ -48,6 +67,7 @@ implementation creates an empty <tt>Container</tt> on the fly.</p>
 <h3>New contributions</h3>
 <p>None.</p>
 </dd>
+
 <dt>22 Dec 2005</dt>
 <dd>
 <h3>Interface changes</h3>
@@ -61,6 +81,7 @@ containers which have previously been part of AdaCL
 <h3>New contributions</h3>
 <p>None.</p>
 </dd>
+
 <dt>20 Apr 2005</dt>
 <dd>
 <h3>Location</h3>
@@ -83,6 +104,7 @@ for PowerPC G4 (eg, Apple PowerBook).</p>
 <h3>New contributions</h3>
 <p>None.</p>
 </dd>
+
 <dt>19 Mar 2004</dt>
 <dd>
 <h3>Interface changes</h3>
@@ -104,7 +126,8 @@ This is an efficiency improvement.</p>
 <h3>New contributions</h3>
 <p>None.</p>
 </dd>
-<dt>23 November 2003</dt>
+
+<dt>23 Nov 2003</dt>
 <dd>
 <h3>Interface changes</h3>
 <p>Added <tt>BC.Support.High_Resolution_Time</tt>, which supports
@@ -126,6 +149,7 @@ turned out to be rather costly!)</p>
 <h3>New contributions</h3>
 <p>None.</p>
 </dd>
+
 <dt>15 Aug 2003</dt>
 <dd>
 <h3>Interface changes</h3>
@@ -138,6 +162,7 @@ turned out to be rather costly!)</p>
 <h3>New contributions</h3>
 <p>None.</p>
 </dd>
+
 <dt>9 Mar 2003</dt>
 <dd>
 <h3>Interface changes</h3>
@@ -155,6 +180,7 @@ streams, even if based on a datagram protocol).</p>
 <h3>New contributions</h3>
 <p>None.</p>
 </dd>
+
 <dt>11 Jan 2003</dt>
 <dd>
 <h3>Licence changes</h3>
@@ -236,7 +262,8 @@ on the <tt>BC.Support</tt> packages</a>.</p>
 <h3>New contributions</h3>
 <p>None.</p>
 </dd>
-<dt>2 June 2002</dt>
+
+<dt>2 Jun 2002</dt>
 <dd>
 <h3>Interface changes</h3>
 <p>None.</p>
@@ -272,6 +299,7 @@ GNAT 3.12</a>.</p>
 <p>Converted the <a href="demos.html">Tests and Demos</a> page to
 report compiler compatibility.</p>
 </dd>
+
 <dt>17 Jan 2002</dt>
 <dd>
 <h3>Interface changes</h3>
@@ -311,6 +339,7 @@ applications.</p>
 "http://www.pumatech.com/mind-it_service/service.html">charge for
 the service</a>.</p>
 </dd>
+
 <dt>11 Oct 2001</dt>
 <dd>
 <h3>Interface changes</h3>
@@ -334,6 +363,7 @@ Bounded Maps.</p>
 <p>Began rework of tests so as to give a clear pass/fail
 indication. So far only for Collections, Maps, Sets.</p>
 </dd>
+
 <dt>19 Aug 2001</dt>
 <dd>
 <h3>Documentation changes</h3>
@@ -347,6 +377,7 @@ reduces the space requirement considerably and means that the
 <p>Began re-indenting to the GNAT default (basically, 3 spaces
 standard indent, 2 spaces for continuations).</p>
 </dd>
+
 <dt>13 May 2001</dt>
 <dd>
 <h3>Interface changes</h3>
@@ -384,6 +415,7 @@ versions of the Aonix compiler. The least I can do is to try
 compiling synchronization support on its own! .. and OA 7.2 would
 have found it. Apologies.</p>
 </dd>
+
 <dt>25 March 2001</dt>
 <dd>
 <p>Containers no longer allocate their representation from the
@@ -420,7 +452,8 @@ item type a pointer to your record, so that you can change the
 indicated non-key fields as required (<em>not</em> the key fields,
 please!)</p>
 </dd>
-<dt>21 January 2001</dt>
+
+<dt>21 Jan 2001</dt>
 <dd>
 <h3>Interface changes</h3>
 For Containers with Bounded, Dynamic and Unbounded forms the
@@ -460,7 +493,8 @@ GNAT 3.13 problem with finalization when using a function return
 value to initialize a classwide value.</p>
 <p>Lots of work on <tt>BC.Support.Synchronization</tt>.</p>
 </dd>
-<dt>30 September 2000</dt>
+
+<dt>30 Sep 2000</dt>
 <dd>
 <p>Implemented the remaining Bounded and Dynamic forms
 (Collections, Deques, Ordered Collections, Ordered Queues, Queues
@@ -478,7 +512,8 @@ compilers</a> about this one!</p>
 element was visited repeatedly. This has changed
 <tt>BC.Containers.Access_Current_Item</tt>'s profile.</p>
 </dd>
-<dt>4 June 2000</dt>
+
+<dt>4 Jun 2000</dt>
 <dd>
 <p>Added Deques (in the Unbounded form only so far).</p>
 <p>In AVL Trees and Lists, removed the <tt>aliased</tt>
@@ -507,12 +542,14 @@ one).</p>
 <p>Reorganised the source files so that tests and demos go in
 subdirectories.</p>
 </dd>
-<dt>19 February 2000</dt>
+
+<dt>19 Feb 2000</dt>
 <dd>
 <p>Uses signature-based Hash Tables (for Bags, Maps, Sets).</p>
 <p>Includes Guarded and Synchronized Maps.</p>
 </dd>
-<dt>3 January 2000</dt>
+
+<dt>3 Jan 2000</dt>
 <dd>
 <p>Added the ability to delete the item an <tt>Iterator</tt> is
 currently indicating
@@ -539,7 +576,8 @@ sometimes corrupt the Tree on deletion.</p>
 <p>Continued the renaming of <tt>Container</tt> parameters from
 <tt>Obj</tt> to something slightly more mnemonic.</p>
 </dd>
-<dt>31st October 1999</dt>
+
+<dt>31 Oct 1999</dt>
 <dd>
 <p>Added Unbounded Ordered Queues.</p>
 <p>AVL Trees are no longer limited.</p>
@@ -547,7 +585,8 @@ sometimes corrupt the Tree on deletion.</p>
 when keys are equal. <tt>Insert</tt> now adds from the front of the
 Collection, <tt>Append</tt> from the rear.</p>
 </dd>
-<dt>21st June 1999</dt>
+
+<dt>21 Jun 1999</dt>
 <dd>
 <p>Added Unbounded Collections and Unbounded Ordered
 Collections.</p>
@@ -563,17 +602,20 @@ too permissive).</p>
 (avoiding <a href="compiler-problems.html#29jan1999">compiler
 problems</a>).</p>
 </dd>
-<dt>7th May 1999</dt>
+
+<dt>7 May 1999</dt>
 <dd>Included the accidentally-omitted Bounded and Dynamic Bag
 sources.</dd>
-<dt>4th May 1999</dt>
+
+<dt>4 May 1999</dt>
 <dd>Added Bounded and Dynamic Bags.
 <p>Added Unbounded Rings in standard, Guarded and Synchronized
 forms.</p>
 <p>ObjectAda <a href="compiler-problems.html#4may1999">problems</a>
 with Semaphores.</p>
 </dd>
-<dt>14th March 1999</dt>
+
+<dt>14 Mar 1999</dt>
 <dd>Eliminated a problem where a function call, used only for its
 side effect and not for its result, was deleted by high
 optimisation levels (<tt>-O3</tt>).
@@ -588,7 +630,8 @@ with Rational Apex.</p>
 Working Group</a>.</p>
 <p>Further <a href="contrib/">contributions</a>.</p>
 </dd>
-<dt>21st February 1999</dt>
+
+<dt>21 Feb 1999</dt>
 <dd>Containers require a (defaultable) <tt>"="</tt> operation for
 Items.
 <p>Added Bags (only in the Unbounded form so far).</p>
@@ -613,7 +656,8 @@ the cache in the copy.</p>
 initial contributions from <a href=
 "mailto:Daniel.Gaudry@wanadoo.fr">Daniel Gaudry</a>.</p>
 </dd>
-<dt>29 January 1999</dt>
+
+<dt>29 Jan 1999</dt>
 <dd>Corrected an error in AVL trees (only the second one that is an
 error in the original C++ and not in the translation!).
 <p>Added ObjectAda-special versions of test drivers (avoiding
@@ -622,7 +666,8 @@ problems</a>).</p>
 <p>Removed a use of the GNAT-special <tt>'Img</tt> attribute.</p>
 <p>Removed a couple of badly-placed <tt>pragma Inline</tt>s.</p>
 </dd>
-<dt>24 January 1999</dt>
+
+<dt>24 Jan 1999</dt>
 <dd>Added Maps.
 <p>Added AVL Trees.</p>
 <p>Removed some abbreviations; for instance, in
@@ -644,17 +689,20 @@ now prefixed with <tt>Undirected_</tt> or <tt>Directed_</tt> as
 appropriate; eg, a directed Vertex becomes
 <tt>Directed_Vertex</tt>.</p>
 </dd>
-<dt>20 October 1998</dt>
+
+<dt>20 Oct 1998</dt>
 <dd>Added Graphs. There are more <a href=
 "compiler-problems.html#20oct1998">compiler problems</a>, I'm
 afraid, though we have found a workround for one of the old ones.
 <p>Internal changes in Storage Management.</p>
 </dd>
-<dt>6 October 1998</dt>
+
+<dt>6 Oct 1998</dt>
 <dd>Updated notes on <a href=
 "compiler-problems.html#6oct1998">compiler problems</a> to give a
 workround for users of ObjectAda 7.1 Special Edition.</dd>
-<dt>4 October 1998</dt>
+
+<dt>4 Oct 1998</dt>
 <dd>Storage Management added, thanks to <a href=
 "mailto:pat@classwide.com">Pat Rogers</a>. This has tickled some
 <em><font color="red">compiler problems</font></em>, <a href=
@@ -671,16 +719,18 @@ adopt the same policy for Bounded forms too. <em><font color=
 <p>Added some minor demo code (<tt>storage</tt>,
 <tt>time_lists</tt> and <tt>time_queues</tt>).</p>
 </dd>
-<dt>24 August 1998</dt>
+
+<dt>24 Aug 1998</dt>
 <dd>Bugfix release.
 <p>There were several storage leaks.</p>
 <p>It's illegal to declare abstract subprograms in a private
 part.</p>
 <p>The Stack and Queue iterators were broken (by sjw).</p>
 </dd>
-<dt>1 August 1998</dt>
+
+<dt>1 Aug 1998</dt>
 <dd>First release by <a href=
-"mailto:simon@pogner.demon.co.uk">Simon Wright</a>. Added Binary
+"mailto:simon@pushface.org">Simon Wright</a>. Added Binary
 and Multiway Trees, Smart Pointers.</dd>
 </dl>
 <p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>

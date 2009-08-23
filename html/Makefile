@@ -40,7 +40,7 @@ upload-docs: force
 	  --times \
 	  --update \
 	  --verbose \
-	  *.{html,gif,jpg,png} x.ada \
+	  *.{css,html,gif,jpg,png} x.ada \
 	  coldframe-hash.{tgz,zip} \
 	  $(SFUSER),booch95@web.sourceforge.net:htdocs/
 

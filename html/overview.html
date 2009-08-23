@@ -5,6 +5,7 @@
 <meta name="generator" content=
 "HTML Tidy for Mac OS X (vers 1st December 2004), see www.w3.org" />
 <title>The Ada95 Booch Components (Overview)</title>
+<link href="bc.css" rel="stylesheet" type="text/css"/>
 </head>
 <body bgcolor="#FFFFFF">
 <table width="100%">
@@ -18,11 +19,6 @@ SourceForge.net. Fast, secure and Free Open Source software downloads"
 </tr>
 </table>
 <p><i>Overview</i></p>
-Please note that this package is a work-in-progress. Some
-documentation, commentaries, statistics, source code, etc. will
-change over the course of time. If anything is updated on the Booch
-Components, you'll see it here first, so be sure to check from time
-to time.
 <p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>
 <ul>
 <li><a href="#history">History</a></li>
@@ -114,12 +110,12 @@ me</a> with any thoughts you may have!</p>
 <dl>
 <dt>Lists; to use or not to use?</dt>
 <dd>Many people, faced with the BCs for the first time, choose
-Lists (Single or Double) as their standard Container.
-<p>This is probably <em>not</em> the best choice. Lists are complex
+Lists (Single or Double) as their standard Container.<br/>
+This is probably <em>not</em> the best choice. Lists are complex
 entities which, I suppose, would be useful if you were implementing
-a list-processing engine like Lisp.</p>
-<p><font color="red">You'll be a lot better off using
-Collections!</font></p>
+a list-processing engine like Lisp.<br/>
+<font color="red">You'll be a lot better off using
+Collections!</font>
 </dd>
 <dt>Hierarchy, Graphs, Lists and Trees</dt>
 <dd>Most of the Components are derived from
@@ -128,23 +124,23 @@ children of <tt>BC.Containers</tt>). The only feature common at
 this level is iteration; implicit in the fact that
 <tt>BC.Containers</tt> is a generic package parameterised by the
 type <tt>Item</tt> is that Containers contain just one sort of
-thing.
-<p>This works fine except for Graphs; a Graph is a collection of
+thing.<br/>
+This works fine except for Graphs; a Graph is a collection of
 Vertices (OK so far), while Vertices are connected by (not
 collections of) Arcs. Graphs will remain outside the Containers
-hierarchy.</p>
-<p>Trees aren't Containers, largely because of the difficulty of
+hierarchy.<br/>
+Trees aren't Containers, largely because of the difficulty of
 supporting standard Iterators in a non-linear structure like a
 Tree, but also because they are "polylithic" (Grady's term, implies
-structural sharing).</p>
-<p>Lists aren't Containers, because they are polylithic.</p>
-<p>That said, I've tried to use a common style throughout.</p>
+structural sharing).<br/>
+Lists aren't Containers, because they are polylithic.<br/>
+That said, I've tried to use a common style throughout.
 </dd>
 <dt>Compilers</dt>
 <dd>The new Aonix ObjectAda 7.2 demo compiler handles the stock
 Components without change, so the old "Aonix-only" versions of the
-test programs, which omitted Dynamic forms, are no longer needed.
-<p>The Components work well (for me) with GCC-3.2 and prerelease
+test programs, which omitted Dynamic forms, are no longer needed.<br/>
+The Components work well (for me) with GCC-3.2 and prerelease
 3.3 compilers.</p>
 </dd>
 </dl>
