@@ -108,7 +108,7 @@ project Booch_95 is
          "-gnatef",                          -- Full source path in brief error messages
          "-gnatf",                           -- Full errors. Verbose details, all undefined references
          "-gnatU",                           -- Enable unique tag for error messages
-         "-gnatwcdfijklmopruvz",             -- All warings enabled
+         "-gnatwcdfijklmopruvz",             -- All warnings enabled
          "-gnatq",                           -- Don't quit, try semantics, even if parse errors
          "-gnatQ",                           -- Don't quit, write ali/tree file even if compile errors
          "-gnatT4");                         -- Compiler tables sizes 4* default
@@ -245,7 +245,7 @@ project Booch_95 is
    --------------------------------------------------------------------------
    --
    package Ide is
-      for Vcs_Kind use "CVS";
+      for Vcs_Kind use "SVN";
 
       case Target is
          when "native" =>
