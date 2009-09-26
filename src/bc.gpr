@@ -3,11 +3,7 @@
 
 project BC is
 
-  --  AUnit is assumed installed in the user's home directory.
-  AUnit := external ("AUNIT", "AUnit-1.03p");
-
-  for Source_Dirs use (".",
-                       external ("HOME") & "/" & AUnit & "/aunit/**");
+  for Source_Dirs use (".");
 
   for Object_Dir use ".build";
 
@@ -36,4 +32,3 @@ project BC is
   end Binder;
 
 end BC;
-
