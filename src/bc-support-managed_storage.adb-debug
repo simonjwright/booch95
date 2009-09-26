@@ -26,10 +26,50 @@
 --  $Date$
 --  $Author$
 
+with Ada.Exceptions;
+with Ada.Strings.Fixed;
 with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
 
+with Ada.Text_IO;
+
 package body BC.Support.Managed_Storage is
+
+
+   --  Debug utilities
+
+   Debug : constant Boolean := False;
+   pragma Warnings (Off, Debug);
+
+   function "+" (S : System.Address) return String;
+   function "+" (S : Chunk_List_Pointer) return String;
+   function "+" (S : Chunk_Pointer) return String;
+   function "+" (S : System.Address) return String is
+      package Address_IO is new Ada.Text_IO.Modular_IO (SSE.Integer_Address);
+      Result : String (1 .. 20);
+   begin
+      Address_IO.Put (Result,
+                      System.Storage_Elements.To_Integer (S),
+                      Base => 16);
+      return " " & Ada.Strings.Fixed.Trim (Result, Ada.Strings.Both);
+   end "+";
+   function "+" (S : Chunk_List_Pointer) return String is
+   begin
+      return +(S.all'Address);
+   end "+";
+   function "+" (S : Chunk_Pointer) return String is
+   begin
+      return +(S.all'Address);
+   end "+";
+   procedure Put_Line (S : String);
+   pragma Inline (Put_Line);
+   procedure Put_Line (S : String) is
+   begin
+      if Debug then
+         Ada.Text_IO.Put_Line (S);
+         Ada.Text_IO.Flush;
+      end if;
+   end Put_Line;
 
 
    --  Manage chaining through the allocated elements in chunks.
@@ -126,6 +166,9 @@ package body BC.Support.Managed_Storage is
          --  previous list, if any, and may become the new head.
 
          List := new Chunk_List;
+         if Debug then
+            Put_Line ("Allocate: new List" & (+List));
+         end if;
 
          --  Chain the new list in
          if Previous_List /= null then
@@ -189,6 +232,13 @@ package body BC.Support.Managed_Storage is
       Storage_Address := Chunk.Next_Element;
       Chunk.Next_Element := Value_At (Chunk.Next_Element);
 
+      if Debug then
+         Put_Line
+           ("Allocate:" & (+Storage_Address)
+              & " s:" & SSE.Storage_Count'Image (Size_In_Storage_Elements)
+              & " a:" & SSE.Storage_Count'Image (Alignment));
+      end if;
+
    end Allocate;
 
 
@@ -206,6 +256,13 @@ package body BC.Support.Managed_Storage is
 
    begin
 
+      if Debug then
+         Put_Line
+           ("Deallocate:" & (+Storage_Address)
+              & " s:" & SSE.Storage_Count'Image (Size_In_Storage_Elements)
+              & " a:" & SSE.Storage_Count'Image (Alignment));
+      end if;
+
       --  Calculate the usable size and alignment.
       Usable_Size_And_Alignment (Size_In_Storage_Elements,
                                  Alignment,
@@ -221,7 +278,9 @@ package body BC.Support.Managed_Storage is
          List := List.Next_List;
       end loop;
       if List = null then
-         raise Pool_Error;
+         Ada.Exceptions.Raise_Exception
+           (Program_Error'Identity,
+            "BC.Support.Managed_Storage.Deallocate: no matching list found");
       end if;
 
       Put (List.Head.Next_Element, At_Location => Storage_Address);
@@ -260,10 +319,19 @@ package body BC.Support.Managed_Storage is
       List, Previous_List : Chunk_List_Pointer;
       Chunk, Previous_Chunk : Chunk_Pointer;
    begin
+      if Debug then
+         Put_Line ("Finalize:");
+      end if;
       List := This.Head;
       while List /= null loop
+         if Debug then
+            Put_Line (" l" & (+List));
+         end if;
          Chunk := List.Head;
          while Chunk /= null loop
+            if Debug then
+               Put_Line ("  c" & (+Chunk));
+            end if;
             Previous_Chunk := Chunk;
             Chunk := Chunk.Next_Chunk;
             Dispose (Previous_Chunk);
@@ -356,6 +424,16 @@ package body BC.Support.Managed_Storage is
       Put (System.Null_Address, At_Location => Stop);
       Result.Next_Element := Start;
 
+      if Debug then
+         Put_Line
+           ("Get_Chunk:"
+              & " s:" & SSE.Storage_Count'Image (Requested_Element_Size)
+              & " a:" & SSE.Storage_Count'Image (Requested_Alignment)
+              & " c:" & (+Result)
+              & " ne:" & SSE.Storage_Count'Image (Result.Number_Elements)
+              & " p:" & (+Result.Next_Element));
+      end if;
+
    end Get_Chunk;
 
 
@@ -383,9 +461,15 @@ package body BC.Support.Managed_Storage is
    is
       Chunk : Chunk_Pointer;
    begin
+      if Debug then
+         Put_Line ("Purge_Unused_Chunks:");
+      end if;
       while This.Unused /= null loop
          Chunk := This.Unused;
          This.Unused := This.Unused.Next_Chunk;
+         if Debug then
+            Put_Line (" p" & (+Chunk));
+         end if;
          Dispose (Chunk);
       end loop;
    end Purge_Unused_Chunks;
@@ -421,6 +505,9 @@ package body BC.Support.Managed_Storage is
 
       while List /= null loop
 
+         if Debug then
+            Put_Line ("Reclaim_Unused_Chunks: looking at" & (+List));
+         end if;
          Chunk := List.Head;
 
          --  Compute the maximum number of elements possible, per chunk,
@@ -440,20 +527,33 @@ package body BC.Support.Managed_Storage is
 
      Decrement_Counts :
          while Element /= System.Null_Address loop
+            if Debug then
+               Put_Line (" looking for" & (+Element));
+            end if;
             Chunk := List.Head;
 
         This_Chunk :
             while Chunk /= null loop
+               if Debug then
+                  Put_Line ("  looking in" & (+Chunk));
+               end if;
+
                if Within_Range (Element, Chunk) then
 
                   Chunk.Number_Elements := Chunk.Number_Elements - 1;
+                  if Debug then
+                     Put_Line ("   found.");
+                  end if;
                   exit This_Chunk;
 
                end if;
                Chunk := Chunk.Next_Chunk;
             end loop This_Chunk;
             if Chunk = null then
-               raise Pool_Error;
+               Ada.Exceptions.Raise_Exception
+                 (Program_Error'Identity,
+                  "BC.Support.Managed_Storage.Reclaim_Unused_Chunks: "
+                    & "element not found in chunk");
             end if;
 
             Element := Value_At (Element); -- get next element
@@ -472,6 +572,10 @@ package body BC.Support.Managed_Storage is
 
                --  Remove this chunk to the Unused list.
 
+               if Debug then
+                  Put_Line (" empty chunk at" & (+Chunk));
+               end if;
+
                -- cjh: Elements on the "Next_Element" list and lying
                --  within this chunk must be removed from the list.
                Element := List.Head.Next_Element;
@@ -479,6 +583,9 @@ package body BC.Support.Managed_Storage is
 
                while Element /= System.Null_Address loop
                   if Within_Range (Element, Chunk) then
+                     if Debug then
+                        Put_Line ("  unlinking element at" & (+Element));
+                     end if;
                      if Previous_Element = System.Null_Address then
                         List.Head.Next_Element := Value_At (Element);
                      else
@@ -539,12 +646,18 @@ package body BC.Support.Managed_Storage is
                   --  is a previous list; make its next list this
                   --  list's next list.
                   if Previous_List = null then
-                     raise Pool_Error;
+                     Ada.Exceptions.Raise_Exception
+                       (Program_Error'Identity,
+                        "BC.Support.Managed_Storage.Reclaim_Unused_Chunks: " &
+                          "Previous_List null");
                   end if;
                   Previous_List.Next_List := Next_List;
 
                end if;
 
+               if Debug then
+                  Put_Line (" deleting list at" & (+List));
+               end if;
                Dispose (List);
 
                List := Next_List;
