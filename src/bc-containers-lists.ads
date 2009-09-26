@@ -33,6 +33,8 @@ generic package BC.Containers.Lists is
    --  components are much more complex than you'll need.           --
    -------------------------------------------------------------------
 
+   pragma Preelaborate;
+
    --  Lists are polylithic structures, and hence the semantics of
    --  copying, assignment, and equality involve structural
    --  sharing. Care must be taken in manipulating the same list named

@@ -26,7 +26,7 @@
 
 package BC.Support.Indefinite_Hash_Tables is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
 
    --  In the generic signature packages, Item denotes the universe

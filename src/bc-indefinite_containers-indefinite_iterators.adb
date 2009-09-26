@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2003 Martin Krischik
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 2003 Martin Krischik
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -21,6 +21,7 @@
 --  executable to be covered by the GNU General Public License.  This
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
+
 pragma License (Modified_GPL);
 pragma Ada_05;
 
@@ -28,13 +29,10 @@ pragma Ada_05;
 --  $Date$
 --  $Author$
 
-package body
-   BC.Indefinite_Containers.Indefinite_Iterators
-is
+package body BC.Indefinite_Containers.Indefinite_Iterators is
 
-   procedure Visit_With_In_Param (
-      Using : in out Iterator'Class;
-      Param : Param_Type)
+   procedure Visit_With_In_Param (Using : in out Iterator'Class;
+                                  Param : Param_Type)
    is
       Success : Boolean;
    begin
@@ -46,40 +44,40 @@ is
       end loop;
    end Visit_With_In_Param;
 
-  procedure Visit_With_In_Out_Param (Using : in out Iterator'Class;
-                            Param : in out Param_Type) is
-    Success : Boolean;
-  begin
-    Reset (Using);
-    while not Is_Done (Using) loop
-      Apply (Current_Item_Ptr (Using).all, Param, Success);
-      exit when not Success;
-      Next (Using);
-    end loop;
-  end Visit_With_In_Out_Param;
+   procedure Visit_With_In_Out_Param (Using : in out Iterator'Class;
+                                      Param : in out Param_Type) is
+      Success : Boolean;
+   begin
+      Reset (Using);
+      while not Is_Done (Using) loop
+         Apply (Current_Item_Ptr (Using).all, Param, Success);
+         exit when not Success;
+         Next (Using);
+      end loop;
+   end Visit_With_In_Out_Param;
 
-  procedure Modify_With_In_Param (Using : in out Iterator'Class;
-                          Param : in Param_Type) is
-    Success : Boolean;
-  begin
-    Reset (Using);
-    while not Is_Done (Using) loop
-      Apply (Current_Item_Ptr (Using).all, Param, Success);
-      exit when not Success;
-      Next (Using);
-    end loop;
-  end Modify_With_In_Param;
+   procedure Modify_With_In_Param (Using : in out Iterator'Class;
+                                   Param : in Param_Type) is
+      Success : Boolean;
+   begin
+      Reset (Using);
+      while not Is_Done (Using) loop
+         Apply (Current_Item_Ptr (Using).all, Param, Success);
+         exit when not Success;
+         Next (Using);
+      end loop;
+   end Modify_With_In_Param;
 
-  procedure Modify_With_In_Out_Param (Using : in out Iterator'Class;
-                             Param : in out Param_Type) is
-    Success : Boolean;
-  begin
-    Reset (Using);
-    while not Is_Done (Using) loop
-      Apply (Current_Item_Ptr (Using).all, Param, Success);
-      exit when not Success;
-      Next (Using);
-    end loop;
-  end Modify_With_In_Out_Param;
+   procedure Modify_With_In_Out_Param (Using : in out Iterator'Class;
+                                       Param : in out Param_Type) is
+      Success : Boolean;
+   begin
+      Reset (Using);
+      while not Is_Done (Using) loop
+         Apply (Current_Item_Ptr (Using).all, Param, Success);
+         exit when not Success;
+         Next (Using);
+      end loop;
+   end Modify_With_In_Out_Param;
 
 end BC.Indefinite_Containers.Indefinite_Iterators;

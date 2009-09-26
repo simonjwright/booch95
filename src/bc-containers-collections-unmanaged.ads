@@ -29,7 +29,7 @@ with BC.Support.Unmanaged;
 generic
 package BC.Containers.Collections.Unmanaged is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Collection is new Abstract_Collection with private;
 

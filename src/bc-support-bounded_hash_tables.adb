@@ -23,7 +23,6 @@
 --  $Date$
 --  $Author$
 
-with Ada.Exceptions;
 with System;
 with System.Address_To_Access_Conversions;
 
@@ -252,9 +251,7 @@ package body BC.Support.Bounded_Hash_Tables is
                end if;
                Bucket := Bucket + 1;
             end loop;
-            Ada.Exceptions.Raise_Exception
-              (Program_Error'Identity,
-               "BC.Support.Bounded_Hash_Tables.Reset: no items found");
+            raise Hash_Table_Error;
          end if;
       end Reset;
 

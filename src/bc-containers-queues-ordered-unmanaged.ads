@@ -29,7 +29,7 @@ with BC.Support.Unmanaged;
 generic
 package BC.Containers.Queues.Ordered.Unmanaged is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Queue is new Abstract_Ordered_Queue with private;
    --  This Queue exhibits unlimited growth and collapsing, limited

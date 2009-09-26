@@ -31,7 +31,7 @@ generic
    with function "=" (L, R : Item) return Boolean is <>;
 package BC.Containers is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  This package specifies the common protocol of all Container
    --  classes. This common protocol consists of Iterators.

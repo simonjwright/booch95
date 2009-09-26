@@ -32,7 +32,7 @@ generic
    Maximum_Size : Positive;
 package BC.Containers.Maps.Bounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A map denotes a collection forming a dictionary of domain/range
    --  pairs.

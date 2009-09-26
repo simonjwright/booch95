@@ -1,4 +1,4 @@
---  Copyright 2001-2002 Simon Wright <simon@pushface.org>
+--  Copyright 2001-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -40,3 +40,4 @@ generic
    type Container (<>) is new Containers.Container with private;
    with function Length (C : Container) return Natural is <>;
 procedure BC.Containers.Shellsort (C : in out Container);
+pragma Preelaborate (BC.Containers.Shellsort);

@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2005 Martin Krischik
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
+--  Copyright 2005 Martin Krischik
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -27,13 +27,12 @@
 --  $Author$
 
 with BC.Support.Indefinite_Bounded;
-pragma Elaborate_All (BC.Support.Indefinite_Bounded);
 
 generic
    Maximum_Size : Positive;
 package BC.Indefinite_Containers.Queues.Bounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Queue is new Abstract_Queue with private;
 

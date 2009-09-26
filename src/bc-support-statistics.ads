@@ -1,4 +1,4 @@
---  Copyright 2003 Simon Wright <simon@pushface.org>
+--  Copyright 2003-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -24,6 +24,8 @@
 --  $Author$
 
 package BC.Support.Statistics is
+
+   pragma Preelaborate;
 
    type Instance is private;
 

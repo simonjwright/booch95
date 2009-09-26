@@ -30,6 +30,7 @@ with Ada.Finalization;
 generic
    type Item is private;
    with function "=" (L, R : Item) return Boolean is <>;
+   pragma Warnings (Off, "=");
 package BC.Lists is
 
    -----------------------------------------------------------------  --
@@ -95,7 +96,7 @@ package BC.Lists is
    --  are slightly different, because of the optimizations possible
    --  with having a previous pointer in the doubly-linked list class.
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  This package specifies the common protocol of all Container
    --  classes. This common protocol consists of Iterators.

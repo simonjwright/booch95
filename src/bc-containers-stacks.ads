@@ -28,7 +28,7 @@
 generic
 package BC.Containers.Stacks is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Abstract_Stack is abstract new Container with private;
 

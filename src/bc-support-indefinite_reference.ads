@@ -1,5 +1,5 @@
 --  Copyright (C) 2003 Martin Krischik
---  Copyright 2008 Simon Wright <simon@pushface.org>
+--  Copyright 2008-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -50,7 +50,7 @@ package BC.Support.Indefinite_Reference is
    --  'Value' is created as well. When the 'Pointer' is destroyed
    --  'Value' is deallocated.
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A Pointer variable encapsulates a single instance of the
    --  indefinite type T.

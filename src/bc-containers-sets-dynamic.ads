@@ -35,7 +35,7 @@ generic
    Initial_Size : Positive := 10;
 package BC.Containers.Sets.Dynamic is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A set denotes a collection of items, drawn from some
    --  well-defined universe. A set may not contain duplicate items.

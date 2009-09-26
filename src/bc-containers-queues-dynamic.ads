@@ -33,7 +33,7 @@ generic
    Initial_Size : Positive := 10;
 package BC.Containers.Queues.Dynamic is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Queue is new Abstract_Queue with private;
    --  A dynamic Queue exhibits similar performance to a

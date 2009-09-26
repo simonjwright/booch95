@@ -34,7 +34,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Sets.Unbounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A set denotes a collection of items, drawn from some
    --  well-defined universe. A set may not contain duplicate items.

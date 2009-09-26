@@ -30,7 +30,7 @@ generic
    type P is access T;
 package BC.Support.Smart_Pointers is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Pointer is private;
    --  A Pointer variable encapsulates a reference-counted accessor of

@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
+--  Copyright 2003-2009 Simon Wright <simon@pushface.org>
 --  Copyright 2005 Martin Krischik
---  Copyright 2003 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -26,12 +26,11 @@
 --  $Author$
 
 with BC.Support.Indefinite_Unmanaged;
-pragma Elaborate_All (BC.Support.Indefinite_Unmanaged);
 
 generic
 package BC.Indefinite_Containers.Queues.Ordered.Unmanaged is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Queue is new Abstract_Ordered_Queue with private;
    --  This Queue exhibits unlimited growth and collapsing, limited

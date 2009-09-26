@@ -1,4 +1,4 @@
---  Copyright 1999-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1999-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -28,7 +28,7 @@ with Ada.Task_Identification;
 
 package BC.Support.Synchronization is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  Semaphores provide for mutual exclusion.
    type Semaphore_Base is abstract tagged limited private;

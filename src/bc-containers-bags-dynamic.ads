@@ -35,7 +35,7 @@ generic
    Initial_Size : Positive := 10;
 package BC.Containers.Bags.Dynamic is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A bag denotes a collection of items, drawn from some
    --  well-defined universe. A bag may contain duplicate items. A bag

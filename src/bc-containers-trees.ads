@@ -27,6 +27,8 @@
 
 generic package BC.Containers.Trees is
 
+   pragma Preelaborate;
+
    --  A binary tree is a rooted collection of nodes and arcs, where
    --  each node has two children and where arcs may not have cycles
    --  or cross-references (as in graphs). A multiway tree is a rooted

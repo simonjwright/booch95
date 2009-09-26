@@ -34,7 +34,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Maps.Unbounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A map denotes a collection forming a dictionary of domain/range
    --  pairs.

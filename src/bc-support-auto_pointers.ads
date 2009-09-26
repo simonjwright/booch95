@@ -30,7 +30,7 @@ generic
    type P is access T;
 package BC.Support.Auto_Pointers is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Pointer is private;
    --  A Pointer variable encapsulates an accessor of type P (to a T).

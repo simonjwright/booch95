@@ -48,4 +48,4 @@ generic
    --  A procedure to add an Item to the destination Container.
 
 procedure BC.Copy (Input : From; Output : in out To);
-pragma Elaborate_Body (BC.Copy);
+pragma Preelaborate (BC.Copy);

@@ -30,7 +30,7 @@ generic
    Maximum_Size : Positive;
 package BC.Containers.Queues.Ordered.Bounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Queue is new Abstract_Ordered_Queue with private;
 

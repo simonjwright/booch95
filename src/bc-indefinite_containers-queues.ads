@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2008 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 --  Copyright 2005 Martin Krischik
 
 --  This package is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 generic
 package BC.Indefinite_Containers.Queues is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Abstract_Queue is abstract new Container with private;
 

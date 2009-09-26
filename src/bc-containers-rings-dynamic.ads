@@ -32,7 +32,7 @@ generic
    Initial_Size : Positive := 10;
 package BC.Containers.Rings.Dynamic is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Ring is new Abstract_Ring with private;
 

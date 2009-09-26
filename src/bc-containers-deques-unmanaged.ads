@@ -29,7 +29,7 @@ with BC.Support.Unmanaged;
 generic
 package BC.Containers.Deques.Unmanaged is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Deque is new Abstract_Deque with private;
    --  This Deque exhibits unlimited growth and collapsing, limited

@@ -27,7 +27,7 @@
 generic
 package BC.Graphs.Undirected is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Graph is new Abstract_Graph with private;
    type Vertex is new Abstract_Vertex with private;

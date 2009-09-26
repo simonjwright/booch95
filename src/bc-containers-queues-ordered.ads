@@ -28,6 +28,8 @@ generic
    with function "<" (L, R : Item) return Boolean is <>;
 package BC.Containers.Queues.Ordered is
 
+   pragma Preelaborate;
+
    type Abstract_Ordered_Queue is abstract new Abstract_Queue with private;
 
    --  A ordered queue denotes a sequence of items, in which items are

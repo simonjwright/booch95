@@ -34,13 +34,13 @@ generic
    Buckets : Positive;
 package BC.Indefinite_Unmanaged_Containers.Maps is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A map denotes a collection forming a dictionary of domain/range
    --  pairs.
 
    --  The parameter Key denotes the universe from which the map draws
-   --  its doamin; the parameter Item denotes the universe from which
+   --  its domain; the parameter Item denotes the universe from which
    --  the map draws its range. The parameters Key and Item typically
    --  represent different types, although they may may represent the
    --  same type. Either may be a primitive type or user-defined.

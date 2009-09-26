@@ -30,7 +30,7 @@ generic
    Maximum_Size : Positive;
 package BC.Containers.Collections.Ordered.Bounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Collection is new Abstract_Ordered_Collection with private;
 

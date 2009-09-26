@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -25,9 +25,11 @@
 --  $Date$
 --  $Author$
 
+--  This is the top level package in the Booch Component Hierarchy.
+
 package BC is
 
-   --  This is the top level package in the Booch Component Hierarchy.
+   pragma Pure;
 
    --  The following exceptions may be raised by improper use of the
    --  Components.
@@ -65,13 +67,28 @@ package BC is
    Underflow : exception;
    --  Raised on attempts to access elements in an empty Container.
 
-   Should_Have_Been_Overridden : exception;
+private
+
+   --  Implementation errors: please report
+
+   Implementation_Error : exception;
+
+   Graph_Error : exception renames Implementation_Error;
+   --  The internal structure of a graph is corrupt.
+
+   Hash_Table_Error : exception renames Implementation_Error;
+   --  The internal structure of a hash table is corrupt.
+
+   Pool_Error : exception renames Implementation_Error;
+   --  The internal structure of a Managed Storage pool is corrupt.
+
+   Should_Have_Been_Overridden : exception renames Implementation_Error;
    --  Raised if the Components have failed to override a primitive
    --  subprogram that should have been overridden for a derived type.
    --  Used only where the subprogram is private (and therefore can't
    --  be abstract).
 
-   Not_Yet_Implemented : exception;
+   Not_Yet_Implemented : exception renames Implementation_Error;
    --  Raised when a feature hasn't yet been implemented.
 
 end BC;

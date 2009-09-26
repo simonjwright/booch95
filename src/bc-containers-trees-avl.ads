@@ -33,7 +33,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Trees.AVL is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type AVL_Tree is new BC.Containers.Container with private;
 

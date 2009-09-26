@@ -37,7 +37,7 @@ package BC.Lists.Double is
    --  components  are   much  more  complex   than  you'll  need.  --
    --  ---------------------------------------------------------------  --
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  Doubly-linked list
 

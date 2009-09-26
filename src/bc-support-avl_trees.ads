@@ -35,7 +35,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Support.AVL_Trees is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type AVL_Node;
    type AVL_Node_Ref is access AVL_Node;

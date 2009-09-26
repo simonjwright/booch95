@@ -30,7 +30,7 @@ generic
    Maximum_Size : Positive;
 package BC.Containers.Stacks.Bounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Stack is new Abstract_Stack with private;
 

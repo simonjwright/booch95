@@ -32,7 +32,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Trees.Multiway_Trees is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Multiway_Tree is private;
 

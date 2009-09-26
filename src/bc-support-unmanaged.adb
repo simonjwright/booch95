@@ -151,8 +151,8 @@ package body BC.Support.Unmanaged is
          begin
             Update_Cache (Obj, Before);
             Temp_Node := Create (Elem,
-                                       Previous => Obj.Cache.Previous,
-                                       Next => Obj.Cache);
+                                 Previous => Obj.Cache.Previous,
+                                 Next => Obj.Cache);
             if Temp_Node.Previous = null then
                Obj.Rep := Temp_Node;
             end if;
@@ -332,7 +332,7 @@ package body BC.Support.Unmanaged is
       if Start > Obj.Size then
          raise BC.Range_Error;
       end if;
-      if (Start = Obj.Cache_Index) and then (Elem = Obj.Cache.Element) then
+      if Start = Obj.Cache_Index and then Elem = Obj.Cache.Element then
          return Obj.Cache_Index;
       end if;
       for I in 1 .. Start - 1 loop

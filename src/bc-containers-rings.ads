@@ -27,7 +27,7 @@
 generic
 package BC.Containers.Rings is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Abstract_Ring is abstract new Container with private;
 

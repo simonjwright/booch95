@@ -32,7 +32,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Stacks.Unbounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Stack is new Abstract_Stack with private;
    --  This Stack exhibits unlimited growth and collapsing, limited

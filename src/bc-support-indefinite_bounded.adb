@@ -244,7 +244,9 @@ package body BC.Support.Indefinite_Bounded is
          raise BC.Range_Error;
       end if;
       for I in Start .. Obj.Size loop
-         if Smart.Value (Obj.Elems (((Obj.Start - 1 + I - 1) mod Obj.Maximum_Size) + 1))
+         if Smart.Value (Obj.Elems
+                           (((Obj.Start - 1 + I - 1) mod Obj.Maximum_Size)
+                            + 1))
            = Elem then
             return I;
          end if;

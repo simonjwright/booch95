@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -30,7 +30,6 @@ with Ada.Finalization;
 with Ada.Streams;
 with System.Storage_Pools;
 with BC.Support.Indefinite_Reference;
-pragma Elaborate_All (BC.Support.Indefinite_Reference);
 
 generic
    type Item (<>) is private;
@@ -40,7 +39,7 @@ generic
    Initial_Size : Positive := 10;
 package BC.Support.Indefinite_Dynamic is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Dyn_Node is private;
    --  An optimally-packed dynamic container whose items are stored on

@@ -28,7 +28,7 @@
 generic
 package BC.Containers.Queues is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Abstract_Queue is abstract new Container with private;
 

@@ -32,7 +32,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Queues.Unbounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Queue is new Abstract_Queue with private;
    --  This Queue exhibits unlimited growth and collapsing, limited

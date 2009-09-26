@@ -27,7 +27,7 @@
 generic
 package BC.Containers.Deques is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Deque_End is (Front, Back);
 

@@ -32,7 +32,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Trees.Binary is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Binary_Tree is private;
 
