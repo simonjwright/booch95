@@ -29,7 +29,7 @@ with System.Storage_Elements;
 
 package BC.Support.Unmanaged_Storage is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    package SSE renames System.Storage_Elements;
    package SSP renames System.Storage_Pools;

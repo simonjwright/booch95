@@ -1,6 +1,5 @@
-
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -25,7 +24,12 @@
 --  $Date$
 --  $Author$
 
+--  Call Apply with a copy of each Item in the Tree, in preorder (for
+--  each node, visit its children and then the node itself). The
+--  iteration will terminate early if Apply sets OK to False.
+
 generic
    with procedure Apply (Elem : in Item; OK : out Boolean);
 procedure BC.Containers.Trees.Multiway.Pre_Order
   (T : Multiway_Tree; Success : out Boolean);
+pragma Preelaborate (BC.Containers.Trees.Multiway.Pre_Order);

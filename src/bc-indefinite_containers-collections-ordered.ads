@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -28,6 +28,8 @@
 generic
    with function "<" (L, R : Item) return Boolean is <>;
 package BC.Indefinite_Containers.Collections.Ordered is
+
+   pragma Preelaborate;
 
    type Abstract_Ordered_Collection
       is abstract new Abstract_Collection with private;

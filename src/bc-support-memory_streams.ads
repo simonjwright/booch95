@@ -1,4 +1,4 @@
---  Copyright 2002-2004 Simon Wright <simon@pushface.org>
+--  Copyright 2002-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -26,6 +26,8 @@
 with Ada.Streams;
 
 package BC.Support.Memory_Streams is
+
+   pragma Preelaborate;
 
    type Stream_Type
      (Capacity : Ada.Streams.Stream_Element_Count)

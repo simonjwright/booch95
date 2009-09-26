@@ -38,10 +38,6 @@ package body BC.Support.Indefinite_Unmanaged is
    package Allow_Access
    is new System.Address_To_Access_Conversions (Unm_Node);
 
-   --  We can't take 'Access of non-aliased components. But if we
-   --  alias discriminated objects they become constrained - even if
-   --  the discriminant has a default.
-
    function Create (I : Item; Previous, Next : Node_Ref) return Node_Ref;
    pragma Inline (Create);
 
@@ -332,8 +328,8 @@ package body BC.Support.Indefinite_Unmanaged is
       if Start > Obj.Size then
          raise BC.Range_Error;
       end if;
-      if (Start = Obj.Cache_Index)
-        and then (Elem = IR.Value (Obj.Cache.Element)) then
+      if Start = Obj.Cache_Index
+        and then Elem = IR.Value (Obj.Cache.Element) then
          return Obj.Cache_Index;
       end if;
       for I in 1 .. Start - 1 loop

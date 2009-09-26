@@ -32,7 +32,7 @@ generic
    Buckets : Positive;
 package BC.Containers.Bags.Unmanaged is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A bag denotes a collection of items, drawn from some
    --  well-defined universe. A bag may contain duplicate items. A bag

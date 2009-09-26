@@ -28,6 +28,8 @@ generic
    with function "<" (L, R : Item) return Boolean is <>;
 package BC.Containers.Collections.Ordered is
 
+   pragma Preelaborate;
+
    type Abstract_Ordered_Collection
       is abstract new Abstract_Collection with private;
 

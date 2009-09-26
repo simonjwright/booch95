@@ -38,7 +38,7 @@ package BC.Containers.Lists.Single is
    --  components are much more complex than you'll need.           --
    -------------------------------------------------------------------
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  Singly-linked list
 

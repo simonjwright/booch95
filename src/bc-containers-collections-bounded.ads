@@ -30,7 +30,7 @@ generic
    Maximum_Size : Positive;
 package BC.Containers.Collections.Bounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Unconstrained_Collection
      (Maximum_Size : Positive) is new Abstract_Collection with private;

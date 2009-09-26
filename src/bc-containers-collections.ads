@@ -27,7 +27,7 @@
 generic
 package BC.Containers.Collections is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Abstract_Collection is abstract new Container with private;
 

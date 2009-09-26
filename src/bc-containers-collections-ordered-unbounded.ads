@@ -31,7 +31,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Collections.Ordered.Unbounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Collection is new Abstract_Ordered_Collection with private;
 

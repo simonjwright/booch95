@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2003 Simon Wright <simon@pushface.org>
---  Copyright 2005 Martin Krischik
+--  Copyright 2003-2009 Simon Wright <simon@pushface.org>
+--  Copyright 2009 Martin Krischik
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -28,7 +28,6 @@
 with Ada.Finalization;
 with Ada.Streams;
 with BC.Support.Indefinite_Reference;
-pragma Elaborate_All (BC.Support.Indefinite_Reference);
 
 generic
    type Item (<>) is private;
@@ -36,7 +35,7 @@ generic
    type Item_Ptr is access Item;
 package BC.Support.Indefinite_Unmanaged is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Unm_Node is private;
    --  An unpacked container whose items are stored on the heap.

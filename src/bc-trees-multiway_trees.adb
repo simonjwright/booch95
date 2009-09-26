@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -26,7 +26,6 @@
 --  $Author$
 
 with Ada.Unchecked_Deallocation;
-with System.Address_To_Access_Conversions;
 
 package body BC.Trees.Multiway_Trees is
 

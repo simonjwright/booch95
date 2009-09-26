@@ -29,7 +29,7 @@ with BC.Support.Unmanaged;
 generic
 package BC.Containers.Stacks.Unmanaged is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Stack is new Abstract_Stack with private;
    --  This Stack exhibits unlimited growth and collapsing, limited

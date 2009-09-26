@@ -29,7 +29,7 @@ with BC.Support.Unmanaged;
 generic
 package BC.Containers.Rings.Unmanaged is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Ring is new Abstract_Ring with private;
 

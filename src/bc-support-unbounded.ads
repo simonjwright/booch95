@@ -36,7 +36,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Support.Unbounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Unb_Node is private;
    --  An unpacked container whose items are stored on the heap.

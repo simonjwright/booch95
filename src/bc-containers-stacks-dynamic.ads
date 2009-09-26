@@ -33,7 +33,7 @@ generic
    Initial_Size : Positive := 10;
 package BC.Containers.Stacks.Dynamic is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Stack is new Abstract_Stack with private;
    --  A dynamic Stack exhibits similar performance to a

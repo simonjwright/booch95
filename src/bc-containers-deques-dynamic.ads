@@ -32,7 +32,7 @@ generic
    Initial_Size : Positive := 10;
 package BC.Containers.Deques.Dynamic is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Deque is new Abstract_Deque with private;
    --  A dynamic Deque exhibits similar performance to a

@@ -32,7 +32,7 @@ generic
    Buckets : Positive;
 package BC.Containers.Maps.Unmanaged is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A map denotes a collection forming a dictionary of domain/range
    --  pairs.

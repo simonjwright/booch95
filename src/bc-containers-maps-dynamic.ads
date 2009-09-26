@@ -35,7 +35,7 @@ generic
    Initial_Size : Positive := 10;
 package BC.Containers.Maps.Dynamic is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A map denotes a collection forming a dictionary of domain/range
    --  pairs.

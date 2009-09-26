@@ -1,10 +1,5 @@
---  Call Apply with a copy of each Item in the Tree, in order (for
---  each node, visit the left subtree, the node itself, and the right
---  subtree). The iteration will terminate early if Apply sets OK to
---  False.
-
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as

@@ -33,7 +33,7 @@ generic
    type Item_Ptr is access all Item;
 package BC.Support.Unmanaged is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Unm_Node is private;
    --  An unpacked container whose items are stored on the heap.

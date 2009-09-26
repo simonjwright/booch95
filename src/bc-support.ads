@@ -25,4 +25,8 @@
 --  $Date$
 --  $Author$
 
-package BC.Support is end BC.Support;
+package BC.Support is
+
+   pragma Pure;
+
+end BC.Support;

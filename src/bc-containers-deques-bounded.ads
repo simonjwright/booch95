@@ -30,7 +30,7 @@ generic
    Maximum_Size : Positive;
 package BC.Containers.Deques.Bounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Deque is new Abstract_Deque with private;
 

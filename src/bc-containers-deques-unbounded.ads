@@ -31,7 +31,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Containers.Deques.Unbounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Deque is new Abstract_Deque with private;
    --  This Deque exhibits unlimited growth and collapsing, limited

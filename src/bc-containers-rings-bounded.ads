@@ -30,7 +30,7 @@ generic
    Maximum_Size : Positive;
 package BC.Containers.Rings.Bounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Unconstrained_Ring
      (Maximum_Size : Positive) is new Abstract_Ring with private;

@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -28,7 +28,10 @@
 generic
    type Item is private;
    with function "=" (L, R : Item) return Boolean is <>;
+   pragma Warnings (Off, "=");
 package BC.Trees is
+
+   pragma Preelaborate;
 
    --  A binary tree is a rooted collection of nodes and arcs, where
    --  each node has two children and where arcs may not have cycles

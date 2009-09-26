@@ -102,7 +102,8 @@ package body BC.Support.Indefinite_Unbounded is
             Temp_R : Node_Ref := Right.Rep;
          begin
             while Temp_L /= null loop
-               if Smart.Value (Temp_L.Element) /= Smart.Value (Temp_R.Element) then
+               if Smart.Value (Temp_L.Element)
+                 /= Smart.Value (Temp_R.Element) then
                   return False;
                end if;
                Temp_L := Temp_L.Next;
@@ -331,7 +332,8 @@ package body BC.Support.Indefinite_Unbounded is
       if Start > Obj.Size then
          raise BC.Range_Error;
       end if;
-      if (Start = Obj.Cache_Index) and then (Elem = Smart.Value (Obj.Cache.Element)) then
+      if Start = Obj.Cache_Index
+        and then Elem = Smart.Value (Obj.Cache.Element) then
          return Obj.Cache_Index;
       end if;
       for I in 1 .. Start - 1 loop
@@ -353,7 +355,9 @@ package body BC.Support.Indefinite_Unbounded is
       Tmp : Node_Ref := U.Last;
    begin
       if Tmp /= null then
-         U.Last := Create (Smart.Value (Tmp.Element), Previous => null, Next => null);
+         U.Last := Create (Smart.Value (Tmp.Element),
+                           Previous => null,
+                           Next => null);
          U.Rep := U.Last;
          Tmp := Tmp.Previous;  -- move to previous node from orig list
          while Tmp /= null loop

@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2003 Martin Krischik
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -21,6 +21,7 @@
 --  executable to be covered by the GNU General Public License.  This
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
+
 pragma License (Modified_GPL);
 pragma Ada_05;
 
@@ -31,76 +32,55 @@ pragma Ada_05;
 generic
 package BC.Indefinite_Containers.Indefinite_Iterators is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
+
+   --  Call Apply with a Parameter for each Item in the Container to
+   --  which the iterator Using is bound. The iteration will terminate
+   --  early if Apply sets OK to False.
    generic
-      --  Call Apply with a Parameter for each Item in the Container to
-      --  which the iterator Using is bound. The iteration will terminate
-      --  early if Apply sets OK to False.
-      type
-         Param_Type (<>)
-      is limited private;
+      type Param_Type (<>) is limited private;
+      with procedure Apply (Elem : in Item;
+                            Param : in Param_Type;
+                            OK : out Boolean);
+   procedure Visit_With_In_Param (Using : in out Iterator'Class;
+                                  Param : in Param_Type);
 
-      with procedure Apply (
-         Elem : in Item;
-         Param : in Param_Type;
-         OK : out Boolean);
 
-   procedure Visit_With_In_Param (
-      Using : in out Iterator'Class;
-      Param : in Param_Type);
-
+   --  Call Apply with a Parameter for each Item in the Container to
+   --  which the iterator Using is bound. The iteration will terminate
+   --  early if Apply sets OK to False.
    generic
-      --  Call Apply with a Parameter for each Item in the Container to
-      --  which the iterator Using is bound. The iteration will terminate
-      --  early if Apply sets OK to False.
-      type
-         Param_Type (<>)
-      is limited private;
+      type Param_Type (<>) is limited private;
+      with procedure Apply (Elem : in Item;
+                            Param : in out Param_Type;
+                            OK : out Boolean);
+   procedure Visit_With_In_Out_Param (Using : in out Iterator'Class;
+                                      Param : in out Param_Type);
 
-      with procedure Apply (
-         Elem : in Item;
-         Param : in out Param_Type;
-         OK : out Boolean);
 
-   procedure Visit_With_In_Out_Param (
-      Using : in out Iterator'Class;
-      Param : in out Param_Type);
-
+   --  Call Apply with a Parameter each Item in the Container to which
+   --  the iterator Using is bound. The iteration will terminate early
+   --  if Apply sets OK to False.
    generic
-      --  Call Apply with a Parameter each Item in the Container to which
-      --  the iterator Using is bound. The iteration will terminate early
-      --  if Apply sets OK to False.
-      type
-         Param_Type (<>)
-      is limited private;
+      type Param_Type (<>) is limited private;
+      with procedure Apply (Elem : in out Item;
+                            Param : in Param_Type;
+                            OK : out Boolean);
+   procedure Modify_With_In_Param (Using : in out Iterator'Class;
+                                   Param : in Param_Type);
 
-      with procedure Apply (
-         Elem : in out Item;
-         Param : in Param_Type;
-         OK : out Boolean);
 
-   procedure Modify_With_In_Param (
-      Using : in out Iterator'Class;
-      Param : in Param_Type);
-
+   --  Call Apply with a copy of each Item in the Container to which
+   --  the iterator Using is bound. The iteration will terminate early
+   --  if Apply sets OK to False.
    generic
-      --  Call Apply with a copy of each Item in the Container to which
-      --  the iterator Using is bound. The iteration will terminate early
-      --  if Apply sets OK to False.
-      type
-         Param_Type (<>)
-      is limited private;
+      type Param_Type (<>) is limited private;
+      with procedure Apply (Elem : in out Item;
+                            Param : in out Param_Type;
+                            OK : out Boolean);
+   procedure Modify_With_In_Out_Param (Using : in out Iterator'Class;
+                                       Param : in out Param_Type);
 
-      with procedure Apply (
-         Elem : in out Item;
-         Param : in out Param_Type;
-         OK : out Boolean);
-
-   procedure Modify_With_In_Out_Param (
-      Using : in out Iterator'Class;
-      Param : in out Param_Type);
-
-private
 
 end BC.Indefinite_Containers.Indefinite_Iterators;

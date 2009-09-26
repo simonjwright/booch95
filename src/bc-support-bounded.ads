@@ -33,7 +33,7 @@ generic
    type Item_Ptr is access all Item;
 package BC.Support.Bounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Bnd_Node (Maximum_Size : Positive) is private;
    --  An optimally-packed static container whose items are stored on

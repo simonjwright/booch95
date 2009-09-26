@@ -722,10 +722,9 @@ package body BC.Containers.Lists.Double is
       end if;
    end Delete_Item_At;
 
-   Empty_Container : List;
-   pragma Warnings (Off, Empty_Container);
-
    function Null_Container return List is
+      Empty_Container : List;
+      pragma Warnings (Off, Empty_Container);
    begin
       return Empty_Container;
    end Null_Container;

@@ -24,8 +24,6 @@
 --  $Date$
 --  $Author$
 
-with Ada.Exceptions;
-
 package body BC.Support.Indefinite_Hash_Tables is
 
    package body Tables is
@@ -154,9 +152,7 @@ package body BC.Support.Indefinite_Hash_Tables is
                end if;
                Bucket := Bucket + 1;
             end loop;
-            Ada.Exceptions.Raise_Exception
-              (Program_Error'Identity,
-               "BC.Support.Hash_Tables.Reset: no items found");
+            raise Hash_Table_Error;
          end if;
       end Reset;
 

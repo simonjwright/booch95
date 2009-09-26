@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -28,7 +28,6 @@
 
 with Ada.Streams;
 with BC.Support.Indefinite_Reference;
-pragma Elaborate_All (BC.Support.Indefinite_Reference);
 
 generic
    type Item (<>) is private;
@@ -36,7 +35,7 @@ generic
    type Item_Ptr is access Item;
 package BC.Support.Indefinite_Bounded is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Bnd_Node (Maximum_Size : Positive) is private;
    --  An optimally-packed static container whose items are stored on

@@ -25,7 +25,6 @@
 --  $Author$
 
 with Ada.Unchecked_Deallocation;
-with Ada.Text_IO;
 
 package body BC.Graphs is
 
@@ -416,9 +415,7 @@ package body BC.Graphs is
    procedure Finalize (V : in out Vertex_Node) is
    begin
       if V.Count > 1 then
-         --  XXX should this be an assertion?
-         Ada.Text_IO.Put_Line ("Vertex_Node finalized with Count"
-                               & Integer'Image (V.Count));
+         raise Graph_Error;
       end if;
    end Finalize;
 
@@ -426,9 +423,7 @@ package body BC.Graphs is
    procedure Finalize (A : in out Arc_Node) is
    begin
       if A.Count > 1 then
-         --  XXX should this be an assertion?
-         Ada.Text_IO.Put_Line ("Arc_Node finalized with Count"
-                               & Integer'Image (A.Count));
+         raise Graph_Error;
       end if;
    end Finalize;
 

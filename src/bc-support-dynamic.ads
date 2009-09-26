@@ -37,7 +37,7 @@ generic
    Initial_Size : Positive := 10;
 package BC.Support.Dynamic is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Dyn_Node is private;
    --  An optimally-packed dynamic container whose items are stored on

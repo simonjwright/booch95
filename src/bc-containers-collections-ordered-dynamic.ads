@@ -32,7 +32,7 @@ generic
    Initial_Size : Positive := 10;
 package BC.Containers.Collections.Ordered.Dynamic is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    type Collection is new Abstract_Ordered_Collection with private;
 

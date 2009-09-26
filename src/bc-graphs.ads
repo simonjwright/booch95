@@ -35,7 +35,7 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Graphs is
 
-   pragma Elaborate_Body;
+   pragma Preelaborate;
 
    --  A directed graph is an unrooted collection of vertices and
    --  directed arcs where cycles and cross-references are not
