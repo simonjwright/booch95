@@ -30,7 +30,7 @@ with System.Storage_Elements;
 
 package BC.Support.Managed_Storage is
 
-   pragma Preelaborate;
+   pragma Elaborate_Body;
 
    package SSE renames System.Storage_Elements;
 
