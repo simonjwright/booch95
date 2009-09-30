@@ -97,7 +97,7 @@ private
 
    package Collection_Nodes
    is new BC.Support.Indefinite_Unmanaged (Item => Item,
-                                Item_Ptr => Item_Ptr);
+                                           Item_Ptr => Item_Ptr);
 
    type Collection is new Abstract_Collection with record
       Rep : Collection_Nodes.Unm_Node;

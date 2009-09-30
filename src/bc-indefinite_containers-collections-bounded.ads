@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2005 Martin Krischik
 --  Copyright 1998-2009 Simon Wright <simon@pushface.org>
+--  Copyright 2005 Martin Krischik
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -110,7 +110,7 @@ private
 
    package Collection_Nodes
    is new BC.Support.Indefinite_Bounded (Item => Item,
-                              Item_Ptr => Item_Ptr);
+                                         Item_Ptr => Item_Ptr);
 
    type Unconstrained_Collection
      (Maximum_Size : Positive)

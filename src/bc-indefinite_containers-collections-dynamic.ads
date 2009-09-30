@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2005 Martin Krischik
 --  Copyright 1998-2009 Simon Wright <simon@pushface.org>
+--  Copyright 2005 Martin Krischik
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -111,9 +111,9 @@ private
 
    package Collection_Nodes
    is new BC.Support.Indefinite_Dynamic (Item => Item,
-                              Item_Ptr => Item_Ptr,
-                              Storage => Storage,
-                              Initial_Size => Initial_Size);
+                                         Item_Ptr => Item_Ptr,
+                                         Storage => Storage,
+                                         Initial_Size => Initial_Size);
 
    type Collection is new Abstract_Collection with record
       Rep : Collection_Nodes.Dyn_Node;

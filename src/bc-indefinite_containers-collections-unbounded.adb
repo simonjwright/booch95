@@ -126,10 +126,9 @@ package body BC.Indefinite_Containers.Collections.Unbounded is
       return Collection_Nodes.Item_At (C.Rep, Index);
    end Item_At;
 
-   Empty_Container : Collection;
-   pragma Warnings (Off, Empty_Container);
-
    function Null_Container return Collection is
+      Empty_Container : Collection;
+      pragma Warnings (Off, Empty_Container);
    begin
       return Empty_Container;
    end Null_Container;
