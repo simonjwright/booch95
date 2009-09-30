@@ -50,15 +50,16 @@ package body BC.Support.Indefinite_Reference is
    procedure Adjust (Obj : in out Pointer)
    is
    begin
-      Obj.Value := new T'(Obj.Value.all);
+      if Obj.Value /= null then
+         Obj.Value := new T'(Obj.Value.all);
+      end if;
    end Adjust;
 
 
    function Create (Value : T) return Pointer
    is
    begin
-      return Pointer'(Ada.Finalization.Controlled
-                        with Value => new T'(Value));
+      return Pointer'(Ada.Finalization.Controlled with Value => new T'(Value));
    end Create;
 
 

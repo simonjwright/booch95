@@ -133,14 +133,6 @@ bc-containers-sets-unmanaged.ad[bs]		\
 bc-containers-sets.ad[bs]
 
 ADA_SOURCE +=					\
-bc-support-auto_pointers.ad[bs]			\
-bc-support-smart_pointers.ad[bs]
-
-ADA_SOURCE +=					\
-bc-containers-quicksort.ad[bs]			\
-bc-containers-shellsort.ad[bs]
-
-ADA_SOURCE +=					\
 bc-containers-stacks-bounded.ad[bs]		\
 bc-containers-stacks-dynamic.ad[bs]		\
 bc-containers-stacks-unbounded.ad[bs]		\
@@ -148,17 +140,6 @@ bc-containers-stacks-unmanaged.ad[bs]		\
 bc-containers-stacks.ad[bs]
 
 ADA_SOURCE +=					\
-bc-trees-avl_trees.ad[bs]			\
-bc-trees-avl_trees-print.ad[bs]			\
-bc-trees-avl_trees-validate.ad[bs]		\
-bc-trees-binary_trees.ad[bs]			\
-bc-trees-binary_trees-in_order.ad[bs]		\
-bc-trees-binary_trees-post_order.ad[bs]		\
-bc-trees-binary_trees-pre_order.ad[bs]		\
-bc-trees-multiway_trees.ad[bs]			\
-bc-trees-multiway_trees-post_order.ad[bs]	\
-bc-trees-multiway_trees-pre_order.ad[bs]	\
-bc-trees.ad[bs]					\
 bc-containers-trees-avl.ad[bs]			\
 bc-containers-trees-avl-print.ad[bs]		\
 bc-containers-trees-avl-validate.ad[bs]		\
@@ -172,14 +153,37 @@ bc-containers-trees-multiway-pre_order.ad[bs]	\
 bc-containers-trees.ad[bs]
 
 ADA_SOURCE +=					\
+bc-containers-quicksort.ad[bs]			\
+bc-containers-shellsort.ad[bs]
+
+ADA_SOURCE +=					\
+bc-trees-avl_trees.ad[bs]			\
+bc-trees-avl_trees-print.ad[bs]			\
+bc-trees-avl_trees-validate.ad[bs]		\
+bc-trees-binary_trees.ad[bs]			\
+bc-trees-binary_trees-in_order.ad[bs]		\
+bc-trees-binary_trees-post_order.ad[bs]		\
+bc-trees-binary_trees-pre_order.ad[bs]		\
+bc-trees-multiway_trees.ad[bs]			\
+bc-trees-multiway_trees-post_order.ad[bs]	\
+bc-trees-multiway_trees-pre_order.ad[bs]	\
+bc-trees.ad[bs]
+
+ADA_SOURCE +=					\
+bc-support-auto_pointers.ad[bs]			\
+bc-support-smart_pointers.ad[bs]
+
+ADA_SOURCE +=					\
 bc-simple_collections.adb			\
 bc-simple_collections.ads			\
 bc-trees-avl_trees-iterators.adb		\
 bc-trees-avl_trees-iterators.ads
 
+ADA_SOURCE +=					\
+bc-indefinite_containers.adb			\
+bc-indefinite_containers.ads
+
 ADA_SOURCE +=							\
-bc-indefinite_containers.adb					\
-bc-indefinite_containers.ads					\
 bc-indefinite_containers-collections.adb			\
 bc-indefinite_containers-collections.ads			\
 bc-indefinite_containers-collections-bounded.adb		\
@@ -198,38 +202,49 @@ bc-indefinite_containers-collections-ordered-unmanaged.ads	\
 bc-indefinite_containers-collections-unbounded.adb		\
 bc-indefinite_containers-collections-unbounded.ads		\
 bc-indefinite_containers-collections-unmanaged.adb		\
-bc-indefinite_containers-collections-unmanaged.ads		\
-bc-indefinite_containers-indefinite_iterators.adb		\
-bc-indefinite_containers-indefinite_iterators.ads		\
-bc-indefinite_containers-queues.adb				\
-bc-indefinite_containers-queues.ads				\
-bc-indefinite_containers-queues-bounded.adb			\
-bc-indefinite_containers-queues-bounded.ads			\
-bc-indefinite_containers-queues-dynamic.adb			\
-bc-indefinite_containers-queues-dynamic.ads			\
-bc-indefinite_containers-queues-ordered.ads			\
-bc-indefinite_containers-queues-ordered-bounded.adb		\
-bc-indefinite_containers-queues-ordered-bounded.ads		\
-bc-indefinite_containers-queues-ordered-dynamic.adb		\
-bc-indefinite_containers-queues-ordered-dynamic.ads		\
-bc-indefinite_containers-queues-ordered-unbounded.adb		\
-bc-indefinite_containers-queues-ordered-unbounded.ads		\
-bc-indefinite_containers-queues-ordered-unmanaged.adb		\
-bc-indefinite_containers-queues-ordered-unmanaged.ads		\
-bc-indefinite_containers-queues-unbounded.adb			\
-bc-indefinite_containers-queues-unbounded.ads			\
-bc-indefinite_containers-queues-unmanaged.adb			\
-bc-indefinite_containers-queues-unmanaged.ads			\
-bc-support-indefinite_bounded.adb				\
-bc-support-indefinite_bounded.ads				\
-bc-support-indefinite_dynamic.adb				\
-bc-support-indefinite_dynamic.ads				\
-bc-support-indefinite_reference.adb				\
-bc-support-indefinite_reference.ads				\
-bc-support-indefinite_unbounded.adb				\
-bc-support-indefinite_unbounded.ads				\
-bc-support-indefinite_unmanaged.adb				\
-bc-support-indefinite_unmanaged.ads			    
+bc-indefinite_containers-collections-unmanaged.ads
+
+ADA_SOURCE +=						\
+bc-indefinite_containers-indefinite_iterators.adb	\
+bc-indefinite_containers-indefinite_iterators.ads
+
+ADA_SOURCE +=					\
+bc-indefinite_containers-maps.adb		\
+bc-indefinite_containers-maps.ads		\
+bc-indefinite_containers-maps-unbounded.adb	\
+bc-indefinite_containers-maps-unbounded.ads
+
+ADA_SOURCE +=						\
+bc-indefinite_containers-queues.adb			\
+bc-indefinite_containers-queues.ads			\
+bc-indefinite_containers-queues-bounded.adb		\
+bc-indefinite_containers-queues-bounded.ads		\
+bc-indefinite_containers-queues-dynamic.adb		\
+bc-indefinite_containers-queues-dynamic.ads		\
+bc-indefinite_containers-queues-ordered.ads		\
+bc-indefinite_containers-queues-ordered-bounded.adb	\
+bc-indefinite_containers-queues-ordered-bounded.ads	\
+bc-indefinite_containers-queues-ordered-dynamic.adb	\
+bc-indefinite_containers-queues-ordered-dynamic.ads	\
+bc-indefinite_containers-queues-ordered-unbounded.adb	\
+bc-indefinite_containers-queues-ordered-unbounded.ads	\
+bc-indefinite_containers-queues-ordered-unmanaged.adb	\
+bc-indefinite_containers-queues-ordered-unmanaged.ads	\
+bc-indefinite_containers-queues-unbounded.adb		\
+bc-indefinite_containers-queues-unbounded.ads		\
+bc-indefinite_containers-queues-unmanaged.adb		\
+bc-indefinite_containers-queues-unmanaged.ads
+
+ADA_SOURCE +=					\
+bc-indefinite_unmanaged_containers.ad[bs]	\
+bc-indefinite_unmanaged_containers-maps.ad[bs]
+
+ADA_SOURCE +=							\
+bc-support-indefinite_bounded.ad[bs]				\
+bc-support-indefinite_dynamic.ad[bs]				\
+bc-support-indefinite_reference.ad[bs]				\
+bc-support-indefinite_unbounded.ad[bs]				\
+bc-support-indefinite_unmanaged.ad[bs]			    
 
 
 ############################
@@ -239,9 +254,9 @@ bc-support-indefinite_unmanaged.ads
 # in Ubuntu Linux 8.04 & Mac OS X.
 DATE ?= $(shell date +%Y%m%d)$(SUBRELEASE)
 
-DISTRIBUTION_FILES =				\
-bc-$(DATE).tgz					\
-bc-$(DATE).tar.bz2				\
+DISTRIBUTION_FILES =	\
+bc-$(DATE).tgz		\
+bc-$(DATE).tar.bz2	\
 bc-$(DATE).zip
 
 ifneq ($(shell which 7za),)
