@@ -1,4 +1,4 @@
---  Copyright 2009 Simon Wright <simon@pushface.org>
+--  Copyright 2009-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -17,6 +17,9 @@
 --  $Author$
 
 project Tests is
+
+  type Language is ("gnat95", "gnat05");
+  Chosen_Language : Language := external ("LANGUAGE", "gnat95");
 
   for Main use
     (
@@ -46,6 +49,8 @@ project Tests is
   package Builder is
      for Default_Switches ("Ada") use
        (
+        "-ftest-coverage",
+        "-fprofile-arcs",
         "-m",
         "-g"
        );
@@ -56,7 +61,7 @@ project Tests is
        (
         "-gnatqQafoy",
         "-gnatwaL",
-        "-gnat95",
+        "-" & Chosen_Language,
         "-O2"
        );
   end Compiler;
