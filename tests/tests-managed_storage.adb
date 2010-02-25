@@ -124,35 +124,48 @@ package body Tests.Managed_Storage is
    procedure Deallocation (C : in out Test_Case'Class);
    procedure Deallocation (C : in out Test_Case'Class) is
       pragma Warnings (Off, C);
-      P8 : MS.Pool (8); -- 2 integers
-      type Integer_P is access Integer;
-      for Integer_P'Storage_Pool use P8;
-      procedure Free is new Ada.Unchecked_Deallocation (Integer, Integer_P);
-      Ps : array (1 .. 6) of Integer_P;
+      --  On a 64-bit processor, the size of the structural components
+      --  of a Pool chunk is going to be 8 bytes. The object size used
+      --  in this test needs to be such that 2 objects will fit in a
+      --  chunk but 3 won't, regardless of whether the structural
+      --  components are 4 or 8 or 16 bytes (in preparation for
+      --  128-bit processors!)
+      P80 : MS.Pool (80); -- 2 32-byte objects + 16
+      type Thirtytwo is new String (1 .. 32);
+      type Thirtytwo_P is access Thirtytwo;
+      for Thirtytwo_P'Storage_Pool use P80;
+      procedure Free
+      is new Ada.Unchecked_Deallocation (Thirtytwo, Thirtytwo_P);
+      Ps : array (1 .. 6) of Thirtytwo_P;
    begin
       for I in Ps'Range loop
-         Ps (I) := new Integer'(I);
+         Ps (I) := new Thirtytwo'(others => Character'Val (I));
       end loop;
-      Check_Chunks (P8, 1, 3, 3, 0);
+      Check_Chunks (P80, 1, 3, 3, 0);
       Free (Ps (1));
       Free (Ps (4));
       Free (Ps (5));
-      Check_Chunks (P8, 2, 3, 3, 0);
-      MS.Reclaim_Unused_Chunks (P8);
-      Check_Chunks (P8, 3, 3, 3, 0);
-      MS.Purge_Unused_Chunks (P8);
-      Check_Chunks (P8, 4, 3, 3, 0);
-      Assert (Ps (2).all = 2, "(2) is incorrect (1)");
-      Assert (Ps (3).all = 3, "(3) is incorrect (1)");
-      Assert (Ps (6).all = 6, "(6) is incorrect (1)");
+      Check_Chunks (P80, 2, 3, 3, 0);
+      MS.Reclaim_Unused_Chunks (P80);
+      Check_Chunks (P80, 3, 3, 3, 0);
+      MS.Purge_Unused_Chunks (P80);
+      Check_Chunks (P80, 4, 3, 3, 0);
+      Assert (Ps (2).all = Thirtytwo'(others => Character'Val (2)),
+              "(2) is incorrect (1)");
+      Assert (Ps (3).all = Thirtytwo'(others => Character'Val (3)),
+              "(3) is incorrect (1)");
+      Assert (Ps (6).all = Thirtytwo'(others => Character'Val (6)),
+              "(6) is incorrect (1)");
       Free (Ps (3));
-      Check_Chunks (P8, 5, 3, 3, 0);
-      MS.Reclaim_Unused_Chunks (P8);
-      Check_Chunks (P8, 6, 3, 2, 1);
-      MS.Purge_Unused_Chunks (P8);
-      Check_Chunks (P8, 7, 2, 2, 0);
-      Assert (Ps (2).all = 2, "(2) is incorrect (2)");
-      Assert (Ps (6).all = 6, "(6) is incorrect (2)");
+      Check_Chunks (P80, 5, 3, 3, 0);
+      MS.Reclaim_Unused_Chunks (P80);
+      Check_Chunks (P80, 6, 3, 2, 1);
+      MS.Purge_Unused_Chunks (P80);
+      Check_Chunks (P80, 7, 2, 2, 0);
+      Assert (Ps (2).all = Thirtytwo'(others => Character'Val (2)),
+              "(2) is incorrect (2)");
+      Assert (Ps (6).all = Thirtytwo'(others => Character'Val (6)),
+              "(6) is incorrect (2)");
       --  re-Free.
       Free (Ps (3));
    end Deallocation;
@@ -234,9 +247,11 @@ package body Tests.Managed_Storage is
       MS.Purge_Unused_Chunks (P128);
       MS.Purge_Unused_Chunks (P128);
       MS.Reclaim_Unused_Chunks (P128);
-      --  Check we can reclaim chunks at beginning/middle/end of size lists
+      --  Check we can reclaim chunks at beginning/middle/end of size lists.
       for I in Ps'Range loop
-         Ps (I) := new String (1 .. I * 4);
+         --  We want each allocation to have its own chunk list, so
+         --  make the increment the size of a 128-bit System.Address.
+         Ps (I) := new String (1 .. I * 16);
       end loop;
       Free (Ps (1));
       Free (Ps (3));
@@ -278,27 +293,27 @@ package body Tests.Managed_Storage is
    begin
       Registration.Register_Routine
         (C,
-         Allocation'Unrestricted_Access,
+         Allocation'Access,
          "Allocation");
       Registration.Register_Routine
         (C,
-         Deallocation'Unrestricted_Access,
+         Deallocation'Access,
          "Deallocation");
       Registration.Register_Routine
         (C,
-         Zero_Allocation'Unrestricted_Access,
+         Zero_Allocation'Access,
          "Zero_Allocation");
       Registration.Register_Routine
         (C,
-         Alignment'Unrestricted_Access,
+         Alignment'Access,
          "Alignment");
       Registration.Register_Routine
         (C,
-         Reclaiming_And_Purging'Unrestricted_Access,
+         Reclaiming_And_Purging'Access,
          "Reclaiming_And_Purging");
       Registration.Register_Routine
         (C,
-         Miscellaneous'Unrestricted_Access,
+         Miscellaneous'Access,
          "Miscellaneous");
    end Register_Tests;
 

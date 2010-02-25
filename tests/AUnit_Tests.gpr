@@ -39,12 +39,19 @@ project AUnit_Tests is
        );
   end Builder;
 
+--    package Naming is
+--       for Spec ("BC.Support.Managed_Storage")
+--         use "bc-support-managed_storage.ads-debug";
+--       for Body ("BC.Support.Managed_Storage")
+--         use "bc-support-managed_storage.adb-debug";
+--    end Naming;
+
   package Compiler is
      for Default_Switches ("Ada") use
        (
         "-gnatqQafoy",
         "-gnatwaL",
-        "-gnat05",
+        "-gnat95",
         "-O2"
        );
   end Compiler;
