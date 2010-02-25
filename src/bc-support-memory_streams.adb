@@ -1,4 +1,4 @@
---  Copyright 2002-2004 Simon Wright <simon@pushface.org>
+--  Copyright 2002-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -101,15 +101,13 @@ package body BC.Support.Memory_Streams is
      (Stream : in out Stream_Type;
       Item   : in Ada.Streams.Stream_Element_Array) is
       use type Ada.Streams.Stream_Element_Offset;
-      Length : constant Ada.Streams.Stream_Element_Offset
-        := Item'Last + 1 - Item'First;
    begin
-      if Stream.Next_Write + Length > Stream.Buffer'Last + 1 then
+      if Stream.Next_Write + Item'Length > Stream.Buffer'Last + 1 then
          raise Ada.IO_Exceptions.End_Error;
       end if;
-      Stream.Buffer (Stream.Next_Write .. Stream.Next_Write + Length - 1)
+      Stream.Buffer (Stream.Next_Write .. Stream.Next_Write + Item'Length - 1)
         := Item;
-      Stream.Next_Write := Stream.Next_Write + Length;
+      Stream.Next_Write := Stream.Next_Write + Item'Length;
    end Write;
 
 
