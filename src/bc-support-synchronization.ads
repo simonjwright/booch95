@@ -28,7 +28,7 @@ with Ada.Task_Identification;
 
 package BC.Support.Synchronization is
 
-   pragma Preelaborate;
+   pragma Elaborate_Body;
 
    --  Semaphores provide for mutual exclusion.
    type Semaphore_Base is abstract tagged limited private;
