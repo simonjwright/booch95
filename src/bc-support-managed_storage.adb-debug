@@ -38,7 +38,7 @@ package body BC.Support.Managed_Storage is
 
    --  Debug utilities
 
-   Debug : constant Boolean := False;
+   Debug : constant Boolean := True;
    pragma Warnings (Off, Debug);
 
    function "+" (S : System.Address) return String;
@@ -502,6 +502,10 @@ package body BC.Support.Managed_Storage is
 
       List := This.Head;
       Previous_List := null;
+
+      if Debug and then List = null then
+         Put_Line ("Reclaim_Unused_Chunks: none");
+      end if;
 
       while List /= null loop
 
