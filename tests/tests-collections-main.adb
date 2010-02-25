@@ -1,4 +1,4 @@
---  Copyright 2009 Simon Wright <simon@pushface.org>
+--  Copyright 2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -18,15 +18,14 @@
 --
 --  Tests for Booch Components Collections.
 
-with AUnit.Test_Runner;
+with AUnit.Reporter.Text;
+with AUnit.Run;
 with AUnit.Test_Suites;
-
-with Tests.Collections;
 
 procedure Tests.Collections.Main is
 
    function Suites return AUnit.Test_Suites.Access_Test_Suite;
-   procedure Run is new AUnit.Test_Runner (Suites);
+   procedure Run is new AUnit.Run.Test_Runner (Suites);
    function Suites return AUnit.Test_Suites.Access_Test_Suite is
       Result : constant AUnit.Test_Suites.Access_Test_Suite
         := new AUnit.Test_Suites.Test_Suite;
@@ -35,6 +34,8 @@ procedure Tests.Collections.Main is
       return Result;
    end Suites;
 
+   Reporter : AUnit.Reporter.Text.Text_Reporter;
+
 begin
-   Run;
+   Run (Reporter);
 end Tests.Collections.Main;
