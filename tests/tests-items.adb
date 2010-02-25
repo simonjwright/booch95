@@ -112,11 +112,11 @@ package body Tests.Items is
    begin
       Registration.Register_Routine
         (C,
-         Equality'Unrestricted_Access,
+         Equality'Access,
          "Equality");
       Registration.Register_Routine
         (C,
-         Comparison'Unrestricted_Access,
+         Comparison'Access,
          "Comparison");
    end Register_Tests;
 
