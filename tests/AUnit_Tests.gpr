@@ -1,4 +1,4 @@
---  Copyright 2009 Simon Wright <simon@pushface.org>
+--  Copyright 2009-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -19,6 +19,9 @@
 with "aunit";
 
 project AUnit_Tests is
+
+  type Language is ("gnat95", "gnat05");
+  Chosen_Language : Language := external ("LANGUAGE", "gnat95");
 
   for Main use
     (
@@ -51,7 +54,7 @@ project AUnit_Tests is
        (
         "-gnatqQafoy",
         "-gnatwaL",
-        "-gnat95",
+        "-" & Chosen_Language,
         "-O2"
        );
   end Compiler;
