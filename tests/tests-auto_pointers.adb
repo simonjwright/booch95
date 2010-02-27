@@ -1,4 +1,4 @@
---  Copyright 2009 Simon Wright <simon@pushface.org>
+--  Copyright 2009-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -18,7 +18,6 @@
 --
 --  Tests for Auto_Pointers.
 
-with AUnit.Assertions; use AUnit.Assertions;
 with AUnit.Test_Cases; use AUnit.Test_Cases;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -54,7 +53,6 @@ package body Tests.Auto_Pointers is
 
    procedure Destroy_Owning_Pointer (C : in out Test_Case'Class);
    procedure Destroy_Owning_Pointer (C : in out Test_Case'Class) is
-      pragma Unreferenced (C);
    begin
       declare
          Ptr : Value_Pointers.Pointer := Value_Pointers.Create (new Value);
@@ -62,14 +60,12 @@ package body Tests.Auto_Pointers is
       begin
          Finalizations := 0;
       end;
-      Assert (Finalizations = 1,
-              "incorrect number of finalizations");
+      Assert (C, Finalizations = 1, "incorrect number of finalizations");
    end Destroy_Owning_Pointer;
 
 
    procedure Copy_Pointer (C : in out Test_Case'Class);
    procedure Copy_Pointer (C : in out Test_Case'Class) is
-      pragma Unreferenced (C);
       P1, P2 : Value_Pointers.Pointer;
    begin
       P1 := Value_Pointers.Create (new Value);
@@ -77,20 +73,17 @@ package body Tests.Auto_Pointers is
       Value_Pointers.Value (P1).Adjusts := 0;
       Value_Pointers.Value (P1).Id := 42;
       P2 := P1;
-      Assert (Value_Pointers.Value (P1) = null,
-              "copied pointer not null");
-      Assert (Value_Pointers.Value (P2).Adjusts = 0,
+      Assert (C, Value_Pointers.Value (P1) = null, "copied pointer not null");
+      Assert (C,
+              Value_Pointers.Value (P2).Adjusts = 0,
               "wrong number of adjusts");
-      Assert (Value_Pointers.Value (P2).Id = 42,
-              "wrong id");
-      Assert (Finalizations = 0,
-              "incorrect number of finalizations");
+      Assert (C, Value_Pointers.Value (P2).Id = 42, "wrong id");
+      Assert (C, Finalizations = 0, "incorrect number of finalizations");
    end Copy_Pointer;
 
 
    procedure Return_From_Function (C : in out Test_Case'Class);
    procedure Return_From_Function (C : in out Test_Case'Class) is
-      pragma Unreferenced (C);
       function Inner return Value_Pointers.Pointer;
       function Inner return Value_Pointers.Pointer is
          Ptr : constant Value_Pointers.Pointer
@@ -104,12 +97,11 @@ package body Tests.Auto_Pointers is
    begin
       Finalizations := 0;
       P := Inner;
-      Assert (Value_Pointers.Value (P).Adjusts = 0,
+      Assert (C,
+              Value_Pointers.Value (P).Adjusts = 0,
               "wrong number of adjusts");
-      Assert (Value_Pointers.Value (P).Id = 42,
-              "wrong id");
-      Assert (Finalizations = 0,
-              "incorrect number of finalizations");
+      Assert (C, Value_Pointers.Value (P).Id = 42, "wrong id");
+      Assert (C, Finalizations = 0, "incorrect number of finalizations");
    end Return_From_Function;
 
 
