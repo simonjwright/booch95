@@ -1,4 +1,4 @@
---  Copyright 2009 Simon Wright <simon@pushface.org>
+--  Copyright 2009-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -81,35 +81,27 @@ package body Tests.Collections is
 
       procedure Length_Initially_Zero (C : in out Test_Case'Class);
       procedure Length_Initially_Zero (C : in out Test_Case'Class) is
-         pragma Warnings (Off, C);
       begin
-         Assert (Length (R) = 0,
-                 "Length should be 0");
+         Assert (C, Length (R) = 0, "Length should be 0");
       end Length_Initially_Zero;
 
       procedure Initially_Empty (C : in out Test_Case'Class);
       procedure Initially_Empty (C : in out Test_Case'Class) is
-         pragma Warnings (Off, C);
       begin
-         Assert (Is_Empty (R),
-                 "should be empty");
+         Assert (C, Is_Empty (R), "should be empty");
       end Initially_Empty;
 
       procedure Value_Initially_Empty (C : in out Test_Case'Class);
       procedure Value_Initially_Empty (C : in out Test_Case'Class) is
-         pragma Warnings (Off, C);
       begin
-         Assert (Value (R) = "",
-                 "should be empty");
+         Assert (C, Value (R) = "", "should be empty");
       end Value_Initially_Empty;
 
       procedure Check_Clear (C : in out Test_Case'Class);
       procedure Check_Clear (C : in out Test_Case'Class) is
-         pragma Unreferenced (C);
       begin
          Clear (R);
-         Assert (Is_Empty (R),
-                 "collection isn't empty");
+         Assert (C, Is_Empty (R), "collection isn't empty");
       end Check_Clear;
 
       function Name (C : Case_1) return AUnit.Message_String is
@@ -145,43 +137,21 @@ package body Tests.Collections is
 
       procedure Length_Is_One (C : in out Test_Case'Class);
       procedure Length_Is_One (C : in out Test_Case'Class) is
-         pragma Unreferenced (C);
       begin
-         Assert (Length (R) = 1,
-                 "collection's length is not 1");
+         Assert (C, Length (R) = 1, "collection's length is not 1");
       end Length_Is_One;
 
       procedure Is_Not_Empty (C : in out Test_Case'Class);
       procedure Is_Not_Empty (C : in out Test_Case'Class) is
-         pragma Unreferenced (C);
       begin
-         Assert (not Is_Empty (R),
-                 "shouldn't be empty");
+         Assert (C, not Is_Empty (R), "shouldn't be empty");
       end Is_Not_Empty;
 
       procedure Check_Value_After_Single_Insert (C : in out Test_Case'Class);
       procedure Check_Value_After_Single_Insert (C : in out Test_Case'Class) is
-         pragma Unreferenced (C);
       begin
-         Assert (Value (R) = "a",
-                 "has wrong value");
+         Assert (C, Value (R) = "a", "has wrong value");
       end Check_Value_After_Single_Insert;
-
-      --        procedure  (C : in out Test_Case'Class);
---        procedure  (C : in out Test_Case'Class) is
---       R : Collection renames Case_2 (C).R;
---        begin
---       Assert (Length (R) = 1,
---               "collection's length is not 1");
---        end ;
-
---        procedure  (C : in out Test_Case'Class);
---        procedure  (C : in out Test_Case'Class) is
---       R : Collection renames Case_2 (C).R;
---        begin
---       Assert (Length (R) = 1,
---               "collection's length is not 1");
---        end ;
 
       function Name (C : Case_2) return AUnit.Message_String is
          pragma Warnings (Off, C);
@@ -207,10 +177,6 @@ package body Tests.Collections is
            (C,
             Check_Value_After_Single_Insert'Unrestricted_Access,
             "check value");
-         --           Register_Routine
---             (C,
---              'Unrestricted_Access,
---              "");
       end Register_Tests;
 
       procedure Set_Up (C : in out Case_2) is
@@ -231,27 +197,9 @@ package body Tests.Collections is
 
       procedure Length_Is_Two (C : in out Test_Case'Class);
       procedure Length_Is_Two (C : in out Test_Case'Class) is
-         pragma Unreferenced (C);
       begin
-         Assert (Length (R) = 2,
-                 "collection's length is not 2");
+         Assert (C, Length (R) = 2, "collection's length is not 2");
       end Length_Is_Two;
-
-      --        procedure  (C : in out Test_Case'Class);
---        procedure  (C : in out Test_Case'Class) is
---       R : Collection renames case_3 (C).R;
---        begin
---       Assert (Length (R) = 1,
---               "collection's length is not 1");
---        end ;
-
---        procedure  (C : in out Test_Case'Class);
---        procedure  (C : in out Test_Case'Class) is
---       R : Collection renames case_3 (C).R;
---        begin
---       Assert (Length (R) = 1,
---               "collection's length is not 1");
---        end ;
 
       function Name (C : Case_3) return AUnit.Message_String is
          pragma Warnings (Off, C);
@@ -273,10 +221,6 @@ package body Tests.Collections is
            (C,
             Check_Clear'Unrestricted_Access,
             "clearing double entry");
-         --           Register_Routine
---             (C,
---              'Unrestricted_Access,
---              "");
       end Register_Tests;
 
       procedure Set_Up (C : in out Case_3) is
@@ -351,8 +295,7 @@ package body Tests.Collections is
          Pos := Pos + 1;
          Next (It);
       end loop;
-      Assert (Pos = Result'Last + 1,
-              "iteration terminated early in Value");
+      Assert (Pos = Result'Last + 1, "iteration terminated early in Value");
       return Result;
    end Value;
 
