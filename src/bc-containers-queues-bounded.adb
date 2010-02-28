@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2006 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -31,61 +31,62 @@ package body BC.Containers.Queues.Bounded is
 
    use Queue_Nodes;
 
-   procedure Clear (Q : in out Queue) is
+   procedure Clear (Q : in out Unconstrained_Queue) is
    begin
       Queue_Nodes.Clear (Q.Rep);
    end Clear;
 
-   procedure Append (Q : in out Queue; Elem : Item) is
+   procedure Append (Q : in out Unconstrained_Queue; Elem : Item) is
    begin
       Queue_Nodes.Append (Q.Rep, Elem);
    end Append;
 
-   procedure Pop (Q : in out Queue) is
+   procedure Pop (Q : in out Unconstrained_Queue) is
    begin
       Queue_Nodes.Remove (Q.Rep, 1);
    end Pop;
 
-   procedure Remove (Q : in out Queue; From : Positive) is
+   procedure Remove (Q : in out Unconstrained_Queue; From : Positive) is
    begin
       Queue_Nodes.Remove (Q.Rep, From);
    end Remove;
 
-   function Available (Q : in Queue) return Natural is
+   function Available (Q : in Unconstrained_Queue) return Natural is
    begin
       return Queue_Nodes.Available (Q.Rep);
    end Available;
 
-   function Length  (Q : Queue) return Natural is
+   function Length  (Q : Unconstrained_Queue) return Natural is
    begin
       return Queue_Nodes.Length (Q.Rep);
    end Length;
 
-   function Is_Empty (Q : Queue) return Boolean is
+   function Is_Empty (Q : Unconstrained_Queue) return Boolean is
    begin
       return Queue_Nodes.Length (Q.Rep) = 0;
    end Is_Empty;
 
-   function Front (Q : Queue) return Item is
+   function Front (Q : Unconstrained_Queue) return Item is
    begin
       return Queue_Nodes.First (Q.Rep);
    end Front;
 
-   function Location (Q : in Queue; Elem : Item) return Natural is
+   function Location
+     (Q : in Unconstrained_Queue; Elem : Item) return Natural is
    begin
       return Queue_Nodes.Location (Q.Rep, Elem);
    end Location;
 
-   function "=" (Left, Right : Queue) return Boolean is
+   function "=" (Left, Right : Unconstrained_Queue) return Boolean is
    begin
       return Left.Rep = Right.Rep;
    end "=";
 
    package Address_Conversions
-   is new System.Address_To_Access_Conversions (Queue);
+   is new System.Address_To_Access_Conversions (Unconstrained_Queue);
 
    function New_Iterator
-     (For_The_Queue : Queue) return Iterator'Class is
+     (For_The_Queue : Unconstrained_Queue) return Iterator'Class is
       Result : Queue_Iterator;
    begin
       Result.For_The_Container :=
@@ -94,12 +95,13 @@ package body BC.Containers.Queues.Bounded is
       return Result;
    end New_Iterator;
 
-   function Item_At (Q : Queue; Index : Positive) return Item_Ptr is
+   function Item_At
+     (Q : Unconstrained_Queue; Index : Positive) return Item_Ptr is
    begin
       return Queue_Nodes.Item_At (Q.Rep, Index);
    end Item_At;
 
-   function Null_Container return Queue is
+   function Null_Container return Unconstrained_Queue is
       Empty_Container : Queue;
       pragma Warnings (Off, Empty_Container);
    begin

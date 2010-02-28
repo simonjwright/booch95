@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2006 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -28,18 +28,18 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Collections.Ordered.Bounded is
 
-   function "=" (Left, Right : in Collection) return Boolean is
+   function "=" (Left, Right : in Unconstrained_Collection) return Boolean is
       use Collection_Nodes;
    begin
       return Left.Rep = Right.Rep;
    end "=";
 
-   procedure Clear (C : in out Collection) is
+   procedure Clear (C : in out Unconstrained_Collection) is
    begin
       Collection_Nodes.Clear (C.Rep);
    end Clear;
 
-   procedure Insert (C : in out Collection; Elem : Item) is
+   procedure Insert (C : in out Unconstrained_Collection; Elem : Item) is
    begin
       for Index in 1 .. Collection_Nodes.Length (C.Rep)
       loop
@@ -51,7 +51,7 @@ package body BC.Containers.Collections.Ordered.Bounded is
       Collection_Nodes.Append (C.Rep, Elem);
    end Insert;
 
-   procedure Insert (C : in out Collection;
+   procedure Insert (C : in out Unconstrained_Collection;
                      Elem : Item;
                      Before : Positive) is
       pragma Warnings (Off, Before);
@@ -66,7 +66,7 @@ package body BC.Containers.Collections.Ordered.Bounded is
       Collection_Nodes.Append (C.Rep, Elem);
    end Insert;
 
-   procedure Append (C : in out Collection; Elem : Item) is
+   procedure Append (C : in out Unconstrained_Collection; Elem : Item) is
    begin
       for Index in 1 .. Collection_Nodes.Length (C.Rep)
       loop
@@ -78,7 +78,7 @@ package body BC.Containers.Collections.Ordered.Bounded is
       Collection_Nodes.Append (C.Rep, Elem);
    end Append;
 
-   procedure Append (C : in out Collection;
+   procedure Append (C : in out Unconstrained_Collection;
                      Elem : Item;
                      After : Positive) is
       pragma Warnings (Off, After);
@@ -93,12 +93,13 @@ package body BC.Containers.Collections.Ordered.Bounded is
       Collection_Nodes.Append (C.Rep, Elem);
    end Append;
 
-   procedure Remove (C : in out Collection; At_Index : Positive) is
+   procedure Remove
+     (C : in out Unconstrained_Collection; At_Index : Positive) is
    begin
       Collection_Nodes.Remove (C.Rep, At_Index);
    end Remove;
 
-   procedure Replace (C : in out Collection;
+   procedure Replace (C : in out Unconstrained_Collection;
                       At_Index : Positive;
                       Elem : Item) is
    begin
@@ -106,46 +107,48 @@ package body BC.Containers.Collections.Ordered.Bounded is
       Insert (C, Elem);
    end Replace;
 
-   function Available (C : in Collection) return Natural is
+   function Available (C : in Unconstrained_Collection) return Natural is
    begin
       return Collection_Nodes.Available (C.Rep);
    end Available;
 
-   function Length (C : Collection) return Natural is
+   function Length (C : Unconstrained_Collection) return Natural is
    begin
       return Collection_Nodes.Length (C.Rep);
    end Length;
 
-   function Is_Empty (C : Collection) return Boolean is
+   function Is_Empty (C : Unconstrained_Collection) return Boolean is
    begin
       return Collection_Nodes.Length (C.Rep) = 0;
    end Is_Empty;
 
-   function First (C : Collection) return Item is
+   function First (C : Unconstrained_Collection) return Item is
    begin
       return Collection_Nodes.First (C.Rep);
    end First;
 
-   function Last (C : Collection) return Item is
+   function Last (C : Unconstrained_Collection) return Item is
    begin
       return Collection_Nodes.Last (C.Rep);
    end Last;
 
-   function Item_At (C : Collection; At_Index : Positive) return Item is
+   function Item_At
+     (C : Unconstrained_Collection; At_Index : Positive) return Item is
    begin
       return Item_At (C, At_Index).all;
    end Item_At;
 
-   function Location (C : Collection; Elem : Item) return Natural is
+   function Location
+     (C : Unconstrained_Collection; Elem : Item) return Natural is
    begin
       return Collection_Nodes.Location (C.Rep, Elem);
    end Location;
 
    package Address_Conversions
-   is new System.Address_To_Access_Conversions (Collection);
+   is new System.Address_To_Access_Conversions (Unconstrained_Collection);
 
    function New_Iterator
-     (For_The_Collection : Collection) return Iterator'Class is
+     (For_The_Collection : Unconstrained_Collection) return Iterator'Class is
       Result : Collection_Iterator;
    begin
       Result.For_The_Container :=
@@ -154,12 +157,13 @@ package body BC.Containers.Collections.Ordered.Bounded is
       return Result;
    end New_Iterator;
 
-   function Item_At (C : Collection; Index : Positive) return Item_Ptr is
+   function Item_At
+     (C : Unconstrained_Collection; Index : Positive) return Item_Ptr is
    begin
       return Collection_Nodes.Item_At (C.Rep, Index);
    end Item_At;
 
-   function Null_Container return Collection is
+   function Null_Container return Unconstrained_Collection is
       Empty_Container : Collection;
       pragma Warnings (Off, Empty_Container);
    begin
