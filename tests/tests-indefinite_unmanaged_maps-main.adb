@@ -1,4 +1,4 @@
---  Copyright 2009-2010 Simon Wright <simon@pushface.org>
+--  Copyright 2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -12,29 +12,17 @@
 --  write to the Free Software Foundation, 59 Temple Place - Suite
 --  330, Boston, MA 02111-1307, USA.
 
---  $Revision$
---  $Date$
---  $Author$
+--  $Revision: 1412 $
+--  $Date: 2009-05-24 18:40:59 +0100 (Sun, 24 May 2009) $
+--  $Author: simonjwright $
 --
---  Tests for the Booch Components.
+--  Tests for Booch Components Indefinite Unmanaged Maps.
 
 with AUnit.Reporter.Text;
 with AUnit.Run;
 with AUnit.Test_Suites;
 
-with Tests.Items;
-
-with Tests.Auto_Pointers;
-with Tests.AVL_Trees;
-with Tests.Collections;
-with Tests.Indefinite_Collections;
-with Tests.Indefinite_Maps;
-with Tests.Indefinite_Unmanaged_Maps;
-with Tests.Managed_Storage;
-with Tests.Multiway_Trees;
-with Tests.Rings;
-
-procedure Tests.Main is
+procedure Tests.Indefinite_Unmanaged_Maps.Main is
 
    function Suites return AUnit.Test_Suites.Access_Test_Suite;
    procedure Run is new AUnit.Run.Test_Runner (Suites);
@@ -42,16 +30,7 @@ procedure Tests.Main is
       Result : constant AUnit.Test_Suites.Access_Test_Suite
         := new AUnit.Test_Suites.Test_Suite;
    begin
-      AUnit.Test_Suites.Add_Test (Result, Items.Suite);
-      AUnit.Test_Suites.Add_Test (Result, Auto_Pointers.Suite);
-      AUnit.Test_Suites.Add_Test (Result, AVL_Trees.Suite);
-      AUnit.Test_Suites.Add_Test (Result, Collections.Suite);
-      AUnit.Test_Suites.Add_Test (Result, Indefinite_Collections.Suite);
-      AUnit.Test_Suites.Add_Test (Result, Indefinite_Maps.Suite);
       AUnit.Test_Suites.Add_Test (Result, Indefinite_Unmanaged_Maps.Suite);
-      AUnit.Test_Suites.Add_Test (Result, Managed_Storage.Suite);
-      AUnit.Test_Suites.Add_Test (Result, Multiway_Trees.Suite);
-      AUnit.Test_Suites.Add_Test (Result, Rings.Suite);
       return Result;
    end Suites;
 
@@ -59,4 +38,4 @@ procedure Tests.Main is
 
 begin
    Run (Reporter);
-end Tests.Main;
+end Tests.Indefinite_Unmanaged_Maps.Main;

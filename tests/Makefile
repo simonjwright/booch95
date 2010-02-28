@@ -33,7 +33,7 @@ GNATMAKE=gnatmake
 ########
 # Tests
 
-test: testable
+test: 
 	for t in $(TESTABLE); do \
 	  echo running $$t; \
 	  ./$$t 2>&1; \
@@ -126,6 +126,7 @@ dist:
 	mkdir $@
 
 clean::
-	rm -f $(TESTABLE) .build
+	rm -f $(TESTABLE)
+	rm -rf .build
 
 .PHONY: clean dist force
