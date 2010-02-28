@@ -32,7 +32,7 @@ SourceForge.net. Fast, secure and Free Open Source software downloads"
 <a href="#iteration">Iteration</a><br />
 <a href="#support">Support</a><br />
 <a href="#the-containers">The Containers</a><br /></p>
-<p><img src="greenline.gif" alt="--" width="100%" height="4" /> 
+<p><img src="greenline.gif" alt="--" width="100%" height="4" />
 <!--==================================================================--></p>
 <h2><a name="abstractions" id="abstractions">Key
 Abstractions</a></h2>
@@ -48,10 +48,10 @@ provides algorithmic abstractions (Searching, Sorting, etc.). The
 <b><a href="#support">Support</a></b> category contains all the
 "concrete" forms, plus structures to create the components.</p>
 <p>Some of the structures permit structural sharing (graphs, lists,
-and trees). Some structures may also be ordered (collections,
-dequeues, and queues). There are also multiple forms for some
-structures: single and double linked lists, directed and undirected
-graphs, and binary, multiway, and AVL trees.
+and trees). Some structures may also be ordered (collections and
+queues). There are also multiple forms for some structures: single and
+double linked lists, directed and undirected graphs, and binary,
+multiway, and AVL trees.
 
 <p>The structures originally supported only definite items. Work
 by <a href="http://sourceforge.net/users/krischik">Martin Krischik</a>
@@ -74,7 +74,7 @@ BCs</a></h2>
 </ul>
 <p>These patterns have evolved in a way that each language feature
 is used in an efficient and appropriate manner, with the overall
-goal of balancing usability and extensibility. 
+goal of balancing usability and extensibility.
 <!--==================================================================--></p>
 <h2><a name="tactical" id="tactical">Tactical Issues</a></h2>
 <blockquote>The particular semantics of a given programming
@@ -91,7 +91,7 @@ management, automatic reclamation of resources (garbage collection
 in C++ and other languages.</p>
 <p>The BCs take advantage of several critical forms of structuring:
 inheritance, parameterization, modularity, and aggregation. Of
-these forms, parameterization is the form most often used. 
+these forms, parameterization is the form most often used.
 <!--==================================================================--></p>
 <h2><a name="macro" id="macro">Macro Organization</a></h2>
 <p>The BCs emphasize separation of policy from implementation. For
@@ -103,7 +103,7 @@ existing ones.</p>
 <p>An example:<br />
 A Mail_Queue is an instance of a Priority_Event_Queue, which itself
 is a generic instantiated with Network_Event as the item it
-contains. The Priority_Event_Queue is derived from Queue. 
+contains. The Priority_Event_Queue is derived from Queue.
 <!--==================================================================--></p>
 <h2><a name="families" id="families">Class Families</a></h2>
 <p>Each abstract base class has several derived concrete forms,
@@ -144,7 +144,7 @@ accessed item is cached.</dd>
 derivation: <img src="organization.png" alt=
 "Picture of organisation of classes" /></p>
 <p>(Each level is a derivation via inheritance. Each class is a
-generic using Item as the container parameter) 
+generic using Item as the container parameter)
 <!--==================================================================--></p>
 <h2><a name="timeandspace" id="timeandspace">Time and Space
 Semantics</a></h2>
@@ -155,7 +155,7 @@ a packed array base class, which is space efficient, but can become
 time inefficient if adding items into the middle of the array.</p>
 <p>Bounded forms have two parameters for their generics: Item and
 Maximum_Size. Dynamic and Unbounded forms have Item and the actual
-Storage Pool for parameters. 
+Storage Pool for parameters.
 <!--==================================================================--></p>
 <h2><a name="storage" id="storage">Storage Management</a></h2>
 <p>Storage management on certain architectures can be complex, and
@@ -185,7 +185,7 @@ size is specified when the pool is created.</dd>
 <strong>not</strong> support allocation of items larger than its
 chunk size.</p>
 <p>For those who don't need this level of control, we provide
-<i>Unmanaged</i> forms. 
+<i>Unmanaged</i> forms.
 <!--==================================================================--></p>
 <h2><a name="exceptions" id="exceptions">Exceptions</a></h2>
 <p>All exceptions for the BCs are declared in the topmost package,
@@ -196,7 +196,7 @@ and portable, unlike other languages.</p>
 <tt>Should_Have_Been_Overridden</tt> is possible. It will only be
 raised if the implementor has forgotten to override a private
 subprogram of an abstract class (such subprograms can't be
-abstract, see RM95 3.9.3(10)). 
+abstract, see RM95 3.9.3(10)).
 <!--==================================================================--></p>
 <h2><a name="iteration" id="iteration">Iteration</a></h2>
 <p>Separate types act as agents responsible for iterating across a
@@ -218,7 +218,7 @@ allow access to the actual contained object rather than just to its
 value.</p>
 <p>There are many different approaches to iteration in Ada 95. The
 current mechanism was selected for its direct simplicity and
-efficiency. 
+efficiency.
 <!--==================================================================--></p>
 <h2><a name="support" id="support">Support</a></h2>
 <p>The support packages (<tt>BC.Support</tt> and children) come in
@@ -234,20 +234,28 @@ two flavours:</p>
 such a way that the pointer is deallocated when the wrapping is
 destroyed.</dd>
 <dt><tt>High_Resolution_Time</tt></dt>
-<dd>Supports high resolution (sub-microsecond) time
-measurements.<br />
+<dd>Supports high resolution (sub-millisecond) time
+measurements.<br/>
 The implementations provided are in the units
 <dl>
+<dt><tt>bc-support-high_resolution_time-clock.adb</tt></dt>
+<dd>for GNAT on targets where the OS time resolution is adequate (for
+example, it's 1 us on Mac OS X Snow Leopard).<br/>
+This is the default.</dd>
 <dt><tt>bc-support-high_resolution_time-clock.adb-pentium</tt></dt>
-<dd>for GNAT on Intel x86 targets (Linux, Windows).</dd>
+<dd>for GNAT on Intel x86 targets (Linux, Windows) where the OS time
+resolution isn't adequate and where the OS doesn't stop the Time Stamp
+Counter when putting the processor to sleep.</dd>
 <dt><tt>bc-support-high_resolution_time-clock.adb-ppc32</tt></dt>
 <dd>for GNAT on 32-bit PowerPC targets (Linux [not tested], MacOS
 X).</dd>
 </dl>
-As distributed, the software is set up for the Pentium target; for
+As distributed, the software is set up for the default target; for
 PowerPC, copy
 <tt>bc-support-high_resolution_time-clock.adb-ppc32</tt> to
-<tt>bc-support-high_resolution_time-clock.adb</tt>.</dd>
+<tt>bc-support-high_resolution_time-clock.adb</tt>, and similarly
+for <tt>bc-support-high_resolution_time-clock.adb-pentium</tt> if
+appropriate.</dd>
 <dt><tt>Managed_Storage</tt></dt>
 <dd>A storage pool by <a href="mailto:pat@classwide.com">Pat
 Rogers</a>, which can allocate objects up to a user-defined size
@@ -336,7 +344,7 @@ of <tt>BC.Containers</tt>) and the forms that are supported.
 </tr>
 
 <tr>
-<td style="text-align: left;">Queues</td>
+<td style="text-align: left;">Graphs</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -530,7 +538,7 @@ supported.
 </tr>
 
 <tr>
-<td style="text-align: left;">Queues</td>
+<td style="text-align: left;">Graphs</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -579,10 +587,10 @@ supported.
 
 <tr>
 <td style="text-align: left;">Maps</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
+<td>&#10003;</td>
 </tr>
 
 <tr>
@@ -675,7 +683,7 @@ supported.
 document.write("Last update: ");
 document.write(document.lastModified);
 //]]>
-</script></i> 
+</script></i>
 <!--===============================================================--></p>
 </body>
 </html>
