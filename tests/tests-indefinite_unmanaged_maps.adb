@@ -12,38 +12,29 @@
 --  write to the Free Software Foundation, 59 Temple Place - Suite
 --  330, Boston, MA 02111-1307, USA.
 
---  $Revision$
---  $Date$
---  $Author$
+--  $Revision: 1412 $
+--  $Date: 2009-05-24 18:40:59 +0100 (Sun, 24 May 2009) $
+--  $Author: simonjwright $
 --
---  Tests for Indefinite Maps.
+--  Tests for Indefinite Unmanaged Maps.
 
 with AUnit.Test_Cases; use AUnit.Test_Cases;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with BC.Indefinite_Containers.Maps.Unbounded;
-with Global_Heap;
+with BC.Indefinite_Unmanaged_Containers.Maps;
 
 pragma Warnings (Off, Ada.Text_IO);
 --  May not be referenced for released versions
 
-package body Tests.Indefinite_Maps is
+package body Tests.Indefinite_Unmanaged_Maps is
 
-   type String_P is access String;
-   package Abstract_Indefinite_Containers
-   is new BC.Indefinite_Containers (Item => String,
-                                    Item_Ptr => String_P);
-
-   package Abstract_Indefinite_Maps
-   is new Abstract_Indefinite_Containers.Maps (Key => String,
-                                               Key_Ptr => String_P);
-   use Abstract_Indefinite_Maps;
+   package Abstract_Indefinite_Unmanaged_Containers
+   is new BC.Indefinite_Unmanaged_Containers (Item => String);
 
    function Hash (S : String) return Natural;
    package Unmanaged_Maps
-   is new Abstract_Indefinite_Maps.Unbounded (Hash => Hash,
-                                              Buckets => 19,
-                                              Storage => Global_Heap.Storage);
+   is new Abstract_Indefinite_Unmanaged_Containers.Maps (Key => String,
+                                                         Buckets => 19);
    use Unmanaged_Maps;
 
    function Hash (S : String) return Natural
@@ -218,7 +209,7 @@ package body Tests.Indefinite_Maps is
                   Assert (C, False, "K should be in ""1""..""5""");
             end case;
          end Apply;
-         It : Map_Iterator'Class := Map_Iterator (New_Iterator (M));
+         It : Map_Iterator := Map_Iterator (New_Iterator (M));
       begin
          Visitor (It);
          Assert (C, Count = 5, "wrong number of items");
@@ -238,7 +229,7 @@ package body Tests.Indefinite_Maps is
                OK := False;
             end if;
          end Apply;
-         It : Map_Iterator'Class := Map_Iterator (New_Iterator (M));
+         It : Map_Iterator := Map_Iterator (New_Iterator (M));
          N : Map;
       begin
          Modifier (It);
@@ -251,7 +242,7 @@ package body Tests.Indefinite_Maps is
       end;
       declare
          Count : Natural := 0;
-         It : Map_Iterator'Class := Map_Iterator (New_Iterator (M));
+         It : Map_Iterator := Map_Iterator (New_Iterator (M));
          N : Map;
       begin
          while not Is_Done (It) loop
@@ -304,7 +295,7 @@ package body Tests.Indefinite_Maps is
    function Name (C : Case_1) return AUnit.Message_String is
       pragma Warnings (Off, C);
    begin
-      return new String'("Indefinite_Maps (unbounded, basic)");
+      return new String'("Indefinite_Unmanaged_Maps (basic)");
    end Name;
 
    procedure Register_Tests (C : in out Case_1) is
@@ -337,4 +328,4 @@ package body Tests.Indefinite_Maps is
    end Suite;
 
 
-end Tests.Indefinite_Maps;
+end Tests.Indefinite_Unmanaged_Maps;
