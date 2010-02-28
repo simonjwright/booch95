@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2006 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -29,50 +29,51 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Stacks.Bounded is
 
-   procedure Clear (S : in out Stack) is
+   procedure Clear (S : in out Unconstrained_Stack) is
    begin
       Stack_Nodes.Clear (S.Rep);
    end Clear;
 
-   procedure Push (S : in out Stack; Elem : Item) is
+   procedure Push (S : in out Unconstrained_Stack; Elem : Item) is
    begin
       Stack_Nodes.Insert (S.Rep, Elem);
    end Push;
 
-   procedure Pop (S : in out Stack) is
+   procedure Pop (S : in out Unconstrained_Stack) is
    begin
       Stack_Nodes.Remove (S.Rep, 1);
    end Pop;
 
-   function Available (S : in Stack) return Natural is
+   function Available (S : in Unconstrained_Stack) return Natural is
    begin
       return Stack_Nodes.Available (S.Rep);
    end Available;
 
-   function Depth (S : Stack) return Natural is
+   function Depth (S : Unconstrained_Stack) return Natural is
    begin
       return Stack_Nodes.Length (S.Rep);
    end Depth;
 
-   function Is_Empty (S : Stack) return Boolean is
+   function Is_Empty (S : Unconstrained_Stack) return Boolean is
    begin
       return Stack_Nodes.Length (S.Rep) = 0;
    end Is_Empty;
 
-   function Top (S : Stack) return Item is
+   function Top (S : Unconstrained_Stack) return Item is
    begin
       return Stack_Nodes.First (S.Rep);
    end Top;
 
-   function "=" (Left, Right : Stack) return Boolean is
+   function "=" (Left, Right : Unconstrained_Stack) return Boolean is
    begin
       return Left.Rep = Right.Rep;
    end "=";
 
    package Address_Conversions
-   is new System.Address_To_Access_Conversions (Stack);
+   is new System.Address_To_Access_Conversions (Unconstrained_Stack);
 
-   function New_Iterator (For_The_Stack : Stack) return Iterator'Class is
+   function New_Iterator
+     (For_The_Stack : Unconstrained_Stack) return Iterator'Class is
       Result : Stack_Iterator;
    begin
       Result.For_The_Container :=
@@ -82,22 +83,22 @@ package body BC.Containers.Stacks.Bounded is
    end New_Iterator;
 
    function Item_At
-     (S : Stack; Index : Positive) return Item_Ptr is
+     (S : Unconstrained_Stack; Index : Positive) return Item_Ptr is
    begin
       return Stack_Nodes.Item_At (S.Rep, Index);
    end Item_At;
 
-   procedure Add (S : in out Stack; Elem : Item) is
+   procedure Add (S : in out Unconstrained_Stack; Elem : Item) is
    begin
       Stack_Nodes.Append (S.Rep, Elem);
    end Add;
 
-   procedure Remove (S : in out Stack; From : Positive) is
+   procedure Remove (S : in out Unconstrained_Stack; From : Positive) is
    begin
       Stack_Nodes.Remove (S.Rep, From);
    end Remove;
 
-   function Null_Container return Stack is
+   function Null_Container return Unconstrained_Stack is
       Empty_Container : Stack;
       pragma Warnings (Off, Empty_Container);
    begin

@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -32,51 +32,59 @@ package BC.Containers.Stacks.Bounded is
 
    pragma Preelaborate;
 
-   type Stack is new Abstract_Stack with private;
+   type Unconstrained_Stack
+     (Maximum_Size : Positive) is new Abstract_Stack with private;
 
-   function Null_Container return Stack;
+   subtype Stack
+      is Unconstrained_Stack (Maximum_Size => Maximum_Size);
 
-   procedure Clear (S : in out Stack);
+   function Null_Container return Unconstrained_Stack;
+
+   procedure Clear (S : in out Unconstrained_Stack);
    --  Empty the Stack of all items.
 
-   procedure Push (S : in out Stack; Elem : Item);
+   procedure Push (S : in out Unconstrained_Stack; Elem : Item);
    --  Add a copy of the item to the top of the Stack.
 
-   procedure Pop (S : in out Stack);
+   procedure Pop (S : in out Unconstrained_Stack);
    --  Remove the item from the top of the Stack.
 
-   function Available (S : in Stack) return Natural;
+   function Available (S : in Unconstrained_Stack) return Natural;
    --  Returns a count of the number of empty "Item slots" left.
 
-   function Depth (S : in Stack) return Natural;
+   function Depth (S : in Unconstrained_Stack) return Natural;
    --  Returns the number of items in the Stack
 
-   function Is_Empty (S : in Stack) return Boolean;
+   function Is_Empty (S : in Unconstrained_Stack) return Boolean;
    --  Returns True if and only if no items are in the stack
 
-   function Top (S : in Stack) return Item;
+   function Top (S : in Unconstrained_Stack) return Item;
    --  Return a copy of the item at the top of the Stack.
 
-   function "=" (Left, Right : in Stack) return Boolean;
+   function "=" (Left, Right : in Unconstrained_Stack) return Boolean;
    --  Return True if and only if both stacks have the same depth and
    --  the same items in the same order; return False otherwise.
 
-   function New_Iterator (For_The_Stack : Stack) return Iterator'Class;
+   function New_Iterator
+     (For_The_Stack : Unconstrained_Stack) return Iterator'Class;
    --  Return a reset Iterator bound to the specific Stack.
 
 private
 
-   function Item_At (S : Stack; Index : Positive) return Item_Ptr;
+   function Item_At
+     (S : Unconstrained_Stack; Index : Positive) return Item_Ptr;
 
-   procedure Add (S : in out Stack; Elem : Item);
-   procedure Remove (S : in out Stack; From : Positive);
+   procedure Add (S : in out Unconstrained_Stack; Elem : Item);
+   procedure Remove (S : in out Unconstrained_Stack; From : Positive);
 
    package Stack_Nodes
    is new BC.Support.Bounded (Item => Item,
                               Item_Ptr => Item_Ptr);
    use Stack_Nodes;
 
-   type Stack is new Abstract_Stack with record
+   type Unconstrained_Stack
+     (Maximum_Size : Positive)
+   is new Abstract_Stack with record
       Rep : Stack_Nodes.Bnd_Node (Maximum_Size => Maximum_Size);
    end record;
 
