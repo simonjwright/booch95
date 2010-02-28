@@ -67,8 +67,8 @@ components to use?</a></h2>
 <p>You're clearly going to need some sort of container to implement
 Fleet.</p>
 <p>If you just want a standard container to support iteration,
-filtering and sorting, use Collections. The List components are
-much more complex than you'll need.</p>
+filtering and sorting, use Collections. <b>The List components are
+much more complex than you'll need.</b></p>
 <p><a href="#maps">Later</a>, we'll look at Maps.</p>
 <h2><a name="instantiation" id="instantiation">How do I instantiate
 them?</a></h2>
@@ -86,20 +86,23 @@ Cars</tt>.</p>
 </pre>
 <p>Next, using the new Abstract_Car_Containers, instantiate the
 abstract Collections. This is quite confusing the first few times
-you come across it! The thing you have to instantiate is
-<em>not</em> <tt>BC.Containers.Collections</tt> but the <em>new
-instantiation</em> of <tt><i>BC.Containers</i>.Collections</tt>
-(<tt>Abstract_Car_Containers.Collections</tt>) that you effectively
-made above:</p>
+you come across it!</p>
+
+<p>When you instantiate a generic parent like <tt>BC.Containers</tt>, all the generic children of the generic parent become candidates for instantiation as actual children of the actual parent.</p>
+
+<p>Although you have to <tt>with BC.Containers.Collections;</tt>, the
+thing you have to instantiate now is the <em>newly
+magicked</em> <tt>Abstract_Car_Containers.Collections</tt>:</p>
+
 <pre>
    with Abstract_Car_Containers;
    with BC.Containers.Collections;
    package Abstract_Car_Collections
    is new Abstract_Car_Containers.Collections;
 </pre>
-<p>You now have to choose the representation to be used for the
-concrete Collection. To start with, assume that you'll never have
-more than 30 Cars to deal with. This means that you can use the
+<p>Next, choose the representation to be used for concrete
+Collections. To start with, assume that you'll never have more than 30
+Cars to deal with. This means that you can use the
 <i>Bounded</i> form. Again, what you instantiate is the child of
 the newly instantiated <tt>Abstract_Car_Collections</tt>.</p>
 <pre>
@@ -258,9 +261,9 @@ registered before some date. You could imagine a function
    function Registered_Before
      (Date : Ada.Calendar.Time) return Fleets.Collection;
 </pre>
-which you'd probably declare in the public part of <a href=
+<p>which you'd probably declare in the public part of <a href=
 "#fleet-combined"><tt>My_Fleet_Combined</tt></a>. Its body might
-look like
+look like</p>
 <pre>
    function Registered_Before
      (Date : Ada.Calendar.Time) return Fleets.Collection is
@@ -290,7 +293,7 @@ look like
       return Result;
    end Registered_Before;
 </pre>
-which is a bit of a mouthful.
+<p>which is a bit of a mouthful.</p>
 <p>The tricky bit is the instantiation of <tt>BC.Filter</tt>
 (which, of course, you have to <tt>with</tt>):</p>
 <blockquote>
@@ -327,10 +330,10 @@ Container.</dd>
 <p>Suppose you want to keep your Fleet sorted (earliest first). You
 need</p>
 <pre>
-  procedure Sort;
+   procedure Sort;
 </pre>
-which, as before, gets declared in the public part of <a href=
-"#fleet-combined"><tt>My_Fleet_Combined</tt></a>.
+<p>which, as before, gets declared in the public part of <a href=
+"#fleet-combined"><tt>My_Fleet_Combined</tt></a>.</p>
 <pre>
    procedure Sort is
 
@@ -351,9 +354,9 @@ which, as before, gets declared in the public part of <a href=
       Sort (The_Fleet);
    end Sort;
 </pre>
-As before, you "with" <tt>BC.Containers.Quicksort</tt>, but when
+<p>As before, you <tt>with BC.Containers.Quicksort;</tt>, but when
 you do the instantiation it's of
-<tt>Abstract_Car_Containers.Quicksort</tt>.
+<tt>Abstract_Car_Containers.Quicksort</tt>.</p>
 <p>As an alternative to Quicksort you can use
 <tt>BC.Containers.Shellsort</tt>; the quicksort is (usually)
 quicker but uses recursion, so may take more stack space.</p>
@@ -380,7 +383,7 @@ start by creating an Abstract_Car_Maps package:</p>
    is new Abstract_Car_Containers.Maps (Key =&gt; Cars.Plate_String,
                                         "=" =&gt; Cars.Plate_Strings."=");
 </pre>
-(this time you can't get away with just <tt>use Cars</tt>).
+<p>(this time you can't get away with just <tt>use Cars</tt>).</p>
 <p>The Map is implemented using a hash table. You say how many
 <i>hash buckets</i> you want, and you supply a <i>hash function</i>
 which, given a Key, indicates which bucket is to be used. The
@@ -405,11 +408,11 @@ elements on average. If you have a Map with 1000 Cars split among
 average rather than the 500 you'd need to look at if you used a
 plain Collection.</p>
 <p>For this to work properly you do need a good hash function, of
-course (<tt>Plate_Hash</tt>). It would be quite legal, but not at
-all efficient, for the hash function always to return 0. A set of
-string hash functions (part of the author's <a href=
-"http://www.pushface.org/coldframe/">ColdFrame</a> package, a code
-framework generator backend for UML CASE tools) is available in
+course (<tt>Plate_Hash</tt>). It would be quite legal, but not at all
+efficient, for the hash function always to return 0. A set of string
+hash functions (part of the author's <a href=
+"http://coldframe.sourceforge.net/coldframe">ColdFrame</a> package, a
+code framework generator backend for UML CASE tools) is available in
 <a href="coldframe-hash.tgz">tar</a> and <a href=
 "coldframe-hash.zip">zip</a> forms.</p>
 <p>In many applications, you'll probably find the fact that a Map
@@ -443,6 +446,9 @@ item is an access type, <i>you</i> have to manage deallocation.</p>
 <p>This form was designed before storage pools were properly
 understood. You're probably best off not using it.</p>
 <h3>Unbounded</h3>
+<p>The unbounded form allocates space for each item held from a
+storage pool that you provide and returns it when the item is
+removed.</p>
 <h3>Unmanaged</h3>
 <p>The unmanaged form allocates space for each item held from the
 system memory pool and returns it when the item is removed. It's by
