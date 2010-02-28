@@ -1,10 +1,3 @@
-
---  for emacs:
---  Local Variables:
---  mode: ada
---  End:
---  vim: textwidth=0 nowrap tabstop=8 shiftwidth=3 softtabstop=3 expandtab
---  vim: filetype=ada encoding=latin1 fileformat=unix
 --  Copyright 2003-2005 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
@@ -110,3 +103,6 @@ package body BC.Support.High_Resolution_Time is
 begin
    Initialize_Clock_Rate;
 end BC.Support.High_Resolution_Time;
+
+--  vim: textwidth=0 nowrap tabstop=8 shiftwidth=3 softtabstop=3 expandtab
+--  vim: filetype=ada encoding=latin1 fileformat=unix

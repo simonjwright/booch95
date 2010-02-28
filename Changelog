@@ -10,8 +10,34 @@ preformatted text', see SF Support Requests item #2624497.
 
 80-column width works well.
 
-The initial entry is intended as catch-up for the changes made between
+The final entry is intended as catch-up for the changes made between
 the 20070822 and 20090216 releases.
+
+yyyymmdd:
+
+A release with ...
+
+There was a problem with BC.Support.High_Resolution_Time on 64-bit
+compilers. Cleared by doing the Right Thing and using
+Unchecked_Conversion instead of overlays.
+
+On Mac OS X Snow Leopard, BC.Support.High_Resolution_Time failed
+because the OS stops the Time Stamp Counter while the processor is
+sleeping. Fortunately, on this OS, the resolution of the system clock
+is 1 microsecond, so an implementation is provided that uses
+Ada.Calendar.Time.
+
+pragmas Pure and Preelaborate used where possible.
+
+Indefinite_Reference.Adjust failed if the Pointer was null (this
+happened wtih Null_Container).
+
+20090226:
+
+A release with fixes for Ring containers.
+
+There was a problem when the Mark denoted an internal index before the
+Top; Insert would improperly increment the Mark.
 
 20090216:
 
@@ -22,21 +48,6 @@ is still bc-yyyymmdd, but under that is GNAT/ (supporting GNUAda and
 other Ada projects on SourceForge), src/ for source, tests/ for tests
 and demos/ for demos.
 
-20090226:
-
-A release with fixes for Ring containers.	
-
-There was a problem when the Mark denoted an internal index before the
-Top; Insert would improperly increment the Mark.
-
-yyyymmdd:
-
-A release with ...
-
-There was a problem with BC.Support.High_Resolution_Time on 64-bit
-compilers. Cleared by doing the Right Thing and using
-Unchecked_Conversion instead of overlays.
-	
 ----------------------------------------------------------------------------
 For emacs:
 Local Variables:
