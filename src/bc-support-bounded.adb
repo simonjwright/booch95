@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -287,19 +287,11 @@ package body BC.Support.Bounded is
       Count : Integer;
    begin
       Integer'Read (Stream, Count);
-      declare
-         Result : Bnd_Node (Count);
-      begin
-         Integer'Read (Stream, Count);
-         for I in 1 .. Count loop
-            declare
-               Elem : constant Item := Item'Input (Stream);
-            begin
-               Append (Result, Elem);
-            end;
-         end loop;
-         Obj := Result;
-      end;
+      Clear (Obj);
+      Integer'Read (Stream, Count);
+      for I in 1 .. Count loop
+         Append (Obj, Item'Input (Stream));
+      end loop;
    end Read_Bnd_Node;
 
 end BC.Support.Bounded;
