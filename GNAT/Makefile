@@ -15,7 +15,7 @@
 ############################################################################
 #  CVS Daten:
 #
-#  $Author$
+#  Author : Martin Krischik
 #
 #  $Revision$
 #  $Date$
@@ -24,13 +24,13 @@
 #
 ############################################################################
 
-.PHONY		: all					#  make all
-.PHONY		: debug					#  make debug
-.PHONY		: release				#  make release
-.PHONY		: clean					#  cleanup
-.PHONY		: pretty				#  pretty printer
-.PHONY		: booch_95				#  make library only
-
+.PHONY		: all				#  make all
+.PHONY		: debug				#  make debug
+.PHONY		: release			#  make release
+.PHONY		: clean				#  cleanup
+.PHONY		: pretty			#  pretty printer
+.PHONY		: booch_95			#  make library only
+.PHONY	        : dist                          #  add to distro defined by DIST
 .SUFFIXES	: .ada .adb .ads
 
 vpath %.ads	 ../src
@@ -41,10 +41,10 @@ ifndef GPR_OS
 	#
 	#  Try to guess GPR settings when they are not already set.
 	#
-	#  Note 1: If you set GPR_OS you need to set the other variables 
+	#  Note 1: If you set GPR_OS you need to set the other variables
 	#	   mentioned here as well.
 	#
-	#  Note 2: The GNU Ada Project is supplied with a more advanced 
+	#  Note 2: The GNU Ada Project is supplied with a more advanced
 	#	   detector which supports more combinations - including
 	#	   cross compilations.
 	#
@@ -59,7 +59,7 @@ ifndef GPR_OS
 	endif
 
 	ifdef sys$login
-		GPR_OS		:= VMS 
+		GPR_OS		:= VMS
 		GPR_CPU		:= APX
 		GPR_Target	:= native
 		GNAT		:= gnat
@@ -114,33 +114,32 @@ endif
 #                                                                          #
 ############################################################################
 
-Base_Dir				:= ${CURDIR}
+Base_Dir			:= ${CURDIR}
 
 ifeq (${GPR_Target},native)
-	Debug_Dir			:= ${Base_Dir}/${GPR_OS}-${GPR_CPU}-Debug
-	Release_Dir			:= ${Base_Dir}/${GPR_OS}-${GPR_CPU}-Release
+	Debug_Dir		:= ${Base_Dir}/${GPR_OS}-${GPR_CPU}-Debug
+	Release_Dir		:= ${Base_Dir}/${GPR_OS}-${GPR_CPU}-Release
 else
-	Debug_Dir			:= ${Base_Dir}/${GPR_Target}-${GPR_CPU}-Debug
-	Release_Dir			:= ${Base_Dir}/${GPR_Target}-${GPR_CPU}-Release
+	Debug_Dir		:= ${Base_Dir}/${GPR_Target}-${GPR_CPU}-Debug
+	Release_Dir		:= ${Base_Dir}/${GPR_Target}-${GPR_CPU}-Release
 endif
 
-GNAT_Opt				:= "-XGPR_CPU=${GPR_CPU}" "-XGPR_OS=${GPR_OS}"
+GNAT_Opt			:= "-XGPR_CPU=${GPR_CPU}" "-XGPR_OS=${GPR_OS}"
 GNAT_Opt_Debug			:= ${GNAT_Opt} "-Xstyle=Debug"
 GNAT_Opt_Release		:= ${GNAT_Opt} "-Xstyle=Release"
 
-all:															\
-		booch_95												\
+all: booch_95
 
-debug:															\
-		${Debug_Dir}											\
-		${Debug_Dir}/lib										\
-		${Debug_Dir}/obj
+debug:					\
+	${Debug_Dir}			\
+	${Debug_Dir}/lib		\
+	${Debug_Dir}/obj
 	gnat make ${GNAT_Opt_Debug} "-P" booch_95.gpr
 
-release:														\
-		${Release_Dir}											\
-		${Release_Dir}/lib										\
-		${Release_Dir}/obj
+release:				\
+	${Release_Dir}			\
+	${Release_Dir}/lib		\
+	${Release_Dir}/obj
 	gnat make ${GNAT_Opt_Release} "-P" booch_95.gpr
 
 clean:
@@ -150,15 +149,19 @@ clean:
 pretty:
 	-gnat pretty ${GNAT_Opt} "-P" booch_95.gpr
 
-booch_95:														\
-		${Debug_Dir}											\
-		${Debug_Dir}/lib										\
-		${Debug_Dir}/obj										\
-		${Release_Dir}											\
-		${Release_Dir}/lib										\
-		${Release_Dir}/obj
+booch_95:				\
+	${Debug_Dir}			\
+	${Debug_Dir}/lib		\
+	${Debug_Dir}/obj		\
+	${Release_Dir}			\
+	${Release_Dir}/lib		\
+	${Release_Dir}/obj
 	gnat make ${GNAT_Opt_Release} "-P" booch_95.gpr
 	gnat make ${GNAT_Opt_Debug}   "-P" booch_95.gpr
+
+dist:
+	mkdir $(DIST)/GNAT
+	cp -p Makefile booch_95.gpr gnat-booch.sh gnat-booch.conf $(DIST)/GNAT/
 
 ############################################################################
 #                                                                          #
@@ -186,72 +189,71 @@ ${Release_Dir}/obj:
 
 ############################################################################
 #                                                                          #
-#  Create Booch Componenets for Indefinite Items                           #
+#  Create Booch Components for Indefinite Items                            #
 #                                                                          #
 ############################################################################
 
-BC_Generated_Files :=													\
-		../bc-support-indefinite_dynamic.ads							\
-		../bc-support-indefinite_dynamic.adb							\
-		../bc-support-indefinite_unbounded.ads							\
-		../bc-support-indefinite_unbounded.adb							\
-		../bc-support-indefinite_bounded.ads							\
-		../bc-support-indefinite_bounded.adb							\
-		../bc-support-indefinite_unmanaged.ads							\
-		../bc-support-indefinite_unmanaged.adb							\
-		../bc-indefinite_containers.ads									\
-		../bc-indefinite_containers.adb									\
-		../bc-indefinite_containers-queues.ads							\
-		../bc-indefinite_containers-queues.adb							\
-		../bc-indefinite_containers-queues-dynamic.ads					\
-		../bc-indefinite_containers-queues-dynamic.adb					\
-		../bc-indefinite_containers-queues-bounded.ads					\
-		../bc-indefinite_containers-queues-bounded.adb					\
-		../bc-indefinite_containers-queues-unbounded.ads				\
-		../bc-indefinite_containers-queues-unbounded.adb				\
-		../bc-indefinite_containers-queues-unmanaged.ads				\
-		../bc-indefinite_containers-queues-unmanaged.adb				\
-		../bc-indefinite_containers-queues-ordered.ads					\
-		../bc-indefinite_containers-queues-ordered-dynamic.ads			\
-		../bc-indefinite_containers-queues-ordered-dynamic.adb			\
-		../bc-indefinite_containers-queues-ordered-bounded.ads			\
-		../bc-indefinite_containers-queues-ordered-bounded.adb			\
-		../bc-indefinite_containers-queues-ordered-unbounded.ads		\
-		../bc-indefinite_containers-queues-ordered-unbounded.adb		\
-		../bc-indefinite_containers-queues-ordered-unmanaged.ads		\
-		../bc-indefinite_containers-queues-ordered-unmanaged.adb		\
-		../bc-indefinite_containers-collections.ads						\
-		../bc-indefinite_containers-collections.adb						\
-		../bc-indefinite_containers-collections-dynamic.ads				\
-		../bc-indefinite_containers-collections-dynamic.adb				\
-		../bc-indefinite_containers-collections-bounded.ads				\
-		../bc-indefinite_containers-collections-bounded.adb				\
-		../bc-indefinite_containers-collections-unbounded.ads			\
-		../bc-indefinite_containers-collections-unbounded.adb			\
-		../bc-indefinite_containers-collections-unmanaged.ads			\
-		../bc-indefinite_containers-collections-unmanaged.adb			\
-		../bc-indefinite_containers-collections-ordered.ads				\
-		../bc-indefinite_containers-collections-ordered-dynamic.ads		\
-		../bc-indefinite_containers-collections-ordered-dynamic.adb		\
-		../bc-indefinite_containers-collections-ordered-bounded.ads		\
-		../bc-indefinite_containers-collections-ordered-bounded.adb		\
-		../bc-indefinite_containers-collections-ordered-unmanaged.ads	\
-		../bc-indefinite_containers-collections-ordered-unmanaged.adb
+BC_Generated_Files :=							\
+	../bc-support-indefinite_dynamic.ads				\
+	../bc-support-indefinite_dynamic.adb				\
+	../bc-support-indefinite_unbounded.ads				\
+	../bc-support-indefinite_unbounded.adb				\
+	../bc-support-indefinite_bounded.ads				\
+	../bc-support-indefinite_bounded.adb				\
+	../bc-support-indefinite_unmanaged.ads				\
+	../bc-support-indefinite_unmanaged.adb				\
+	../bc-indefinite_containers.ads					\
+	../bc-indefinite_containers.adb					\
+	../bc-indefinite_containers-queues.ads				\
+	../bc-indefinite_containers-queues.adb				\
+	../bc-indefinite_containers-queues-dynamic.ads			\
+	../bc-indefinite_containers-queues-dynamic.adb			\
+	../bc-indefinite_containers-queues-bounded.ads			\
+	../bc-indefinite_containers-queues-bounded.adb			\
+	../bc-indefinite_containers-queues-unbounded.ads		\
+	../bc-indefinite_containers-queues-unbounded.adb		\
+	../bc-indefinite_containers-queues-unmanaged.ads		\
+	../bc-indefinite_containers-queues-unmanaged.adb		\
+	../bc-indefinite_containers-queues-ordered.ads			\
+	../bc-indefinite_containers-queues-ordered-dynamic.ads		\
+	../bc-indefinite_containers-queues-ordered-dynamic.adb		\
+	../bc-indefinite_containers-queues-ordered-bounded.ads		\
+	../bc-indefinite_containers-queues-ordered-bounded.adb		\
+	../bc-indefinite_containers-queues-ordered-unbounded.ads	\
+	../bc-indefinite_containers-queues-ordered-unbounded.adb	\
+	../bc-indefinite_containers-queues-ordered-unmanaged.ads	\
+	../bc-indefinite_containers-queues-ordered-unmanaged.adb	\
+	../bc-indefinite_containers-collections.ads			\
+	../bc-indefinite_containers-collections.adb			\
+	../bc-indefinite_containers-collections-dynamic.ads		\
+	../bc-indefinite_containers-collections-dynamic.adb		\
+	../bc-indefinite_containers-collections-bounded.ads		\
+	../bc-indefinite_containers-collections-bounded.adb		\
+	../bc-indefinite_containers-collections-unbounded.ads		\
+	../bc-indefinite_containers-collections-unbounded.adb		\
+	../bc-indefinite_containers-collections-unmanaged.ads		\
+	../bc-indefinite_containers-collections-unmanaged.adb		\
+	../bc-indefinite_containers-collections-ordered.ads		\
+	../bc-indefinite_containers-collections-ordered-dynamic.ads	\
+	../bc-indefinite_containers-collections-ordered-dynamic.adb	\
+	../bc-indefinite_containers-collections-ordered-bounded.ads	\
+	../bc-indefinite_containers-collections-ordered-bounded.adb	\
+	../bc-indefinite_containers-collections-ordered-unmanaged.ads	\
+	../bc-indefinite_containers-collections-ordered-unmanaged.adb
 
-#		../bc-support-indefinite_bounded_hash_tables.adb				\
-#		../bc-support-indefinite_bounded_hash_tables.ads				\
-#		../bc-indefinite_containers-bags.ads							\
-#		../bc-indefinite_containers-bags.adb							\
-#		../bc-indefinite_containers-bags-dynamic.adb					\
-#		../bc-indefinite_containers-bags-bounded.ads					\
-#		../bc-indefinite_containers-bags-bounded.adb					\
-#		../bc-indefinite_containers-bags-unbounded.ads					\
-#		../bc-indefinite_containers-bags-unbounded.adb					\
-#		../bc-indefinite_containers-bags-unmanaged.ads					\
-#		../bc-indefinite_containers-bags-unmanaged.adb					\
+#	../bc-support-indefinite_bounded_hash_tables.adb	\
+#	../bc-support-indefinite_bounded_hash_tables.ads	\
+#	../bc-indefinite_containers-bags.ads			\
+#	../bc-indefinite_containers-bags.adb			\
+#	../bc-indefinite_containers-bags-dynamic.adb		\
+#	../bc-indefinite_containers-bags-bounded.ads		\
+#	../bc-indefinite_containers-bags-bounded.adb		\
+#	../bc-indefinite_containers-bags-unbounded.ads		\
+#	../bc-indefinite_containers-bags-unbounded.adb		\
+#	../bc-indefinite_containers-bags-unmanaged.ads		\
+#	../bc-indefinite_containers-bags-unmanaged.adb
 
-generate:																\
-		${BC_Generated_Files}
+generate: ${BC_Generated_Files}
 
 clean_generate:
 	${DELETE} ${BC_Generated_Files}
