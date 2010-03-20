@@ -43,6 +43,7 @@ bc-support-dynamic.ad[bs]				\
 bc-support-exceptions.ad[bs]				\
 bc-support-hash_tables.ad[bs]				\
 bc-support-high_resolution_time.ad[bs]			\
+bc-support-high_resolution_time-clock.adb		\
 bc-support-high_resolution_time-clock.adb-pentium	\
 bc-support-high_resolution_time-clock.adb-ppc32		\
 bc-support-managed_storage.ad[bs]			\
@@ -235,8 +236,9 @@ bc-indefinite_containers-queues-unbounded.ads		\
 bc-indefinite_containers-queues-unmanaged.adb		\
 bc-indefinite_containers-queues-unmanaged.ads
 
-ADA_SOURCE +=					\
-bc-indefinite_unmanaged_containers.ad[bs]	\
+ADA_SOURCE +=						\
+bc-indefinite_unmanaged_containers.ad[bs]		\
+bc-indefinite_unmanaged_containers-collections.ad[bs]	\
 bc-indefinite_unmanaged_containers-maps.ad[bs]
 
 ADA_SOURCE +=							\
@@ -244,7 +246,7 @@ bc-support-indefinite_bounded.ad[bs]				\
 bc-support-indefinite_dynamic.ad[bs]				\
 bc-support-indefinite_reference.ad[bs]				\
 bc-support-indefinite_unbounded.ad[bs]				\
-bc-support-indefinite_unmanaged.ad[bs]			    
+bc-support-indefinite_unmanaged.ad[bs]
 
 
 ############################
@@ -271,28 +273,11 @@ dist: COPYING README $(DISTRIBUTION_FILES)
 
 SOURCE = Makefile COPYING README $(ADA_SOURCE)
 
-# bc-support-high_resolution_time-clock.adb is a copy of the
-# appropriate architecture-specific implementation. Choose the
-# more-popular Pentium version for the standard distribution.
-
 bc-$(DATE): force
 	-rm -rf $@
 	mkdir -p $@/src
 	tar cf - $(SOURCE) | (cd $@/src; tar xvf -)
-	cp -p \
-	  bc-support-high_resolution_time-clock.adb-pentium \
-	  bc-support-high_resolution_time-clock.adb-ppc32   \
-	  $@/src/
-	cp -p \
-	  bc-support-high_resolution_time-clock.adb-pentium \
-	  $@/src/bc-support-high_resolution_time-clock.adb
-	mkdir $@/GNAT 
-	cp -p \
-	    ../GNAT/Makefile		   \
-	    ../GNAT/booch_95.gpr	   \
-	    ../GNAT/gnat-booch.sh	   \
-	    ../GNAT/gnat-booch.conf	   \
-	    $@/GNAT/
+	$(MAKE) DIST=$(PWD)/$@ -C ../GNAT dist
 	$(MAKE) DIST=$(PWD)/$@ -C ../tests dist
 	$(MAKE) DIST=$(PWD)/$@ -C ../demos dist
 
@@ -343,7 +328,7 @@ upload-dist: force
 	rsync						\
 	  $(RSYNC_OPTS)					\
 	  $(DISTRIBUTION_FILES)				\
-	  "$(SFUSER)@frs.sourceforge.net:uploads/" 
+	  "$(SFUSER)@frs.sourceforge.net:uploads/"
 
 
 .PHONY: force
