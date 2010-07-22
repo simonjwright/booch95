@@ -19,13 +19,13 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $Revision: 1391 $
---  $Date: 2009-01-12 20:55:33 +0000 (Mon, 12 Jan 2009) $
---  $Author: simonjwright $
+--  $Revision$
+--  $Date$
+--  $Author$
 
 --  This implementation is for operating systems where the compiler
 --  can provide adequate resolution (for example, Mac OS X, at least
---  on Intel hadrware).
+--  on Intel hardware).
 
 with Ada.Unchecked_Conversion;
 
