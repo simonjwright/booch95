@@ -53,7 +53,7 @@ package body BC.Support.Bounded is
 
    procedure Insert (Obj : in out Bnd_Node; Elem : Item; Before : Positive) is
    begin
-      if Before > Obj'Size then
+      if Before > Obj.Size then
          raise BC.Range_Error;
       end if;
       if Obj.Size >= Obj.Maximum_Size then
