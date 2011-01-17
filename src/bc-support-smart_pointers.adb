@@ -53,13 +53,23 @@ package body BC.Support.Smart_Pointers is
    procedure Delete is new Ada.Unchecked_Deallocation (T, P);
    procedure Delete is new Ada.Unchecked_Deallocation (Node, Ref);
 
+   --  Finalize may be called more than once on the same object.
+   --
+   --  The first time it's called, we may set Tmp to a non-null value
+   --  which designates the actual shared object and then proceed to
+   --  decrement the count and, if no references remain, delete the
+   --  used memory. But, in any case, *this* smart pointer no longer
+   --  references the actual object, so another call to Finalize will
+   --  have no effect.
    procedure Finalize (Obj : in out Pointer) is
+      Tmp : Ref := Obj.Rep;
    begin
-      if Obj.Rep /= null then
-         Obj.Rep.Count := Obj.Rep.Count - 1;
-         if Obj.Rep.Count = 0 then
-            Delete (Obj.Rep.Value);
-            Delete (Obj.Rep);
+      Obj.Rep := null;
+      if Tmp /= null then
+         Tmp.Count := Tmp.Count - 1;
+         if Tmp.Count = 0 then
+            Delete (Tmp.Value);
+            Delete (Tmp);
          end if;
       end if;
    end Finalize;
