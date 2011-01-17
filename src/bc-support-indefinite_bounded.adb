@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2010 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -51,7 +51,7 @@ package body BC.Support.Indefinite_Bounded is
 
    procedure Insert (Obj : in out Bnd_Node; Elem : Item; Before : Positive) is
    begin
-      if Before > Obj'Size then
+      if Before > Obj.Size then
          raise BC.Range_Error;
       end if;
       if Obj.Size >= Obj.Maximum_Size then
