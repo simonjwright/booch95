@@ -23,12 +23,15 @@ project AUnit_Tests is
   type Language is ("gnat95", "gnat05");
   Chosen_Language : Language := external ("LANGUAGE", "gnat95");
 
+  type Debug_Code is ("no", "yes");
+  Debug : Debug_Code := External ("DEBUG", "no");
+
   for Main use
     (
      "tests-main.adb"
     );
 
-  for Source_Dirs use (".", "../src");
+  for Source_Dirs use (".", "../src") & AUnit.Sources;
   for Exec_Dir use ".";
   for Object_Dir use ".build";
 
@@ -42,12 +45,17 @@ project AUnit_Tests is
        );
   end Builder;
 
---    package Naming is
---       for Spec ("BC.Support.Managed_Storage")
---         use "bc-support-managed_storage.ads-debug";
---       for Body ("BC.Support.Managed_Storage")
---         use "bc-support-managed_storage.adb-debug";
---    end Naming;
+  package Naming is
+     case Debug is
+        when "yes" =>
+           for Spec ("BC.Support.Managed_Storage")
+             use "bc-support-managed_storage.ads-debug";
+           for Body ("BC.Support.Managed_Storage")
+             use "bc-support-managed_storage.adb-debug";
+        when "no" =>
+           null;
+     end case;
+  end Naming;
 
   package Compiler is
      for Default_Switches ("Ada") use
