@@ -17,7 +17,7 @@
 --  $Author$
 
 with Ada.Finalization;
-with BC.Support.Smart_Pointers;
+with BC.Support.Smart_Pointers.Test_Finalize;
 
 package Smart_Test_Support is
 
@@ -32,6 +32,7 @@ package Smart_Test_Support is
    procedure Finalize (The_T : in out T);
 
    package Smart is new BC.Support.Smart_Pointers (T => T, P => P);
+   procedure Smart_Test_Finalize is new Smart.Test_Finalize;
 
    function Create (Ch : Character) return Smart.Pointer;
    function Value (P : Smart.Pointer) return Character;
