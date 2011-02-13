@@ -82,6 +82,14 @@ begin
 
       Put_Line ("logic tests done.");
 
+      Put_Line ("idempotency of finalization...");
+      A := B;
+      Smart_Test_Finalize (A);
+      Put_Line ("finalized a, b " & Value (B));
+      Smart_Test_Finalize (A);
+      Put_Line ("finalized a again, b " & Value (B));
+      Put_Line ("idempotency of finalization done.");
+
    end;
 
    --  Timing tests.
