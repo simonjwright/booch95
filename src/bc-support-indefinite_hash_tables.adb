@@ -24,7 +24,10 @@
 --  $Date$
 --  $Author$
 
+with System;
+
 package body BC.Support.Indefinite_Hash_Tables is
+
 
    package body Tables is
 
@@ -36,7 +39,9 @@ package body BC.Support.Indefinite_Hash_Tables is
 
       function "=" (L, R : Table) return Boolean is
       begin
-         --  optimisation if L, R are the same Table?
+         if System."=" (L'Address, R'Address) then
+            return True;
+         end if;
          if L.Size = R.Size then
             for B in 1 .. L.Number_Of_Buckets loop
                for Index in 1 .. Items.Length (L.Items (B)) loop
