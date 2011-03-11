@@ -108,6 +108,7 @@ private
                                            Storage => Storage);
    package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
+      Eq => Maps."=",
       Item_Ptr => Key_Ptr,
       Hash => Hash,
       Item_Container => KC.Unb_Node,

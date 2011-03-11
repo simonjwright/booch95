@@ -115,6 +115,7 @@ private
                                          Initial_Size => Initial_Size);
    package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
+      Eq => Maps."=",
       Item_Ptr => Key_Ptr,
       Hash => Hash,
       Item_Container => KC.Dyn_Node,
