@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2009 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -103,9 +103,8 @@ private
 
    subtype Elem_Range is Positive;
    package Smart
-   is new BC.Support.Indefinite_Reference (
-      T => Item,
-      P => Item_Ptr);
+   is new BC.Support.Indefinite_Reference (T => Item,
+                                           P => Item_Ptr);
    type Elem_Array is array (Elem_Range range <>) of Smart.Pointer;
 
    subtype Size_Range is Natural;

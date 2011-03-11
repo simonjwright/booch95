@@ -23,7 +23,6 @@
 --  $Date$
 --  $Author$
 
-with System;
 with System.Address_To_Access_Conversions;
 
 package body BC.Support.Bounded_Hash_Tables is

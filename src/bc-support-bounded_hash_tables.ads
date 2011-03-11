@@ -36,9 +36,10 @@ package BC.Support.Bounded_Hash_Tables is
    --  Values may be either primitive types or user-defined
    --  non-limited types.
 
-   --  The two signature packages use the function Eq for equality
-   --  instead of the more normal "=" because ObjectAda 7.2 and 7.2.1
+   --  The function Eq is used for equality instead of the more normal
+   --  "=" because (in Bounded_Hash_Tables) ObjectAda 7.2 and 7.2.1
    --  get confused otherwise.
+
 
    generic
 
