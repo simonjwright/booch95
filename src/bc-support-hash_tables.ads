@@ -48,7 +48,8 @@ package BC.Support.Hash_Tables is
    generic
 
       type Item is private;
-      type Item_Ptr is access all Item;
+      type Item_Ptr is access Item;
+      with function Eq (L, R : Item) return Boolean;
       with function Hash (V : Item) return Natural;
 
       type Item_Container is private;
@@ -76,7 +77,7 @@ package BC.Support.Hash_Tables is
    generic
 
       type Value is private;
-      type Value_Ptr is access all Value;
+      type Value_Ptr is access Value;
       with function Eq (L, R : Value) return Boolean;
 
       type Value_Container is private;

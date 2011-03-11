@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2010 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -229,8 +229,7 @@ package body BC.Support.Indefinite_Bounded is
          raise BC.Range_Error;
       end if;
       return Smart.Value_Access
-           (Obj.Elems (((Obj.Start - 1 + Index - 1) mod Obj.Maximum_Size) + 1)
-            );
+           (Obj.Elems (((Obj.Start - 1 + Index - 1) mod Obj.Maximum_Size) + 1));
    end Item_At;
 
    function Location (Obj : Bnd_Node;
