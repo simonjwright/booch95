@@ -20,9 +20,9 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $Revision: 1420 $
---  $Date: 2009-09-26 18:42:21 +0100 (Sat, 26 Sep 2009) $
---  $Author: simonjwright $
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with System;
 
