@@ -25,6 +25,7 @@
 --  $Author$
 
 with Ada.Finalization;
+with Ada.Streams;
 with BC.Support.Indefinite_Reference;
 
 package BC.Support.Indefinite_Bounded_Hash_Tables is
@@ -178,6 +179,21 @@ package BC.Support.Indefinite_Bounded_Hash_Tables is
       procedure Next (T : Table;
                       Bucket : in out Positive;
                       Index : in out  Positive);
+
+   private
+
+      --  Streaming
+
+      procedure Read_Table
+        (Stream : access Ada.Streams.Root_Stream_Type'Class;
+         Obj : out Table);
+
+      procedure Write_Table
+        (Stream : access Ada.Streams.Root_Stream_Type'Class;
+         Obj : Table);
+
+      for Table'Read use Read_Table;
+      for Table'Write use Write_Table;
 
    end Tables;
 
