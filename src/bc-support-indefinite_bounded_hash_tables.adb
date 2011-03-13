@@ -341,6 +341,72 @@ package body BC.Support.Indefinite_Bounded_Hash_Tables is
       end Next;
 
 
+      procedure Read_Table
+        (Stream : access Ada.Streams.Root_Stream_Type'Class;
+         Obj : out Table)
+      is
+         Number_Of_Buckets : Positive;
+         Maximum_Size : Positive;
+      begin
+
+         --  Read the discriminants.
+         Integer'Read (Stream, Number_Of_Buckets);
+         Integer'Read (Stream, Maximum_Size);
+
+         --  Read the contents.
+         declare
+            Result : Table (Number_Of_Buckets => Number_Of_Buckets,
+                            Maximum_Size => Maximum_Size);
+            Size : Natural;
+         begin
+            Integer'Read (Stream, Size);
+            Clear (Result);  -- XXX is this needed?
+            for J in 1 .. Size loop
+               declare
+                  --  We need to declare these as variables rather
+                  --  than just streaming them in in the Bind call, to
+                  --  make sure they're read in the correct order.
+                  I : constant Items.Item := Items.Item'Input (Stream);
+                  V : constant Values.Value :=  Values.Value'Input (Stream);
+               begin
+                  Bind (Result, I => I, V => V);
+               end;
+            end loop;
+            Obj := Result;
+         end;
+
+      end Read_Table;
+
+
+      procedure Write_Table
+        (Stream : access Ada.Streams.Root_Stream_Type'Class;
+         Obj : Table)
+      is
+         Bucket : Positive;
+         Index : Positive;
+      begin
+
+         --  Write the discriminants.
+         Integer'Write (Stream, Obj.Number_Of_Buckets);
+         Integer'Write (Stream, Obj.Maximum_Size);
+
+         --  Write the size (extent).
+         Integer'Write (Stream, Obj.Size);
+
+         --  Write the contents by iterating over them.
+         Reset (Obj, Bucket => Bucket, Index => Index);
+         while not Is_Done (Obj, Bucket => Bucket, Index => Index) loop
+            Items.Item'Output
+              (Stream,
+               Current_Item_Ptr (Obj, Bucket => Bucket, Index => Index).all);
+            Values.Value'Output
+              (Stream,
+               Current_Value_Ptr (Obj, Bucket => Bucket, Index => Index).all);
+            Next (Obj, Bucket => Bucket, Index => Index);
+         end loop;
+
+      end Write_Table;
+
    end Tables;
 
 
