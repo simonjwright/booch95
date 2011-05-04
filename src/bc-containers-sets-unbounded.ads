@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -98,6 +98,7 @@ private
    package Items is new BC.Support.Hash_Tables.Item_Signature
      (Item => Item,
       Item_Ptr => Item_Ptr,
+      Eq => Containers."=",
       Hash => Hash,
       Item_Container => IC.Unb_Node,
       Clear => IC.Clear,

@@ -32,6 +32,11 @@ pragmas Pure and Preelaborate used where possible.
 Indefinite_Reference.Adjust failed if the Pointer was null (this
 happened wtih Null_Container).
 
+Finalization of Smart Pointers wasn't idempotent.
+
+Bags, Maps and Sets allowed predefined equality to emerge (for Maps,
+in the case of keys).
+
 20090226:
 
 A release with fixes for Ring containers.
