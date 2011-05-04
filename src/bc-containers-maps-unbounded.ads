@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -108,8 +108,8 @@ private
                                            Storage => Storage);
    package Keys is new BC.Support.Hash_Tables.Item_Signature
      (Item => Key,
-      Eq => Maps."=",
       Item_Ptr => Key_Ptr,
+      Eq => Maps."=",
       Hash => Hash,
       Item_Container => KC.Unb_Node,
       Clear => KC.Clear,
