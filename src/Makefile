@@ -241,97 +241,25 @@ bc-indefinite_unmanaged_containers.ad[bs]		\
 bc-indefinite_unmanaged_containers-collections.ad[bs]	\
 bc-indefinite_unmanaged_containers-maps.ad[bs]
 
-ADA_SOURCE +=							\
-bc-support-indefinite_bounded.ad[bs]				\
-bc-support-indefinite_dynamic.ad[bs]				\
-bc-support-indefinite_reference.ad[bs]				\
-bc-support-indefinite_unbounded.ad[bs]				\
+ADA_SOURCE +=					\
+bc-support-indefinite_bounded.ad[bs]		\
+bc-support-indefinite_dynamic.ad[bs]		\
+bc-support-indefinite_reference.ad[bs]		\
+bc-support-indefinite_unbounded.ad[bs]		\
 bc-support-indefinite_unmanaged.ad[bs]
 
 
 ############################
 # Distribution construction
 
-# Create the current date, in the form yyyymmdd. This certainly works
-# in Ubuntu Linux 8.04 & Mac OS X.
-DATE ?= $(shell date +%Y%m%d)$(SUBRELEASE)
+SOURCE = Makefile $(ADA_SOURCE)
 
-DISTRIBUTION_FILES =	\
-bc-$(DATE).tgz		\
-bc-$(DATE).tar.bz2	\
-bc-$(DATE).zip
-
-ifneq ($(shell which 7za),)
-  DISTRIBUTION_FILES += bc-$(DATE).7z
-endif
-
-dist: COPYING README $(DISTRIBUTION_FILES)
-	-@rm -rf $@
-	mkdir -p $@
-	cp -p $^ $@/
-	cp -pR ../contrib $@/
-
-SOURCE = Makefile COPYING README $(ADA_SOURCE)
-
-bc-$(DATE): force
-	-rm -rf $@
-	mkdir -p $@/src
-	tar cf - $(SOURCE) | (cd $@/src; tar xvf -)
-	$(MAKE) DIST=$(PWD)/$@ -C ../GNAT dist
-	$(MAKE) DIST=$(PWD)/$@ -C ../tests dist
-	$(MAKE) DIST=$(PWD)/$@ -C ../demos dist
-
-bc-$(DATE).tgz: bc-$(DATE)
-	tar zcvf $@ $</
-
-bc-$(DATE).tar.bz2: bc-$(DATE)
-	tar --create --verbose --bzip2 --file=$@ $</
-
-bc-$(DATE).zip: bc-$(DATE)
-	zip -lr $@ $</*
-
-bc-$(DATE).7z: bc-$(DATE)
-	7za a -r $@ $</
+dist:
+	mkdir $(DIST)/src
+	tar cf - $(SOURCE) | (cd $(DIST)/src; tar xvf -)
 
 
-##############
-# Upload to SF
-
-ifeq (${USER},martin)
-    SFUSER	   ?= krischik
-else ifeq (${USER},simon)
-    SFUSER	   ?= simonjwright
-else
-    SFUSER         ?= nobody
-endif
-
-RSYNC_OPTS  =			\
-	--compress		\
-	--copy-unsafe-links	\
-	--cvs-exclude		\
-	--perms			\
-	--recursive		\
-	--rsh=ssh		\
-	--times			\
-	--update		\
-	--verbose
-
-upload-docs: force
-	rsync						\
-	  $(RSYNC_OPTS)					\
-	  ../html/*.{html,gif,jpg,png} 			\
-	  ../html/x.ada					\
-	  ../html/coldframe-hash.{tgz,zip}		\
-	  $(SFUSER),booch95@web.sourceforge.net:htdocs/
-
-upload-dist: force
-	rsync						\
-	  $(RSYNC_OPTS)					\
-	  $(DISTRIBUTION_FILES)				\
-	  "$(SFUSER)@frs.sourceforge.net:uploads/"
-
-
-.PHONY: force
+.PHONY: dist force
 
 # vim: textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab
 # vim: filetype=make encoding=utf-8 fileformat=unix

@@ -18,6 +18,12 @@
 
 all::
 
+FILES = *.{css,html,gif,jpg,png} x.ada \
+	  coldframe-hash.{tgz,zip}
+
+dist: force
+	zip $(DIST) $(FILES)
+
 ############################
 # Documentation upload to SF
 
@@ -30,18 +36,17 @@ else
 endif
 
 upload-docs: force
-	rsync \
-	  --compress \
-	  --copy-unsafe-links \
-	  --cvs-exclude \
-	  --perms \
-	  --recursive \
-	  --rsh=ssh \
-	  --times \
-	  --update \
-	  --verbose \
-	  *.{css,html,gif,jpg,png} x.ada \
-	  coldframe-hash.{tgz,zip} \
+	rsync						\
+	  --compress					\
+	  --copy-unsafe-links				\
+	  --cvs-exclude					\
+	  --perms					\
+	  --recursive					\
+	  --rsh=ssh					\
+	  --times					\
+	  --update					\
+	  --verbose					\
+	  $(FILES)					\
 	  $(SFUSER),booch95@web.sourceforge.net:htdocs/
 
 .PHONY: force

@@ -1,0 +1,21 @@
+This is the Download directory of the Ada 95 Booch Components.
+
+The Components are available in four forms:
+
+bc-{date}.tgz, normally for UNIX systems
+  tar zxvf bc-{date}.tgz
+
+bc-{date}.tar.bz2, normally for UNIX systems
+  tar jxvf bc-{date}.tgz
+
+bc-{date}.7z, normally for Windows systems
+  7z x bc-{date}.7z
+
+bc-{date}.zip,    normally for Windows systems
+  use WinZip or equivalent (has CR/LF line terminations)
+
+The HTML documentation is available as bc-html-{date}.zip.
+
+Simon Wright <simon@pushface.org>
+
+
