@@ -134,20 +134,20 @@ debug:					\
 	${Debug_Dir}			\
 	${Debug_Dir}/lib		\
 	${Debug_Dir}/obj
-	gnat make ${GNAT_Opt_Debug} "-P" booch_95.gpr
+	gnat make ${GNAT_Opt_Debug} -P booch_95.gpr
 
 release:				\
 	${Release_Dir}			\
 	${Release_Dir}/lib		\
 	${Release_Dir}/obj
-	gnat make ${GNAT_Opt_Release} "-P" booch_95.gpr
+	gnat make ${GNAT_Opt_Release} -P booch_95.gpr
 
 clean:
-	gnat clean ${GNAT_Opt_Debug}   "-P" booch_95.gpr
-	gnat clean ${GNAT_Opt_Release} "-P" booch_95.gpr
+	gnat clean ${GNAT_Opt_Debug}   -P booch_95.gpr
+	gnat clean ${GNAT_Opt_Release} -P booch_95.gpr
 
 pretty:
-	-gnat pretty ${GNAT_Opt} "-P" booch_95.gpr
+	-gnat pretty ${GNAT_Opt} -P booch_95.gpr
 
 booch_95:				\
 	${Debug_Dir}			\
@@ -156,8 +156,8 @@ booch_95:				\
 	${Release_Dir}			\
 	${Release_Dir}/lib		\
 	${Release_Dir}/obj
-	gnat make ${GNAT_Opt_Release} "-P" booch_95.gpr
-	gnat make ${GNAT_Opt_Debug}   "-P" booch_95.gpr
+	gnat make ${GNAT_Opt_Release} -P booch_95.gpr
+	gnat make ${GNAT_Opt_Debug}   -P booch_95.gpr
 
 dist:
 	mkdir $(DIST)/GNAT
