@@ -28,12 +28,12 @@ GNATMAKE=gnatmake
 #####################
 # Default build rule
 %$(EXE): %.adb
-	$(GNATMAKE) -Ptests $<
+	$(GNATMAKE) -p -Ptests $<
 
 ########
 # Tests
 
-test: 
+test:
 	for t in $(TESTABLE); do \
 	  echo running $$t; \
 	  ./$$t 2>&1; \
@@ -90,7 +90,9 @@ TEST_SRC += set_test.ad[bs] set_test_support.ad[bs]
 set_test$(EXE): force
 
 TESTABLE += smart_test$(EXE)
-TEST_SRC += smart_test.ad[bs] smart_test_support.ad[bs] \
+TEST_SRC += bc-support-smart_pointers-test_finalize.ad[bs]	\
+smart_test.ad[bs]						\
+smart_test_support.ad[bs]					\
 tests-auto_pointers.ad[bs]
 smart_test$(EXE): force
 
@@ -114,13 +116,14 @@ tree_test$(EXE): force
 
 testable: .build $(TESTABLE)
 
-TEST_SRC += assertions.ad[bs] global_heap.ad[bs] \
-tests-support.ad[bs] tests-items.ad[bs] \
+TEST_SRC += assertions.ad[bs]			\
+global_heap.ad[bs]				\
+tests-support.ad[bs] tests-items.ad[bs]		\
 tests-main.adb tests.ads
 
 dist:
 	mkdir $(DIST)/tests
-	cp $(TEST_SRC) Makefile tests.gpr $(DIST)/tests/ 
+	cp $(TEST_SRC) Makefile tests.gpr $(DIST)/tests/
 
 .build:
 	mkdir $@
