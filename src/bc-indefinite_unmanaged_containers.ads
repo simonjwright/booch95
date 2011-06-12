@@ -141,7 +141,7 @@ private
    --  packages.
    pragma Warnings (Off, "=");
 
-   type Item_Ptr is access all Item;
+   type Item_Ptr is access Item;
 
    type Container is abstract tagged null record;
 
