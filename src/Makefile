@@ -175,66 +175,32 @@ bc-support-auto_pointers.ad[bs]			\
 bc-support-smart_pointers.ad[bs]
 
 ADA_SOURCE +=					\
-bc-simple_collections.adb			\
-bc-simple_collections.ads			\
-bc-trees-avl_trees-iterators.adb		\
-bc-trees-avl_trees-iterators.ads
+bc-simple_collections.ad[bs]					\
+bc-trees-avl_trees-iterators.ad[bs]				\
+								\
+ADA_SOURCE +=							\
+bc-indefinite_containers.ad[bs]					\
+								\
+ADA_SOURCE +=							\
+bc-indefinite_containers-collections.ad[bs]			\
+bc-indefinite_containers-collections-bounded.ad[bs]		\
+bc-indefinite_containers-collections-ordered.ad[bs]		\
+bc-indefinite_containers-collections-ordered-bounded.ad[bs]	\
+bc-indefinite_containers-collections-ordered-unbounded.ad[bs]	\
+bc-indefinite_containers-collections-unbounded.ad[bs]
 
 ADA_SOURCE +=					\
-bc-indefinite_containers.adb			\
-bc-indefinite_containers.ads
+bc-indefinite_containers-maps.ad[bs]		\
+bc-indefinite_containers-maps-bounded.ad[bs]	\
+bc-indefinite_containers-maps-unbounded.ad[bs]
 
 ADA_SOURCE +=							\
-bc-indefinite_containers-collections.adb			\
-bc-indefinite_containers-collections.ads			\
-bc-indefinite_containers-collections-bounded.adb		\
-bc-indefinite_containers-collections-bounded.ads		\
-bc-indefinite_containers-collections-dynamic.adb		\
-bc-indefinite_containers-collections-dynamic.ads		\
-bc-indefinite_containers-collections-ordered.ads		\
-bc-indefinite_containers-collections-ordered-bounded.adb	\
-bc-indefinite_containers-collections-ordered-bounded.ads	\
-bc-indefinite_containers-collections-ordered-dynamic.adb	\
-bc-indefinite_containers-collections-ordered-dynamic.ads	\
-bc-indefinite_containers-collections-ordered-unbounded.adb	\
-bc-indefinite_containers-collections-ordered-unbounded.ads	\
-bc-indefinite_containers-collections-ordered-unmanaged.adb	\
-bc-indefinite_containers-collections-ordered-unmanaged.ads	\
-bc-indefinite_containers-collections-unbounded.adb		\
-bc-indefinite_containers-collections-unbounded.ads		\
-bc-indefinite_containers-collections-unmanaged.adb		\
-bc-indefinite_containers-collections-unmanaged.ads
-
-ADA_SOURCE +=						\
-bc-indefinite_containers-indefinite_iterators.adb	\
-bc-indefinite_containers-indefinite_iterators.ads
-
-ADA_SOURCE +=					\
-bc-indefinite_containers-maps.adb		\
-bc-indefinite_containers-maps.ads		\
-bc-indefinite_containers-maps-unbounded.adb	\
-bc-indefinite_containers-maps-unbounded.ads
-
-ADA_SOURCE +=						\
-bc-indefinite_containers-queues.adb			\
-bc-indefinite_containers-queues.ads			\
-bc-indefinite_containers-queues-bounded.adb		\
-bc-indefinite_containers-queues-bounded.ads		\
-bc-indefinite_containers-queues-dynamic.adb		\
-bc-indefinite_containers-queues-dynamic.ads		\
-bc-indefinite_containers-queues-ordered.ads		\
-bc-indefinite_containers-queues-ordered-bounded.adb	\
-bc-indefinite_containers-queues-ordered-bounded.ads	\
-bc-indefinite_containers-queues-ordered-dynamic.adb	\
-bc-indefinite_containers-queues-ordered-dynamic.ads	\
-bc-indefinite_containers-queues-ordered-unbounded.adb	\
-bc-indefinite_containers-queues-ordered-unbounded.ads	\
-bc-indefinite_containers-queues-ordered-unmanaged.adb	\
-bc-indefinite_containers-queues-ordered-unmanaged.ads	\
-bc-indefinite_containers-queues-unbounded.adb		\
-bc-indefinite_containers-queues-unbounded.ads		\
-bc-indefinite_containers-queues-unmanaged.adb		\
-bc-indefinite_containers-queues-unmanaged.ads
+bc-indefinite_containers-queues.ad[bs]				\
+bc-indefinite_containers-queues-bounded.ad[bs]			\
+bc-indefinite_containers-queues-ordered.ad[bs]			\
+bc-indefinite_containers-queues-ordered-bounded.ad[bs]		\
+bc-indefinite_containers-queues-ordered-unbounded.ad[bs]	\
+bc-indefinite_containers-queues-unbounded.ad[bs]
 
 ADA_SOURCE +=						\
 bc-indefinite_unmanaged_containers.ad[bs]		\
@@ -243,7 +209,6 @@ bc-indefinite_unmanaged_containers-maps.ad[bs]
 
 ADA_SOURCE +=					\
 bc-support-indefinite_bounded.ad[bs]		\
-bc-support-indefinite_dynamic.ad[bs]		\
 bc-support-indefinite_reference.ad[bs]		\
 bc-support-indefinite_unbounded.ad[bs]		\
 bc-support-indefinite_unmanaged.ad[bs]

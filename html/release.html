@@ -23,6 +23,29 @@ SourceForge.net. Fast, secure and Free Open Source software downloads"
 <p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>
 <dl>
 
+<dt>12 June 2011</dt>
+<dd><p>There was a problem with BC.Support.High_Resolution_Time on 64-bit
+compilers. Cleared by doing the Right Thing and using
+Unchecked_Conversion instead of overlays.</p>
+<p>On Mac OS X Snow Leopard, BC.Support.High_Resolution_Time failed
+because the OS stops the Time Stamp Counter while the processor is
+sleeping. Fortunately, on this OS, the resolution of the system clock
+is 1 microsecond, so an implementation is provided that uses
+Ada.Calendar.Time.</p>
+<p>Pragmas Pure and Preelaborate used where possible.</p>
+<p>Indefinite_Reference.Adjust failed if the Pointer was null (this
+happened wtih Null_Container).</p>
+<p>Finalization of Smart Pointers wasn't idempotent.</p>
+<p>Bags, Maps and Sets allowed predefined equality to emerge (for Maps,
+in the case of keys).</p>
+<p>The dynamic and unmanaged forms of the Indefinite Containers have been
+removed; dynamic on the grounds that it's an unneeded complexity, and
+unmanaged in favour of Indefinite Unmanaged Containers.</p>
+<p>A new tree of Indefinite Unmanaged Containers has been started,
+containing for the moment just Collections and Maps. These provide
+containment for indefinite types without the need for the user to
+provide any storage managers.</p></dd>
+
 <dt>26 Feb 2009</dt>
 <dd>There was a problem with Rings when the Mark denoted an internal
 index before the Top; Insert would improperly increment the Mark.</dd>
