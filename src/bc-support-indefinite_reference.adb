@@ -1,5 +1,5 @@
 --  Copyright (C) 2003 Martin Krischik
---  Copyright 2008 Simon Wright <simon@pushface.org>
+--  Copyright 2009 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as

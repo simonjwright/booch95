@@ -1,6 +1,6 @@
 This is the Download directory of the Ada 95 Booch Components.
 
-The Components are available in four forms:
+The Components are available in up to four forms:
 
 bc-{date}.tgz, normally for UNIX systems
   tar zxvf bc-{date}.tgz

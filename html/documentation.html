@@ -52,14 +52,13 @@ and trees). Some structures may also be ordered (collections and
 queues). There are also multiple forms for some structures: single and
 double linked lists, directed and undirected graphs, and binary,
 multiway, and AVL trees.
-
 <p>The structures originally supported only definite items. Work
 by <a href="http://sourceforge.net/users/krischik">Martin Krischik</a>
 introduced support for indefinite items (for example, String).
-
 <ul>
 <li> <a href="#definite">Definite containers</a>
 <li> <a href="#indefinite">Indefinite containers</a>
+<li> <a href="#indefinite-unmanaged">Indefinite Unmanaged containers</a>
 </ul>
 
 <!--==================================================================--></p>
@@ -101,9 +100,9 @@ low-level features used in constructing the different components,
 in order to help the "power user" create new components or extend
 existing ones.</p>
 <p>An example:<br />
-A Mail_Queue is an instance of a Priority_Event_Queue, which itself
+A Mail_Queue is an instance of an Ordered_Queue, which itself
 is a generic instantiated with Network_Event as the item it
-contains. The Priority_Event_Queue is derived from Queue.
+contains. The Ordered_Queue is derived from Queue.
 <!--==================================================================--></p>
 <h2><a name="families" id="families">Class Families</a></h2>
 <p>Each abstract base class has several derived concrete forms,
@@ -112,13 +111,16 @@ semantics. The user selects the concrete form most appropriate to
 their needs. The net result is that copy, assignment, and equality
 operations work between each different form of the components.</p>
 <p>There are two very common variations of structure management:
-bounded and unbounded. A third form was added to the latest BCs:
-dynamic. This form represents a heap structure which behaves
-(basically) as a dynamic array. Its performance lies between that
-of a bounded and unbounded structure. The array can grow or shrink
-in multiples of a chunk_size. <i>[Note, this becomes less valuable
-given Ada's support for user-defined storage pools.]</i></p>
-<p>The selection rules are:</p>
+<i>bounded</i> and <i>unbounded</i>.</p>
+<p>A third form, <i>dynamic</i>, represents a heap structure which
+behaves (basically) as a dynamic array. Its performance lies between
+that of a bounded and unbounded structure. The array can grow or
+shrink in multiples of a chunk_size. <i>[Note, this C++-originated
+feature becomes less valuable given Ada's support for user-defined
+storage pools.]</i></p>
+<p>A fourth, simpler, form, <i>unmanaged</i>, can be used when storage
+management is not of concern.</p>
+<p>The selection syggestions are:</p>
 <dl>
 <dt><b>Bounded</b></dt>
 <dd>Use where size is statically known or allocation from the heap
@@ -134,9 +136,10 @@ efficient than the unbounded form. Storage is allocated by a
 item added, under the control of a <a href="#storage">storage
 manager</a>. The most recently accessed item is cached.</dd>
 <dt><b>Unmanaged</b></dt>
-<dd>Space efficient, but requires memory allocation for each new
-item added, from the system's memory pool. The most recently
-accessed item is cached.</dd>
+<dd>Space efficient, but requires memory allocation for each new item
+added, from the system's memory pool (in other words, the user doesn't
+need to provide a storage manager when the generic packages are
+instantiated). The most recently accessed item is cached.</dd>
 </dl>
 <!--==================================================================-->
 <h2><a name="micro" id="micro">Micro Organization</a></h2>
@@ -189,7 +192,7 @@ chunk size.</p>
 <!--==================================================================--></p>
 <h2><a name="exceptions" id="exceptions">Exceptions</a></h2>
 <p>All exceptions for the BCs are declared in the topmost package,
-BC. This precludes the user from having to include a separate
+BC. This precludes the user from having to <tt>with</tt> a separate
 "Exceptions" package. Exception behaviour of the BCs is standard
 and portable, unlike other languages.</p>
 <p>As well as the exceptions from the C++ Components, an exception
@@ -494,12 +497,10 @@ supported.
 <th>Unbounded</th>
 <th>Bounded</th>
 <th>Dynamic</th>
-<th>Unmanaged</th>
 </tr>
 
 <tr>
 <td style="text-align: left;">Bags</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -510,7 +511,6 @@ supported.
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
@@ -518,12 +518,10 @@ supported.
 <td>&#10003;</td>
 <td>&#10003;</td>
 <td>&#10003;</td>
-<td>&#10003;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>ordered</em></td>
-<td>&#10003;</td>
 <td>&#10003;</td>
 <td>&#10003;</td>
 <td>&#10003;</td>
@@ -534,12 +532,10 @@ supported.
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: left;">Graphs</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -550,12 +546,10 @@ supported.
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>undirected</em></td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -566,12 +560,10 @@ supported.
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>single</em></td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -582,20 +574,17 @@ supported.
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: left;">Maps</td>
 <td>&#10003;</td>
 <td>&#10003;</td>
-<td>&#10003;</td>
-<td>&#10003;</td>
+<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: left;">Queues</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -606,12 +595,10 @@ supported.
 <td>&#10003;</td>
 <td>&#10003;</td>
 <td>&#10003;</td>
-<td>&#10003;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>ordered</em></td>
-<td>&#10003;</td>
 <td>&#10003;</td>
 <td>&#10003;</td>
 <td>&#10003;</td>
@@ -622,12 +609,10 @@ supported.
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: left;">Sets</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -638,12 +623,10 @@ supported.
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: left;">Trees</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -654,12 +637,10 @@ supported.
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>binary</em></td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -670,6 +651,131 @@ supported.
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
+</tr>
+
+</table>
+
+<h3><a name="indefinite-unmanaged"
+id="indefinite-inmanaged">Indefinite Unmanaged containers</a></h3>
+
+<p>This is a table of the indefinite unmanaged components (children
+of <tt>BC.Indefinite_Unmanaged_Containers</tt>) and the forms that are
+supported.
+
+<table border="1">
+
+<tr>
+<th>Component</th>
+<th>Supported</th>
+</tr>
+
+<tr>
+<td style="text-align: left;">Bags</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Collections</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>plain</em></td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>ordered</em></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Dequeues</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Graphs</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>directed</em></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>undirected</em></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Lists</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>single</em></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>double</em></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Maps</td>
+<td>&#10003;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Queues</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>plain</em></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>ordered</em></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Rings</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Sets</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Stacks</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: left;">Trees</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>AVL</em></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>binary</em></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td style="text-align: right;"><em>multiway</em></td>
 <td>&nbsp;</td>
 </tr>
 
