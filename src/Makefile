@@ -42,16 +42,22 @@ bc-support-bounded_hash_tables.ad[bs]			\
 bc-support-dynamic.ad[bs]				\
 bc-support-exceptions.ad[bs]				\
 bc-support-hash_tables.ad[bs]				\
-bc-support-high_resolution_time.ad[bs]			\
 bc-support-high_resolution_time-clock.adb		\
 bc-support-high_resolution_time-clock.adb-pentium	\
 bc-support-high_resolution_time-clock.adb-ppc32		\
+bc-support-high_resolution_time.ad[bs]			\
+bc-support-indefinite_bounded.ad[bs]			\
+bc-support-indefinite_bounded_hash_tables.ad[bs]	\
+bc-support-indefinite_hash_tables.ad[bs]		\
+bc-support-indefinite_reference.ad[bs]			\
+bc-support-indefinite_unbounded.ad[bs]			\
+bc-support-indefinite_unmanaged.ad[bs]			\
 bc-support-managed_storage.ad[bs]			\
 bc-support-memory_streams.ad[bs]			\
 bc-support-standard_storage.ads				\
 bc-support-statistics.ad[bs]				\
-bc-support-synchronization.ad[bs]			\
 bc-support-synchronization-debug.ad[bs]			\
+bc-support-synchronization.ad[bs]			\
 bc-support-unbounded.ad[bs]				\
 bc-support-unmanaged.ad[bs]				\
 bc-support-unmanaged_storage.ad[bs]			\
@@ -175,12 +181,12 @@ bc-support-auto_pointers.ad[bs]			\
 bc-support-smart_pointers.ad[bs]
 
 ADA_SOURCE +=					\
-bc-simple_collections.ad[bs]					\
-bc-trees-avl_trees-iterators.ad[bs]				\
-								\
-ADA_SOURCE +=							\
-bc-indefinite_containers.ad[bs]					\
-								\
+bc-simple_collections.ad[bs]			\
+bc-trees-avl_trees-iterators.ad[bs]
+
+ADA_SOURCE +=					\
+bc-indefinite_containers.ad[bs]
+
 ADA_SOURCE +=							\
 bc-indefinite_containers-collections.ad[bs]			\
 bc-indefinite_containers-collections-bounded.ad[bs]		\
@@ -206,12 +212,6 @@ ADA_SOURCE +=						\
 bc-indefinite_unmanaged_containers.ad[bs]		\
 bc-indefinite_unmanaged_containers-collections.ad[bs]	\
 bc-indefinite_unmanaged_containers-maps.ad[bs]
-
-ADA_SOURCE +=					\
-bc-support-indefinite_bounded.ad[bs]		\
-bc-support-indefinite_reference.ad[bs]		\
-bc-support-indefinite_unbounded.ad[bs]		\
-bc-support-indefinite_unmanaged.ad[bs]
 
 
 ############################

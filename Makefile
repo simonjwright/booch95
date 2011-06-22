@@ -25,35 +25,35 @@ libs:
 	gnatmake -p -P bc -Xstyle=release
 	gnatmake -p -P bc -Xstyle=debug
 
-SUBDIRS = src tests demos GNAT html
+SUBDIRS = src tests demos GNAT html contrib
 
 # Create the current date, in the form yyyymmdd. This certainly works
 # in Ubuntu Linux 8.04 & Mac OS X.
 DATE ?= $(shell date +%Y%m%d)$(SUBRELEASE)
 
+TOP_LEVEL_FILES = COPYING README Makefile bc.gpr
+
 DISTRIBUTION_FILES =	\
 bc-$(DATE).tgz		\
 bc-$(DATE).tar.bz2	\
-bc-$(DATE).zip		\
-bc-html-$(DATE).zip
+bc-$(DATE).zip
 
 ifneq ($(shell which 7za),)
   DISTRIBUTION_FILES += bc-$(DATE).7z
 endif
 
-dist: COPYING README Makefile bc.gpr $(DISTRIBUTION_FILES)
+dist: $(DISTRIBUTION_FILES)
 	-@rm -rf $@
 	mkdir -p $@
 	cp -p $^ $@/
-	cp -pR contrib $@/
 
 bc-$(DATE): force
 	-rm -rf $@
 	mkdir $@
-	$(MAKE) DIST=$(PWD)/$@ -C src dist
-	$(MAKE) DIST=$(PWD)/$@ -C tests dist
-	$(MAKE) DIST=$(PWD)/$@ -C demos dist
-	$(MAKE) DIST=$(PWD)/$@ -C GNAT dist
+	cp $(TOP_LEVEL_FILES) $@
+	for s in $(SUBDIRS); do \
+	  $(MAKE) DIST=$(PWD)/$@ -C $$s dist; \
+	done
 
 bc-$(DATE).tgz: bc-$(DATE)
 	tar zcvf $@ $</
@@ -66,9 +66,6 @@ bc-$(DATE).zip: bc-$(DATE)
 
 bc-$(DATE).7z: bc-$(DATE)
 	7za a -r $@ $</
-
-bc-html-$(DATE).zip: force
-	$(MAKE) DIST=$(PWD)/$@ -C html dist
 
 
 .PHONY: force

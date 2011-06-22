@@ -18,11 +18,11 @@
 
 all::
 
-FILES = *.{css,html,gif,jpg,png} x.ada \
-	  coldframe-hash.{tgz,zip}
+FILES = Makefile *.{css,html,gif,jpg,png} x.ada coldframe-hash.{tgz,zip}
 
-dist: force
-	zip $(DIST) $(FILES)
+dist:
+	mkdir $(DIST)/html
+	tar cf - $(FILES) | (cd $(DIST)/html; tar xvf -)
 
 ############################
 # Documentation upload to SF
