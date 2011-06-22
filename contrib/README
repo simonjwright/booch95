@@ -1,4 +1,21 @@
 Subdirectories of this directory contains demonstration code provided
 by various authors.
 
-sjw 21.ii.99
+anh-vo/ contains storage managers from Anh Vo <Anh.Vo@udlp.com>. He
+said
+   "I would like to suggest some improvement in the area of Storage
+   Pool.  The implementation of Storage Pool attached is simpler, more
+   efficient.  Most of all, it can detect memory leaks. There are two
+   kinds of Storage Pool, general and fix. Fixed Storage Pool is
+   several times more efficient than General Storage Pool due to the
+   fixed size of the data."
+
+bond/ contains Mark Bond <wymbdd@hotmail.com>'s final year BSc Project
+Report on adding persistence to the BCs.
+
+gaudry/ contains various examples from Daniel Gaudry
+<Daniel.Gaudry@wanadoo.fr>; many won't compile with the latest
+releases, but nevertheless you may find them instructive.
+
+rogers/ contains storage managers from Pat Rogers
+<progers@classwide.com>.
