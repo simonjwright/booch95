@@ -1,4 +1,4 @@
---  Copyright 2010 Simon Wright <simon@pushface.org>
+--  Copyright 2010-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -31,7 +31,9 @@ with Ada.Unchecked_Conversion;
 
 separate (BC.Support.High_Resolution_Time)
 function Clock return Time is
+   pragma Warnings (Off, "representation of Time values may change*");
    function To_Time is new Ada.Unchecked_Conversion (Ada.Calendar.Time, Time);
+   pragma Warnings (On, "representation of Time values may change*");
 begin
    return To_Time (Ada.Calendar.Clock);
 end Clock;

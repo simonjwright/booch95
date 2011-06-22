@@ -36,13 +36,15 @@ package body BC.Support.Unmanaged_Storage is
                        Storage_Address : out System.Address;
                        Size_In_Storage_Elements : SSE.Storage_Count;
                        Alignment : SSE.Storage_Count) is
-      pragma Warnings (Off, The_Pool);
+      pragma Unreferenced (The_Pool);
    begin
+      pragma Warnings (Off, "redundant conversion*");
       SSP.Allocate (SSP.Root_Storage_Pool'Class
                       (Default_Access_Type'Storage_Pool),
                     Storage_Address,
                     Size_In_Storage_Elements,
                     Alignment);
+      pragma Warnings (On, "redundant conversion*");
    end Allocate;
 
 
@@ -50,21 +52,25 @@ package body BC.Support.Unmanaged_Storage is
                          Storage_Address : System.Address;
                          Size_In_Storage_Elements : SSE.Storage_Count;
                          Alignment : SSE.Storage_Count) is
-      pragma Warnings (Off, The_Pool);
+      pragma Unreferenced (The_Pool);
    begin
+      pragma Warnings (Off, "redundant conversion*");
       SSP.Deallocate (SSP.Root_Storage_Pool'Class
                         (Default_Access_Type'Storage_Pool),
                       Storage_Address,
                       Size_In_Storage_Elements,
                       Alignment);
+      pragma Warnings (On, "redundant conversion*");
    end Deallocate;
 
 
    function Storage_Size (This : Pool) return SSE.Storage_Count is
       pragma Warnings (Off, This);
    begin
+      pragma Warnings (Off, "redundant conversion*");
       return SSP.Storage_Size (SSP.Root_Storage_Pool'Class
                                  (Default_Access_Type'Storage_Pool));
+      pragma Warnings (On, "redundant conversion*");
    end Storage_Size;
 
 

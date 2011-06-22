@@ -229,7 +229,7 @@ package body BC.Support.Indefinite_Bounded is
          raise BC.Range_Error;
       end if;
       return Smart.Value_Access
-           (Obj.Elems (((Obj.Start - 1 + Index - 1) mod Obj.Maximum_Size) + 1));
+        (Obj.Elems (((Obj.Start - 1 + Index - 1) mod Obj.Maximum_Size) + 1));
    end Item_At;
 
    function Location (Obj : Bnd_Node;
