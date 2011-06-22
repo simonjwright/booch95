@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2004 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -29,9 +29,14 @@ package body BC.Support.Hash_Tables is
    package body Tables is
 
 
+      pragma Warnings
+        (Off, "abstract subprogram is not dispatching or overriding*");
+      pragma Warnings (Off, "function ""="" is not referenced");
       function "=" (L, R : Items.Item) return Boolean is abstract;
-      pragma Warnings (Off, "=");
       --  Make sure we don't use any old equality.
+      pragma Warnings
+        (On, "abstract subprogram is not dispatching or overriding*");
+      pragma Warnings (On, "function ""="" is not referenced");
 
 
       function "=" (L, R : Table) return Boolean is
