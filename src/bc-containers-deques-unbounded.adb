@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2006 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -98,7 +98,7 @@ package body BC.Containers.Deques.Unbounded is
       Result : Deque_Iterator;
    begin
       Result.For_The_Container :=
-        Address_Conversions.To_Pointer (For_The_Deque'Address).all'Access;
+        Container_Ptr (Address_Conversions.To_Pointer (For_The_Deque'Address));
       Reset (Result);
       return Result;
    end New_Iterator;
