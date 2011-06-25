@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
---  Copyright 2003-2010 Simon Wright <simon@pushface.org>
+--  Copyright 2003-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -115,7 +115,8 @@ package body BC.Indefinite_Unmanaged_Containers.Collections is
       Result : Collection_Iterator;
    begin
       Result.For_The_Container :=
-        Address_Conversions.To_Pointer (For_The_Collection'Address).all'Access;
+        Container_Ptr (Address_Conversions.To_Pointer
+                         (For_The_Collection'Address));
       Reset (Result);
       return Result;
    end New_Iterator;

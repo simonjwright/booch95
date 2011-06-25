@@ -150,7 +150,8 @@ package body BC.Indefinite_Containers.Collections.Ordered.Unbounded is
       Result : Collection_Iterator;
    begin
       Result.For_The_Container :=
-        Address_Conversions.To_Pointer (For_The_Collection'Address).all'Access;
+        Container_Ptr (Address_Conversions.To_Pointer
+                         (For_The_Collection'Address));
       Reset (Result);
       return Result;
    end New_Iterator;

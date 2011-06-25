@@ -89,7 +89,7 @@ package body BC.Indefinite_Containers.Queues.Ordered.Unbounded is
       Result : Queue_Iterator;
    begin
       Result.For_The_Container :=
-        Address_Conversions.To_Pointer (For_The_Queue'Address).all'Access;
+        Container_Ptr (Address_Conversions.To_Pointer (For_The_Queue'Address));
       Reset (Result);
       return Result;
    end New_Iterator;

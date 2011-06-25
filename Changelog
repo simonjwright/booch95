@@ -7,6 +7,8 @@ yyyymmdd:
 
 A release with ...
 
+All uses of ".all'Access" eliminated.
+
 20110622:
 
 Release 20110612 was missing the top-level bc.gpr and support files

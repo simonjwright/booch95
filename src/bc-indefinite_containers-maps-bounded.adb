@@ -83,7 +83,7 @@ package body BC.Indefinite_Containers.Maps.Bounded is
       Result : Bounded_Map_Iterator;
    begin
       Result.For_The_Container :=
-        Address_Conversions.To_Pointer (For_The_Map'Address).all'Access;
+        Container_Ptr (Address_Conversions.To_Pointer (For_The_Map'Address));
       Reset (Result);
       return Result;
    end New_Iterator;
