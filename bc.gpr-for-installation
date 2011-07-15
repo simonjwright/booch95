@@ -24,36 +24,8 @@ project BC is
       when "release" =>
          for Library_Kind use "dynamic";
    end case;
-   for Library_Dir use "./lib-" & Style;
-
-   for Languages use ("ada");
-
-   for Source_Dirs use ("./src");
-   for Object_Dir use ".build-" & Style;
-
-   package Builder is
-      case Style is
-         when "debug" =>
-            for Default_Switches ("ada") use ("-g");
-         when "release" =>
-            null;
-      end case;
-   end Builder;
-
-   package Compiler is
-      Default_Switches :=
-        (
-         "-gnatqQ",  --  to keep ALI files even if there are compilation errors
-         "-gnatafo", --  assertions, full reports, integer overflow
-         "-gnaty",   --  standard style checks
-         "-gnatwaL"  --  all standard warnings except for elaboration
-        );
-      case Style is
-         when "debug" =>
-            for Default_Switches ("ada") use Default_Switches & ("-O0");
-         when "release" =>
-            for Default_Switches ("ada") use Default_Switches & ("-O2");
-      end case;
-   end Compiler;
+   for Library_Dir use "../../lib/bc/lib-" & Style;
+   for Externally_Built use "true";
+   for Source_Dirs use ("../../include/bc/");
 
 end BC;

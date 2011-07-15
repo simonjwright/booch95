@@ -14,16 +14,33 @@
 
 # $Id: Makefile 1443 2010-03-20 17:58:38Z simonjwright $
 
-# Top-level (GNU) Makefile for Booch Components. Used for distribution
-# construction.
+# Template for the top-level (GNU) Makefile for Booch Components. Used
+# for installation and distribution construction.
 
-all:
-	@echo "'make libs' to make the BC libraries for use with bc.gpr."
-	@echo "'make dist' to make the distribution."
+prefix = @PREFIX@
+GNATMAKE ?= gnatmake
+
+# 'make' to make the BC libraries for use with bc.gpr.
+# 'make install' to install the BC libraries with your GNAT."
+# 'make dist' to make the distribution."
 
 libs:
-	gnatmake -p -P bc -Xstyle=release
-	gnatmake -p -P bc -Xstyle=debug
+	$(GNATMAKE) -p -Pbc -Xstyle=debug
+	$(GNATMAKE) -p -Pbc -Xstyle=release
+
+install:
+	-mkdir -p $(prefix)/lib/gnat/
+	cp bc.gpr-for-installation $(prefix)/lib/gnat/bc.gpr
+	-mkdir -p $(prefix)/include/bc
+	cp -p src/*.ad[bs] $(prefix)/include/bc/
+	-mkdir -p $(prefix)/lib/bc/lib-debug
+	cp -p lib-debug/* $(prefix)/lib/bc/lib-debug/
+	chmod -w $(prefix)/lib/bc/lib-debug/*.ali
+	-mkdir -p $(prefix)/lib/bc/lib-release
+	cp -p lib-release/* $(prefix)/lib/bc/lib-release/
+	chmod -w $(prefix)/lib/bc/lib-release/*.ali
+
+# Distribution construction
 
 SUBDIRS = src tests demos GNAT html contrib
 
