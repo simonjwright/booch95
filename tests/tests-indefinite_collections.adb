@@ -12,9 +12,9 @@
 --  write to the Free Software Foundation, 59 Temple Place - Suite
 --  330, Boston, MA 02111-1307, USA.
 
---  $Revision: 1409 $
---  $Date: 2009-05-23 18:33:55 +0100 (Sat, 23 May 2009) $
---  $Author: simonjwright $
+--  $Revision$
+--  $Date$
+--  $Author$
 --
 --  Tests for Indefinite Collections.
 
