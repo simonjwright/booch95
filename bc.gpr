@@ -12,48 +12,33 @@
 --  write to the Free Software Foundation, 59 Temple Place - Suite
 --  330, Boston, MA 02111-1307, USA.
 
+--  $Id$
+
 project BC is
 
-   type Style_Kind is ("debug", "release");
-   Style : Style_Kind := External ("style", "release");
+   type Library_T is ("static", "relocatable");
+   Library_Type : Library_T := external ("LIBRARY_TYPE", "static");
 
    for Library_Name use "bc";
-   case Style is
-      when "debug" =>
-         for Library_Kind use "static";
-      when "release" =>
-         for Library_Kind use "dynamic";
-   end case;
-   for Library_Dir use "./lib-" & Style;
+   for Library_Kind use Library_Type;
+   for Library_Dir use "./lib-" & Library_Type;
+   for Library_Options use External_As_List ("LDFLAGS", " ");
 
    for Languages use ("ada");
 
    for Source_Dirs use ("./src");
-   for Object_Dir use ".build-" & Style;
-
-   package Builder is
-      case Style is
-         when "debug" =>
-            for Default_Switches ("ada") use ("-g");
-         when "release" =>
-            null;
-      end case;
-   end Builder;
+   for Object_Dir use ".build-" & Library_Type;
 
    package Compiler is
-      Default_Switches :=
+      for Default_Switches ("Ada") use
         (
+         "-g",       --  for debug symbols
+         "-O2",      --  standard optimisation
          "-gnatqQ",  --  to keep ALI files even if there are compilation errors
          "-gnatafo", --  assertions, full reports, integer overflow
          "-gnaty",   --  standard style checks
          "-gnatwaL"  --  all standard warnings except for elaboration
         );
-      case Style is
-         when "debug" =>
-            for Default_Switches ("ada") use Default_Switches & ("-O0");
-         when "release" =>
-            for Default_Switches ("ada") use Default_Switches & ("-O2");
-      end case;
    end Compiler;
 
 end BC;
