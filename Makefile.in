@@ -12,7 +12,7 @@
 # write to the Free Software Foundation, 59 Temple Place - Suite
 # 330, Boston, MA 02111-1307, USA.
 
-# $Id: Makefile 1443 2010-03-20 17:58:38Z simonjwright $
+# $Id$
 
 # Template for the top-level (GNU) Makefile for Booch Components. Used
 # for installation and distribution construction.
