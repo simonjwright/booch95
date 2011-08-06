@@ -14,24 +14,30 @@
 # write to the Free Software Foundation, 59 Temple Place - Suite
 # 330, Boston, MA 02111-1307, USA.
 
+# $Id$
+
 # Determine the prefix of the GNAT system to which the current
 # 'gnatmake' belongs and use it to edit Makefile.in and create a
 # Makefile that will install the BCs in that system.
 
-# We need to go via gnatmake because the compiler driver is sometimes
-# just 'gcc' and sometimes 'gnatgcc'.
+# project_dir is the shortest of the 'Project Search Path' entries in
+# the output of 'gnatls -v' that ends 'lib/gnat' (Windows backslashes
+# changed to slashes, eg 'C:/GNAT/2011/lib/gnat')
+project_dir=`gnatls -v | awk '
+/Project Search Path/ {started = 1}
+!started {next}
+{gsub(/\\\\/, "/")}
+/adainclude/ {path = $0}
+/lib\/gnat/ {
+    if (!path || length(path) > length($0)) {
+	path = $0
+    }
+}
+END {print path}
+'`
 
-# eg /opt/gcc-4.6.0-x86_64/lib/gcc/x86_64-apple-darwin10/4.6.0/libgcc.a
-libgcc=`gnatmake -c -u -f -gnats src/bc.ads -cargs -print-libgcc-file-name 2>/dev/null`
-# eg /opt/gcc-4.6.0-x86_64/lib/gcc/x86_64-apple-darwin10/4.6.0
-versiondir=`dirname $libgcc`
-# eg x86_64-apple-darwin10
-builddir=`(cd $versiondir/..; echo $PWD)`
-build=`basename $builddir`
-# eg /opt/gcc-4.6.0-x86_64
-prefix=`(cd $versiondir/../../../..; echo $PWD)`
+prefix=`(cd $project_dir/../..; echo $PWD)`
 
 sed \
     -e "s;@PREFIX@;$prefix;" \
-    -e "s;@BUILD@;$build;" \
     <Makefile.in >Makefile

@@ -12,19 +12,16 @@
 --  write to the Free Software Foundation, 59 Temple Place - Suite
 --  330, Boston, MA 02111-1307, USA.
 
+--  $Id$
+
 project BC is
 
-   type Style_Kind is ("debug", "release");
-   Style : Style_Kind := External ("style", "release");
+   type Library_T is ("static", "relocatable");
+   Library_Type : Library_T := external ("LIBRARY_TYPE", "static");
 
    for Library_Name use "bc";
-   case Style is
-      when "debug" =>
-         for Library_Kind use "static";
-      when "release" =>
-         for Library_Kind use "dynamic";
-   end case;
-   for Library_Dir use "../../lib/bc/lib-" & Style;
+   for Library_Kind use Library_Type;
+   for Library_Dir use "../../lib/bc/lib-" & Library_Kind;
    for Externally_Built use "true";
    for Source_Dirs use ("../../include/bc/");
 
