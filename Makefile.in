@@ -21,24 +21,24 @@ prefix = @PREFIX@
 GNATMAKE ?= gnatmake
 
 # 'make' to make the BC libraries for use with bc.gpr.
-# 'make install' to install the BC libraries with your GNAT."
-# 'make dist' to make the distribution."
+# 'make install' to install the BC libraries with your GNAT.
+# 'make dist' to make the distribution.
 
 libs:
-	$(GNATMAKE) -p -Pbc -Xstyle=debug
-	$(GNATMAKE) -p -Pbc -Xstyle=release
+	$(GNATMAKE) -p -Pbc -XLIBRARY_TYPE=static
+	$(GNATMAKE) -p -Pbc -XLIBRARY_TYPE=relocatable
 
 install:
 	-mkdir -p $(prefix)/lib/gnat/
 	cp bc.gpr-for-installation $(prefix)/lib/gnat/bc.gpr
 	-mkdir -p $(prefix)/include/bc
-	cp -p src/*.ad[bs] $(prefix)/include/bc/
-	-mkdir -p $(prefix)/lib/bc/lib-debug
-	cp -p lib-debug/* $(prefix)/lib/bc/lib-debug/
-	chmod -w $(prefix)/lib/bc/lib-debug/*.ali
-	-mkdir -p $(prefix)/lib/bc/lib-release
-	cp -p lib-release/* $(prefix)/lib/bc/lib-release/
-	chmod -w $(prefix)/lib/bc/lib-release/*.ali
+	tar -c -f- -C src *.ad[bs] | tar -x -f- -C $(prefix)/include/bc/
+	-mkdir -p $(prefix)/lib/bc/lib-static
+	tar -c -f- lib-static | tar -x -f- -C $(prefix)/lib/bc/
+	chmod -w $(prefix)/lib/bc/lib-static/*.ali
+	-mkdir -p $(prefix)/lib/bc/lib-relocatable
+	tar -c -f- lib-relocatable | tar -x -f- -C $(prefix)/lib/bc/
+	chmod -w $(prefix)/lib/bc/lib-relocatable/*.ali
 
 # Distribution construction
 
