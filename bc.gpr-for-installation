@@ -21,7 +21,7 @@ project BC is
 
    for Library_Name use "bc";
    for Library_Kind use Library_Type;
-   for Library_Dir use "../../lib/bc/lib-" & Library_Kind;
+   for Library_Dir use "../../lib/bc/lib-" & Library_Type;
    for Externally_Built use "true";
    for Source_Dirs use ("../../include/bc/");
 
