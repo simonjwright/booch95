@@ -1,3 +1,5 @@
+-*- mode: text -*-
+
 This is the Changelog for the Booch Components. It's intended for
 updating SourceForge releases, not as a standard ChangeLog; in other
 words, it's for features, not detailed updates, and it's for features
@@ -68,9 +70,3 @@ Altered the directory structure to a more standard form; the top level
 is still bc-yyyymmdd, but under that is GNAT/ (supporting GNUAda and
 other Ada projects on SourceForge), src/ for source, tests/ for tests
 and demos/ for demos.
-
-----------------------------------------------------------------------------
-For emacs:
-Local Variables:
-mode: text
-End:

@@ -48,7 +48,7 @@ SUBDIRS = src tests demos GNAT html contrib
 # in Ubuntu Linux 8.04 & Mac OS X.
 DATE ?= $(shell date +%Y%m%d)$(SUBRELEASE)
 
-TOP_LEVEL_FILES = COPYING README Makefile bc.gpr
+TOP_LEVEL_FILES = COPYING INSTALL Makefile bc.gpr bc.gpr-for-installation
 
 DISTRIBUTION_FILES =	\
 bc-$(DATE).tgz		\
