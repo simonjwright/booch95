@@ -9,6 +9,13 @@ yyyymmdd:
 
 A release with ...
 
+20110809:
+
+A release with installation script and instructions, and minor
+modifications.
+
+Can be installed as a library in GCC and GNAT GPL installations.
+
 All uses of ".all'Access" eliminated.
 
 20110622:
