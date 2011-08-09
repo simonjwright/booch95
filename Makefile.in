@@ -18,15 +18,15 @@
 # for installation and distribution construction.
 
 prefix = @PREFIX@
-GNATMAKE ?= gnatmake
+GPRBUILD ?= gprbuild
 
 # 'make' to make the BC libraries for use with bc.gpr.
 # 'make install' to install the BC libraries with your GNAT.
 # 'make dist' to make the distribution.
 
 libs:
-	$(GNATMAKE) -p -Pbc -XLIBRARY_TYPE=static
-	$(GNATMAKE) -p -Pbc -XLIBRARY_TYPE=relocatable
+	$(GPRBUILD) -p -Pbc -XLIBRARY_TYPE=static
+	$(GPRBUILD) -p -Pbc -XLIBRARY_TYPE=relocatable
 
 install:
 	-mkdir -p $(prefix)/lib/gnat/
@@ -48,7 +48,13 @@ SUBDIRS = src tests demos GNAT html contrib
 # in Ubuntu Linux 8.04 & Mac OS X.
 DATE ?= $(shell date +%Y%m%d)$(SUBRELEASE)
 
-TOP_LEVEL_FILES = COPYING INSTALL Makefile bc.gpr bc.gpr-for-installation
+TOP_LEVEL_FILES =				\
+COPYING 					\
+INSTALL 					\
+Makefile.in 					\
+configure 					\
+bc.gpr 						\
+bc.gpr-for-installation
 
 DISTRIBUTION_FILES =	\
 bc-$(DATE).tgz		\
@@ -85,7 +91,7 @@ bc-$(DATE).7z: bc-$(DATE)
 	7za a -r $@ $</
 
 
-.PHONY: force
+.PHONY: dist force install
 
 # vim: textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab
 # vim: filetype=make encoding=utf-8 fileformat=unix
