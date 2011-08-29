@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
---  Copyright 2009 Simon Wright <simon@pushface.org>
+--  Copyright 2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -21,25 +21,19 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $Revision$
---  $Date$
---  $Author$
-
-with BC.Support.Indefinite_Unmanaged;
+--  $Revision: 1420 $
+--  $Date: 2009-09-26 18:42:21 +0100 (Sat, 26 Sep 2009) $
+--  $Author: simonjwright $
 
 generic
-package BC.Indefinite_Containers.Collections.Ordered.Unmanaged is
+   with function "<" (L, R : Item) return Boolean is <>;
+package BC.Indefinite_Unmanaged_Containers.Collections.Ordered is
 
    pragma Preelaborate;
 
-   type Collection is new Abstract_Ordered_Collection with private;
+   type Collection is new Collections.Collection with private;
 
    function Null_Container return Collection;
-
-   function "=" (Left, Right : in Collection) return Boolean;
-
-   procedure Clear (C : in out Collection);
-   --  Empty the collection of all items.
 
    procedure Insert (C : in out Collection; Elem : Item);
    --  Add the item to the collection, starting at the front.
@@ -57,33 +51,10 @@ package BC.Indefinite_Containers.Collections.Ordered.Unmanaged is
                      After : Positive);
    --  Add the item to the collection, starting at the end.
 
-   procedure Remove (C : in out Collection; At_Index : Positive);
-   --  Remove the item at the given index in the collection.
-
    procedure Replace (C : in out Collection;
                       At_Index : Positive;
                       Elem : Item);
    --  Replace the item at the given index with the given item.
-
-   function Length (C : Collection) return Natural;
-   --  Return the number of items in the collection.
-
-   function Is_Empty (C : Collection) return Boolean;
-   --  Return True if and only if there are no items in the collection.
-
-   function First (C : Collection) return Item;
-   --  Return a copy of the item at the front of the collection.
-
-   function Last (C : Collection) return Item;
-   --  Return a copy of the item at the end of the collection.
-
-   function Item_At (C : Collection; At_Index : Positive) return Item;
-   --  Return a copy of the item at the indicated position in the
-   --  collection.
-
-   function Location (C : Collection; Elem : Item) return Natural;
-   --  Return the first index at which the item is found (0 if the
-   --  item desn't exist in the collecton).
 
    function New_Iterator
      (For_The_Collection : Collection) return Iterator'Class;
@@ -91,15 +62,6 @@ package BC.Indefinite_Containers.Collections.Ordered.Unmanaged is
 
 private
 
-   function Item_At
-     (C : Collection; Index : Positive) return Item_Ptr;
+   type Collection is new Collections.Collection with null record;
 
-   package Collection_Nodes
-   is new BC.Support.Indefinite_Unmanaged (Item => Item,
-                                           Item_Ptr => Item_Ptr);
-
-   type Collection is new Abstract_Ordered_Collection with record
-      Rep : Collection_Nodes.Unm_Node;
-   end record;
-
-end BC.Indefinite_Containers.Collections.Ordered.Unmanaged;
+end BC.Indefinite_Unmanaged_Containers.Collections.Ordered;

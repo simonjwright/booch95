@@ -54,8 +54,10 @@ package body BC.Containers.Collections.Ordered.Bounded is
    procedure Insert (C : in out Unconstrained_Collection;
                      Elem : Item;
                      Before : Positive) is
-      pragma Warnings (Off, Before);
    begin
+      if Before > Collection_Nodes.Length (C.Rep) then
+         raise BC.Range_Error;
+      end if;
       for Index in 1 .. Collection_Nodes.Length (C.Rep)
       loop
          if not (Collection_Nodes.Item_At (C.Rep, Index) < Elem) then
@@ -81,8 +83,10 @@ package body BC.Containers.Collections.Ordered.Bounded is
    procedure Append (C : in out Unconstrained_Collection;
                      Elem : Item;
                      After : Positive) is
-      pragma Warnings (Off, After);
    begin
+      if After > Collection_Nodes.Length (C.Rep) then
+         raise BC.Range_Error;
+      end if;
       for Index in 1 .. Collection_Nodes.Length (C.Rep)
       loop
          if Elem < Collection_Nodes.Item_At (C.Rep, Index) then
@@ -93,8 +97,8 @@ package body BC.Containers.Collections.Ordered.Bounded is
       Collection_Nodes.Append (C.Rep, Elem);
    end Append;
 
-   procedure Remove
-     (C : in out Unconstrained_Collection; At_Index : Positive) is
+   procedure Remove (C : in out Unconstrained_Collection;
+                     At_Index : Positive) is
    begin
       Collection_Nodes.Remove (C.Rep, At_Index);
    end Remove;
@@ -132,14 +136,14 @@ package body BC.Containers.Collections.Ordered.Bounded is
       return Collection_Nodes.Last (C.Rep);
    end Last;
 
-   function Item_At
-     (C : Unconstrained_Collection; At_Index : Positive) return Item is
+   function Item_At (C : Unconstrained_Collection;
+                     At_Index : Positive) return Item is
    begin
       return Item_At (C, At_Index).all;
    end Item_At;
 
-   function Location
-     (C : Unconstrained_Collection; Elem : Item) return Natural is
+   function Location (C : Unconstrained_Collection;
+                      Elem : Item) return Natural is
    begin
       return Collection_Nodes.Location (C.Rep, Elem);
    end Location;
@@ -158,8 +162,8 @@ package body BC.Containers.Collections.Ordered.Bounded is
       return Result;
    end New_Iterator;
 
-   function Item_At
-     (C : Unconstrained_Collection; Index : Positive) return Item_Ptr is
+   function Item_At (C : Unconstrained_Collection;
+                     Index : Positive) return Item_Ptr is
    begin
       return Collection_Nodes.Item_At (C.Rep, Index);
    end Item_At;
