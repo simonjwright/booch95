@@ -44,8 +44,7 @@ package body BC.Indefinite_Containers.Collections.Ordered.Unmanaged is
    begin
       for Index in 1 .. Collection_Nodes.Length (C.Rep)
       loop
-         if not (Collection_Nodes.Item_At (C.Rep, Index)
-                 < Elem) then
+         if not (Collection_Nodes.Item_At (C.Rep, Index) < Elem) then
             Collection_Nodes.Insert (C.Rep, Elem, Index);
             return;
          end if;
@@ -56,12 +55,13 @@ package body BC.Indefinite_Containers.Collections.Ordered.Unmanaged is
    procedure Insert (C : in out Collection;
                      Elem : Item;
                      Before : Positive) is
-      pragma Warnings (Off, Before);
    begin
+      if Before > Collection_Nodes.Length (C.Rep) then
+         raise BC.Range_Error;
+      end if;
       for Index in 1 .. Collection_Nodes.Length (C.Rep)
       loop
-         if not (Collection_Nodes.Item_At (C.Rep, Index)
-                 < Elem) then
+         if not (Collection_Nodes.Item_At (C.Rep, Index) < Elem) then
             Collection_Nodes.Insert (C.Rep, Elem, Index);
             return;
          end if;
@@ -84,8 +84,10 @@ package body BC.Indefinite_Containers.Collections.Ordered.Unmanaged is
    procedure Append (C : in out Collection;
                      Elem : Item;
                      After : Positive) is
-      pragma Warnings (Off, After);
    begin
+      if After > Collection_Nodes.Length (C.Rep) then
+         raise BC.Range_Error;
+      end if;
       for Index in 1 .. Collection_Nodes.Length (C.Rep)
       loop
          if Elem < Collection_Nodes.Item_At (C.Rep, Index) then

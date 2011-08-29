@@ -1,4 +1,5 @@
 --  Copyright 1994 Grady Booch
+--  Copyright 2005 Martin Krischik
 --  Copyright 2003-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
@@ -20,24 +21,13 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $Revision$
---  $Date$
---  $Author$
+--  $Revision: 1473 $
+--  $Date: 2011-06-25 21:02:07 +0100 (Sat, 25 Jun 2011) $
+--  $Author: simonjwright $
 
 with System.Address_To_Access_Conversions;
 
-package body BC.Containers.Collections.Ordered.Unmanaged is
-
-   function "=" (Left, Right : in Collection) return Boolean is
-      use Collection_Nodes;
-   begin
-      return Left.Rep = Right.Rep;
-   end "=";
-
-   procedure Clear (C : in out Collection) is
-   begin
-      Collection_Nodes.Clear (C.Rep);
-   end Clear;
+package body BC.Indefinite_Unmanaged_Containers.Collections.Ordered is
 
    procedure Insert (C : in out Collection; Elem : Item) is
    begin
@@ -97,11 +87,6 @@ package body BC.Containers.Collections.Ordered.Unmanaged is
       Collection_Nodes.Append (C.Rep, Elem);
    end Append;
 
-   procedure Remove (C : in out Collection; At_Index : Positive) is
-   begin
-      Collection_Nodes.Remove (C.Rep, At_Index);
-   end Remove;
-
    procedure Replace (C : in out Collection;
                       At_Index : Positive;
                       Elem : Item) is
@@ -109,36 +94,6 @@ package body BC.Containers.Collections.Ordered.Unmanaged is
       Collection_Nodes.Remove (C.Rep, At_Index);
       Insert (C, Elem);
    end Replace;
-
-   function Length (C : Collection) return Natural is
-   begin
-      return Collection_Nodes.Length (C.Rep);
-   end Length;
-
-   function Is_Empty (C : Collection) return Boolean is
-   begin
-      return Collection_Nodes.Length (C.Rep) = 0;
-   end Is_Empty;
-
-   function First (C : Collection) return Item is
-   begin
-      return Collection_Nodes.First (C.Rep);
-   end First;
-
-   function Last (C : Collection) return Item is
-   begin
-      return Collection_Nodes.Last (C.Rep);
-   end Last;
-
-   function Item_At (C : Collection; At_Index : Positive) return Item is
-   begin
-      return Item_At (C, At_Index).all;
-   end Item_At;
-
-   function Location (C : Collection; Elem : Item) return Natural is
-   begin
-      return Collection_Nodes.Location (C.Rep, Elem);
-   end Location;
 
    package Address_Conversions
    is new System.Address_To_Access_Conversions (Collection);
@@ -154,11 +109,6 @@ package body BC.Containers.Collections.Ordered.Unmanaged is
       return Result;
    end New_Iterator;
 
-   function Item_At (C : Collection; Index : Positive) return Item_Ptr is
-   begin
-      return Collection_Nodes.Item_At (C.Rep, Index);
-   end Item_At;
-
    function Null_Container return Collection is
       Empty_Container : Collection;
       pragma Warnings (Off, Empty_Container);
@@ -166,4 +116,4 @@ package body BC.Containers.Collections.Ordered.Unmanaged is
       return Empty_Container;
    end Null_Container;
 
-end BC.Containers.Collections.Ordered.Unmanaged;
+end BC.Indefinite_Unmanaged_Containers.Collections.Ordered;
