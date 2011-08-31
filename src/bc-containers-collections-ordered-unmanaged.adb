@@ -54,18 +54,17 @@ package body BC.Containers.Collections.Ordered.Unmanaged is
    procedure Insert (C : in out Collection;
                      Elem : Item;
                      Before : Positive) is
+      Current : constant Item := Item_At (C, Before);
+      --  May raise Range_Error.
    begin
-      if Before > Collection_Nodes.Length (C.Rep) then
-         raise BC.Range_Error;
+      if Elem < Current or else Current < Elem then
+         --  Values not equal; Insert sortedly.
+         Insert (C, Elem);
+      else
+         --  Values are equal (presumably), so Insert in the specified
+         --  place.
+         Collection_Nodes.Insert (C.Rep, Before => Before, Elem => Elem);
       end if;
-      for Index in 1 .. Collection_Nodes.Length (C.Rep)
-      loop
-         if not (Collection_Nodes.Item_At (C.Rep, Index) < Elem) then
-            Collection_Nodes.Insert (C.Rep, Elem, Index);
-            return;
-         end if;
-      end loop;
-      Collection_Nodes.Append (C.Rep, Elem);
    end Insert;
 
    procedure Append (C : in out Collection; Elem : Item) is
@@ -83,18 +82,17 @@ package body BC.Containers.Collections.Ordered.Unmanaged is
    procedure Append (C : in out Collection;
                      Elem : Item;
                      After : Positive) is
+      Current : constant Item := Item_At (C, After);
+      --  May raise Range_Error.
    begin
-      if After > Collection_Nodes.Length (C.Rep) then
-         raise BC.Range_Error;
+      if Elem < Current or else Current < Elem then
+         --  Values not equal; Append sortedly.
+         Append (C, Elem);
+      else
+         --  Values are equal (presumably), so Append in the specified
+         --  place.
+         Collection_Nodes.Append (C.Rep, After => After, Elem => Elem);
       end if;
-      for Index in 1 .. Collection_Nodes.Length (C.Rep)
-      loop
-         if Elem < Collection_Nodes.Item_At (C.Rep, Index) then
-            Collection_Nodes.Insert (C.Rep, Elem, Index);
-            return;
-         end if;
-      end loop;
-      Collection_Nodes.Append (C.Rep, Elem);
    end Append;
 
    procedure Remove (C : in out Collection; At_Index : Positive) is
@@ -105,9 +103,20 @@ package body BC.Containers.Collections.Ordered.Unmanaged is
    procedure Replace (C : in out Collection;
                       At_Index : Positive;
                       Elem : Item) is
+      Current : constant Item := Item_At (C, At_Index);
    begin
-      Collection_Nodes.Remove (C.Rep, At_Index);
-      Insert (C, Elem);
+      if Elem < Current then
+         --  Elem goes after any 'equal' Item; the same as an Append.
+         Remove (C, At_Index);
+         Append (C, Elem);
+      elsif Current < Elem then
+         --  Elem goes before any 'equal' Item; the same as an Insert.
+         Remove (C, At_Index);
+         Insert (C, Elem);
+      else
+         --  Values are equal (presumably), so replace in situ.
+         Collection_Nodes.Replace (C.Rep, Index => At_Index, Elem => Elem);
+      end if;
    end Replace;
 
    function Length (C : Collection) return Natural is
