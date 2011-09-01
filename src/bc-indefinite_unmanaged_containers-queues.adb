@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1994-1997 David Weller
 --  Copyright 2005 Martin Krischik
---  Copyright 1998-2011 Simon Wright <simon@pushface.org>
+--  Copyright 1994-1997 David Weller
+--  Copyright 2003-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -26,51 +26,83 @@
 --  $Date$
 --  $Author$
 
-with System;
+with System.Address_To_Access_Conversions;
 
-package body BC.Indefinite_Containers.Queues is
+package body BC.Indefinite_Unmanaged_Containers.Queues is
 
-   procedure Copy (From : Abstract_Queue'Class;
-                   To : in out Abstract_Queue'Class) is
-      Iter : Iterator'Class := New_Iterator (From);
+   procedure Clear (Q : in out Queue) is
    begin
-      if System."/=" (From'Address, To'Address) then
-         Clear (To);
-         Reset (Iter);
-         while not Is_Done (Iter) loop
-            Append (To, Current_Item (Iter));
-            Next (Iter);
-         end loop;
-      end if;
-   end Copy;
+      Queue_Nodes.Clear (Q.Rep);
+   end Clear;
 
-   function Are_Equal (Left, Right : Abstract_Queue'Class) return Boolean is
+   procedure Append (Q : in out Queue; Elem : Item) is
    begin
-      if System."=" (Left'Address, Right'Address) then
-         return True;
-      end if;
-      if Length (Left) /= Length (Right) then
-         return False;
-      end if;
-      declare
-         Left_Iter : Iterator'Class := New_Iterator (Left);
-         Right_Iter : Iterator'Class := New_Iterator (Right);
-      begin
-         while not Is_Done (Left_Iter) and then
-           not Is_Done (Right_Iter) loop
-            if Current_Item (Left_Iter) /= Current_Item (Right_Iter) then
-               return False;
-            end if;
-            Next (Left_Iter);
-            Next (Right_Iter);
-         end loop;
-         return True;
-      end;
-   end Are_Equal;
+      Queue_Nodes.Append (Q.Rep, Elem);
+   end Append;
+
+   procedure Pop (Q : in out Queue) is
+   begin
+      Queue_Nodes.Remove (Q.Rep, 1);
+   end Pop;
+
+   procedure Remove (Q : in out Queue; From : Positive) is
+   begin
+      Queue_Nodes.Remove (Q.Rep, From);
+   end Remove;
+
+   function Length (Q : Queue) return Natural is
+   begin
+      return Queue_Nodes.Length (Q.Rep);
+   end Length;
+
+   function Is_Empty (Q : Queue) return Boolean is
+   begin
+      return Queue_Nodes.Length (Q.Rep) = 0;
+   end Is_Empty;
+
+   function Front (Q : Queue) return Item is
+   begin
+      return Queue_Nodes.First (Q.Rep);
+   end Front;
+
+   function Location (Q : Queue; Elem : Item) return Natural is
+   begin
+      return Queue_Nodes.Location (Q.Rep, Elem);
+   end Location;
+
+   function "=" (Left, Right : Queue) return Boolean is
+      use Queue_Nodes;
+   begin
+      return Left.Rep = Right.Rep;
+   end "=";
+
+   package Address_Conversions
+   is new System.Address_To_Access_Conversions (Queue);
+
+   function New_Iterator (For_The_Queue : Queue) return Iterator'Class is
+      Result : Queue_Iterator;
+   begin
+      Result.For_The_Container :=
+        Container_Ptr (Address_Conversions.To_Pointer (For_The_Queue'Address));
+      Reset (Result);
+      return Result;
+   end New_Iterator;
+
+   function Item_At (Q : Queue; Index : Positive) return Item_Ptr is
+   begin
+      return Queue_Nodes.Item_At (Q.Rep, Index);
+   end Item_At;
+
+   function Null_Container return Queue is
+      Empty_Container : Queue;
+      pragma Warnings (Off, Empty_Container);
+   begin
+      return Empty_Container;
+   end Null_Container;
 
    procedure Reset (It : in out Queue_Iterator) is
-      Q : Abstract_Queue'Class
-        renames Abstract_Queue'Class (It.For_The_Container.all);
+      Q : Queue'Class
+        renames Queue'Class (It.For_The_Container.all);
    begin
       if Length (Q) = 0 then
          It.Index := 0;
@@ -79,20 +111,14 @@ package body BC.Indefinite_Containers.Queues is
       end if;
    end Reset;
 
-   function Available (Q : in Abstract_Queue) return Natural is
-      pragma Warnings (Off, Q);
-   begin
-      return Natural'Last;
-   end Available;
-
    procedure Next (It : in out Queue_Iterator) is
    begin
       It.Index := It.Index + 1;
    end Next;
 
    function Is_Done (It : Queue_Iterator) return Boolean is
-      Q : Abstract_Queue'Class
-     renames Abstract_Queue'Class (It.For_The_Container.all);
+      Q : Queue'Class
+     renames Queue'Class (It.For_The_Container.all);
    begin
       return It.Index = 0 or else It.Index > Length (Q);
    end Is_Done;
@@ -114,8 +140,8 @@ package body BC.Indefinite_Containers.Queues is
    end Current_Item_Ptr;
 
    procedure Delete_Item_At (It : in out Queue_Iterator) is
-      Q : Abstract_Queue'Class
-        renames Abstract_Queue'Class (It.For_The_Container.all);
+      Q : Queue'Class
+        renames Queue'Class (It.For_The_Container.all);
    begin
       if Is_Done (It) then
          raise BC.Not_Found;
@@ -123,4 +149,4 @@ package body BC.Indefinite_Containers.Queues is
       Remove (Q, It.Index);
    end Delete_Item_At;
 
-end BC.Indefinite_Containers.Queues;
+end BC.Indefinite_Unmanaged_Containers.Queues;

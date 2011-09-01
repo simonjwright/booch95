@@ -26,7 +26,12 @@
 --  $Author$
 
 generic
+
    with function "<" (L, R : Item) return Boolean is <>;
+   --  Must define a strict ordering; if A "<" B and B "<" C, A must
+   --  be "<" C. If A is not "<" B and B is not "<" A, A and B are
+   --  said to be equivalent (they need not be "=").
+
 package BC.Indefinite_Unmanaged_Containers.Collections.Ordered is
 
    pragma Preelaborate;
@@ -36,25 +41,41 @@ package BC.Indefinite_Unmanaged_Containers.Collections.Ordered is
    function Null_Container return Collection;
 
    procedure Insert (C : in out Collection; Elem : Item);
-   --  Add the item to the collection, starting at the front.
+   --  Add the item to the collection, inserting the new item at the
+   --  appropriate position; if an equivalent item is found, the new
+   --  item is inserted before it.
 
    procedure Insert (C : in out Collection;
                      Elem : Item;
                      Before : Positive);
-   --  Add the item to the collection, starting at the front.
+   --  If the indicated item is equivalent to the new item, the new
+   --  item is inserted before the indicated item; otherwise, the
+   --  behaviour is as above.
 
    procedure Append (C : in out Collection; Elem : Item);
-   --  Add the item to the collection, starting at the end.
+   --  Add the item to the collection, inserting the new item at the
+   --  appropriate position; if any equivalent items are found, the
+   --  new item is inserted after all of them.
 
    procedure Append (C : in out Collection;
                      Elem : Item;
                      After : Positive);
-   --  Add the item to the collection, starting at the end.
+   --  If the indicated item is equivalent to the new item, the new
+   --  item is inserted after the indicated item; otherwise, the
+   --  behaviour is as above.
 
    procedure Replace (C : in out Collection;
                       At_Index : Positive;
                       Elem : Item);
-   --  Replace the item at the given index with the given item.
+   --  If the indicated item is equivalent to the new item, it is
+   --  replaced directly.
+   --
+   --  If the new item is "<" the indicated item, the indicated item
+   --  is removed and the new item is Appended, as above. If the
+   --  indicated item is "<" the new item, the indicated item is
+   --  removed and the new item is Inserted, as above. The effect is
+   --  that the new item moves toward the appropriate end of the
+   --  Collection but not beyond any equivalent items.
 
    function New_Iterator
      (For_The_Collection : Collection) return Iterator'Class;

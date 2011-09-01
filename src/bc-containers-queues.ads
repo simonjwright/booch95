@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2011 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -50,8 +50,7 @@ package BC.Containers.Queues is
    --  Remove and return the item from the front of the queue.
 
    procedure Remove (Q : in out Abstract_Queue; From : Positive) is abstract;
-   --  Remove the item at the given index (may be a balking
-   --  operation).
+   --  Remove the item at the given index.
 
    function Available (Q : in Abstract_Queue) return Natural;
    --  Indicates number of empty "Item slots" left in Queue
@@ -64,11 +63,6 @@ package BC.Containers.Queues is
 
    function Front (Q : in Abstract_Queue) return Item is abstract;
    --  Return a copy of the item at the front of the queue.
-
-   generic
-      with procedure Process (Elem : in out Item);
-   procedure Process_Front (Q : in out Abstract_Queue'Class);
-   --  Access the item at the front of the queue.
 
    function Location (Q : in Abstract_Queue; Elem : in Item) return Natural
       is abstract;

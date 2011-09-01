@@ -26,7 +26,12 @@
 --  $Author$
 
 generic
+
    with function "<" (L, R : Item) return Boolean is <>;
+   --  Must define a strict ordering; if A "<" B and B "<" C, A must
+   --  be "<" C. If A is not "<" B and B is not "<" A, A and B are
+   --  said to be equivalent (they need not be "=").
+
 package BC.Indefinite_Containers.Collections.Ordered is
 
    pragma Preelaborate;
@@ -36,8 +41,8 @@ package BC.Indefinite_Containers.Collections.Ordered is
 
    --  An ordered collection denotes a sorted indexed collection of
    --  items, drawn from some well-defined universe. An ordered
-   --  collection may contain duplicate items; it owns a copy of each
-   --  item.
+   --  collection may contain duplicate (equivalent) items; it owns a
+   --  copy of each item.
 
 private
 
