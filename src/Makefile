@@ -187,31 +187,45 @@ bc-trees-avl_trees-iterators.ad[bs]
 ADA_SOURCE +=					\
 bc-indefinite_containers.ad[bs]
 
+ADA_SOURCE +=						\
+bc-indefinite_containers-collections-bounded.ad[bs]	\
+bc-indefinite_containers-collections-dynamic.ad[bs]	\
+bc-indefinite_containers-collections-unbounded.ad[bs]	\
+bc-indefinite_containers-collections-unmanaged.ad[bs]	\
+bc-indefinite_containers-collections.ad[bs]
+
 ADA_SOURCE +=							\
-bc-indefinite_containers-collections.ad[bs]			\
-bc-indefinite_containers-collections-bounded.ad[bs]		\
-bc-indefinite_containers-collections-ordered.ad[bs]		\
 bc-indefinite_containers-collections-ordered-bounded.ad[bs]	\
+bc-indefinite_containers-collections-ordered-dynamic.ad[bs]	\
 bc-indefinite_containers-collections-ordered-unbounded.ad[bs]	\
-bc-indefinite_containers-collections-unbounded.ad[bs]
+bc-indefinite_containers-collections-ordered-unmanaged.ad[bs]	\
+bc-indefinite_containers-collections-ordered.ad[bs]
 
 ADA_SOURCE +=					\
-bc-indefinite_containers-maps.ad[bs]		\
 bc-indefinite_containers-maps-bounded.ad[bs]	\
-bc-indefinite_containers-maps-unbounded.ad[bs]
-
-ADA_SOURCE +=							\
-bc-indefinite_containers-queues.ad[bs]				\
-bc-indefinite_containers-queues-bounded.ad[bs]			\
-bc-indefinite_containers-queues-ordered.ad[bs]			\
-bc-indefinite_containers-queues-ordered-bounded.ad[bs]		\
-bc-indefinite_containers-queues-ordered-unbounded.ad[bs]	\
-bc-indefinite_containers-queues-unbounded.ad[bs]
+bc-indefinite_containers-maps-unbounded.ad[bs]	\
+bc-indefinite_containers-maps.ad[bs]
 
 ADA_SOURCE +=						\
-bc-indefinite_unmanaged_containers.ad[bs]		\
-bc-indefinite_unmanaged_containers-collections.ad[bs]	\
-bc-indefinite_unmanaged_containers-maps.ad[bs]
+bc-indefinite_containers-queues-bounded.ad[bs]		\
+bc-indefinite_containers-queues-dynamic.ad[bs]		\
+bc-indefinite_containers-queues-unbounded.ad[bs]	\
+bc-indefinite_containers-queues-unmanaged.ad[bs]	\
+bc-indefinite_containers-queues.ad[bs]
+
+ADA_SOURCE +=							\
+bc-indefinite_containers-queues-ordered-bounded.ad[bs]		\
+bc-indefinite_containers-queues-ordered-dynamic.ad[bs]		\
+bc-indefinite_containers-queues-ordered-unbounded.ad[bs]	\
+bc-indefinite_containers-queues-ordered-unmanaged.ad[bs]	\
+bc-indefinite_containers-queues-ordered.ad[bs]
+
+ADA_SOURCE +=							\
+bc-indefinite_unmanaged_containers-collections-ordered.ad[bs]	\
+bc-indefinite_unmanaged_containers-collections.ad[bs]		\
+bc-indefinite_unmanaged_containers-maps.ad[bs]			\
+bc-indefinite_unmanaged_containers-queues.ad[bs]		\
+bc-indefinite_unmanaged_containers.ad[bs]
 
 
 ############################

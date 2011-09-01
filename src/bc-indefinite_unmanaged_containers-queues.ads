@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2009 Simon Wright <simon@pushface.org>
+--  Copyright 2003-2011 Simon Wright <simon@pushface.org>
 --  Copyright 2005 Martin Krischik
 
 --  This package is free software; you can redistribute it and/or
@@ -26,60 +26,63 @@
 --  $Date$
 --  $Author$
 
+with BC.Support.Indefinite_Unmanaged;
+
 generic
-package BC.Indefinite_Containers.Queues is
+package BC.Indefinite_Unmanaged_Containers.Queues is
 
    pragma Preelaborate;
 
-   type Abstract_Queue is abstract new Container with private;
+   type Queue is new Container with private;
+   --  This Queue exhibits unlimited growth and collapsing, limited
+   --  only by available memory.  Assignment is "deep".
 
-   --  A queue denotes a sequence of items, in which items may be
-   --  added from one end and removed from the opposite end of the
-   --  sequence.
+   function Null_Container return Queue;
 
-   procedure Clear (Q : in out Abstract_Queue) is abstract;
+   procedure Clear (Q : in out Queue);
    --  Empty the queue of all items.
 
-   procedure Append (Q : in out Abstract_Queue; Elem : Item) is abstract;
+   procedure Append (Q : in out Queue; Elem : Item);
    --  Add the item to the back of the queue; the item itself is
    --  copied.
 
-   procedure Pop (Q : in out Abstract_Queue) is abstract;
+   procedure Pop (Q : in out Queue);
    --  Remove the item from the front of the queue.
 
-   procedure Remove (Q : in out Abstract_Queue; From : Positive) is abstract;
-   --  Remove the item at the given index (may be a balking
-   --  operation).
+   procedure Remove (Q : in out Queue; From : Positive);
+   --  Remove the item at the given index.
 
-   function Available (Q : in Abstract_Queue) return Natural;
-   --  Indicates number of empty "Item slots" left in Queue
-
-   function Length (Q : in Abstract_Queue) return Natural is abstract;
+   function Length (Q : in Queue) return Natural;
    --  Return the number of items in the queue.
 
-   function Is_Empty (Q : in Abstract_Queue) return Boolean is abstract;
+   function Is_Empty (Q : in Queue) return Boolean;
    --  Return True if and only if there are no items in the queue.
 
-   function Front (Q : in Abstract_Queue) return Item is abstract;
+   function Front (Q : in Queue) return Item;
    --  Return a copy of the item at the front of the queue.
 
-   function Location (Q : in Abstract_Queue; Elem : in Item) return Natural
-      is abstract;
+   function Location (Q : in Queue; Elem : Item) return Natural;
    --  Return the first index at which the item is found; return 0 if
    --  the item does not exist in the queue.
 
-   function Are_Equal (Left, Right : Abstract_Queue'Class) return Boolean;
+   function "=" (Left, Right : in Queue) return Boolean;
    --  Return True if and only if both queues have the same length and
    --  the same items in the same order; return False otherwise.
 
-   procedure Copy (From : Abstract_Queue'Class;
-                   To : in out Abstract_Queue'Class);
-   --  This operation MUST be called for dissimilar Queues in place of
-   --  assignment.
+   function New_Iterator (For_The_Queue : Queue) return Iterator'Class;
+   --  Return a reset Iterator bound to the specific Queue.
 
 private
 
-   type Abstract_Queue is abstract new Container with null record;
+   package Queue_Nodes
+   is new BC.Support.Indefinite_Unmanaged (Item => Item,
+                                           Item_Ptr => Item_Ptr);
+
+   type Queue is new Container with record
+      Rep : Queue_Nodes.Unm_Node;
+   end record;
+
+   function Item_At (Q : Queue; Index : Positive) return Item_Ptr;
 
    type Queue_Iterator is new Iterator with record
       Index : Natural;
@@ -99,4 +102,4 @@ private
 
    procedure Delete_Item_At (It : in out Queue_Iterator);
 
-end BC.Indefinite_Containers.Queues;
+end BC.Indefinite_Unmanaged_Containers.Queues;
