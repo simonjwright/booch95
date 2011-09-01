@@ -65,6 +65,11 @@ package body BC.Indefinite_Unmanaged_Containers.Queues is
       return Queue_Nodes.First (Q.Rep);
    end Front;
 
+   procedure Process_Front (Q : in out Queue'Class) is
+   begin
+      Process (Item_At (Q, 1).all);
+   end Process_Front;
+
    function Location (Q : Queue; Elem : Item) return Natural is
    begin
       return Queue_Nodes.Location (Q.Rep, Elem);

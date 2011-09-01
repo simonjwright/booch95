@@ -64,6 +64,11 @@ package BC.Containers.Queues is
    function Front (Q : in Abstract_Queue) return Item is abstract;
    --  Return a copy of the item at the front of the queue.
 
+   generic
+      with procedure Process (Elem : in out Item);
+   procedure Process_Front (Q : in out Abstract_Queue'Class);
+   --  Allows modification of the item at the front of the queue.
+
    function Location (Q : in Abstract_Queue; Elem : in Item) return Natural
       is abstract;
    --  Return the first index at which the item is found; return 0 if
