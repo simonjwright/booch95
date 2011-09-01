@@ -61,6 +61,11 @@ package BC.Indefinite_Unmanaged_Containers.Queues is
    function Front (Q : in Queue) return Item;
    --  Return a copy of the item at the front of the queue.
 
+   generic
+      with procedure Process (Elem : in out Item);
+   procedure Process_Front (Q : in out Queue'Class);
+   --  Allows modification of the item at the front of the queue.
+
    function Location (Q : in Queue; Elem : Item) return Natural;
    --  Return the first index at which the item is found; return 0 if
    --  the item does not exist in the queue.

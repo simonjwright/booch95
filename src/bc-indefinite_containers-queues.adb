@@ -30,6 +30,11 @@ with System;
 
 package body BC.Indefinite_Containers.Queues is
 
+   procedure Process_Front (Q : in out Abstract_Queue'Class) is
+   begin
+      Process (Item_At (Q, 1).all);
+   end Process_Front;
+
    procedure Copy (From : Abstract_Queue'Class;
                    To : in out Abstract_Queue'Class) is
       Iter : Iterator'Class := New_Iterator (From);
