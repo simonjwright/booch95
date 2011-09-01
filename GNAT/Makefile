@@ -159,9 +159,8 @@ booch_95:				\
 	gnat make ${GNAT_Opt_Release} -P booch_95.gpr
 	gnat make ${GNAT_Opt_Debug}   -P booch_95.gpr
 
+# Not in the distribution.
 dist:
-	mkdir $(DIST)/GNAT
-	cp -p Makefile booch_95.gpr gnat-booch.sh gnat-booch.conf $(DIST)/GNAT/
 
 ############################################################################
 #                                                                          #
