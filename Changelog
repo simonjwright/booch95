@@ -9,6 +9,29 @@ yyyymmdd:
 
 A release with ...
 
+2011mmdd:
+
+Changes to Ordered Collections:
+
+Ordered Collections are now provided in all forms.
+
+Although the index parameters to Append(After) and Insert(Before) were
+not used for Ordered Collections, there should have been checks that
+they were in range. Out-of-range values now cause Range_Error to be
+raised.
+
+The behaviour of Append(After), Insert(Before) and Replace when the
+indicated location contains a value that is equivalent to the current
+value has been improved.
+
+The behaviour of Replace when the new item is not equivalent to the
+replaced item was not specified (it was always treated as a Remove
+followed by an Insert). It has now been improved.
+
+Changes to Queues:
+
+Added Indefinite Unmanaged Queues.
+
 20110809:
 
 A release with installation script and instructions, and minor
