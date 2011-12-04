@@ -24,7 +24,7 @@
 --  $Date$
 --  $Author$
 
---  Call Apply with a copy of each Item in the Tree, in preorder (for
+--  Call Apply with a copy of each Item in the Tree, in postorder (for
 --  each node, visit its children and then the node itself). The
 --  iteration will terminate early if Apply sets OK to False.
 

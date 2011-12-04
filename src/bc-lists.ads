@@ -33,11 +33,11 @@ generic
    pragma Warnings (Off, "=");
 package BC.Lists is
 
-   -----------------------------------------------------------------  --
+   -------------------------------------------------------------------
    --  WARNING: If  you just want a standard  container to support  --
    --  iteration, filtering and sorting, use Collections. The List  --
    --  components  are   much  more  complex   than  you'll  need.  --
-   --  ---------------------------------------------------------------  --
+   -------------------------------------------------------------------
 
    --  Lists are polylithic structures, and hence the semantics of
    --  copying, assignment, and equality involve structural

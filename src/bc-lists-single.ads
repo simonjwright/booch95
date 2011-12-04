@@ -31,11 +31,11 @@ generic
    Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Lists.Single is
 
-   -----------------------------------------------------------------  --
+   -------------------------------------------------------------------
    --  WARNING: If  you just want a standard  container to support  --
    --  iteration, filtering and sorting, use Collections. The List  --
    --  components  are   much  more  complex   than  you'll  need.  --
-   --  ---------------------------------------------------------------  --
+   -------------------------------------------------------------------
 
    pragma Preelaborate;
 
