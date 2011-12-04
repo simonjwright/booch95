@@ -23,6 +23,24 @@ SourceForge.net. Fast, secure and Free Open Source software downloads"
 <p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>
 <dl>
 
+<dt>xx Septemper 2011</dt>
+<dd>
+<p><b>Changes to Ordered Collections</b>:</p>
+<p>Ordered Collections are now provided in all forms.</p>
+<p>Although the index parameters to Append(After) and Insert(Before) were
+not used for Ordered Collections, there should have been checks that
+they were in range. Out-of-range values now cause Range_Error to be
+raised.</p>
+<p>The behaviour of Append(After), Insert(Before) and Replace when the
+indicated location contains a value that is equivalent to the current
+value has been improved.</p>
+<p>The behaviour of Replace when the new item is not equivalent to the
+replaced item was not specified (it was always treated as a Remove
+followed by an Insert). It has now been improved.</p>
+<p><b>Changes to Queues</b>:</p>
+<p>Added Indefinite Unmanaged Queues.</p>
+</dd>
+
 <dt>09 August 2011</dt>
 <dd>
 <p>Can be installed as a library in GCC and GNAT GPL installations.</p>
