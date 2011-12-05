@@ -14,20 +14,10 @@
 
 # $Id$
 
-# (GNU) Makefile for Booch Components.
+# (GNU) Makefile for Booch Components src/ directory; does
+# distribution construction.
 
 all::
-
-
-#####################
-# Default build rule
-%: %.adb
-	gnatmake $(GNATMAKE_FLAGS) $@
-
-#GCOV_FLAGS = -O0 -ftest-coverage -fprofile-arcs
-
-GNATMAKE_FLAGS = -O2 -g -gnatqQafoy -gnatwaL -j2 -m -k
-GNATMAKE_FLAGS += $(GCOV_FLAGS)
 
 ADA_SOURCE =					\
 bc.ad[bs]					\
@@ -231,14 +221,12 @@ bc-indefinite_unmanaged_containers.ad[bs]
 ############################
 # Distribution construction
 
-SOURCE = Makefile $(ADA_SOURCE)
-
 dist:
 	mkdir $(DIST)/src
-	tar cf - $(SOURCE) | (cd $(DIST)/src; tar xvf -)
+	tar cf - $(ADA_SOURCE) | (cd $(DIST)/src; tar xvf -)
 
 
-.PHONY: dist force
+.PHONY: dist
 
 # vim: textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab
 # vim: filetype=make encoding=utf-8 fileformat=unix

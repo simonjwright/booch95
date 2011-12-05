@@ -32,7 +32,7 @@ install:
 	-mkdir -p $(prefix)/lib/gnat/
 	cp bc.gpr-for-installation $(prefix)/lib/gnat/bc.gpr
 	-mkdir -p $(prefix)/include/bc
-	tar -c -f- -C src *.ad[bs] | tar -x -f- -C $(prefix)/include/bc/
+	cd src; tar -c -f- *.ad[bs] | tar -x -f- -C $(prefix)/include/bc/
 	-mkdir -p $(prefix)/lib/bc/lib-static
 	tar -c -f- lib-static | tar -x -f- -C $(prefix)/lib/bc/
 	chmod -w $(prefix)/lib/bc/lib-static/*.ali
