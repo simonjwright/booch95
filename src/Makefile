@@ -38,6 +38,7 @@ bc-support-high_resolution_time-clock.adb-ppc32		\
 bc-support-high_resolution_time.ad[bs]			\
 bc-support-indefinite_bounded.ad[bs]			\
 bc-support-indefinite_bounded_hash_tables.ad[bs]	\
+bc-support-indefinite_dynamic.ad[bs]			\
 bc-support-indefinite_hash_tables.ad[bs]		\
 bc-support-indefinite_reference.ad[bs]			\
 bc-support-indefinite_unbounded.ad[bs]			\
