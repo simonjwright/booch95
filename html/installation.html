@@ -39,6 +39,15 @@ directory in the compiler source path,
    $ gnatmake -I$HOME/bc-20110809/src foo.adb
 </pre>
 
+<h2>Using GNAT Project with Debian 6</h2>
+
+<p>If you're running Debian 6 (<i>squeeze</i>), there are a couple of
+changes needed (<i>gnatmake</i> doesn't
+understand <tt>external_as_list()</tt> in a Project file): say</p>
+<pre>
+   <i>$</i> patch -p0 &lt;debian-6.diff
+</pre>
+
 <h2>Using GNAT Project</h2>
 
 <p>Alternatively, using the GNAT Project facility, add <tt>bc.gpr</tt> to

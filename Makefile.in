@@ -49,12 +49,13 @@ SUBDIRS = src tests demos GNAT html contrib
 DATE ?= $(shell date +%Y%m%d)$(SUBRELEASE)
 
 TOP_LEVEL_FILES =				\
-COPYING 					\
-INSTALL 					\
-Makefile.in 					\
-configure 					\
-bc.gpr 						\
-bc.gpr-for-installation
+COPYING						\
+INSTALL						\
+Makefile.in					\
+configure					\
+bc.gpr						\
+bc.gpr-for-installation				\
+debian-6.diff
 
 DISTRIBUTION_FILES =	\
 bc-$(DATE).tgz		\

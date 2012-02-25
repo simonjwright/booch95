@@ -7,9 +7,10 @@ actually in releases - it excludes work-in-progress.
 
 yyyymmdd:
 
-A release with ...
+BC.Support.Indefinite_Dynamic was missing.
+Includes a patch to allow use of bc.gpr on Debian 6.
 
-2011mmdd:
+20111205:
 
 Changes to Ordered Collections:
 
