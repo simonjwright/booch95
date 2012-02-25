@@ -1,0 +1,12 @@
+Index: bc.gpr
+===================================================================
+--- bc.gpr	(revision 1504)
++++ bc.gpr	(working copy)
+@@ -22,7 +22,6 @@
+    for Library_Name use "bc";
+    for Library_Kind use Library_Type;
+    for Library_Dir use "./lib-" & Library_Type;
+-   for Library_Options use External_As_List ("LDFLAGS", " ");
+ 
+    for Languages use ("ada");
+ 
