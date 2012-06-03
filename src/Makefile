@@ -215,6 +215,7 @@ ADA_SOURCE +=							\
 bc-indefinite_unmanaged_containers-collections-ordered.ad[bs]	\
 bc-indefinite_unmanaged_containers-collections.ad[bs]		\
 bc-indefinite_unmanaged_containers-maps.ad[bs]			\
+bc-indefinite_unmanaged_containers-queues-ordered.ad[bs]	\
 bc-indefinite_unmanaged_containers-queues.ad[bs]		\
 bc-indefinite_unmanaged_containers.ad[bs]
 

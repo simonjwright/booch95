@@ -223,6 +223,8 @@ project BC is
       "bc-indefinite_unmanaged_containers-collections.ads",
       "bc-indefinite_unmanaged_containers-maps.adb",
       "bc-indefinite_unmanaged_containers-maps.ads",
+      "bc-indefinite_unmanaged_containers-queues-ordered.adb",
+      "bc-indefinite_unmanaged_containers-queues-ordered.ads",
       "bc-indefinite_unmanaged_containers-queues.adb",
       "bc-indefinite_unmanaged_containers-queues.ads",
       "bc-indefinite_unmanaged_containers.adb",
