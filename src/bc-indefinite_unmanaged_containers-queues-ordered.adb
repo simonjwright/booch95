@@ -21,9 +21,9 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $Revision: 1473 $
---  $Date: 2011-06-25 21:02:07 +0100 (Sat, 25 Jun 2011) $
---  $Author: simonjwright $
+--  $Revision$
+--  $Date$
+--  $Author$
 
 with System.Address_To_Access_Conversions;
 
