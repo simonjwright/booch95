@@ -1,4 +1,4 @@
---  Copyright 2009-2010 Simon Wright <simon@pushface.org>
+--  Copyright Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -85,27 +85,31 @@ package body Tests.Indefinite_Collections is
 
       procedure Length_Initially_Zero (C : in out Test_Case'Class);
       procedure Length_Initially_Zero (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Length (R) = 0, "Length should be 0");
+         Assert (Length (R) = 0, "Length should be 0");
       end Length_Initially_Zero;
 
       procedure Initially_Empty (C : in out Test_Case'Class);
       procedure Initially_Empty (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Is_Empty (R), "should be empty");
+         Assert (Is_Empty (R), "should be empty");
       end Initially_Empty;
 
       procedure Value_Initially_Empty (C : in out Test_Case'Class);
       procedure Value_Initially_Empty (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Value (R) = "", "should be empty");
+         Assert (Value (R) = "", "should be empty");
       end Value_Initially_Empty;
 
       procedure Check_Clear (C : in out Test_Case'Class);
       procedure Check_Clear (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
          Clear (R);
-         Assert (C, Is_Empty (R), "collection isn't empty");
+         Assert (Is_Empty (R), "collection isn't empty");
       end Check_Clear;
 
       function Name (C : Case_1) return AUnit.Message_String is
@@ -141,20 +145,23 @@ package body Tests.Indefinite_Collections is
 
       procedure Length_Is_One (C : in out Test_Case'Class);
       procedure Length_Is_One (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Length (R) = 1, "collection's length is not 1");
+         Assert (Length (R) = 1, "collection's length is not 1");
       end Length_Is_One;
 
       procedure Is_Not_Empty (C : in out Test_Case'Class);
       procedure Is_Not_Empty (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, not Is_Empty (R), "shouldn't be empty");
+         Assert (not Is_Empty (R), "shouldn't be empty");
       end Is_Not_Empty;
 
       procedure Check_Value_After_Single_Insert (C : in out Test_Case'Class);
       procedure Check_Value_After_Single_Insert (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Value (R) = "a", "has wrong value");
+         Assert (Value (R) = "a", "has wrong value");
       end Check_Value_After_Single_Insert;
 
       function Name (C : Case_2) return AUnit.Message_String is
@@ -201,8 +208,9 @@ package body Tests.Indefinite_Collections is
 
       procedure Length_Is_Two (C : in out Test_Case'Class);
       procedure Length_Is_Two (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Length (R) = 2, "collection's length is not 2");
+         Assert (Length (R) = 2, "collection's length is not 2");
       end Length_Is_Two;
 
       function Name (C : Case_3) return AUnit.Message_String is

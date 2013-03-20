@@ -1,4 +1,4 @@
---  Copyright 2009-2010 Simon Wright <simon@pushface.org>
+--  Copyright Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -80,31 +80,35 @@ package body Tests.Rings is
 
       procedure Extent_Initially_Zero (C : in out Test_Case'Class);
       procedure Extent_Initially_Zero (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Extent (R) = 0, "Extent should be 0");
+         Assert (Extent (R) = 0, "Extent should be 0");
       end Extent_Initially_Zero;
 
       procedure Initially_Empty (C : in out Test_Case'Class);
       procedure Initially_Empty (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Is_Empty (R), "should be empty");
+         Assert (Is_Empty (R), "should be empty");
       end Initially_Empty;
 
       procedure Initially_At_Mark (C : in out Test_Case'Class);
       procedure Initially_At_Mark (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, At_Mark (R), "should be at mark");
+         Assert (At_Mark (R), "should be at mark");
       end Initially_At_Mark;
 
       procedure Initially_No_Content (C : in out Test_Case'Class);
       procedure Initially_No_Content (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
          declare
             Ch : Character;
             pragma Warnings (Off, Ch);
          begin
             Ch := Top (R);
-            Assert (C, False, "should have raised BC.Underflow");
+            Assert (False, "should have raised BC.Underflow");
          exception
             when BC.Underflow => null;
          end;
@@ -112,15 +116,17 @@ package body Tests.Rings is
 
       procedure Value_Initially_Empty (C : in out Test_Case'Class);
       procedure Value_Initially_Empty (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Value (R) = "", "should be empty");
+         Assert (Value (R) = "", "should be empty");
       end Value_Initially_Empty;
 
       procedure Check_Clear (C : in out Test_Case'Class);
       procedure Check_Clear (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
          Clear (R);
-         Assert (C, Is_Empty (R), "ring isn't empty");
+         Assert (Is_Empty (R), "ring isn't empty");
       end Check_Clear;
 
       function Name (C : Case_1) return AUnit.Message_String is
@@ -164,52 +170,59 @@ package body Tests.Rings is
 
       procedure Extent_Is_One (C : in out Test_Case'Class);
       procedure Extent_Is_One (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Extent (R) = 1, "ring's extent is not 1");
+         Assert (Extent (R) = 1, "ring's extent is not 1");
       end Extent_Is_One;
 
       procedure Is_Not_Empty (C : in out Test_Case'Class);
       procedure Is_Not_Empty (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, not Is_Empty (R), "shouldn't be empty");
+         Assert (not Is_Empty (R), "shouldn't be empty");
       end Is_Not_Empty;
 
       procedure Is_At_Mark (C : in out Test_Case'Class);
       procedure Is_At_Mark (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, At_Mark (R), "should be at mark");
+         Assert (At_Mark (R), "should be at mark");
       end Is_At_Mark;
 
       procedure Check_Top_After_Single_Insert (C : in out Test_Case'Class);
       procedure Check_Top_After_Single_Insert (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Top (R) = 'a', "has wrong top");
+         Assert (Top (R) = 'a', "has wrong top");
       end Check_Top_After_Single_Insert;
 
       procedure Check_Empty_After_Pop (C : in out Test_Case'Class);
       procedure Check_Empty_After_Pop (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
          Pop (R);
-         Assert (C, Is_Empty (R), "ring isn't empty");
+         Assert (Is_Empty (R), "ring isn't empty");
       end Check_Empty_After_Pop;
 
       procedure Check_Rotating_Single_Entry (C : in out Test_Case'Class);
       procedure Check_Rotating_Single_Entry (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
          Rotate (R);
-         Assert (C, Extent (R) = 1, "ring's extent is not 1");
-         Assert (C, At_Mark (R), "should be at mark");
-         Assert (C, Top (R) = 'a', "has wrong top");
+         Assert (Extent (R) = 1, "ring's extent is not 1");
+         Assert (At_Mark (R), "should be at mark");
+         Assert (Top (R) = 'a', "has wrong top");
          Rotate (R, Dir => Backward);
-         Assert (C, Extent (R) = 1, "ring's extent is not 1");
-         Assert (C, At_Mark (R), "should be at mark");
-         Assert (C, Top (R) = 'a', "has wrong top");
+         Assert (Extent (R) = 1, "ring's extent is not 1");
+         Assert (At_Mark (R), "should be at mark");
+         Assert (Top (R) = 'a', "has wrong top");
       end Check_Rotating_Single_Entry;
 
       procedure Check_Value_After_Single_Insert (C : in out Test_Case'Class);
       procedure Check_Value_After_Single_Insert (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Value (R) = "a", "has wrong value");
+         Assert (Value (R) = "a", "has wrong value");
       end Check_Value_After_Single_Insert;
 
       function Name (C : Case_2) return AUnit.Message_String is
@@ -272,77 +285,83 @@ package body Tests.Rings is
 
       procedure Extent_Is_Two (C : in out Test_Case'Class);
       procedure Extent_Is_Two (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Extent (R) = 2, "ring's extent is not 2");
+         Assert (Extent (R) = 2, "ring's extent is not 2");
       end Extent_Is_Two;
 
       procedure Not_At_Mark (C : in out Test_Case'Class);
       procedure Not_At_Mark (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, not At_Mark (R), "shouldn't be at mark");
+         Assert (not At_Mark (R), "shouldn't be at mark");
       end Not_At_Mark;
 
       procedure Check_Top_After_Double_Insert (C : in out Test_Case'Class);
       procedure Check_Top_After_Double_Insert (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Top (R) = 'b', "has wrong top");
+         Assert (Top (R) = 'b', "has wrong top");
       end Check_Top_After_Double_Insert;
 
       procedure Check_Value_After_Pop (C : in out Test_Case'Class);
       procedure Check_Value_After_Pop (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
          Pop (R);
-         Assert (C, Value (R) = "a", "has wrong value");
+         Assert (Value (R) = "a", "has wrong value");
       end Check_Value_After_Pop;
 
       procedure Check_Rotating_Double_Entry (C : in out Test_Case'Class);
       procedure Check_Rotating_Double_Entry (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
          Rotate (R);
-         Assert (C, Value (R) = "ab", "has wrong value after rotation");
-         Assert (C, At_Mark (R), "should be at mark");
-         Assert (C, Top (R) = 'a', "has wrong top (a)");
+         Assert (Value (R) = "ab", "has wrong value after rotation");
+         Assert (At_Mark (R), "should be at mark");
+         Assert (Top (R) = 'a', "has wrong top (a)");
          Rotate (R, Dir => Backward);
-         Assert (C,
-                 Value (R) = "ba",
+         Assert (Value (R) = "ba",
                  "has wrong value after rotation backward");
-         Assert (C, not At_Mark (R), "shouldn't be at mark");
-         Assert (C, Top (R) = 'b', "has wrong top (b)");
+         Assert (not At_Mark (R), "shouldn't be at mark");
+         Assert (Top (R) = 'b', "has wrong top (b)");
       end Check_Rotating_Double_Entry;
 
       procedure Check_Value_Of_Double_Entry (C : in out Test_Case'Class);
       procedure Check_Value_Of_Double_Entry (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
-         Assert (C, Value (R) = "ba", "has wrong value");
+         Assert (Value (R) = "ba", "has wrong value");
       end Check_Value_Of_Double_Entry;
 
       procedure Check_Insertion_Around_Mark (C : in out Test_Case'Class);
       procedure Check_Insertion_Around_Mark (C : in out Test_Case'Class) is
+         pragma Unreferenced (C);
       begin
          Mark (R);                     --  mark is on b, internal form Ba
-         Assert (C, Value (R) = "ba", "has wrong value (a)");
-         Assert (C, At_Mark (R), "is not at mark (a)");
+         Assert (Value (R) = "ba", "has wrong value (a)");
+         Assert (At_Mark (R), "is not at mark (a)");
          Rotate (R, Dir => Backward);  --  internal bA
-         Assert (C, Value (R) = "ab", "has wrong value (b)");
-         Assert (C, not At_Mark (R), "is at mark (a)");
+         Assert (Value (R) = "ab", "has wrong value (b)");
+         Assert (not At_Mark (R), "is at mark (a)");
          Insert (R, 'c');              --  internal bCa (after mark)
-         Assert (C, Value (R) = "cab", "has wrong value (c)");
-         Assert (C, not At_Mark (R), "is at mark (b)");
+         Assert (Value (R) = "cab", "has wrong value (c)");
+         Assert (not At_Mark (R), "is at mark (b)");
          Rotate (R, Dir => Forward);   --  internal bcA
-         Assert (C, Value (R) = "abc", "has wrong value (d)");
-         Assert (C, not At_Mark (R), "is not at mark (b)");
+         Assert (Value (R) = "abc", "has wrong value (d)");
+         Assert (not At_Mark (R), "is not at mark (b)");
          Rotate (R, Dir => Forward);   --  internal Bca
-         Assert (C, Value (R) = "bca", "has wrong value (e)");
-         Assert (C, At_Mark (R), "is not at mark (c)");
+         Assert (Value (R) = "bca", "has wrong value (e)");
+         Assert (At_Mark (R), "is not at mark (c)");
          Rotate (R, Dir => Forward);   --  internal bCa
-         Assert (C, Value (R) = "cab", "has wrong value (f)");
+         Assert (Value (R) = "cab", "has wrong value (f)");
          Mark (R);                     --  mark now on c
          Insert (R, 'd');              --  internal bDca (before mark)
-         Assert (C, Value (R) = "dcab", "has wrong value (g)");
-         Assert (C, not At_Mark (R), "is at mark (c)");
+         Assert (Value (R) = "dcab", "has wrong value (g)");
+         Assert (not At_Mark (R), "is at mark (c)");
          Rotate (R, Dir => Forward);   --  internal bdCa
-         Assert (C, Value (R) = "cabd", "has wrong value (h)");
-         Assert (C, At_Mark (R), "is not at mark (d)");
+         Assert (Value (R) = "cabd", "has wrong value (h)");
+         Assert (At_Mark (R), "is not at mark (d)");
       end Check_Insertion_Around_Mark;
 
       function Name (C : Case_3) return AUnit.Message_String is
