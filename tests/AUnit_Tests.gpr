@@ -1,4 +1,4 @@
---  Copyright 2009-2010 Simon Wright <simon@pushface.org>
+--  Copyright Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -20,7 +20,7 @@ with "aunit";
 
 project AUnit_Tests is
 
-  type Language is ("gnat95", "gnat05");
+  type Language is ("gnat95", "gnat05", "gnat12");
   Chosen_Language : Language := external ("LANGUAGE", "gnat95");
 
   type Debug_Code is ("no", "yes");
@@ -36,10 +36,9 @@ project AUnit_Tests is
   for Object_Dir use ".build";
 
   package Builder is
+     Coverage_Switches := ("-ftest-coverage", "-fprofile-arcs");
      for Default_Switches ("Ada") use
        (
-        "-ftest-coverage",
-        "-fprofile-arcs",
         "-m",
         "-g"
        );

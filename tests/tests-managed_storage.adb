@@ -1,4 +1,4 @@
---  Copyright 2009-2010 Simon Wright <simon@pushface.org>
+--  Copyright Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -77,6 +77,7 @@ package body Tests.Managed_Storage is
 
    procedure Allocation (C : in out Test_Case'Class);
    procedure Allocation (C : in out Test_Case'Class) is
+      pragma Unreferenced (C);
       P128 : MS.Pool (128);
       type String_P is access String;
       for String_P'Storage_Pool use P128;
@@ -87,8 +88,7 @@ package body Tests.Managed_Storage is
          P := new String
            (1 .. 129 - 2 * Integer'Max_Size_In_Storage_Elements);
          Free (P);
-         Assert (C,
-                 False,
+         Assert (False,
                  "allocation of too large an item should have failed");
       exception
          when BC.Storage_Error => null;
@@ -124,6 +124,7 @@ package body Tests.Managed_Storage is
 
    procedure Deallocation (C : in out Test_Case'Class);
    procedure Deallocation (C : in out Test_Case'Class) is
+      pragma Unreferenced (C);
       --  On a 64-bit processor, the size of the structural components
       --  of a Pool chunk is going to be 8 bytes. The object size used
       --  in this test needs to be such that 2 objects will fit in a
@@ -150,14 +151,11 @@ package body Tests.Managed_Storage is
       Check_Chunks (P80, 3, 3, 3, 0);
       MS.Purge_Unused_Chunks (P80);
       Check_Chunks (P80, 4, 3, 3, 0);
-      Assert (C,
-              Ps (2).all = Thirtytwo'(others => Character'Val (2)),
+      Assert (Ps (2).all = Thirtytwo'(others => Character'Val (2)),
               "(2) is incorrect (1)");
-      Assert (C,
-              Ps (3).all = Thirtytwo'(others => Character'Val (3)),
+      Assert (Ps (3).all = Thirtytwo'(others => Character'Val (3)),
               "(3) is incorrect (1)");
-      Assert (C,
-              Ps (6).all = Thirtytwo'(others => Character'Val (6)),
+      Assert (Ps (6).all = Thirtytwo'(others => Character'Val (6)),
               "(6) is incorrect (1)");
       Free (Ps (3));
       Check_Chunks (P80, 5, 3, 3, 0);
@@ -165,11 +163,9 @@ package body Tests.Managed_Storage is
       Check_Chunks (P80, 6, 3, 2, 1);
       MS.Purge_Unused_Chunks (P80);
       Check_Chunks (P80, 7, 2, 2, 0);
-      Assert (C,
-              Ps (2).all = Thirtytwo'(others => Character'Val (2)),
+      Assert (Ps (2).all = Thirtytwo'(others => Character'Val (2)),
               "(2) is incorrect (2)");
-      Assert (C,
-              Ps (6).all = Thirtytwo'(others => Character'Val (6)),
+      Assert (Ps (6).all = Thirtytwo'(others => Character'Val (6)),
               "(6) is incorrect (2)");
       --  re-Free.
       Free (Ps (3));
@@ -178,6 +174,7 @@ package body Tests.Managed_Storage is
 
    procedure Zero_Allocation (C : in out Test_Case'Class);
    procedure Zero_Allocation (C : in out Test_Case'Class) is
+      pragma Unreferenced (C);
       P128 : MS.Pool (128);
       subtype Empty is String (1 .. 0);
       type Empty_P is access Empty;
@@ -204,6 +201,7 @@ package body Tests.Managed_Storage is
    procedure Alignment (C : in out Test_Case'Class);
    procedure Alignment (C : in out Test_Case'Class)
    is
+      pragma Unreferenced (C);
       P256 : MS.Pool (256);
       Result : System.Address;
       use type SSE.Integer_Address;
@@ -214,19 +212,17 @@ package body Tests.Managed_Storage is
       Assert (SSE.To_Integer (Result) mod 32 = 0,
               "address not correctly aligned (1)");
       MS.Allocate (P256, Result, 256 - 32, 32);  -- must work
-      Assert (C,
-              SSE.To_Integer (Result) mod 32 = 0,
+      Assert (SSE.To_Integer (Result) mod 32 = 0,
               "address not correctly aligned (2)");
       begin
          --  This allocation almost certainly won't work, because
          --  (assuming 32-bit words) the payload starts 6 words in,
          --  and the system allocation will probably start on a
-         --  16-byte alignment, so the highest alignment with wioch we
+         --  16-byte alignment, so the highest alignment with which we
          --  could ever achieve allocation of a full-size element
          --  would be 8.
          MS.Allocate (P256, Result, 256, 16);
-         Assert (C,
-                 SSE.To_Integer (Result) mod 16 = 0,
+         Assert (SSE.To_Integer (Result) mod 16 = 0,
                  "address not correctly aligned (3)");
       exception
          when BC.Storage_Error => null;
@@ -236,6 +232,7 @@ package body Tests.Managed_Storage is
 
    procedure Reclaiming_And_Purging (C : in out Test_Case'Class);
    procedure Reclaiming_And_Purging (C : in out Test_Case'Class) is
+      pragma Unreferenced (C);
       P128 : MS.Pool (128);
       type String_P is access String;
       for String_P'Storage_Pool use P128;
@@ -270,6 +267,7 @@ package body Tests.Managed_Storage is
 
    procedure Miscellaneous (C : in out Test_Case'Class);
    procedure Miscellaneous (C : in out Test_Case'Class) is
+      pragma Unreferenced (C);
       P128 : MS.Pool (128);
       package SSE renames System.Storage_Elements;
       use type SSE.Storage_Count;
@@ -280,8 +278,7 @@ package body Tests.Managed_Storage is
       Check_Chunks (P128, 2, 10, 0, 10);
       MS.Purge_Unused_Chunks (P128);
       Check_Chunks (P128, 3, 0, 0, 0);
-      Assert (C,
-              MS.Storage_Size (P128) = SSE.Storage_Count'Last,
+      Assert (MS.Storage_Size (P128) = SSE.Storage_Count'Last,
               "wrong Storage_Size");
    end Miscellaneous;
 
