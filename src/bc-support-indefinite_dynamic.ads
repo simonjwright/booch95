@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2009 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2013 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -35,8 +35,8 @@ generic
    type Item (<>) is private;
    with function "=" (L, R : Item) return Boolean is <>;
    type Item_Ptr is access Item;
-   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
    Initial_Size : Positive := 10;
+   Storage : in out System.Storage_Pools.Root_Storage_Pool'Class;
 package BC.Support.Indefinite_Dynamic is
 
    pragma Preelaborate;
@@ -99,12 +99,10 @@ package BC.Support.Indefinite_Dynamic is
 private
 
    package Smart
-   is new BC.Support.Indefinite_Reference (
-      T => Item,
-      P => Item_Ptr);
+   is new BC.Support.Indefinite_Reference (T => Item, P => Item_Ptr);
    type Dyn_Arr is array (Positive range <>) of Smart.Pointer;
 
-   type Dyn_Arr_Ref is access all Dyn_Arr;
+   type Dyn_Arr_Ref is access Dyn_Arr;
    for Dyn_Arr_Ref'Storage_Pool use Storage;
 
    type Dyn_Node is new Ada.Finalization.Controlled with record
