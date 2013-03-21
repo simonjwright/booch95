@@ -16,18 +16,7 @@
 
 project BC is
 
-   type Library_T is ("static", "relocatable");
-   Library_Type : Library_T := external ("LIBRARY_TYPE", "static");
-
-   for Library_Name use "bc";
-   for Library_Kind use Library_Type;
-   for Library_Dir use "./lib-" & Library_Type;
-   for Library_Options use External_As_List ("LDFLAGS", " ");
-
-   for Languages use ("ada");
-
-   for Source_Dirs use ("src");
-   for Source_Files use
+   Sources :=
      (
       "bc-containers-bags-bounded.adb",
       "bc-containers-bags-bounded.ads",
@@ -188,8 +177,6 @@ project BC is
       "bc-indefinite_containers-collections-unmanaged.ads",
       "bc-indefinite_containers-collections.adb",
       "bc-indefinite_containers-collections.ads",
-      "bc-indefinite_containers-indefinite_iterators.adb",
-      "bc-indefinite_containers-indefinite_iterators.ads",
       "bc-indefinite_containers-maps-bounded.adb",
       "bc-indefinite_containers-maps-bounded.ads",
       "bc-indefinite_containers-maps-unbounded.adb",
@@ -313,6 +300,179 @@ project BC is
       "bc-trees.ads",
       "bc.ads"
      );
+
+   Source_Units :=
+     (
+      "BC.Containers.Bags.Bounded",
+      "BC.Containers.Bags.Dynamic",
+      "BC.Containers.Bags.Unbounded",
+      "BC.Containers.Bags.Unmanaged",
+      "BC.Containers.Bags",
+      "BC.Containers.Collections.Bounded",
+      "BC.Containers.Collections.Dynamic",
+      "BC.Containers.Collections.Ordered.Bounded",
+      "BC.Containers.Collections.Ordered.Dynamic",
+      "BC.Containers.Collections.Ordered.Unbounded",
+      "BC.Containers.Collections.Ordered.Unmanaged",
+      "BC.Containers.Collections.Ordered",
+      "BC.Containers.Collections.Unbounded",
+      "BC.Containers.Collections.Unmanaged",
+      "BC.Containers.Collections",
+      "BC.Containers.Deques.Bounded",
+      "BC.Containers.Deques.Dynamic",
+      "BC.Containers.Deques.Unbounded",
+      "BC.Containers.Deques.Unmanaged",
+      "BC.Containers.Deques",
+      "BC.Containers.Lists.Double",
+      "BC.Containers.Lists.Single",
+      "BC.Containers.Lists",
+      "BC.Containers.Maps.Bounded",
+      "BC.Containers.Maps.Dynamic",
+      "BC.Containers.Maps.Unbounded",
+      "BC.Containers.Maps.Unmanaged",
+      "BC.Containers.Maps",
+      "BC.Containers.Queues.Bounded",
+      "BC.Containers.Queues.Dynamic",
+      "BC.Containers.Queues.Ordered.Bounded",
+      "BC.Containers.Queues.Ordered.Dynamic",
+      "BC.Containers.Queues.Ordered.Unbounded",
+      "BC.Containers.Queues.Ordered.Unmanaged",
+      "BC.Containers.Queues.Ordered",
+      "BC.Containers.Queues.Unbounded",
+      "BC.Containers.Queues.Unmanaged",
+      "BC.Containers.Queues",
+      "BC.Containers.Quicksort",
+      "BC.Containers.Rings.Bounded",
+      "BC.Containers.Rings.Dynamic",
+      "BC.Containers.Rings.Unbounded",
+      "BC.Containers.Rings.Unmanaged",
+      "BC.Containers.Rings",
+      "BC.Containers.Sets.Bounded",
+      "BC.Containers.Sets.Dynamic",
+      "BC.Containers.Sets.Unbounded",
+      "BC.Containers.Sets.Unmanaged",
+      "BC.Containers.Sets",
+      "BC.Containers.Shellsort",
+      "BC.Containers.Stacks.Bounded",
+      "BC.Containers.Stacks.Dynamic",
+      "BC.Containers.Stacks.Unbounded",
+      "BC.Containers.Stacks.Unmanaged",
+      "BC.Containers.Stacks",
+      "BC.Containers.Trees.AVL.Print",
+      "BC.Containers.Trees.AVL.Validate",
+      "BC.Containers.Trees.AVL",
+      "BC.Containers.Trees.Binary.In_Order",
+      "BC.Containers.Trees.Binary.Post_Order",
+      "BC.Containers.Trees.Binary.Pre_Order",
+      "BC.Containers.Trees.Binary",
+      "BC.Containers.Trees.Multiway.Post_Order",
+      "BC.Containers.Trees.Multiway.Pre_Order",
+      "BC.Containers.Trees.Multiway",
+      "BC.Containers.Trees",
+      "BC.Containers",
+      "BC.Copy",
+      "BC.Filter",
+      "BC.Graphs.Directed",
+      "BC.Graphs.Undirected",
+      "BC.Graphs",
+      "BC.Indefinite_Containers.Collections.Bounded",
+      "BC.Indefinite_Containers.Collections.Dynamic",
+      "BC.Indefinite_Containers.Collections.Ordered.Bounded",
+      "BC.Indefinite_Containers.Collections.Ordered.Dynamic",
+      "BC.Indefinite_Containers.Collections.Ordered.Unbounded",
+      "BC.Indefinite_Containers.Collections.Ordered.Unmanaged",
+      "BC.Indefinite_Containers.Collections.Ordered",
+      "BC.Indefinite_Containers.Collections.Unbounded",
+      "BC.Indefinite_Containers.Collections.Unmanaged",
+      "BC.Indefinite_Containers.Collections",
+      "BC.Indefinite_Containers.Maps.Bounded",
+      "BC.Indefinite_Containers.Maps.Unbounded",
+      "BC.Indefinite_Containers.Maps",
+      "BC.Indefinite_Containers.Queues.Bounded",
+      "BC.Indefinite_Containers.Queues.Dynamic",
+      "BC.Indefinite_Containers.Queues.Ordered.Bounded",
+      "BC.Indefinite_Containers.Queues.Ordered.Dynamic",
+      "BC.Indefinite_Containers.Queues.Ordered.Unbounded",
+      "BC.Indefinite_Containers.Queues.Ordered.Unmanaged",
+      "BC.Indefinite_Containers.Queues.Ordered",
+      "BC.Indefinite_Containers.Queues.Unbounded",
+      "BC.Indefinite_Containers.Queues.Unmanaged",
+      "BC.Indefinite_Containers.Queues",
+      "BC.Indefinite_Containers",
+      "BC.Indefinite_Unmanaged_Containers.Collections.Ordered",
+      "BC.Indefinite_Unmanaged_Containers.Collections",
+      "BC.Indefinite_Unmanaged_Containers.Maps",
+      "BC.Indefinite_Unmanaged_Containers.Queues.Ordered",
+      "BC.Indefinite_Unmanaged_Containers.Queues",
+      "BC.Indefinite_Unmanaged_Containers",
+      "BC.Lists.Double",
+      "BC.Lists.Single",
+      "BC.Lists",
+      "BC.Simple_Collections",
+      "BC.Support.Auto_Pointers",
+      "BC.Support.AVL_Trees",
+      "BC.Support.Bounded",
+      "BC.Support.Bounded_Hash_Tables",
+      "BC.Support.Dynamic",
+      "BC.Support.Exceptions",
+      "BC.Support.Hash_Tables",
+      "BC.Support.High_Resolution_Time",
+      "BC.Support.Indefinite_Bounded",
+      "BC.Support.Indefinite_Bounded_Hash_Tables",
+      "BC.Support.Indefinite_Dynamic",
+      "BC.Support.Indefinite_Hash_Tables",
+      "BC.Support.Indefinite_Reference",
+      "BC.Support.Indefinite_Unbounded",
+      "BC.Support.Indefinite_Unmanaged",
+      "BC.Support.Managed_Storage",
+      "BC.Support.Memory_Streams",
+      "BC.Support.Smart_Pointers",
+      "BC.Support.Standard_Storage",
+      "BC.Support.Statistics",
+      "BC.Support.Synchronization.Debug",
+      "BC.Support.Synchronization",
+      "BC.Support.Unbounded",
+      "BC.Support.Unmanaged",
+      "BC.Support.Unmanaged_Storage",
+      "BC.Support",
+      "BC.Trees.AVL_Trees.Iterators",
+      "BC.Trees.AVL_Trees.Print",
+      "BC.Trees.AVL_Trees.Validate",
+      "BC.Trees.AVL_Trees",
+      "BC.Trees.Binary_Trees.In_Order",
+      "BC.Trees.Binary_Trees.Post_Order",
+      "BC.Trees.Binary_Trees.Pre_Order",
+      "BC.Trees.Binary_Trees",
+      "BC.Trees.Multiway_Trees.Post_Order",
+      "BC.Trees.Multiway_Trees.Pre_Order",
+      "BC.Trees.Multiway_Trees",
+      "BC.Trees",
+      "BC"
+     );
+
+   type Library_T is ("static", "relocatable");
+   Library_Type : Library_T := external ("LIBRARY_TYPE", "static");
+
+   for Library_Name use "bc";
+   for Library_Kind use Library_Type;
+   for Library_Dir use "./lib-" & Library_Type;
+   case Library_Type is
+      when "relocatable" =>
+         for Library_Src_Dir use "./include";
+         for Library_Interface use Source_Units;
+      when "static" =>
+         --  Neither gnatmake nor gprbuild handles this case
+         --  properly. Rely on the relocatable build to copy the
+         --  required interface units to ./include.
+         null;
+   end case;
+   for Library_Options use External_As_List ("LDFLAGS", " ");
+
+   for Languages use ("ada");
+
+   for Source_Dirs use ("src");
+   for Source_Files use Sources;
+
    for Object_Dir use ".build-" & Library_Type;
 
    package Compiler is
