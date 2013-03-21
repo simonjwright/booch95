@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2009 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2013 Simon Wright <simon@pushface.org>
 --  Copyright 2005 Martin Krischik
 
 --  This package is free software; you can redistribute it and/or
@@ -89,9 +89,9 @@ private
 
    package Queue_Nodes
    is new BC.Support.Indefinite_Dynamic (Item => Item,
-                              Item_Ptr => Item_Ptr,
-                              Storage => Storage,
-                              Initial_Size => Initial_Size);
+                                         Item_Ptr => Item_Ptr,
+                                         Storage => Storage,
+                                         Initial_Size => Initial_Size);
 
    type Queue is new Abstract_Ordered_Queue with record
       Rep : Queue_Nodes.Dyn_Node;
