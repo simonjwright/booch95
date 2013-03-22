@@ -39,15 +39,6 @@ directory in the compiler source path,
    $ gnatmake -I$HOME/bc-20110809/src foo.adb
 </pre>
 
-<h2>Using GNAT Project with Debian 6</h2>
-
-<p>If you're running Debian 6 (<i>squeeze</i>), there are a couple of
-changes needed (<i>gnatmake</i> doesn't
-understand <tt>external_as_list()</tt> in a Project file): say</p>
-<pre>
-   <i>$</i> patch -p0 &lt;debian-6.diff
-</pre>
-
 <h2>Using GNAT Project</h2>
 
 <p>Alternatively, using the GNAT Project facility, add <tt>bc.gpr</tt> to
@@ -90,6 +81,15 @@ or <tt>GPR_PROJECT_PATH</tt> environment variable: in the shell, or
 to <i>gnatmake</i> or <i>gprbuild</i> to tell them to create the
 necessary build directories.
 
+<h3>Using GNAT Project with Debian 6</h3>
+
+<p>If you're running Debian 6 (<i>squeeze</i>), there is a small
+change needed (<i>gnatmake</i> doesn't
+understand <tt>external_as_list()</tt> in a Project file): say</p>
+<pre>
+   <i>$</i> patch -p0 &lt;debian-6.diff
+</pre>
+
 <h2>Installation with the compiler</h2>
 
 <p>If you're using GCC or GNAT GPL, the best way is to install the BCs
@@ -106,7 +106,7 @@ on Windows.
 </pre>
 <p>This uses the output of <tt>gnatls -v</tt> to work out where to
 install the BCs if you decide to; on this Mac OS X machine, it's under
-<tt>/opt/gnat-gpl-2011/</tt>.
+<tt>/opt/gnat-gpl-2012/</tt>.
 
 <p>Then,
 <pre>

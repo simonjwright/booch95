@@ -1,4 +1,4 @@
-/* 
+/*
    Stylesheet for Booch Component documents.
    */
 
@@ -14,7 +14,7 @@ body { font-size : 50%;
        margin-left : .5em;
        margin-right : .5em;
        color : black;
-       background : white; 
+       background : white;
        }
 
 div#header img { float : right;
@@ -27,7 +27,7 @@ h1 { font-size : 1.7em;
      text-transform : uppercase;
      letter-spacing :.2em;
      margin-top : .3em;
-     margin-bottom : 1em;
+     margin-bottom : .5em;
      }
 
 h2 { font-size : 1.5em;
@@ -42,7 +42,7 @@ h5 { font-size : 1.1em; }
 
 h6 { font-size : 1em; }
 
-p { margin : .1em 0 .1em 1em; }
+p { margin : .25em .25em .1em 1em; }
 
 dl { margin-left : 1em; }
 
