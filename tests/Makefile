@@ -123,7 +123,7 @@ tests-main.adb tests.ads
 
 dist:
 	mkdir $(DIST)/tests
-	cp $(TEST_SRC) Makefile tests.gpr $(DIST)/tests/
+	cp $(TEST_SRC) Makefile tests.gpr AUnit_Tests.gpr $(DIST)/tests/
 
 .build:
 	mkdir $@
