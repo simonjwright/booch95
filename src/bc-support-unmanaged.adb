@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 2003-2006 Simon Wright <simon@pushface.org>
+--  Copyright 2003-2013 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -116,7 +116,6 @@ package body BC.Support.Unmanaged is
    end "=";
 
    procedure Clear (Obj : in out Unm_Node) is
-      Empty_Node : Unm_Node;
       Ptr : Node_Ref;
    begin
       while Obj.Rep /= null loop
@@ -124,7 +123,10 @@ package body BC.Support.Unmanaged is
          Obj.Rep := Obj.Rep.Next;
          Delete_Node (Ptr);
       end loop;
-      Obj := Empty_Node;
+      Obj.Last := null;
+      Obj.Size := 0;
+      Obj.Cache := null;
+      Obj.Cache_Index := 0;
    end Clear;
 
    procedure Insert (Obj : in out Unm_Node; Elem : Item) is
