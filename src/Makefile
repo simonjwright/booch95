@@ -38,7 +38,6 @@ bc-support-high_resolution_time-clock.adb-ppc32		\
 bc-support-high_resolution_time.ad[bs]			\
 bc-support-indefinite_bounded.ad[bs]			\
 bc-support-indefinite_bounded_hash_tables.ad[bs]	\
-bc-support-indefinite_dynamic.ad[bs]			\
 bc-support-indefinite_hash_tables.ad[bs]		\
 bc-support-indefinite_reference.ad[bs]			\
 bc-support-indefinite_unbounded.ad[bs]			\
@@ -180,16 +179,12 @@ bc-indefinite_containers.ad[bs]
 
 ADA_SOURCE +=						\
 bc-indefinite_containers-collections-bounded.ad[bs]	\
-bc-indefinite_containers-collections-dynamic.ad[bs]	\
 bc-indefinite_containers-collections-unbounded.ad[bs]	\
-bc-indefinite_containers-collections-unmanaged.ad[bs]	\
 bc-indefinite_containers-collections.ad[bs]
 
 ADA_SOURCE +=							\
 bc-indefinite_containers-collections-ordered-bounded.ad[bs]	\
-bc-indefinite_containers-collections-ordered-dynamic.ad[bs]	\
 bc-indefinite_containers-collections-ordered-unbounded.ad[bs]	\
-bc-indefinite_containers-collections-ordered-unmanaged.ad[bs]	\
 bc-indefinite_containers-collections-ordered.ad[bs]
 
 ADA_SOURCE +=					\
@@ -199,16 +194,12 @@ bc-indefinite_containers-maps.ad[bs]
 
 ADA_SOURCE +=						\
 bc-indefinite_containers-queues-bounded.ad[bs]		\
-bc-indefinite_containers-queues-dynamic.ad[bs]		\
 bc-indefinite_containers-queues-unbounded.ad[bs]	\
-bc-indefinite_containers-queues-unmanaged.ad[bs]	\
 bc-indefinite_containers-queues.ad[bs]
 
 ADA_SOURCE +=							\
 bc-indefinite_containers-queues-ordered-bounded.ad[bs]		\
-bc-indefinite_containers-queues-ordered-dynamic.ad[bs]		\
 bc-indefinite_containers-queues-ordered-unbounded.ad[bs]	\
-bc-indefinite_containers-queues-ordered-unmanaged.ad[bs]	\
 bc-indefinite_containers-queues-ordered.ad[bs]
 
 ADA_SOURCE +=							\

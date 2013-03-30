@@ -156,9 +156,6 @@ forms is that the unbounded form is essentially an time efficient
 linked-list, but is not very space efficient. The bounded form uses
 a packed array base class, which is space efficient, but can become
 time inefficient if adding items into the middle of the array.</p>
-<p>Bounded forms have two parameters for their generics: Item and
-Maximum_Size. Dynamic and Unbounded forms have Item and the actual
-Storage Pool for parameters.
 <!--==================================================================--></p>
 <h2><a name="storage" id="storage">Storage Management</a></h2>
 <p>Storage management on certain architectures can be complex, and
@@ -496,12 +493,10 @@ supported.
 <th>Component</th>
 <th>Unbounded</th>
 <th>Bounded</th>
-<th>Dynamic</th>
 </tr>
 
 <tr>
 <td style="text-align: left;">Bags</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -510,19 +505,16 @@ supported.
 <td style="text-align: left;">Collections</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>plain</em></td>
 <td>&#10003;</td>
 <td>&#10003;</td>
-<td>&#10003;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>ordered</em></td>
-<td>&#10003;</td>
 <td>&#10003;</td>
 <td>&#10003;</td>
 </tr>
@@ -531,12 +523,10 @@ supported.
 <td style="text-align: left;">Dequeues</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: left;">Graphs</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -545,12 +535,10 @@ supported.
 <td style="text-align: right;"><em>directed</em></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>undirected</em></td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -559,12 +547,10 @@ supported.
 <td style="text-align: left;">Lists</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>single</em></td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -573,19 +559,16 @@ supported.
 <td style="text-align: right;"><em>double</em></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: left;">Maps</td>
 <td>&#10003;</td>
 <td>&#10003;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: left;">Queues</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -594,12 +577,10 @@ supported.
 <td style="text-align: right;"><em>plain</em></td>
 <td>&#10003;</td>
 <td>&#10003;</td>
-<td>&#10003;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>ordered</em></td>
-<td>&#10003;</td>
 <td>&#10003;</td>
 <td>&#10003;</td>
 </tr>
@@ -608,12 +589,10 @@ supported.
 <td style="text-align: left;">Rings</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: left;">Sets</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -622,12 +601,10 @@ supported.
 <td style="text-align: left;">Stacks</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: left;">Trees</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -636,19 +613,16 @@ supported.
 <td style="text-align: right;"><em>AVL</em></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>binary</em></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>&nbsp;</td>
 </tr>
 
 <tr>
 <td style="text-align: right;"><em>multiway</em></td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
