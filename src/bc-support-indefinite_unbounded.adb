@@ -1,7 +1,7 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 2005 Martin Krischik
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2005 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2013 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -117,7 +117,6 @@ package body BC.Support.Indefinite_Unbounded is
    end "=";
 
    procedure Clear (Obj : in out Unb_Node) is
-      Empty_Node : Unb_Node;
       Ptr : Node_Ref;
    begin
       while Obj.Rep /= null loop
@@ -125,7 +124,10 @@ package body BC.Support.Indefinite_Unbounded is
          Obj.Rep := Obj.Rep.Next;
          Delete_Node (Ptr);
       end loop;
-      Obj := Empty_Node;
+      Obj.Last := null;
+      Obj.Size := 0;
+      Obj.Cache := null;
+      Obj.Cache_Index := 0;
    end Clear;
 
    procedure Insert (Obj : in out Unb_Node; Elem : Item) is
