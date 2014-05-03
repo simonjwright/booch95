@@ -99,7 +99,8 @@ package body BC.Support.Indefinite_Unmanaged is
          begin
             while Temp_L /= null loop
                if IR.Value (Temp_L.Element)
-                 /= IR.Value (Temp_R.Element) then
+                 /= IR.Value (Temp_R.Element)
+               then
                   return False;
                end if;
                Temp_L := Temp_L.Next;
@@ -331,7 +332,8 @@ package body BC.Support.Indefinite_Unmanaged is
          raise BC.Range_Error;
       end if;
       if Start = Obj.Cache_Index
-        and then Elem = IR.Value (Obj.Cache.Element) then
+        and then Elem = IR.Value (Obj.Cache.Element)
+      then
          return Obj.Cache_Index;
       end if;
       for I in 1 .. Start - 1 loop

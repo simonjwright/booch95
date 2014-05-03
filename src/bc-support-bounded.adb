@@ -248,7 +248,8 @@ package body BC.Support.Bounded is
       end if;
       for I in Start .. Obj.Size loop
          if Obj.Elems (((Obj.Start - 1 + I - 1) mod Obj.Maximum_Size) + 1)
-           = Elem then
+           = Elem
+         then
             return I;
          end if;
       end loop;

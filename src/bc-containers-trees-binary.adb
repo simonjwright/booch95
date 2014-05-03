@@ -61,7 +61,8 @@ package body BC.Containers.Trees.Binary is
    is new Ada.Unchecked_Deallocation (Binary_Node, Binary_Node_Ref);
 
    function Create (From : Binary_Tree) return Binary_Tree is
-      Temp : Binary_Tree := (Ada.Finalization.Controlled with Rep => From.Rep);
+      Temp : constant Binary_Tree
+        := (Ada.Finalization.Controlled with Rep => From.Rep);
    begin
       if From.Rep /= null then
          Temp.Rep.Count := Temp.Rep.Count + 1;
