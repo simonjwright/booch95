@@ -252,7 +252,8 @@ package body BC.Containers.Lists.Double is
             --  Ensure From_List is the head of a list.
             --  XXX check this logic!
             if From_List.Head.Rep /= null and then
-              From_List.Head.Rep.Previous /= null then
+              From_List.Head.Rep.Previous /= null
+            then
                raise BC.Not_Root;
             end if;
             while Curr /= null and then Index < After loop

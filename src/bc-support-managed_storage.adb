@@ -118,7 +118,8 @@ package body BC.Support.Managed_Storage is
 
       if List = null
         or else List.Element_Size /= Usable_Size
-        or else List.Alignment /= Usable_Alignment then
+        or else List.Alignment /= Usable_Alignment
+      then
 
          --  Need to create a new list.
          --

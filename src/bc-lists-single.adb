@@ -601,7 +601,8 @@ package body BC.Lists.Single is
       declare
          package Conversions is new System.Address_To_Access_Conversions
            (List_Iterator'Class);
-         P : Conversions.Object_Pointer := Conversions.To_Pointer (It'Address);
+         P : constant Conversions.Object_Pointer
+           := Conversions.To_Pointer (It'Address);
       begin
          P.Index := Curr.Next;
       end;

@@ -291,7 +291,8 @@ package body BC.Support.AVL_Trees is
          --  Recurse down the right branch
          Delete (To_Be_Deleted, Candidate_Replacement.Right, Decreased);
          if Candidate_Replacement.Left = null
-           and then Candidate_Replacement.Right = null then
+           and then Candidate_Replacement.Right = null
+         then
             Candidate_Replacement.Balance := Middle;
          elsif Decreased then
             Balance_Right (Candidate_Replacement, Decreased);
@@ -487,8 +488,9 @@ package body BC.Support.AVL_Trees is
       --  New_Tree gets finalized on exit from this procedure, we
       --  don't Clear it down). NB, mustn't do a whole-record
       --  assignment here or we'll end up with a recursive disaster).
+      pragma Warnings (Off, "useless assignment*");
       New_Tree.Rep := null;
-      New_Tree.Size := 0;
+      pragma Warnings (On, "useless assignment*");
    end Adjust;
 
    procedure Finalize (T : in out AVL_Tree) is

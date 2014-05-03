@@ -86,7 +86,7 @@ package body BC.Trees.Multiway_Trees is
    end Purge;
 
    function Create (From : Multiway_Tree) return Multiway_Tree is
-      Temp : Multiway_Tree
+      Temp : constant Multiway_Tree
         := (Ada.Finalization.Controlled with Rep => From.Rep);
    begin
       if From.Rep /= null then

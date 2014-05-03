@@ -52,7 +52,8 @@ package body BC.Support.Hash_Tables is
                      if not Is_Bound (R, This_Item)
                        or else not Values.Eq
                                     (Values.Item_At (L.Values (B), Index),
-                                     Value_Of (R, This_Item)) then
+                                     Value_Of (R, This_Item))
+                     then
                         return False;
                      end if;
                   end;
