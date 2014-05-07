@@ -29,7 +29,7 @@
 --  which is normally private and whose default implementation raises
 --  Should_Have_Been_Overridden. If it's not fully supported, as is
 --  the case for hash-table-based containers (Bags, Maps, Sets),
---  Container_Error will be raised.
+--  Sort_Error will be raised.
 
 generic
    with function "<" (L, R : Item) return Boolean is <>;
