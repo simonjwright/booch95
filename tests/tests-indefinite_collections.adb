@@ -23,9 +23,7 @@ with AUnit.Test_Cases; use AUnit.Test_Cases;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with BC.Indefinite_Containers.Collections.Bounded;
-with BC.Indefinite_Containers.Collections.Dynamic;
 with BC.Indefinite_Containers.Collections.Unbounded;
-with BC.Indefinite_Containers.Collections.Unmanaged;
 with Global_Heap;
 
 pragma Warnings (Off, Ada.Text_IO);
@@ -265,22 +263,11 @@ package body Tests.Indefinite_Collections is
                                         CB.Collection,
                                         CB.Null_Container);
 
-   package CD
-   is new Abstract_Collections.Dynamic (Storage => Global_Heap.Storage);
-   package Dynamic_Tests is new Test_G ("dynamic",
-                                        CD.Collection,
-                                        CD.Null_Container);
-
    package CU
    is new Abstract_Collections.Unbounded (Storage => Global_Heap.Storage);
    package Unbounded_Tests is new Test_G ("unbounded",
                                           CU.Collection,
                                           CU.Null_Container);
-
-   package CUM is new Abstract_Collections.Unmanaged;
-   package Unmanaged_Tests is new Test_G ("unmanaged",
-                                          CUM.Collection,
-                                          CUM.Null_Container);
 
 
    function Suite return AUnit.Test_Suites.Access_Test_Suite is
@@ -288,9 +275,7 @@ package body Tests.Indefinite_Collections is
         := new AUnit.Test_Suites.Test_Suite;
    begin
       AUnit.Test_Suites.Add_Test (Result, Bounded_Tests.Suite);
-      AUnit.Test_Suites.Add_Test (Result, Dynamic_Tests.Suite);
       AUnit.Test_Suites.Add_Test (Result, Unbounded_Tests.Suite);
-      AUnit.Test_Suites.Add_Test (Result, Unmanaged_Tests.Suite);
       return Result;
    end Suite;
 
