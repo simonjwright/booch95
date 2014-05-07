@@ -19,10 +19,10 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  This package provides interval measurements using the Pentium
---  timestamp clock. This clock counts the number of processor cycles
---  since the processor was started (modulo 2**64).
---
+--  This package provides interval measurements using an operating
+--  system- or processor-based technique, as appropriate: see versions
+--  of the separate BC.Support.High_Resolution_Time.Clock.
+
 --  By default, the package initializes itself by measuring a "delay
 --  1.0"; you can prevent this by setting the environment variable
 --  CLOCK_RATE_GHZ to the correct value (eg, 1.123 for a 1123 MHz
