@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2010 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2014 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -21,11 +21,8 @@
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
 
---  $Revision$
---  $Date$
---  $Author$
-
 with BC.Support.Bounded;
+
 generic
    Maximum_Size : Positive;
 package BC.Containers.Stacks.Bounded is

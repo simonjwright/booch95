@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1999 Pat Rogers
---  Copyright 1999-2009 Simon Wright <simon@pushface.org>
+--  Copyright 1999-2014 Simon Wright <simon@pushface.org>
 --  Modifications November 2006 by Christopher J. Henrich
 
 --  This package is free software; you can redistribute it and/or
@@ -21,10 +21,6 @@
 --  executable to be covered by the GNU General Public License.  This
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
-
---  $Revision$
---  $Date$
---  $Author$
 
 with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;

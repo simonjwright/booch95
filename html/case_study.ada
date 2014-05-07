@@ -1,5 +1,3 @@
---  $Id$
-
 with Ada.Calendar;
 with Ada.Strings.Bounded;
 package Cars is
@@ -226,5 +224,3 @@ package Mapped_Fleets is new Abstract_Car_Maps.Bounded
   (Hash => Plate_Hash,
    Buckets => 5,
    Maximum_Size => 30);
-
-

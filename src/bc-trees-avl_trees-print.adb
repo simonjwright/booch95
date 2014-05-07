@@ -1,4 +1,4 @@
---  Copyright 1999-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1999-2014 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -18,10 +18,6 @@
 --  executable to be covered by the GNU General Public License.  This
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
-
---  $Revision$
---  $Date$
---  $Author$
 
 with Ada.Text_IO;
 procedure BC.Trees.AVL_Trees.Print (T : AVL_Tree) is
