@@ -451,6 +451,7 @@ project BC is
         (
          "-g",       --  for debug symbols
          "-O2",      --  standard optimisation
+         "-gnat95",  --  these are the Ada 95 containers!
          "-gnatqQ",  --  to keep ALI files even if there are compilation errors
          "-gnatafo", --  assertions, full reports, integer overflow
          "-gnaty",   --  standard style checks
