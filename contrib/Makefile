@@ -16,14 +16,13 @@
 
 all::
 
-FILES = \
-  Makefile \
-  README \
-  anh-vo/*.ad[bs] \
-  bond/bc-persistent.tar.gz \
-  bond/final_report.pdf \
-  gaudry/README \
-  gaudry/*.zip \
+FILES =						\
+  README					\
+  anh-vo/*.ad[bs]				\
+  bond/bc-persistent.tar.gz			\
+  bond/final_report.pdf				\
+  gaudry/README					\
+  gaudry/*.zip					\
   rogers/*.ad[bs]
 
 dist:
