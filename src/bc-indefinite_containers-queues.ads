@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2009 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2014 Simon Wright <simon@pushface.org>
 --  Copyright 2005 Martin Krischik
 
 --  This package is free software; you can redistribute it and/or
@@ -21,10 +21,6 @@
 --  executable to be covered by the GNU General Public License.  This
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
-
---  $Revision$
---  $Date$
---  $Author$
 
 generic
 package BC.Indefinite_Containers.Queues is

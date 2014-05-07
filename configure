@@ -14,8 +14,6 @@
 # write to the Free Software Foundation, 59 Temple Place - Suite
 # 330, Boston, MA 02111-1307, USA.
 
-# $Id$
-
 # Determine the prefix of the GNAT system to which the current
 # 'gnatmake' belongs and use it to edit Makefile.in and create a
 # Makefile that will install the BCs in that system.

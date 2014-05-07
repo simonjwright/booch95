@@ -1,11 +1,6 @@
---  Call Apply with a copy of each Item in the Tree, in preorder (for
---  each node, visit the node itself, the left subtree, and the right
---  subtree). The iteration will terminate early if Apply sets OK to
---  False.
-
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2003 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2014 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -25,10 +20,6 @@
 --  executable to be covered by the GNU General Public License.  This
 --  exception does not however invalidate any other reasons why the
 --  executable file might be covered by the GNU Public License.
-
---  $Revision$
---  $Date$
---  $Author$
 
 with Ada.Unchecked_Deallocation;
 
