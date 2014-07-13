@@ -5,14 +5,32 @@ updating SourceForge releases, not as a standard ChangeLog; in other
 words, it's for features, not detailed updates, and it's for features
 actually in releases - it excludes work-in-progress.
 
-yyyymmdd:
+DATE:
+
+Removed the dynamic and unmanaged forms of indefinite containers,
+as originally noted in the 20110612 release (thanks to David Henry for
+pointing this out).
+
+Small performance improvement in Clear for unbounded and
+unmanaged forms.
+
+Removed warnings from GCC 4.9.0 (mainly style).
+
+Shellsort raises Sort_Error, not Container_Error, if the
+wrong kind of Container is used.
+
+20130322:
+
+Added BC.Indefinite_Unmanaged_Containers.Queues.Ordered.
+
+A problem with building any indefinite dynamic form under GCC 4.7
+has been resolved.
 
 BC.Support.Indefinite_Dynamic was missing.
+
 Includes a patch to allow use of bc.gpr on Debian 6.
 
 20111205:
-
-Changes to Ordered Collections:
 
 Ordered Collections are now provided in all forms.
 
@@ -29,9 +47,9 @@ The behaviour of Replace when the new item is not equivalent to the
 replaced item was not specified (it was always treated as a Remove
 followed by an Insert). It has now been improved.
 
-Changes to Queues:
-
 Added Indefinite Unmanaged Queues.
+
+'make install' didn't actually install the source code.
 
 20110809:
 
