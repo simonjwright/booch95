@@ -14,6 +14,12 @@
 
 project BC is
 
+   type Language is ("gnat95", "gnat05", "gnat12");
+   Chosen_Language : Language := external ("LANGUAGE", "gnat95");
+
+   type Library_T is ("static", "relocatable");
+   Library_Type : Library_T := external ("LIBRARY_TYPE", "static");
+
    Sources :=
      (
       "bc-containers-bags-bounded.adb",
@@ -421,9 +427,6 @@ project BC is
       "BC"
      );
 
-   type Library_T is ("static", "relocatable");
-   Library_Type : Library_T := external ("LIBRARY_TYPE", "static");
-
    for Library_Name use "bc";
    for Library_Kind use Library_Type;
    for Library_Dir use "./lib-" & Library_Type;
@@ -449,9 +452,9 @@ project BC is
    package Compiler is
       for Default_Switches ("Ada") use
         (
+         "-" & Chosen_Language,
          "-g",       --  for debug symbols
          "-O2",      --  standard optimisation
-         "-gnat95",  --  these are the Ada 95 containers!
          "-gnatqQ",  --  to keep ALI files even if there are compilation errors
          "-gnatafo", --  assertions, full reports, integer overflow
          "-gnaty",   --  standard style checks

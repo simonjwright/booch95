@@ -17,7 +17,7 @@ with Ada.Exceptions;
 with Ada.Text_IO;
 with Assertions;
 with BC;
-with Set_Test_Support;1
+with Set_Test_Support;
 procedure Set_Test is
 
    use Ada.Text_IO;
