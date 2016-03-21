@@ -32,7 +32,7 @@ GNATMAKE=gnatmake
 test:
 	for t in $(TESTABLE); do \
 	  echo running $$t; \
-	  ./$$t 2>&1; \
+	  ./$$t 2>&1 | tee $$t.log; \
 	done
 
 TESTABLE += avl_test$(EXE)

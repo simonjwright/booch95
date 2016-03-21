@@ -16,14 +16,14 @@
 with BC.Graphs;
 with BC.Graphs.Directed;
 with BC.Graphs.Undirected;
-with Global_Heap;
+with BC.Support.Standard_Storage;
 
 package Graph_Test_Support is
 
    package AG is new BC.Graphs
      (Vertex_Item => Character,
       Arc_Item => Character,
-      Storage => Global_Heap.Storage);
+      Storage => BC.Support.Standard_Storage.Pool);
 
    package DG is new AG.Directed;
 
