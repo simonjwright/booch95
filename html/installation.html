@@ -48,26 +48,12 @@ your project's <tt>with</tt>s:
    project Foo is
       ...
 </pre>
-<p>With this approach, you can choose to use a static or relocatable
-version of the library; the default is static. There's no great
-advantage to choosing the relocatable version, since the BCs are
-mainly generic and most of the object code will be in the
-instantiations, in your library. Also, the relocatable version needs
-to be located at run time, and at the time of writing (20110809) this
-is only assured on Mac OS X.
 
-<p>To override the default, set <tt>LIBRARY_TYPE</tt>
-to <tt>relocatable</tt>, either in the environment or using
-the <tt>-XLIBRARY_TYPE=relocatable</tt> flag to
-<i>gnatmake</i> or <i>gprbuild</i>. This flag is used for the same purpose in
-AdaCore's library components (GNATcoll, XML/Ada etc), though possibly
-with a different default.
-
-Rather than explicitly naming the location of <tt>bc.gpr</tt> in your
+<p>Rather than explicitly naming the location of <tt>bc.gpr</tt> in your
 own GPR files, a better way of using GNAT Project is to add the BC's
 top-level directory to your <tt>ADA_PROJECT_PATH</tt>
 or <tt>GPR_PROJECT_PATH</tt> environment variable: in the shell, or
-(the equivalent of) <tt>~/.bashrc</tt>:
+(the equivalent of) <tt>~/.bashrc</tt>:</p>
 <pre>
    $ export ADA_PROJECT_PATH=~/bc-20110809:$ADA_PROJECT_PATH
 </pre>
@@ -80,6 +66,30 @@ or <tt>GPR_PROJECT_PATH</tt> environment variable: in the shell, or
 <p>Note, you will need to use the <tt>-p</tt> switch
 to <i>gnatmake</i> or <i>gprbuild</i> to tell them to create the
 necessary build directories.
+
+<h3>Project options</h3>
+
+<h4>Library style</h4>
+<p>With this approach, you can choose to use a static or relocatable
+version of the library; the default is static. There's no great
+advantage to choosing the relocatable version, since the BCs are
+mainly generic and most of the object code will be in the
+instantiations, in your library. Also, the relocatable version needs
+to be located at run time, and at the time of writing (20110809) this
+is only assured on Mac OS X (and then only if you use <i>gprbuild</i>.
+
+<p>To override the default, set the scenario variable <tt>LIBRARY_TYPE</tt>
+to <tt>relocatable</tt>, either in the environment or using
+the <tt>-XLIBRARY_TYPE=relocatable</tt> flag to
+<i>gnatmake</i> or <i>gprbuild</i>. This flag is used for the same
+purpose in AdaCore's library components (GNATcoll, XML/Ada etc),
+though possibly with a different default.</p>
+
+<h4>Language level</h4>
+
+<p>The BCs can be built against the Ada 2005 or 2012 standards if
+required; the scenario variable <t>LANGUAGE</t> can be set
+to <t>gnat95</t> (default), <t>gnat05</t> or <t>gnat12</t>.</p>
 
 <h3>Using GNAT Project with Debian 6</h3>
 

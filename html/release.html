@@ -23,18 +23,31 @@ SourceForge.net. Fast, secure and Free Open Source software downloads"
 <p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>
 <dl>
 
+<!--
 <dt>DATE</dt>
+<dd>
+<p><b>Interface changes</b></p>
+<p><b>Implementation changes</b></p>
+<p><b>Documentation changes</b></p>
+</dd>
+ -->
+
+<dt>21 March 2016</dt>
 <dd>
 <p><b>Interface changes</b></p>
 <p>Removed the dynamic and unmanaged forms of indefinite containers,
 as originally noted in the 20110612 release (thanks to David Henry for
 pointing this out).</p>
-<p><b>Implementation changes</b></p?
-<p>Small performance improvement in <tt>Clear</tt> for unbounded and
+<p><b>Implementation changes</b></p>
+<p>Small performance improvement in <t>Clear</t> for unbounded and
 unmanaged forms.</p>
 <p>Removed warnings from GCC 4.9.0 (mainly style).</p>
-<p><tt>Shellsort</tt> raises Sort_Error, not Container_Error, if the
-wrong kind of Container is used.</p>
+<p><t>Shellsort</t> raises <t>Sort_Error</t>,
+not <t>Container_Error</t>, if the wrong kind of Container is
+used.</p>
+<p>The BCs can be built against the Ada 2005 or 2012 standards if
+required; the GNAT Project scenario variable <t>LANGUAGE</t> can be
+set to <t>gnat95</t> (default), <t>gnat05</t> or <t>gnat12</t>.</p>
 <p><b>Documentation changes</b></p>
 <p>To match the interface changes above.</p>
 </dd>
