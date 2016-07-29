@@ -395,6 +395,7 @@ project BC is
       "BC.Support.Exceptions",
       "BC.Support.Hash_Tables",
       "BC.Support.High_Resolution_Time",
+      "BC.Support.High_Resolution_Time.Clock",
       "BC.Support.Indefinite_Bounded",
       "BC.Support.Indefinite_Bounded_Hash_Tables",
       "BC.Support.Indefinite_Hash_Tables",
@@ -432,12 +433,11 @@ project BC is
    for Library_Dir use "./lib-" & Library_Type;
    case Library_Type is
       when "relocatable" =>
-         for Library_Src_Dir use "./include";
+         for Library_Src_Dir use "./include-relocatable";
          for Library_Interface use Source_Units;
       when "static" =>
-         --  Neither gnatmake nor gprbuild handles this case
-         --  properly. Rely on the relocatable build to copy the
-         --  required interface units to ./include.
+         for Library_Src_Dir use "./include-static";
+         for Interfaces use Sources;
          null;
    end case;
    for Library_Options use External_As_List ("LDFLAGS", " ");
