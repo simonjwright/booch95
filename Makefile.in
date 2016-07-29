@@ -15,28 +15,50 @@
 # Template for the top-level (GNU) Makefile for Booch Components. Used
 # for installation and distribution construction.
 
-prefix = @PREFIX@
+prefix ?= @PREFIX@
 GPRBUILD ?= gprbuild
 
 # 'make' to make the BC libraries for use with bc.gpr.
 # 'make install' to install the BC libraries with your GNAT.
 # 'make dist' to make the distribution.
 
-libs:
-	$(GPRBUILD) -p -Pbc -XLIBRARY_TYPE=static
-	$(GPRBUILD) -p -Pbc -XLIBRARY_TYPE=relocatable
+libs: lib-static-stamp lib-relocatable-stamp
 
-install:
-	-mkdir -p $(prefix)/lib/gnat/
-	cp bc.gpr-for-installation $(prefix)/lib/gnat/bc.gpr
-	-mkdir -p $(prefix)/include/bc
-	cd include; tar -c -f- *.ad[bs] | tar -x -f- -C $(prefix)/include/bc/
-	-mkdir -p $(prefix)/lib/bc/lib-static
-	tar -c -f- lib-static | tar -x -f- -C $(prefix)/lib/bc/
-	chmod -w $(prefix)/lib/bc/lib-static/*.ali
-	-mkdir -p $(prefix)/lib/bc/lib-relocatable
-	tar -c -f- lib-relocatable | tar -x -f- -C $(prefix)/lib/bc/
-	chmod -w $(prefix)/lib/bc/lib-relocatable/*.ali
+lib-static-stamp: force
+	$(GPRBUILD) -p -Pbc -XLIBRARY_TYPE=static
+	touch $@
+
+lib-relocatable-stamp: force
+	$(GPRBUILD) -p -Pbc -XLIBRARY_TYPE=relocatable
+	touch $@
+
+install: install-static install-relocatable
+
+install-static: lib-static-stamp
+	gprinstall				\
+	  -f					\
+	  --prefix=$(prefix)			\
+	  -P bc.gpr				\
+	  --install-name=bc			\
+	  --project-subdir=lib/gnat		\
+	  -XLIBRARY_TYPE=static			\
+	  --mode=dev				\
+	  --create-missing-dirs			\
+	  --build-var=LIBRARY_TYPE		\
+	  --build-name=static
+
+install-relocatable: lib-relocatable-stamp
+	gprinstall				\
+	  -f					\
+	  --prefix=$(prefix)			\
+	  -P bc.gpr				\
+	  --install-name=bc			\
+	  --project-subdir=lib/gnat		\
+	  -XLIBRARY_TYPE=relocatable		\
+	  --mode=dev				\
+	  --create-missing-dirs			\
+	  --build-var=LIBRARY_TYPE		\
+	  --build-name=relocatable
 
 # Distribution construction
 
@@ -90,7 +112,9 @@ bc-$(DATE).7z: bc-$(DATE)
 	7za a -r $@ $</
 
 
-.PHONY: dist force install
+.PHONY: dist force install			\
+  lib-static-stamp lib-relocatable-stamp	\
+  install-static install-relocatable
 
 # vim: textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab
 # vim: filetype=make encoding=utf-8 fileformat=unix
