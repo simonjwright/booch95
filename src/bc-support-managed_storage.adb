@@ -46,7 +46,7 @@ package body BC.Support.Managed_Storage is
    function "+" (S : Chunk_Pointer) return String;
    function "+" (S : System.Address) return String is
       package Address_IO is new Ada.Text_IO.Modular_IO (SSE.Integer_Address);
-      Result : String (1 .. 12);
+      Result : String (1 .. 20);
    begin
       Address_IO.Put (Result,
                       System.Storage_Elements.To_Integer (S),

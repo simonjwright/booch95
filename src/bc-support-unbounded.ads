@@ -98,8 +98,6 @@ private
       Rep : Node_Ref;
       Last : Node_Ref;
       Size : Natural := 0;
-      Cache : Node_Ref;
-      Cache_Index : Natural := 0; -- 0 means invalid
    end record;
 
    procedure Adjust (U : in out Unb_Node);
