@@ -40,6 +40,10 @@ DEMOS += ada_units$(EXE)
 DEMO_SRC += ada_units.adb ada_unit_support.ad[bs]
 ada_units$(EXE): force
 
+DEMOS += concurrent_access_demo$(EXE)
+DEMO_SRC += concurrent_access_demo.adb concurrent_access_demo_support.ad[bs]
+concurrent_access_demo$(EXE): force
+
 DEMOS += configuration_demo$(EXE)
 DEMO_SRC += configuration_demo.adb configuration_demo_support.ad[bs]
 configuration_demo$(EXE): force
@@ -100,7 +104,7 @@ demos: .build $(DEMOS)
 
 dist:
 	mkdir $(DIST)/demos
-	cp $(DEMO_SRC) Makefile demos.gpr $(DIST)/demos/ 
+	cp $(DEMO_SRC) Makefile demos.gpr $(DIST)/demos/
 
 .build:
 	mkdir .build

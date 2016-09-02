@@ -3,6 +3,7 @@ project Demos is
   for Main use
     (
      "ada_units",
+     "concurrent_access_demo",
      "configuration_demo",
      "lists_traversal",
      "ordering_test",
