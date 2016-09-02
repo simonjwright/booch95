@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2002 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2002, 2016 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -83,10 +83,16 @@ package BC.Support.Unbounded is
    --  Returns the first index in which the given item is
    --  found. Returns 0 if unsuccessful.
 
+   --  Support concurrent iteration in the case where the Container is
+   --  initialized once and thereafter is read-only.
+   type Node is private;
+   type Node_Ref is access Node;
+   function First (Obj : Unb_Node) return Node_Ref;
+   function Item_At (Node : Node_Ref) return Item_Ptr;
+   function Next (Node : Node_Ref) return Node_Ref;
+
 private
 
-   type Node;
-   type Node_Ref is access Node;
    for Node_Ref'Storage_Pool use Storage;
    type Node is record
       Element : Item;
@@ -98,6 +104,8 @@ private
       Rep : Node_Ref;
       Last : Node_Ref;
       Size : Natural := 0;
+      Cache : Node_Ref;
+      Cache_Index : Natural := 0; -- 0 means invalid
    end record;
 
    procedure Adjust (U : in out Unb_Node);

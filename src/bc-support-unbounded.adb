@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2005 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2005, 2016 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -30,6 +30,13 @@ with System.Address_To_Access_Conversions;
 
 package body BC.Support.Unbounded is
 
+   --  We can't take 'Access of components of constant (in parameter)
+   --  objects; but we need to be able to do this so that we can
+   --  update the cache (which doesn't violate the abstraction, just
+   --  the Ada restriction). This technique is due to Matthew Heaney.
+   package Allow_Access
+   is new System.Address_To_Access_Conversions (Unb_Node);
+
    --  We can't take 'Access of non-aliased components. But if we
    --  alias discriminated objects they become constrained - even if
    --  the discriminant has a default.
@@ -38,9 +45,6 @@ package body BC.Support.Unbounded is
 
    function Create (I : Item; Previous, Next : Node_Ref) return Node_Ref;
    pragma Inline (Create);
-
-   function Node_At (Obj : Unb_Node; Index : Positive) return Node_Ref;
-   pragma Inline (Node_At);
 
    function Create (I : Item; Previous, Next : Node_Ref) return Node_Ref is
       Result : Node_Ref;
@@ -60,20 +64,36 @@ package body BC.Support.Unbounded is
    procedure Delete_Node is new
      Ada.Unchecked_Deallocation (Node, Node_Ref);
 
-   function Node_At (Obj : Unb_Node; Index : Positive) return Node_Ref is
+   procedure Update_Cache (Obj : in out Unb_Node; Index : Positive);
+
+   procedure Update_Cache (Obj : in out Unb_Node; Index : Positive) is
    begin
       if Index > Obj.Size then
          raise BC.Range_Error;
       end if;
+      if Obj.Cache /= null then
+         if Index = Obj.Cache_Index then
+            return;
+         elsif Index = Obj.Cache_Index + 1 then
+            Obj.Cache := Obj.Cache.Next;
+            Obj.Cache_Index := Index;
+            return;
+         elsif Index = Obj.Cache_Index - 1 then
+            Obj.Cache := Obj.Cache.Previous;
+            Obj.Cache_Index := Index;
+            return;
+         end if;
+      end if;
       declare
          Ptr : Node_Ref := Obj.Rep;
       begin
-         for J in 1 .. Index - 1 loop
+         for I in 1 .. Index - 1 loop
             Ptr := Ptr.Next;
          end loop;
-         return Ptr;
+         Obj.Cache := Ptr;
+         Obj.Cache_Index := Index;
       end;
-   end Node_At;
+   end Update_Cache;
 
    function "=" (Left, Right : in Unb_Node) return Boolean is
    begin
@@ -115,6 +135,8 @@ package body BC.Support.Unbounded is
          Obj.Last := Obj.Rep;
       end if;
       Obj.Size := Obj.Size + 1;
+      Obj.Cache := Obj.Rep;
+      Obj.Cache_Index := 1;
    end Insert;
 
    procedure Insert (Obj : in out Unb_Node; Elem : Item; Before : Positive) is
@@ -126,17 +148,17 @@ package body BC.Support.Unbounded is
          Insert (Obj, Elem);
       else
          declare
-            Current_Node : constant Node_Ref := Node_At (Obj, Before);
-            Temp_Node    : Node_Ref;
+            Temp_Node : Node_Ref;
          begin
+            Update_Cache (Obj, Before);
             Temp_Node := Create (Elem,
-                                 Previous => Current_Node.Previous,
-                                 Next => Current_Node);
+                                 Previous => Obj.Cache.Previous,
+                                 Next => Obj.Cache);
             if Temp_Node.Previous = null then
-               --  XXX can't this only happen if Before was 1?
                Obj.Rep := Temp_Node;
             end if;
             Obj.Size := Obj.Size + 1;
+            Obj.Cache := Temp_Node;
          end;
       end if;
    end Insert;
@@ -151,6 +173,8 @@ package body BC.Support.Unbounded is
          Obj.Rep := Obj.Last;
       end if;
       Obj.Size := Obj.Size + 1;
+      Obj.Cache := Obj.Last;
+      Obj.Cache_Index := Obj.Size;
    end Append;
 
    procedure Append (Obj : in out Unb_Node; Elem : Item; After : Positive) is
@@ -162,12 +186,12 @@ package body BC.Support.Unbounded is
          Append (Obj, Elem);
       else
          declare
-            Current_Node : constant Node_Ref := Node_At (Obj, After);
-            Temp_Node    : Node_Ref;
+            Temp_Node : Node_Ref;
          begin
+            Update_Cache (Obj, After);
             Temp_Node := Create (Elem,
-                                 Previous => Current_Node,
-                                 Next => Current_Node.Next);
+                                       Previous => Obj.Cache,
+                                       Next => Obj.Cache.Next);
             if Temp_Node.Previous /= null then
                Temp_Node.Previous.Next := Temp_Node;
             end if;
@@ -175,6 +199,8 @@ package body BC.Support.Unbounded is
                Obj.Last := Temp_Node;
             end if;
             Obj.Size := Obj.Size + 1;
+            Obj.Cache := Temp_Node;
+            Obj.Cache_Index := Obj.Cache_Index + 1;
          end;
       end if;
    end Append;
@@ -191,8 +217,10 @@ package body BC.Support.Unbounded is
          Clear (Obj);
       else
          declare
-            Ptr : Node_Ref := Node_At (Obj, From);
+            Ptr : Node_Ref;
          begin
+            Update_Cache (Obj, From);
+            Ptr := Obj.Cache;
             if Ptr.Previous = null then
                Obj.Rep := Ptr.Next;
             else
@@ -204,6 +232,15 @@ package body BC.Support.Unbounded is
                Ptr.Next.Previous := Ptr.Previous;
             end if;
             Obj.Size := Obj.Size - 1;
+            if Ptr.Next /= null then
+               Obj.Cache := Ptr.Next;
+            elsif Ptr.Previous /= null then
+               Obj.Cache := Ptr.Previous;
+               Obj.Cache_Index := Obj.Cache_Index - 1;
+            else
+               Obj.Cache := null;
+               Obj.Cache_Index := 0;
+            end if;
             Delete_Node (Ptr);
          end;
       end if;
@@ -211,7 +248,25 @@ package body BC.Support.Unbounded is
 
    procedure Replace (Obj : in out Unb_Node; Index : Positive; Elem : Item) is
    begin
-      Node_At (Obj, Index).Element := Elem;
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
+      if not ((Obj.Cache /= null) and then (Index = Obj.Cache_Index)) then
+         declare
+            Ptr : Node_Ref := Obj.Rep;
+         begin
+            for I in 1 .. Obj.Size loop
+               if I = Index then
+                  Obj.Cache := Ptr;
+                  Obj.Cache_Index := I;
+                  exit;
+               else
+                  Ptr := Ptr.Next;
+               end if;
+            end loop;
+         end;
+      end if;
+      Obj.Cache.Element := Elem;
    end Replace;
 
    function Length (Obj : Unb_Node) return Natural is
@@ -246,14 +301,27 @@ package body BC.Support.Unbounded is
    end Item_At;
 
    function Item_At (Obj : Unb_Node; Index : Positive) return Item_Ptr is
-      Ptr : constant Node_Ref := Node_At (Obj, Index);
+      U : constant Allow_Access.Object_Pointer
+        := Allow_Access.To_Pointer (Obj'Address);
+      --  Note, although (GNAT 3.11p) the value in Obj is successfully
+      --  updated via U, the optimiser can get fooled; when we return
+      --  next/previous cache hits, we must return via U. I don't
+      --  think this is a bug; the pointer aliasing is a nasty trick,
+      --  after all.
    begin
+      if Index > Obj.Size then
+         raise BC.Range_Error;
+      end if;
+      Update_Cache (U.all, Index);
       return Item_Ptr
-        (Allow_Element_Access.To_Pointer (Ptr.Element'Address));
+        (Allow_Element_Access.To_Pointer (U.Cache.Element'Address));
    end Item_At;
 
    function Location (Obj : Unb_Node; Elem : Item; Start : Positive := 1)
                      return Natural is
+      Ptr : Node_Ref := Obj.Rep;
+      U : constant Allow_Access.Object_Pointer
+        := Allow_Access.To_Pointer (Obj'Address);
    begin
       --  XXX the C++ (which indexes from 0) nevertheless checks
       --  "start <= count". We have to special-case the empty Node;
@@ -262,19 +330,42 @@ package body BC.Support.Unbounded is
       if Obj.Size = 0 then
          return 0;
       end if;
-      declare
-         Ptr : Node_Ref := Node_At (Obj, Start);
-      begin
-         for J in Start .. Obj.Size loop
-            if Ptr.Element = Elem then
-               return J;
-            else
-               Ptr := Ptr.Next;
-            end if;
-         end loop;
-      end;
+      if Start > Obj.Size then
+         raise BC.Range_Error;
+      end if;
+      if (Start = Obj.Cache_Index) and then (Elem = Obj.Cache.Element) then
+         return Obj.Cache_Index;
+      end if;
+      for I in 1 .. Start - 1 loop
+         Ptr := Ptr.Next; -- advance to Start point
+      end loop;
+      for I in Start .. Obj.Size loop
+         if Ptr.Element = Elem then
+            U.Cache := Ptr;
+            U.Cache_Index := I;
+            return I;
+         else
+            Ptr := Ptr.Next;
+         end if;
+      end loop;
       return 0;
    end Location;
+
+   function First (Obj : Unb_Node) return Node_Ref is
+   begin
+      return Obj.Rep;
+   end First;
+
+   function Item_At (Node : Node_Ref) return Item_Ptr is
+   begin
+      return Item_Ptr
+        (Allow_Element_Access.To_Pointer (Node.Element'Address));
+   end Item_At;
+
+   function Next (Node : Node_Ref) return Node_Ref is
+   begin
+      return Node.Next;
+   end Next;
 
    procedure Adjust (U : in out Unb_Node) is
       Tmp : Node_Ref := U.Last;
@@ -290,6 +381,8 @@ package body BC.Support.Unbounded is
             Tmp := Tmp.Previous;
          end loop;
       end if;
+      U.Cache := null;
+      U.Cache_Index := 0;
    end Adjust;
 
    procedure Finalize (U : in out Unb_Node) is

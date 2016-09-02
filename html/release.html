@@ -20,6 +20,14 @@ width="210" height="62" border="0" alt=
 <p><i>Release notes</i></p>
 <p><img src="greenline.gif" alt="--" width="100%" height="4" /></p>
 <dl>
+<dt>1 Sep 2016</dt>
+<dd>Unbounded Collections have a new
+function <tt>New_Constant_Collection_Iterator</tt> which allows
+concurrent iteration over an Unbounded Collection <b>provided that it
+is read-only after initialization</b>.<br>  This is in response
+to <a href="https://sourceforge.net/p/booch95/feature-requests/3/">feature
+request #3</a>.</dd>
+
 <dt>26 Feb 2009</dt>
 <dd>There was a problem with Rings when the Mark denoted an internal
 index before the Top; Insert would improperly increment the Mark.</dd>
