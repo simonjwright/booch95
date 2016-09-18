@@ -1,6 +1,6 @@
 --  Copyright 1994 Grady Booch
 --  Copyright 1994-1997 David Weller
---  Copyright 1998-2005 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2005, 2016 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -75,7 +75,7 @@ package body BC.Support.Unbounded is
    procedure Update_Cache (Obj : in out Unb_Node; Index : Positive);
 
    procedure Update_Cache (Obj : in out Unb_Node; Index : Positive) is
-      Cache : constant Cache_Manager.Cache_P := Cache_Manager.Get_Cache (Obj);
+      Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (Obj);
       Node : constant Node_Ref := Cache_Manager.Get_Node_Ref (Cache);
    begin
       if Index > Obj.Size then
@@ -136,7 +136,7 @@ package body BC.Support.Unbounded is
    end Clear;
 
    procedure Insert (Obj : in out Unb_Node; Elem : Item) is
-      Cache : constant Cache_Manager.Cache_P := Cache_Manager.Get_Cache (Obj);
+      Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (Obj);
    begin
       Obj.Rep := Create (Elem, Previous => null, Next => Obj.Rep);
       if Obj.Last = null then
@@ -155,7 +155,7 @@ package body BC.Support.Unbounded is
          Insert (Obj, Elem);
       else
          declare
-            Cache : Cache_Manager.Cache_P;
+            Cache : Caching.Cache_P;
             Node : Node_Ref;
             Temp_Node : Node_Ref;
          begin
@@ -175,7 +175,7 @@ package body BC.Support.Unbounded is
    end Insert;
 
    procedure Append (Obj : in out Unb_Node; Elem : Item) is
-      Cache : constant Cache_Manager.Cache_P := Cache_Manager.Get_Cache (Obj);
+      Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (Obj);
    begin
       Obj.Last := Create (Elem, Previous => Obj.Last, Next => null);
       if Obj.Last.Previous /= null then
@@ -197,7 +197,7 @@ package body BC.Support.Unbounded is
          Append (Obj, Elem);
       else
          declare
-            Cache : Cache_Manager.Cache_P;
+            Cache : Caching.Cache_P;
             Node : Node_Ref;
             Temp_Node : Node_Ref;
          begin
@@ -231,7 +231,7 @@ package body BC.Support.Unbounded is
          Clear (Obj);
       else
          declare
-            Cache : Cache_Manager.Cache_P;
+            Cache : Caching.Cache_P;
             Ptr : Node_Ref;
          begin
             Update_Cache (Obj, From);
@@ -262,7 +262,7 @@ package body BC.Support.Unbounded is
    end Remove;
 
    procedure Replace (Obj : in out Unb_Node; Index : Positive; Elem : Item) is
-      Cache : constant Cache_Manager.Cache_P := Cache_Manager.Get_Cache (Obj);
+      Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (Obj);
       Node : Node_Ref := Cache_Manager.Get_Node_Ref (Cache);
    begin
       if Index > Obj.Size then
@@ -330,7 +330,7 @@ package body BC.Support.Unbounded is
       end if;
       Update_Cache (U.all, Index);
       declare
-         Cache : constant Cache_Manager.Cache_P
+         Cache : constant Caching.Cache_P
            := Cache_Manager.Get_Cache (Obj);
          Node : constant Node_Ref := Cache_Manager.Get_Node_Ref (Cache);
       begin
@@ -341,7 +341,7 @@ package body BC.Support.Unbounded is
 
    function Location (Obj : Unb_Node; Elem : Item; Start : Positive := 1)
                      return Natural is
-      Cache : constant Cache_Manager.Cache_P := Cache_Manager.Get_Cache (Obj);
+      Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (Obj);
       Node : Node_Ref := Cache_Manager.Get_Node_Ref (Cache);
       --  U : constant Allow_Access.Object_Pointer
       --    := Allow_Access.To_Pointer (Obj'Address);
@@ -389,7 +389,7 @@ package body BC.Support.Unbounded is
          end loop;
       end if;
       declare
-         Cache : constant Cache_Manager.Cache_P := Cache_Manager.Get_Cache (U);
+         Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (U);
       begin
          Cache_Manager.Update (Cache, null, 0);
       end;
