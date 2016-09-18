@@ -39,6 +39,7 @@ ADA_SOURCE +=						\
 bc-support-avl_trees.ad[bs]				\
 bc-support-bounded.ad[bs]				\
 bc-support-bounded_hash_tables.ad[bs]			\
+bc-support-caching.ad[bs]				\
 bc-support-dynamic.ad[bs]				\
 bc-support-exceptions.ad[bs]				\
 bc-support-hash_tables.ad[bs]				\
@@ -231,7 +232,7 @@ bc-support-indefinite_reference.ads				\
 bc-support-indefinite_unbounded.adb				\
 bc-support-indefinite_unbounded.ads				\
 bc-support-indefinite_unmanaged.adb				\
-bc-support-indefinite_unmanaged.ads			    
+bc-support-indefinite_unmanaged.ads
 
 
 ############################
@@ -273,7 +274,7 @@ bc-$(DATE): force
 	cp -p \
 	  bc-support-high_resolution_time-clock.adb-pentium \
 	  $@/src/bc-support-high_resolution_time-clock.adb
-	mkdir $@/GNAT 
+	mkdir $@/GNAT
 	cp -p \
 	    ../GNAT/Makefile		   \
 	    ../GNAT/booch_95.gpr	   \
@@ -330,7 +331,7 @@ upload-dist: force
 	rsync						\
 	  $(RSYNC_OPTS)					\
 	  $(DISTRIBUTION_FILES)				\
-	  "$(SFUSER)@frs.sourceforge.net:uploads/" 
+	  "$(SFUSER)@frs.sourceforge.net:uploads/"
 
 
 .PHONY: force
