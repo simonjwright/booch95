@@ -15,13 +15,17 @@ procedure Concurrent_Access_Demo is
    task body Accessor is
       ID : Character;
    begin
-      accept Start (ID : Character) do
-         Accessor.ID := ID;
-      end Start;
+      select
+         accept Start (ID : Character) do
+            Accessor.ID := ID;
+         end Start;
+      or
+         terminate;
+      end select;
       delay 0.01; -- so the other task can be started
       declare
          It : CADT.Abstract_Containers.Iterator'Class
-           := CADT.Collections.New_Constant_Collection_Iterator (Collection);
+           := CADT.Collections.New_Iterator (Collection);
          Expected : Positive;
       begin
          for J in 1 .. 1_000 loop
@@ -50,7 +54,8 @@ procedure Concurrent_Access_Demo is
       when E : others =>
          Ada.Text_IO.Put_Line (Ada.Exceptions.Exception_Information (E));
    end Accessor;
-   A1, A2 : Accessor;
+   A1 : Accessor;
+   A2 : Accessor;
 begin
    for J in 1 .. 10_000 loop
       CADT.Collections.Append (Collection, J);
