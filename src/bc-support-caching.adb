@@ -32,9 +32,13 @@ package body BC.Support.Caching is
 
       function Get_Cache (For_The_Container : Container) return Cache_P
       is
-         Result : constant Cache_P := Cache_Attributes.Reference;
+         Result : Cache_P := Cache_Attributes.Value;
          use type System.Address;
       begin
+         if Result = null then
+            Result := new Cache;
+            Cache_Attributes.Set_Value (Result);
+         end if;
          if Result.Container /= For_The_Container'Address then
             Result.all := (Container => For_The_Container'Address,
                            Node      => System.Null_Address,

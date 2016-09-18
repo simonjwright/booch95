@@ -47,26 +47,21 @@ package BC.Support.Caching is
    --  As with the original code, an Index of 0 means that the cache
    --  is invalid.
    type Cache is record
-      Container : System.Address;
-      Node      : System.Address;
-      Index     : Natural;
+      Container : System.Address := System.Null_Address;
+      Node      : System.Address := System.Null_Address;
+      Index     : Natural        := 0;
    end record;
-
-   Null_Cache : constant Cache := (Container => System.Null_Address,
-                                   Node      => System.Null_Address,
-                                   Index     => 0);
+   type Cache_P is access Cache;
 
    package Cache_Attributes
-     is new Ada.Task_Attributes (Attribute     => Cache,
-                                 Initial_Value => Null_Cache);
+     is new Ada.Task_Attributes (Attribute     => Cache_P,
+                                 Initial_Value => null);
 
    generic
       type Container is private;
       type Node is private;
       type Node_Ref is access Node;
    package Cache_Manager is
-      subtype Cache_P is Cache_Attributes.Attribute_Handle;
-
       function Get_Cache (For_The_Container : Container) return Cache_P;
 
       function Get_Node_Ref (From : Cache_P) return Node_Ref;
