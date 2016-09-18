@@ -24,12 +24,21 @@ and demos/ for demos.
 
 20090226:
 
-A release with fixes for Ring containers.	
+A release with fixes for Ring containers.
 
 There was a problem when the Mark denoted an internal index before the
 Top; Insert would improperly increment the Mark.
 
-	
+20090226-a1:
+
+Unbounded Containers support concurrent iteration over a Container
+provided that it is read-only during the iteration(s).
+
+Note that this release may provide poor performance when iteration
+over a Container involves access to another Container.
+
+
+
 ----------------------------------------------------------------------------
 For emacs:
 Local Variables:
