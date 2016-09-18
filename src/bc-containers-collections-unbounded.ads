@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2002, 2016 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2002 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -92,13 +92,6 @@ package BC.Containers.Collections.Unbounded is
      (For_The_Collection : Collection) return Iterator'Class;
    --  Return a reset Iterator bound to the specific Collection.
 
-   function New_Constant_Collection_Iterator
-     (For_The_Collection : Collection) return Iterator'Class;
-   --  Return a reset Iterator bound to the specific Collection, which
-   --  should only be used when the Collection won't be updated after
-   --  initialization. Supports concurrent access *but only in this
-   --  case*. Calling Delete_Item_At will raise Program_Error.
-
 private
 
    function Item_At (C : Collection; Index : Positive) return Item_Ptr;
@@ -111,22 +104,5 @@ private
    type Collection is new Abstract_Collection with record
       Rep : Collection_Nodes.Unb_Node;
    end record;
-
-   type Constant_Collection_Iterator is new Iterator with record
-      Node : Collection_Nodes.Node_Ref;
-   end record;
-
-   procedure Reset (It : in out Constant_Collection_Iterator);
-
-   procedure Next (It : in out Constant_Collection_Iterator);
-
-   function Is_Done (It : Constant_Collection_Iterator) return Boolean;
-
-   function Current_Item (It : Constant_Collection_Iterator) return Item;
-
-   function Current_Item_Ptr
-     (It : Constant_Collection_Iterator) return Item_Ptr;
-
-   procedure Delete_Item_At (It : in out Constant_Collection_Iterator);
 
 end BC.Containers.Collections.Unbounded;
