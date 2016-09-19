@@ -25,7 +25,8 @@ with System;
 package BC.Support.Caching is
 
    --  This package is intended for use to support the caching used in
-   --  the Unbounded (and Unmanaged) forms of Containers.
+   --  the Unbounded (and Unmanaged) forms of Containers. The actual
+   --  use is in BC.Support.Unbounded or .Unmanaged.
    --
    --  The issue (see Feature Request #3) is the desire to allow
    --  concurrent iteration over an Unbounded Collection, provided
@@ -35,11 +36,14 @@ package BC.Support.Caching is
    --  components are so because there is limited space in the Task
    --  Control Block for attributes, and it would be impractical to
    --  have a different Cache type for each Container
-   --  instantiated. Using Containers should instantiate
-   --  Address_To_Access_Conversions for their access-to-node type.
+   --  instantiated. Using Containers must convert between
+   --  System.Address and their access-to-node type (note, this may
+   --  give rise to aliasing-related warnings, which can be suppressed
+   --  in GNAT using pragma No_Strict_Aliasing on the access-to-node
+   --  type).
    --
    --  On retrieving the Cache, the first check is that it isn't in
-   --  use for another Container instance, if so, it must be
+   --  use for another Container instance; if so, it must be
    --  nulled. This will make certain usage patterns very inefficient
    --  (e.g. iterating over one container as part of the processing
    --  during iteration over another).
