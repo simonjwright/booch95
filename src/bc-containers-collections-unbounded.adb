@@ -1,5 +1,5 @@
 --  Copyright 1994 Grady Booch
---  Copyright 1998-2006 Simon Wright <simon@pushface.org>
+--  Copyright 1998-2006, 2016 Simon Wright <simon@pushface.org>
 
 --  This package is free software; you can redistribute it and/or
 --  modify it under terms of the GNU General Public License as
@@ -23,8 +23,6 @@
 --  $Revision$
 --  $Date$
 --  $Author$
-
-with System.Address_To_Access_Conversions;
 
 package body BC.Containers.Collections.Unbounded is
 
@@ -106,15 +104,12 @@ package body BC.Containers.Collections.Unbounded is
       return Collection_Nodes.Location (C.Rep, Elem);
    end Location;
 
-   package Address_Conversions
-   is new System.Address_To_Access_Conversions (Collection);
-
    function New_Iterator
      (For_The_Collection : Collection) return Iterator'Class is
-      Result : Collection_Iterator;
+      Result : Unbounded_Collection_Iterator;
    begin
-      Result.For_The_Container :=
-        Address_Conversions.To_Pointer (For_The_Collection'Address).all'Access;
+      Result.Node_Iterator :=
+        Collection_Nodes.New_Iterator (For_The_Collection.Rep);
       Reset (Result);
       return Result;
    end New_Iterator;
@@ -131,5 +126,40 @@ package body BC.Containers.Collections.Unbounded is
    begin
       return Empty_Container;
    end Null_Container;
+
+   -------------------------
+   --  Iteration support  --
+   -------------------------
+
+   procedure Reset (It : in out Unbounded_Collection_Iterator) is
+   begin
+      Collection_Nodes.Reset (It.Node_Iterator);
+   end Reset;
+
+   procedure Next (It : in out Unbounded_Collection_Iterator) is
+   begin
+      Collection_Nodes.Next (It.Node_Iterator);
+   end Next;
+
+   function Is_Done (It : Unbounded_Collection_Iterator) return Boolean is
+   begin
+      return Collection_Nodes.Is_Done (It.Node_Iterator);
+   end Is_Done;
+
+   function Current_Item (It : Unbounded_Collection_Iterator) return Item is
+   begin
+      return Collection_Nodes.Current_Item_Ptr (It.Node_Iterator).all;
+   end Current_Item;
+
+   function Current_Item_Ptr
+     (It : Unbounded_Collection_Iterator) return Item_Ptr is
+   begin
+      return Collection_Nodes.Current_Item_Ptr (It.Node_Iterator);
+   end Current_Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Unbounded_Collection_Iterator) is
+   begin
+      Collection_Nodes.Delete_Item_At (It.Node_Iterator);
+   end Delete_Item_At;
 
 end BC.Containers.Collections.Unbounded;

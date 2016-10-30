@@ -83,11 +83,36 @@ package BC.Support.Unbounded is
    --  Returns the first index in which the given item is
    --  found. Returns 0 if unsuccessful.
 
+   -------------------------
+   --  Iteration support  --
+   -------------------------
+
+   type Unb_Node_Iterator is private;
+   --  Ideally this would be constrained (by access-to-first-node),
+   --  but that makes it hard to use. It's relatively private.
+
+   function New_Iterator (For_The_Node : Unb_Node) return Unb_Node_Iterator;
+   --  Return a reset Iterator bound to the specific unbounded node.
+
+   procedure Reset (It : in out Unb_Node_Iterator);
+   --  Reset the Iterator to the beginning.
+
+   procedure Next (It : in out Unb_Node_Iterator);
+   --  Advance the Iterator to the next Item in the Node.
+
+   function Is_Done (It : Unb_Node_Iterator) return Boolean;
+   --  Return True if there are no more Items in the Node.
+
+   function Current_Item_Ptr (It : Unb_Node_Iterator) return Item_Ptr;
+   --  Return a pointer to the current Item.
+
+   procedure Delete_Item_At (It : in out Unb_Node_Iterator);
+   --  Delete the current Item.
+
 private
 
    type Node;
    type Node_Ref is access Node;
-   pragma No_Strict_Aliasing (Node_Ref);
    for Node_Ref'Storage_Pool use Storage;
    type Node is record
       Element : Item;
@@ -99,10 +124,19 @@ private
       Rep : Node_Ref;
       Last : Node_Ref;
       Size : Natural := 0;
+      Cache : Node_Ref;
+      Cache_Index : Natural := 0; -- 0 means invalid
    end record;
+   type Unb_Node_Ref is access all Unb_Node;
+   for Unb_Node_Ref'Storage_Size use 0;
 
    procedure Adjust (U : in out Unb_Node);
    procedure Finalize (U : in out Unb_Node);
+
+   type Unb_Node_Iterator is record
+      Owner   : Unb_Node_Ref;
+      Current : Node_Ref;
+   end record;
 
    procedure Write_Unb_Node
      (Stream : access Ada.Streams.Root_Stream_Type'Class;

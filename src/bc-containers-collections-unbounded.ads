@@ -105,4 +105,21 @@ private
       Rep : Collection_Nodes.Unb_Node;
    end record;
 
+   type Unbounded_Collection_Iterator is new Containers.Iterator with record
+      Node_Iterator : Collection_Nodes.Unb_Node_Iterator;
+   end record;
+
+   procedure Reset (It : in out Unbounded_Collection_Iterator);
+
+   procedure Next (It : in out Unbounded_Collection_Iterator);
+
+   function Is_Done (It : Unbounded_Collection_Iterator) return Boolean;
+
+   function Current_Item (It : Unbounded_Collection_Iterator) return Item;
+
+   function Current_Item_Ptr
+     (It : Unbounded_Collection_Iterator) return Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Unbounded_Collection_Iterator);
+
 end BC.Containers.Collections.Unbounded;
