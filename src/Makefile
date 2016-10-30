@@ -39,7 +39,6 @@ ADA_SOURCE +=						\
 bc-support-avl_trees.ad[bs]				\
 bc-support-bounded.ad[bs]				\
 bc-support-bounded_hash_tables.ad[bs]			\
-bc-support-caching.ad[bs]				\
 bc-support-dynamic.ad[bs]				\
 bc-support-exceptions.ad[bs]				\
 bc-support-hash_tables.ad[bs]				\
