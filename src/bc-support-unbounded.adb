@@ -28,8 +28,6 @@
 with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
 
-with BC.Support.Caching;
-
 package body BC.Support.Unbounded is
 
    --  We can't take 'Access of components of constant (in parameter)
@@ -44,12 +42,6 @@ package body BC.Support.Unbounded is
    --  the discriminant has a default.
    package Allow_Element_Access
    is new System.Address_To_Access_Conversions (Item);
-
-   --  Support caching
-   package Cache_Manager is new Caching.Cache_Manager
-     (Container => Unb_Node,
-      Node      => Node,
-      Node_Ref  => Node_Ref);
 
    function Create (I : Item; Previous, Next : Node_Ref) return Node_Ref;
    pragma Inline (Create);
@@ -75,20 +67,20 @@ package body BC.Support.Unbounded is
    procedure Update_Cache (Obj : in out Unb_Node; Index : Positive);
 
    procedure Update_Cache (Obj : in out Unb_Node; Index : Positive) is
-      Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (Obj);
-      Node : constant Node_Ref := Cache_Manager.Get_Node_Ref (Cache);
    begin
       if Index > Obj.Size then
          raise BC.Range_Error;
       end if;
-      if Node /= null then
-         if Index = Cache.Index then
+      if Obj.Cache /= null then
+         if Index = Obj.Cache_Index then
             return;
-         elsif Index = Cache.Index + 1 then
-            Cache_Manager.Update (Cache, Node.Next, Index);
+         elsif Index = Obj.Cache_Index + 1 then
+            Obj.Cache := Obj.Cache.Next;
+            Obj.Cache_Index := Index;
             return;
-         elsif Index = Cache.Index - 1 then
-            Cache_Manager.Update (Cache, Node.Previous, Index);
+         elsif Index = Obj.Cache_Index - 1 then
+            Obj.Cache := Obj.Cache.Previous;
+            Obj.Cache_Index := Index;
             return;
          end if;
       end if;
@@ -98,7 +90,8 @@ package body BC.Support.Unbounded is
          for I in 1 .. Index - 1 loop
             Ptr := Ptr.Next;
          end loop;
-         Cache_Manager.Update (Cache, Ptr, Index);
+         Obj.Cache := Ptr;
+         Obj.Cache_Index := Index;
       end;
    end Update_Cache;
 
@@ -136,14 +129,14 @@ package body BC.Support.Unbounded is
    end Clear;
 
    procedure Insert (Obj : in out Unb_Node; Elem : Item) is
-      Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (Obj);
    begin
       Obj.Rep := Create (Elem, Previous => null, Next => Obj.Rep);
       if Obj.Last = null then
          Obj.Last := Obj.Rep;
       end if;
       Obj.Size := Obj.Size + 1;
-      Cache_Manager.Update (Cache, Obj.Rep, 1);
+      Obj.Cache := Obj.Rep;
+      Obj.Cache_Index := 1;
    end Insert;
 
    procedure Insert (Obj : in out Unb_Node; Elem : Item; Before : Positive) is
@@ -155,27 +148,22 @@ package body BC.Support.Unbounded is
          Insert (Obj, Elem);
       else
          declare
-            Cache : Caching.Cache_P;
-            Node : Node_Ref;
             Temp_Node : Node_Ref;
          begin
             Update_Cache (Obj, Before);
-            Cache     := Cache_Manager.Get_Cache (Obj);
-            Node      := Cache_Manager.Get_Node_Ref (Cache);
             Temp_Node := Create (Elem,
-                                 Previous => Node.Previous,
-                                 Next     => Node);
+                                 Previous => Obj.Cache.Previous,
+                                 Next => Obj.Cache);
             if Temp_Node.Previous = null then
                Obj.Rep := Temp_Node;
             end if;
             Obj.Size := Obj.Size + 1;
-            Cache_Manager.Update (Cache, Temp_Node, Cache.Index);
+            Obj.Cache := Temp_Node;
          end;
       end if;
    end Insert;
 
    procedure Append (Obj : in out Unb_Node; Elem : Item) is
-      Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (Obj);
    begin
       Obj.Last := Create (Elem, Previous => Obj.Last, Next => null);
       if Obj.Last.Previous /= null then
@@ -185,7 +173,8 @@ package body BC.Support.Unbounded is
          Obj.Rep := Obj.Last;
       end if;
       Obj.Size := Obj.Size + 1;
-      Cache_Manager.Update (Cache, Obj.Last, Obj.Size);
+      Obj.Cache := Obj.Last;
+      Obj.Cache_Index := Obj.Size;
    end Append;
 
    procedure Append (Obj : in out Unb_Node; Elem : Item; After : Positive) is
@@ -197,16 +186,12 @@ package body BC.Support.Unbounded is
          Append (Obj, Elem);
       else
          declare
-            Cache : Caching.Cache_P;
-            Node : Node_Ref;
             Temp_Node : Node_Ref;
          begin
             Update_Cache (Obj, After);
-            Cache := Cache_Manager.Get_Cache (Obj);
-            Node := Cache_Manager.Get_Node_Ref (Cache);
             Temp_Node := Create (Elem,
-                                 Previous => Node,
-                                 Next => Node.Next);
+                                       Previous => Obj.Cache,
+                                       Next => Obj.Cache.Next);
             if Temp_Node.Previous /= null then
                Temp_Node.Previous.Next := Temp_Node;
             end if;
@@ -214,7 +199,8 @@ package body BC.Support.Unbounded is
                Obj.Last := Temp_Node;
             end if;
             Obj.Size := Obj.Size + 1;
-            Cache_Manager.Update (Cache, Temp_Node, Cache.Index + 1);
+            Obj.Cache := Temp_Node;
+            Obj.Cache_Index := Obj.Cache_Index + 1;
          end;
       end if;
    end Append;
@@ -231,13 +217,10 @@ package body BC.Support.Unbounded is
          Clear (Obj);
       else
          declare
-            Cache : Caching.Cache_P;
             Ptr : Node_Ref;
          begin
             Update_Cache (Obj, From);
-            Cache := Cache_Manager.Get_Cache (Obj);
-            Ptr := Cache_Manager.Get_Node_Ref (Cache);
-            --  sorry about the .all'Access
+            Ptr := Obj.Cache;
             if Ptr.Previous = null then
                Obj.Rep := Ptr.Next;
             else
@@ -250,11 +233,13 @@ package body BC.Support.Unbounded is
             end if;
             Obj.Size := Obj.Size - 1;
             if Ptr.Next /= null then
-               Cache_Manager.Update (Cache, Ptr.Next, Cache.Index);
+               Obj.Cache := Ptr.Next;
             elsif Ptr.Previous /= null then
-               Cache_Manager.Update (Cache, Ptr.Previous, Cache.Index - 1);
+               Obj.Cache := Ptr.Previous;
+               Obj.Cache_Index := Obj.Cache_Index - 1;
             else
-               Cache_Manager.Update (Cache, null, 0);
+               Obj.Cache := null;
+               Obj.Cache_Index := 0;
             end if;
             Delete_Node (Ptr);
          end;
@@ -262,24 +247,26 @@ package body BC.Support.Unbounded is
    end Remove;
 
    procedure Replace (Obj : in out Unb_Node; Index : Positive; Elem : Item) is
-      Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (Obj);
-      Node : Node_Ref := Cache_Manager.Get_Node_Ref (Cache);
    begin
       if Index > Obj.Size then
          raise BC.Range_Error;
       end if;
-      if Node = null or else Cache.Index /= Index then
-         Node := Obj.Rep;
+      if not ((Obj.Cache /= null) and then (Index = Obj.Cache_Index)) then
+         declare
+            Ptr : Node_Ref := Obj.Rep;
+         begin
             for I in 1 .. Obj.Size loop
                if I = Index then
-                  Cache_Manager.Update (Cache, Node, Index);
+                  Obj.Cache := Ptr;
+                  Obj.Cache_Index := I;
                   exit;
                else
-                  Node := Node.Next;
+                  Ptr := Ptr.Next;
                end if;
             end loop;
+         end;
       end if;
-      Node.Element := Elem;
+      Obj.Cache.Element := Elem;
    end Replace;
 
    function Length (Obj : Unb_Node) return Natural is
@@ -316,9 +303,6 @@ package body BC.Support.Unbounded is
    function Item_At (Obj : Unb_Node; Index : Positive) return Item_Ptr is
       U : constant Allow_Access.Object_Pointer
         := Allow_Access.To_Pointer (Obj'Address);
-      --  Update_Cache takes Obj as in-out (it doesn't need to now?)
-      --
-      --  XXX not sure this will still be true? XXX
       --  Note, although (GNAT 3.11p) the value in Obj is successfully
       --  updated via U, the optimiser can get fooled; when we return
       --  next/previous cache hits, we must return via U. I don't
@@ -329,22 +313,15 @@ package body BC.Support.Unbounded is
          raise BC.Range_Error;
       end if;
       Update_Cache (U.all, Index);
-      declare
-         Cache : constant Caching.Cache_P
-           := Cache_Manager.Get_Cache (Obj);
-         Node : constant Node_Ref := Cache_Manager.Get_Node_Ref (Cache);
-      begin
-         return Item_Ptr
-           (Allow_Element_Access.To_Pointer (Node.Element'Address));
-      end;
+      return Item_Ptr
+        (Allow_Element_Access.To_Pointer (U.Cache.Element'Address));
    end Item_At;
 
    function Location (Obj : Unb_Node; Elem : Item; Start : Positive := 1)
                      return Natural is
-      Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (Obj);
-      Node : Node_Ref := Cache_Manager.Get_Node_Ref (Cache);
-      --  U : constant Allow_Access.Object_Pointer
-      --    := Allow_Access.To_Pointer (Obj'Address);
+      Ptr : Node_Ref := Obj.Rep;
+      U : constant Allow_Access.Object_Pointer
+        := Allow_Access.To_Pointer (Obj'Address);
    begin
       --  XXX the C++ (which indexes from 0) nevertheless checks
       --  "start <= count". We have to special-case the empty Node;
@@ -356,19 +333,19 @@ package body BC.Support.Unbounded is
       if Start > Obj.Size then
          raise BC.Range_Error;
       end if;
-      if Start = Cache.Index and then Elem = Node.Element then
-         return Start;
+      if (Start = Obj.Cache_Index) and then (Elem = Obj.Cache.Element) then
+         return Obj.Cache_Index;
       end if;
-      Node := Obj.Rep;
       for I in 1 .. Start - 1 loop
-         Node := Node.Next; -- advance to Start point
+         Ptr := Ptr.Next; -- advance to Start point
       end loop;
       for I in Start .. Obj.Size loop
-         if Node.Element = Elem then
-            Cache_Manager.Update (Cache, Node, I);
+         if Ptr.Element = Elem then
+            U.Cache := Ptr;
+            U.Cache_Index := I;
             return I;
          else
-            Node := Node.Next;
+            Ptr := Ptr.Next;
          end if;
       end loop;
       return 0;
@@ -383,16 +360,13 @@ package body BC.Support.Unbounded is
          Tmp := Tmp.Previous;  -- move to previous node from orig list
          while Tmp /= null loop
             U.Rep := Create (Tmp.Element,
-                             Previous => null,
-                             Next => U.Rep);
+                                   Previous => null,
+                                   Next => U.Rep);
             Tmp := Tmp.Previous;
          end loop;
       end if;
-      declare
-         Cache : constant Caching.Cache_P := Cache_Manager.Get_Cache (U);
-      begin
-         Cache_Manager.Update (Cache, null, 0);
-      end;
+      U.Cache := null;
+      U.Cache_Index := 0;
    end Adjust;
 
    procedure Finalize (U : in out Unb_Node) is
@@ -433,5 +407,73 @@ package body BC.Support.Unbounded is
          end;
       end loop;
    end Read_Unb_Node;
+
+   -------------------------
+   --  Iteration support  --
+   -------------------------
+
+   function New_Iterator (For_The_Node : Unb_Node) return Unb_Node_Iterator is
+   begin
+      return (Owner   => Unb_Node_Ref
+                (Allow_Access.To_Pointer (For_The_Node'Address)),
+              Current => For_The_Node.Rep);
+   end New_Iterator;
+
+   procedure Reset (It : in out Unb_Node_Iterator) is
+   begin
+      It.Current := It.Owner.Rep;
+   end Reset;
+
+   procedure Next (It : in out Unb_Node_Iterator) is
+   begin
+      It.Current := It.Current.Next;
+   end Next;
+
+   function Is_Done (It : Unb_Node_Iterator) return Boolean is
+   begin
+      return It.Current = null;
+   end Is_Done;
+
+   function Current_Item_Ptr (It : Unb_Node_Iterator) return Item_Ptr is
+   begin
+      return Item_Ptr
+        (Allow_Element_Access.To_Pointer (It.Current.Element'Address));
+   end Current_Item_Ptr;
+
+   procedure Delete_Item_At (It : in out Unb_Node_Iterator) is
+      Owner : Unb_Node renames It.Owner.all;
+   begin
+      if Is_Done (It) then
+         raise BC.Not_Found;
+      end if;
+      if Owner.Size = 1 then
+         Clear (Owner);
+         return;
+      end if;
+      declare
+         Old_Node : Node_Ref := It.Current;
+      begin
+         if Old_Node.Previous = null then
+            Owner.Rep := Old_Node.Next;
+         else
+            Old_Node.Previous.Next := Old_Node.Next;
+         end if;
+
+         if Old_Node.Next = null then
+            Owner.Last := Old_Node.Previous;
+         else
+            Old_Node.Next.Previous := Old_Node.Previous;
+         end if;
+
+         It.Current := Old_Node.Next;
+
+         Delete_Node (Old_Node);
+         Owner.Size := Owner.Size - 1;
+
+         --  Invalidating the cache is a lot easier than reevaluating it.
+         Owner.Cache := null;
+         Owner.Cache_Index := 0;
+      end;
+   end Delete_Item_At;
 
 end BC.Support.Unbounded;
