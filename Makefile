@@ -12,11 +12,18 @@
 # write to the Free Software Foundation, 59 Temple Place - Suite
 # 330, Boston, MA 02111-1307, USA.
 
-# Template for the top-level (GNU) Makefile for Booch Components. Used
-# for installation and distribution construction.
+# The top-level (GNU) Makefile for Booch Components. Used for
+# installation and distribution construction.
 
-prefix ?= @PREFIX@
+# Compute the prefix of the current GNAT installation
+prefix ?= $(realpath $(dir $(shell which gnatls))..)
+
+# Work out where to install the GPR
+debian = $(and $(wildcard /etc/debian_version),$(filter $(prefix),/usr))
+GPR_INSTALL_SUBDIR = $(if $(debian),share/ada/adainclude,lib/gnat)
+
 GPRBUILD ?= gprbuild
+GPRCLEAN ?= gprclean
 
 # 'make' to make the BC libraries for use with bc.gpr.
 # 'make install' to install the BC libraries with your GNAT.
@@ -35,29 +42,29 @@ lib-relocatable-stamp: force
 install: install-static install-relocatable
 
 install-static: lib-static-stamp
-	gprinstall				\
-	  -f					\
-	  --prefix=$(prefix)			\
-	  -P bc.gpr				\
-	  --install-name=bc			\
-	  --project-subdir=lib/gnat		\
-	  -XLIBRARY_TYPE=static			\
-	  --mode=dev				\
-	  --create-missing-dirs			\
-	  --build-var=LIBRARY_TYPE		\
+	gprinstall					\
+	  -f						\
+	  --prefix=$(prefix)				\
+	  -P bc.gpr					\
+	  --install-name=bc				\
+	  --project-subdir=$(GPR_INSTALL_SUBDIR)	\
+	  -XLIBRARY_TYPE=static				\
+	  --mode=dev					\
+	  --create-missing-dirs				\
+	  --build-var=LIBRARY_TYPE			\
 	  --build-name=static
 
 install-relocatable: lib-relocatable-stamp
-	gprinstall				\
-	  -f					\
-	  --prefix=$(prefix)			\
-	  -P bc.gpr				\
-	  --install-name=bc			\
-	  --project-subdir=lib/gnat		\
-	  -XLIBRARY_TYPE=relocatable		\
-	  --mode=dev				\
-	  --create-missing-dirs			\
-	  --build-var=LIBRARY_TYPE		\
+	gprinstall					\
+	  -f						\
+	  --prefix=$(prefix)				\
+	  -P bc.gpr					\
+	  --install-name=bc				\
+	  --project-subdir=$(GPR_INSTALL_SUBDIR)	\
+	  -XLIBRARY_TYPE=relocatable			\
+	  --mode=dev					\
+	  --create-missing-dirs				\
+	  --build-var=LIBRARY_TYPE			\
 	  --build-name=relocatable
 
 # Distribution construction
@@ -71,10 +78,8 @@ DATE ?= $(shell date +%Y%m%d)$(SUBRELEASE)
 TOP_LEVEL_FILES =				\
 COPYING						\
 INSTALL						\
-Makefile.in					\
-configure					\
+Makefile					\
 bc.gpr						\
-bc.gpr-for-installation				\
 debian-6.diff
 
 DISTRIBUTION_FILES =	\

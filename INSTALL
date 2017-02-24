@@ -64,22 +64,12 @@ Installation with the compiler
 ------------------------------
 
 If you're using GCC or GNAT GPL, the best way is to install the BCs
-alongside your compiler. Note, THIS DOES NOT WORK WITH DEBIAN (yet),
-because of its different approach to file system layout for the Ada
-subsystem.
+alongside your compiler.
 
 The remaining instructions assume use on a Unix machine, or Cygwin if
 on Windows.
 
-In the top level of the BCs, say
-
-   $ ./configure
-
-This uses the output of gnatls -v to work out where to install the BCs
-if you decide to; on this Mac OS X machine, it's under
-/opt/gnat-gpl-2011/.
-
-Then,
+First,
 
    $ make
 
