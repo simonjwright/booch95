@@ -76,7 +76,7 @@ advantage to choosing the relocatable version, since the BCs are
 mainly generic and most of the object code will be in the
 instantiations, in your library. Also, the relocatable version needs
 to be located at run time, and at the time of writing (20110809) this
-is only assured on Mac OS X (and then only if you use <i>gprbuild</i>.
+is only assured on Mac OS X (and then only if you use <i>gprbuild</i>).
 
 <p>To override the default, set the scenario variable <tt>LIBRARY_TYPE</tt>
 to <tt>relocatable</tt>, either in the environment or using
@@ -103,22 +103,12 @@ understand <tt>external_as_list()</tt> in a Project file): say</p>
 <h2>Installation with the compiler</h2>
 
 <p>If you're using GCC or GNAT GPL, the best way is to install the BCs
-alongside your compiler. Note, <b>THIS DOES NOT WORK WITH DEBIAN</b>
-(yet), because of its different approach to file system layout for the
-Ada subsystem.
+alongside your compiler.
 
 <p>The remaining instructions assume use on a Unix machine, or Cygwin if
 on Windows.
 
-<p>In the top level of the BCs, say
-<pre>
-   $ ./configure
-</pre>
-<p>This uses the output of <tt>gnatls -v</tt> to work out where to
-install the BCs if you decide to; on this Mac OS X machine, it's under
-<tt>/opt/gnat-gpl-2012/</tt>.
-
-<p>Then,
+<p>First,
 <pre>
    $ make
 </pre>
