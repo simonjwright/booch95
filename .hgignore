@@ -7,6 +7,26 @@ Makefile
 include
 lib-*
 
+demos/.build
+
+demos/ada_units{,.exe}
+demos/attributes{,.exe}
+demos/attributes.ada{,.exe}
+demos/attributes.adb{,.exe}
+demos/attributes_support.adb{,.exe}
+demos/attributes_support.ads{,.exe}
+demos/concurrent_access.ada{,.exe}
+demos/concurrent_access_demo{,.exe}
+demos/configuration_demo{,.exe}
+demos/lists_traversal{,.exe}
+demos/mapping{,.exe}
+demos/mapping.adb{,.exe}
+demos/mapping_support.adb{,.exe}
+demos/mapping_support.ads{,.exe}
+demos/ordering_test{,.exe}
+demos/storage{,.exe}
+demos/storage_timing{,.exe}
+
 tests/.build*
 
 tests/avl_test{,.exe}
@@ -28,3 +48,9 @@ tests/stream_test{,.exe}
 tests/test.dat
 tests/tests-main{,.exe}
 tests/tree_test{,.exe}
+
+include-*
+
+# temporary - for the nuweb-based tests
+
+doc-git
