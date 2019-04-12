@@ -22,4 +22,4 @@
 generic
    with function Image (E : Item) return String;
 procedure BC.Containers.Trees.AVL.Print (T : AVL_Tree);
-pragma Preelaborate (BC.Containers.Trees.AVL.Print);
+--  pragma Preelaborate (BC.Containers.Trees.AVL.Print);
