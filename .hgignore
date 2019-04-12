@@ -1,33 +1,29 @@
 syntax: glob
 
-Makefile
+.build*
 
-.build-*
-
-include
+include-*
 lib-*
 
-demos/.build
-
 demos/ada_units{,.exe}
-demos/attributes{,.exe}
-demos/attributes.ada{,.exe}
-demos/attributes.adb{,.exe}
-demos/attributes_support.adb{,.exe}
-demos/attributes_support.ads{,.exe}
-demos/concurrent_access.ada{,.exe}
-demos/concurrent_access_demo{,.exe}
-demos/configuration_demo{,.exe}
+demos/configuration_demo{,.exe,.dat}
 demos/lists_traversal{,.exe}
-demos/mapping{,.exe}
-demos/mapping.adb{,.exe}
-demos/mapping_support.adb{,.exe}
-demos/mapping_support.ads{,.exe}
 demos/ordering_test{,.exe}
 demos/storage{,.exe}
 demos/storage_timing{,.exe}
+demos/test_synchronization{,.exe}
+demos/time_change{,.exe}
+demos/time_collections{,.exe}
+demos/time_lists{,.exe}
+demos/time_queues{,.exe}
+demos/user_map{,.exe}
+demos/user_set{,.exe}
+demos/word_count{,.exe}
+demos/word_*.ad[bs]
+demos/bcwords-stamp
 
-tests/.build*
+tests/*.log
+tests/build-stamp
 
 tests/avl_test{,.exe}
 tests/bag_test{,.exe}
