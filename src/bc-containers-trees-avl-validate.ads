@@ -21,4 +21,4 @@
 
 generic
 procedure BC.Containers.Trees.AVL.Validate (T : AVL_Tree);
-pragma Preelaborate (BC.Containers.Trees.AVL.Validate);
+--  pragma Preelaborate (BC.Containers.Trees.AVL.Validate);
