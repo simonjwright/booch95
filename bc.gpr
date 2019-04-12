@@ -437,8 +437,6 @@ project BC is
          for Library_Interface use Source_Units;
       when "static" =>
          for Library_Src_Dir use "./include-static";
-         for Interfaces use Sources;
-         null;
    end case;
    for Library_Options use External_As_List ("LDFLAGS", " ");
 
