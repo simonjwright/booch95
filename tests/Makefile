@@ -25,9 +25,12 @@ test: build-stamp
 	  ./$$t 2>&1 | tee $$t.log; \
 	done
 
-build-stamp:
+build-stamp: force
 	gprbuild -p -P tests
 	touch build-stamp
+
+clean::
+	rm -rf build-stamp
 
 TESTABLE += avl_test$(EXE)
 TEST_SRC += avl_test.ad[bs] avl_test_support.ad[bs]
@@ -99,4 +102,4 @@ dist:
 clean::
 	gprclean -P tests.gpr
 
-.PHONY: clean dist
+.PHONY: clean dist force
